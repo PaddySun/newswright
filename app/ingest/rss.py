@@ -136,12 +136,12 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
     try:
         with httpx.Client(timeout=60.0, follow_redirects=True) as client:
             resp = client.get(source.url, headers=headers)
-            resp.raise_for_status()
-            if resp.status_code == 304:
+            if resp.status_code == 304:  # 必须在 raise_for_status 之前判（httpx 对 3xx 抛异常）
                 stats.not_modified = True
                 source.last_fetched_at = datetime.now(timezone.utc)
                 db.commit()
                 return stats
+            resp.raise_for_status()
             body = resp.content
     except httpx.HTTPError as e:
         stats.error = f"{type(e).__name__}: {e}"

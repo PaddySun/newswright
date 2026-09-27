@@ -1,0 +1,118 @@
+{
+ "A_idempotency": {
+  "fetch_round2_sources": [
+   {
+    "url": "www.oflight.co.jp",
+    "status": "DONE",
+    "feed": 20,
+    "dup_blocked": 20,
+    "inserted": 0,
+    "error": null
+   },
+   {
+    "url": "rss.arxiv.org",
+    "status": "FAILED",
+    "feed": 0,
+    "dup_blocked": 0,
+    "inserted": 0,
+    "error": "HTTPStatusError: Redirect response '304 Not Modified' for url 'https://rss.arxiv.org/rss/cs.CV'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/304"
+   },
+   {
+    "url": "www.paddysun.top",
+    "status": "DONE",
+    "feed": 10,
+    "dup_blocked": 10,
+    "inserted": 0,
+    "error": null
+   },
+   {
+    "url": "www.cisa.gov",
+    "status": "FAILED",
+    "feed": 0,
+    "dup_blocked": 0,
+    "inserted": 0,
+    "error": "HTTPStatusError: Client error '403 Forbidden' for url 'https://www.cisa.gov/cybersecurity-advisories/all.xml'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+   },
+   {
+    "url": "www.ithome.com",
+    "status": "DONE",
+    "feed": 60,
+    "dup_blocked": 60,
+    "inserted": 0,
+    "error": null
+   }
+  ],
+  "score_round2": [
+   {
+    "direction_id": 1,
+    "name": "AI 与软件工程",
+    "task_id": 17,
+    "status": "DONE",
+    "candidates": 0,
+    "scored": 0,
+    "passed": 0,
+    "call_failed": 0,
+    "parse_failed": 0,
+    "error": null
+   }
+  ],
+  "scoring_llm_calls_delta": 0,
+  "scores_ok_before": 65,
+  "scores_ok_after": 65,
+  "total_items": 90
+ },
+ "B_fault_injection": {
+  "injected_model": "deepseek-nonexistent-model",
+  "score_round3": [
+   {
+    "direction_id": 1,
+    "name": "AI 与软件工程",
+    "task_id": 18,
+    "status": "FAILED",
+    "candidates": 2,
+    "scored": 0,
+    "passed": 0,
+    "call_failed": 2,
+    "parse_failed": 0,
+    "error": "2 条打分未成功（含解析失败 0），下轮续跑"
+   }
+  ],
+  "score_results_for_new_items": [
+   {
+    "item_id": 91,
+    "status": "FAILED",
+    "error": "ProviderError: deepseek 调用失败（重试 0 次后放弃）: HTTP 400: {\"error\":{\"message\":\"The supported API model names are deepseek-flash"
+   },
+   {
+    "item_id": 92,
+    "status": "FAILED",
+    "error": "ProviderError: deepseek 调用失败（重试 0 次后放弃）: HTTP 400: {\"error\":{\"message\":\"The supported API model names are deepseek-flash"
+   }
+  ],
+  "new_items_content_kept": true,
+  "latest_score_task": {
+   "id": 18,
+   "status": "FAILED",
+   "last_error": "2 条打分未成功（含解析失败 0），下轮续跑"
+  }
+ },
+ "C_recovery": {
+  "score_round4": [
+   {
+    "direction_id": 1,
+    "name": "AI 与软件工程",
+    "task_id": 19,
+    "status": "DONE",
+    "candidates": 2,
+    "scored": 2,
+    "passed": 0,
+    "call_failed": 0,
+    "parse_failed": 0,
+    "error": null
+   }
+  ],
+  "new_items_now_scored_ok": 2,
+  "scores_ok_after_recovery": 67,
+  "note": "恢复后仅 2 条新条目被补打，旧 OK 条目未重打（见 usage delta）"
+ }
+}
