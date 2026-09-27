@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+*.db
+newswright.db*
+data/snapshot/
+.pytest_cache/
+scratch/

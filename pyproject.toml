@@ -1,0 +1,23 @@
+[project]
+name = "newswright"
+version = "0.1.0"
+description = "Newswright minimal full-pipeline demo backend (RSS ingest -> rules -> LLM scoring -> AI author writing)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "httpx>=0.27",
+    "feedparser>=6.0",
+    "trafilatura>=1.12",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.7",
+    "python-dotenv>=1.0",
+    "pytest>=8.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = { find = { include = ["app*"] } }
