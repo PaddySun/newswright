@@ -141,6 +141,8 @@ class UsageLog(Base):
     call_point: Mapped[str] = mapped_column(String(30))  # scoring / writing / prefilter
     prompt_tokens: Mapped[int] = mapped_column(Integer, default=0)
     completion_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    # moark 等非 token 计费方使用（deepseek 恒 0）
+    billing_units: Mapped[int] = mapped_column(Integer, default=0)
     latency_ms: Mapped[int] = mapped_column(Integer, default=0)
     ok: Mapped[bool] = mapped_column(Boolean, default=True)
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
