@@ -9,3 +9,4 @@ newswright.db*
 data/snapshot/
 .pytest_cache/
 scratch/
+*.egg-info/

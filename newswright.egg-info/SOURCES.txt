@@ -1,6 +1,0 @@
-pyproject.toml
-newswright.egg-info/PKG-INFO
-newswright.egg-info/SOURCES.txt
-newswright.egg-info/dependency_links.txt
-newswright.egg-info/requires.txt
-newswright.egg-info/top_level.txt
