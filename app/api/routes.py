@@ -231,6 +231,29 @@ def scheduler_status(db: Session = Depends(get_session)):
     return st
 
 
+# ---------- 热榜（能力③） ----------
+
+@router.get("/hot/batches")
+def hot_batches(limit: int = 5, db: Session = Depends(get_session)):
+    """热榜批次与关键词（时间序列；图表与作者风向段的数据源）。"""
+    from ..models import HotBatch, HotTopic
+
+    q = db.query(HotBatch).order_by(HotBatch.id.desc()).limit(min(limit, 50))
+    out = []
+    for b in q.all():
+        topics = db.query(HotTopic).filter_by(batch_id=b.id).all()
+        per_platform: dict[str, int] = {}
+        for t in topics:
+            per_platform[t.platform] = per_platform.get(t.platform, 0) + 1
+        out.append({
+            "id": b.id, "date": b.date, "keywords": b.keywords, "summary": b.summary,
+            "source_platforms": b.source_platforms, "model": b.model,
+            "topics_total": len(topics), "topics_per_platform": per_platform,
+            "created_at": b.created_at,
+        })
+    return out
+
+
 # ---------- 统计（零信任过滤预留位验收项） ----------
 
 @router.get("/stats/filters")

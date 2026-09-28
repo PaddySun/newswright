@@ -165,10 +165,38 @@ class PipelineTask(Base):
     __tablename__ = "pipeline_task"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    kind: Mapped[str] = mapped_column(String(20))  # fetch / score / write
+    kind: Mapped[str] = mapped_column(String(20))  # fetch / score / write / fetch_round / hot_round
     status: Mapped[str] = mapped_column(String(20), default="PENDING")  # PENDING/RUNNING/DONE/FAILED
     payload: Mapped[dict] = mapped_column(JSON, default=dict)
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+
+class HotTopic(Base):
+    """热榜原始条目（能力③）。每平台每轮全量覆盖式记录，不做增量合并（BettaFish daily 语义）。"""
+    __tablename__ = "hot_topic"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    platform: Mapped[str] = mapped_column(String(50))
+    rank: Mapped[int] = mapped_column(Integer, default=0)
+    title: Mapped[str] = mapped_column(String(2000))
+    url: Mapped[str | None] = mapped_column(String(2000), nullable=True)
+    extra: Mapped[dict | None] = mapped_column(JSON, nullable=True)  # 热度值/icon/hover 等
+    keyword_contrib: Mapped[bool] = mapped_column(Boolean, default=False)  # 是否进入当轮关键词提炼输入
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    batch_id: Mapped[int] = mapped_column(ForeignKey("hot_batch.id"))
+
+
+class HotBatch(Base):
+    """每轮热榜批次 + 当日关键词提炼结果（hot_round 的聚合产物）。"""
+    __tablename__ = "hot_batch"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    date: Mapped[str] = mapped_column(String(10))  # YYYY-MM-DD（本地日期，BettaFish daily 语义）
+    keywords: Mapped[list] = mapped_column(JSON, default=list)
+    summary: Mapped[str] = mapped_column(Text, default="")
+    source_platforms: Mapped[list] = mapped_column(JSON, default=list)
+    model: Mapped[str] = mapped_column(String(100), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

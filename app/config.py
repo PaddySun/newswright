@@ -99,3 +99,12 @@ SANITIZE_ENABLED = _get_bool("SANITIZE_ENABLED", False)
 SANITIZE_DENY_KEYWORDS = [
     kw.strip() for kw in (_get("SANITIZE_DENY_KEYWORDS") or "").split(",") if kw.strip()
 ]
+
+# 热榜聚合（能力③，BettaFish MindSpider 前半段模式）：newsnow 类聚合 API
+HOT_AGG_BASE = _get("HOT_AGG_BASE") or "https://newsnow.busiyi.world/api/s"
+HOT_PLATFORMS = [
+    p.strip() for p in (_get("HOT_PLATFORMS") or "weibo,zhihu,bilibili,toutiao,github").split(",")
+    if p.strip()
+]
+# 进入关键词提炼的每平台条目上限（全量落库不受限；输入控制成本）
+HOT_KEYWORD_INPUT_PER_PLATFORM = int(_get("HOT_KEYWORD_INPUT_PER_PLATFORM") or 20)
