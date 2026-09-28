@@ -31,11 +31,38 @@ GLOBAL_SYSTEM_PROMPT = """你是一个 AI 内容生产系统中的作者代理�
 输出严格按要求的 JSON 结构，不要输出 JSON 以外的任何内容。"""
 
 SOURCES = [
-    "https://www.oflight.co.jp/feed.en.xml",
-    "https://rss.arxiv.org/rss/cs.CV",
-    "https://www.paddysun.top/feed",
-    "https://www.cisa.gov/cybersecurity-advisories/all.xml",
-    "https://www.ithome.com/rss/",
+    {"url": "https://www.oflight.co.jp/feed.en.xml", "type": "rss"},
+    {"url": "https://rss.arxiv.org/rss/cs.CV", "type": "rss"},
+    {"url": "https://www.paddysun.top/feed", "type": "rss"},
+    {"url": "https://www.cisa.gov/cybersecurity-advisories/all.xml", "type": "rss"},
+    {"url": "https://www.ithome.com/rss/", "type": "rss"},
+]
+
+# 定点网页监测（能力②，M9）：低频变更页 + 常规文章页
+WEB_SOURCES = [
+    {
+        # 索引/changelog 页：页面级日期不可靠 → ignore_page_date；列表页用 LLM 抽取条目
+        "url": "https://api-docs.deepseek.com/news",
+        "config": {
+            "monitor_words": ["DeepSeek"],
+            "extraction_prompt": "抽取页面中的发布记录/新闻条目（标题、链接、日期、摘要）",
+            "llm_extract": True,
+            "ignore_page_date": True,
+            "interval_minutes": 60,
+        },
+    },
+    {
+        # 常规文章页：真实发布日期参与规则（过期会被如实拒绝，全文照存）
+        "url": "https://deepseek.com/news/deepseek-v3-2/",
+        "config": {"monitor_words": [], "interval_minutes": 1440},
+    },
+    {
+        # 常规文章页（站长博客，静态、近期）：DeepSeek 系页面实测全为陈旧内容
+        # （V4.1-Flash 文 2025-09-22 / V3.2 文 2025-12-01），过期规则如实拒绝；
+        # 换近期静态文章页作为"进全量管线"的主样本
+        "url": "https://www.paddysun.top/archives/5330",
+        "config": {"monitor_words": ["Agent"], "interval_minutes": 60},
+    },
 ]
 
 AUTHOR_MODEL = "deepseek-chat"
@@ -62,10 +89,18 @@ def main() -> int:
         else:
             print(f"方向已存在 {direction.id}，跳过")
 
-        for url in SOURCES:
+        for s in SOURCES:
+            url = s["url"] if isinstance(s, dict) else s
             if db.query(Source).filter_by(url=url).one_or_none() is None:
                 db.add(Source(direction_id=direction.id, url=url, type="rss", enabled=True))
                 print(f"已添加源: {url}")
+        db.commit()
+
+        for w in WEB_SOURCES:
+            if db.query(Source).filter_by(url=w["url"]).one_or_none() is None:
+                db.add(Source(direction_id=direction.id, url=w["url"], type="web",
+                              enabled=True, source_config=w["config"]))
+                print(f"已添加网页监测源: {w['url']}")
         db.commit()
 
         if db.query(Author).filter_by(name="墨新").one_or_none() is None:

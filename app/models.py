@@ -40,6 +40,9 @@ class Source(Base):
     # 调度退避计数（能力①）：连续失败 ≥阈值跳过该源并探测拉长
     backoff_failures: Mapped[int] = mapped_column(Integer, default=0)
     backoff_skips: Mapped[int] = mapped_column(Integer, default=0)
+    # type=web 扩展（M9）：监测配置与内容哈希（etag/Last-Modified 缺失时的变更检测兜底）
+    source_config: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    content_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
 
 class Item(Base):

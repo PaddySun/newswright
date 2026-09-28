@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 from .. import config
 from ..models import PipelineTask, Source
 from ..ingest.rss import fetch_source
+from ..ingest.web import fetch_web_source
 from ..models import Item
 
 log = logging.getLogger("newswright.pipeline")
@@ -62,7 +63,7 @@ def fetch_round(db: Session, *, triggered_by: str = "manual") -> dict:
         task.attempts += 1
         db.commit()
         try:
-            stats = fetch_source(db, src)
+            stats = _fetch_one(db, src)
             status = "FAILED" if stats.error else "DONE"
             _finish(db, task, status=status,
                     stats=_fetch_stats_dict(stats), error=stats.error)
@@ -83,6 +84,13 @@ def fetch_round(db: Session, *, triggered_by: str = "manual") -> dict:
     return summary
 
 
+def _fetch_one(db: Session, src: Source):
+    """按源类型分发抓取器（provider 接口化：新源类型加分支即可）。"""
+    if src.type == "web":
+        return fetch_web_source(db, src)
+    return fetch_source(db, src)
+
+
 def _fetch_stats_dict(stats) -> dict:
     return {
         "feed_entries": stats.feed_entries,
@@ -94,6 +102,7 @@ def _fetch_stats_dict(stats) -> dict:
         "not_modified": stats.not_modified,
         "sanitize_passed": stats.sanitize_passed,
         "sanitize_rejected": stats.sanitize_rejected,
+        **(getattr(stats, "extra", {}) or {}),
     }
 
 
@@ -126,7 +135,16 @@ def enqueue_fetch_round(db: Session, *, triggered_by: str = "scheduler") -> Pipe
         return None
     skipped: list[dict] = []
     round_task = _new_task(db, kind="fetch_round", payload={"triggered_by": triggered_by})
+    now = datetime.now(timezone.utc)
     for src in db.query(Source).filter_by(enabled=True).all():
+        # 每源轮询间隔（source_config.interval_minutes）：未到期跳过（调度入队侧判定）
+        interval = (src.source_config or {}).get("interval_minutes")
+        if interval and src.last_fetched_at:
+            last = src.last_fetched_at if src.last_fetched_at.tzinfo else src.last_fetched_at.replace(tzinfo=timezone.utc)
+            if (now - last).total_seconds() < int(interval) * 60:
+                skipped.append({"source_id": src.id, "url": src.url,
+                                "reason": f"interval_not_due:{interval}m"})
+                continue
         fails = src.backoff_failures or 0
         if fails >= config.BACKOFF_FAIL_THRESHOLD:
             skips = (src.backoff_skips or 0) + 1
@@ -167,7 +185,7 @@ def process_fetch_round(db: Session, round_task: PipelineTask) -> dict:
             any_failed = True
             continue
         try:
-            stats = fetch_source(db, src)
+            stats = _fetch_one(db, src)
             status = "FAILED" if stats.error else "DONE"
             _finish(db, t, status=status, stats=_fetch_stats_dict(stats), error=stats.error)
             _update_backoff(db, src, failed=bool(stats.error))

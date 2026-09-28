@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
@@ -98,6 +98,8 @@ class SourceFetchStats:
     sanitize_rejected: int = 0
     error: str | None = None
     guid_collisions: int = 0  # feed 内部重复 guid
+    # 通道附加信息（web 变更类型/监测词命中等），并入任务 payload.stats
+    extra: dict = field(default_factory=dict)
 
 
 @dataclass

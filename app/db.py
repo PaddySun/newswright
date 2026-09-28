@@ -31,6 +31,8 @@ def _migrate_added_columns() -> None:
         "source": {
             "backoff_failures": "INTEGER NOT NULL DEFAULT 0",
             "backoff_skips": "INTEGER NOT NULL DEFAULT 0",
+            "source_config": "JSON",
+            "content_hash": "VARCHAR(64)",
         },
         "item": {
             "sanitize_status": "VARCHAR(20) NOT NULL DEFAULT 'PENDING'",
