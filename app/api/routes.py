@@ -1,6 +1,8 @@
 """最小 API（本机 Demo，无鉴权）。所有端点返回 JSON。"""
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import func
@@ -8,8 +10,15 @@ from sqlalchemy.orm import Session
 
 from ..db import get_session
 from ..models import Article, Author, Item, MemoryEntry, PipelineTask, ScoreResult, Source, UsageLog, WriteRun
-from ..pipeline.runner import fetch_round, score_round, write_task
+from ..pipeline.runner import (
+    enqueue_fetch_round,
+    fetch_round,
+    process_fetch_round,
+    score_round,
+    write_task,
+)
 from ..authors.memory import record_feedback
+from .. import scheduler as scheduler_mod
 
 router = APIRouter()
 
@@ -181,3 +190,90 @@ def list_tasks(kind: str | None = None, limit: int = 50, db: Session = Depends(g
          "payload": t.payload, "last_error": t.last_error, "updated_at": t.updated_at}
         for t in q.all()
     ]
+
+
+# ---------- 调度（能力①） ----------
+
+@router.post("/scheduler/run-once/{kind}")
+def scheduler_run_once(kind: str, db: Session = Depends(get_session)):
+    """手动触发某轮次（与调度器同一条 enqueue→process 路径，便于测试；双轨并存）。"""
+    if kind == "fetch":
+        round_task = enqueue_fetch_round(db, triggered_by="api_run_once")
+        if round_task is None:
+            return {"skipped": True, "reason": "上一轮 fetch_round 未结束（防重叠）"}
+        summary = process_fetch_round(db, round_task)
+        score = score_round(db, triggered_by="api_run_once")
+        return {"fetch_round": summary, "score": score}
+    if kind == "hot":
+        try:
+            from ..hot.service import run_hot_round
+        except ImportError:
+            raise HTTPException(501, "hot 通道未实装（M10）")
+        return {"hot_round": run_hot_round(db, triggered_by="api_run_once")}
+    raise HTTPException(422, "kind 必须是 fetch|hot")
+
+
+@router.get("/scheduler/status")
+def scheduler_status(db: Session = Depends(get_session)):
+    st = scheduler_mod.status()
+    recent_rounds = (
+        db.query(PipelineTask)
+        .filter(PipelineTask.kind.in_(("fetch_round", "hot_round")))
+        .order_by(PipelineTask.id.desc())
+        .limit(10)
+        .all()
+    )
+    st["recent_rounds"] = [
+        {"id": t.id, "kind": t.kind, "status": t.status, "attempts": t.attempts,
+         "payload": t.payload, "last_error": t.last_error, "updated_at": t.updated_at}
+        for t in recent_rounds
+    ]
+    return st
+
+
+# ---------- 统计（零信任过滤预留位验收项） ----------
+
+@router.get("/stats/filters")
+def stats_filters(days: int = 7, db: Session = Depends(get_session)):
+    """按阶段（rule/sanitize）× 原因聚合的被过滤条数与占比；时间范围可配。"""
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    q = db.query(
+        Item.fetch_status, Item.rule_reject_reason,
+        Item.sanitize_status, Item.sanitize_reason,
+        func.count(Item.id),
+    ).filter(Item.fetched_at >= since).group_by(
+        Item.fetch_status, Item.rule_reject_reason,
+        Item.sanitize_status, Item.sanitize_reason,
+    ).all()
+
+    def _reason_prefix(reason: str | None) -> str:
+        # too_short:12<200 → too_short（聚合到原因类别）
+        if not reason:
+            return "(none)"
+        return reason.split(":", 1)[0]
+
+    total = sum(r[4] for r in q) or 0
+    rule_rows: dict[str, int] = {}
+    sanitize_rows: dict[str, int] = {}
+    for fetch_status, rule_reason, sz_status, sz_reason, n in q:
+        if fetch_status == "REJECTED_RULED":
+            key = _reason_prefix(rule_reason)
+            rule_rows[key] = rule_rows.get(key, 0) + n
+        if sz_status == "REJECTED":
+            key = f"{_reason_prefix(sz_reason)}|{((sz_reason or '').split(':', 1) + [''])[1]}"
+            sanitize_rows[key] = sanitize_rows.get(key, 0) + n
+
+    def _shape(rows: dict[str, int]) -> list[dict]:
+        return [
+            {"reason": k, "count": v, "share": round(v / total, 4) if total else 0.0}
+            for k, v in sorted(rows.items(), key=lambda kv: -kv[1])
+        ]
+
+    rejected_total = sum(v for v in rule_rows.values()) + sum(v for v in sanitize_rows.values())
+    return {
+        "window_days": days,
+        "items_total": total,
+        "rejected_total": rejected_total,
+        "rule": _shape(rule_rows),
+        "sanitize": _shape(sanitize_rows),
+    }

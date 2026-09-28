@@ -37,6 +37,9 @@ class Source(Base):
     last_fetched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     etag: Mapped[str | None] = mapped_column(String(500), nullable=True)
     last_modified: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    # 调度退避计数（能力①）：连续失败 ≥阈值跳过该源并探测拉长
+    backoff_failures: Mapped[int] = mapped_column(Integer, default=0)
+    backoff_skips: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class Item(Base):
@@ -50,9 +53,13 @@ class Item(Base):
     title: Mapped[str] = mapped_column(String(2000), default="")
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     content_text: Mapped[str] = mapped_column(Text, default="")
-    # FETCHED / REJECTED_RULED / FAILED
+    # FETCHED / REJECTED_RULED / FAILED（抓取侧语义：抓取成功但被过滤 ≠ 抓取失败）
     fetch_status: Mapped[str] = mapped_column(String(30), default="FETCHED")
     rule_reject_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    # 零信任过滤预留位：PASSED / REJECTED / PENDING；REJECTED 条目全文照存
+    sanitize_status: Mapped[str] = mapped_column(String(20), default="PENDING")
+    sanitize_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    sanitize_detail: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 

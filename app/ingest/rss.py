@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 from .. import config
 from ..models import Item, Source
 from .rules import apply_rules
+from .sanitize import SanitizeTarget, run_sanitize
 
 log = logging.getLogger("newswright.ingest")
 
@@ -93,6 +94,8 @@ class SourceFetchStats:
     rule_rejected: int = 0
     failed: int = 0
     not_modified: bool = False
+    sanitize_passed: int = 0
+    sanitize_rejected: int = 0
     error: str | None = None
     guid_collisions: int = 0  # feed 内部重复 guid
 
@@ -184,6 +187,18 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
                 item.fetch_status = "REJECTED_RULED"
                 item.rule_reject_reason = rule.reason
                 stats.rule_rejected += 1
+            # 落库前强制流经 sanitize 阶段（骨架：pass-through 或演示链）；
+            # 与 fetch_status 语义分离，REJECTED 全文照存
+            sr = run_sanitize(SanitizeTarget(
+                title=item.title, content_text=item.content_text, url=item.url,
+            ))
+            item.sanitize_status = "PASSED" if sr.passed else "REJECTED"
+            item.sanitize_reason = sr.reason
+            item.sanitize_detail = sr.detail or None
+            if sr.passed:
+                stats.sanitize_passed += 1
+            else:
+                stats.sanitize_rejected += 1
             db.add(item)
             db.flush()
             stats.inserted += 1
