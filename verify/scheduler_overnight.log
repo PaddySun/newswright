@@ -1,0 +1,767 @@
+2026-09-29 03:54:47,493 dotenv.main WARNING python-dotenv could not parse statement starting at line 13
+2026-09-29 03:54:47,493 dotenv.main WARNING python-dotenv could not parse statement starting at line 14
+2026-09-29 03:54:48,238 apscheduler.scheduler INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-09-29 03:54:48,238 apscheduler.scheduler INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-09-29 03:54:48,239 apscheduler.scheduler INFO Added job "run_job_safely" to job store "default"
+2026-09-29 03:54:48,239 apscheduler.scheduler INFO Added job "run_job_safely" to job store "default"
+2026-09-29 03:54:48,249 apscheduler.scheduler INFO Scheduler started
+2026-09-29 03:54:48,250 newswright.scheduler INFO 调度器已启动：fetch+15min（含 score 链）、hot+60min
+2026-09-29 03:54:48,250 apscheduler.executors.default INFO Running job "run_job_safely (trigger: interval[0:15:00], next run at: 2026-09-29 04:09:48 CST)" (scheduled at 2026-09-28 19:54:48.238285+00:00)
+2026-09-29 03:54:50,160 httpx INFO HTTP Request: GET https://www.oflight.co.jp/feed.en.xml "HTTP/1.1 200 OK"
+2026-09-29 03:54:50,900 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,900 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,900 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,900 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,901 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,901 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,901 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,901 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,901 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,901 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,901 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,901 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,901 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,902 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,902 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,902 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,902 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,902 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,902 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,902 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,902 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,902 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,902 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,903 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,903 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,903 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,903 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,903 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,903 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,903 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,903 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,904 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,904 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,904 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,904 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,904 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,904 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,905 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,905 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,905 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,905 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,905 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,905 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,905 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,906 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,906 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,906 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,906 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,906 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,906 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,906 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,907 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,907 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,907 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,907 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,907 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,907 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:50,907 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:50,907 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:50,908 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,595 httpx INFO HTTP Request: GET https://rss.arxiv.org/rss/cs.CV "HTTP/1.1 200 OK"
+2026-09-29 03:54:52,825 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,825 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,825 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,826 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,826 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,826 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,826 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,826 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,826 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,827 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,827 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,827 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,828 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,828 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,828 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,828 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,828 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,828 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,829 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,829 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,829 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,829 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,829 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,830 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,830 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,830 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,830 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,831 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,831 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,831 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,831 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,831 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,831 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,832 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,832 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,832 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,832 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,832 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,832 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,833 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,833 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,833 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,833 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,834 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,834 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,834 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,834 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,834 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,835 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,835 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,835 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,835 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,835 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,835 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,836 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,836 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,836 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,836 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,837 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,837 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,837 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,837 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,837 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,837 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,838 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,838 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,838 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,838 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,838 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,838 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,838 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,838 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,839 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,839 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,839 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,839 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,839 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,839 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,839 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,839 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,839 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,840 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,840 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,840 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,840 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,840 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,840 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,840 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,841 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,841 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,841 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,841 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,841 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,841 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,841 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,841 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,842 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,842 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,842 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,842 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,842 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,842 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,842 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,842 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,843 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,843 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,843 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,843 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,843 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,843 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,843 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,844 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,844 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,844 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,844 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,844 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,844 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,844 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,845 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,845 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,845 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,845 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,845 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,845 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,845 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,846 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,846 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,846 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,846 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,846 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,846 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,846 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,847 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,847 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,847 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,847 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,847 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,847 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,847 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,847 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,847 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,848 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,848 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,848 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,848 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,848 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,848 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,848 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,848 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,849 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,849 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,849 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,849 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,849 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,850 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,850 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,850 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,850 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,850 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,851 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,851 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,851 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,851 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,851 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,851 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,852 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,852 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,852 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,852 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,852 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,852 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,853 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,853 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,853 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,854 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,854 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,854 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,854 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,854 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,854 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,854 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,855 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,855 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,855 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,855 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,855 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,855 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,855 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,855 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,856 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,856 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,856 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,856 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,856 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,856 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,857 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,857 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,857 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,857 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,857 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,857 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,857 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,857 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,857 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,858 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,858 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,858 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,858 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,858 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,858 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,859 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,859 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,859 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,859 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,859 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,859 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,859 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,859 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,859 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,860 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,860 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,860 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,860 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,860 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,860 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,861 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,861 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,861 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,861 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,861 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,861 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,862 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,862 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,862 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,862 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,862 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,862 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,862 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,863 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,863 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,863 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,863 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,863 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,864 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,864 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,864 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,864 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,864 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,864 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,865 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,865 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,865 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,865 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,865 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,865 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,865 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,865 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,866 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,866 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,866 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,866 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,866 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,866 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,866 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,867 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,867 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,867 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,867 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,867 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,867 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,868 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,868 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,868 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,868 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,868 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,868 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,868 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,868 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,868 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,869 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,869 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,869 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,869 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,869 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,869 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,870 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,870 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,870 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,870 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,870 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,870 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,871 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,871 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,871 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,871 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,871 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,871 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,871 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,871 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,871 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,872 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,872 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,872 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,872 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,872 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,872 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,872 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,872 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,872 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,873 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,873 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,873 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,873 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,873 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,873 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,874 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,874 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,874 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,874 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,874 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,874 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,874 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,875 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,875 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,875 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,875 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,875 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,875 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,875 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,875 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,876 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,876 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,876 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,876 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,876 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,876 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,877 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,877 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,877 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,877 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,877 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,877 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,877 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,878 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,878 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,878 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,878 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,878 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,878 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,878 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,878 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,879 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,879 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,879 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,879 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,879 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,879 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,879 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,879 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,879 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,880 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,880 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,880 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,880 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,880 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,880 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,880 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,881 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,881 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,881 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,881 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,881 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,881 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,881 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,882 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,882 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,882 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,882 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,882 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,883 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,883 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,883 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,883 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,883 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,883 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,883 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,884 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,884 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,884 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,884 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,884 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,884 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,884 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,885 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,885 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,885 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,885 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,885 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,885 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,886 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,886 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,886 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,886 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,886 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,887 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,887 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,887 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,887 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,887 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,888 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,888 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,888 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,888 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,888 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,888 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,888 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,889 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,889 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,889 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,889 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,889 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,890 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,890 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,890 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,890 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,890 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,890 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,891 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,891 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,891 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,891 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,891 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,892 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,892 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,892 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,892 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,892 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,892 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,893 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,893 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,893 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,893 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,893 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,893 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,894 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,894 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,894 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,894 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,894 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,894 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,895 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,895 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,895 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,895 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,895 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,895 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,895 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,895 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,895 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,896 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,896 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,896 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,896 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,896 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,896 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,896 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,896 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,897 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,897 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,897 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,897 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,897 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,897 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,897 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,898 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,898 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,898 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,898 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,898 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,898 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,898 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,899 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,899 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,899 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,899 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,899 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,899 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,899 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,900 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,900 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,900 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,900 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,900 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,900 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,900 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,901 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,901 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,901 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,901 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,901 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,901 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,902 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,902 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,902 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,902 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,902 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,902 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,903 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,903 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,903 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,903 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,903 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,903 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,903 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,903 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,904 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,904 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,904 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,904 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,904 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,904 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,904 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,905 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,905 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,905 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,905 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,905 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,905 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,905 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,905 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,905 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,906 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,906 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,906 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,906 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,906 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,906 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,907 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,907 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,907 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,907 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,907 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,907 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:52,907 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 03:54:52,908 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 03:54:52,908 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:53,995 httpx INFO HTTP Request: GET https://www.paddysun.top/feed "HTTP/1.1 200 OK"
+2026-09-29 03:54:55,192 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:55,197 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:55,202 trafilatura.core WARNING discarding data: None
+2026-09-29 03:54:56,181 httpx INFO HTTP Request: GET https://www.ithome.com/rss/ "HTTP/1.1 200 OK"
+2026-09-29 03:54:57,513 httpx INFO HTTP Request: GET https://api-docs.deepseek.com/news "HTTP/1.1 304 Not Modified"
+2026-09-29 03:54:58,603 httpx INFO HTTP Request: GET https://api-docs.deepseek.com/news/news260910 "HTTP/1.1 302 Found"
+2026-09-29 03:54:58,773 httpx INFO HTTP Request: GET https://api-docs.deepseek.com/news/news260910/ "HTTP/1.1 304 Not Modified"
+2026-09-29 03:54:59,914 httpx INFO HTTP Request: GET https://www.paddysun.top/archives/5330 "HTTP/1.1 200 OK"
+2026-09-29 03:55:01,317 httpx INFO HTTP Request: POST https://api.bocha.cn/v1/web-search "HTTP/1.1 200 "
+2026-09-29 03:55:02,499 httpx INFO HTTP Request: POST https://wsa.tencentcloudapi.com "HTTP/1.1 200 OK"
+2026-09-29 03:55:02,544 newswright.scheduler INFO fetch_round #102 DONE（9 源）
+2026-09-29 03:55:03,535 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:05,375 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:06,873 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:08,518 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:10,306 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:12,026 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:13,526 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:15,631 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:17,483 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:19,076 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:20,705 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:22,393 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:23,891 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:25,448 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:27,066 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:28,702 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:30,293 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:31,743 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:33,284 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:34,970 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:36,706 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:38,444 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:39,928 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:41,567 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:43,352 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:45,026 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:46,953 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:48,863 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:50,618 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:52,374 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:54,172 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:55,975 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:57,753 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:55:59,610 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:01,536 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:03,302 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:05,162 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:06,821 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:08,791 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:10,622 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:12,335 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:13,901 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:15,516 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:17,114 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:18,807 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:20,687 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:22,315 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:24,280 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:25,959 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:27,369 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:29,093 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:30,803 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:32,552 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:34,176 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:35,957 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:37,622 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:39,480 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:41,026 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:43,134 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:44,988 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:46,522 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:48,293 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:50,322 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:51,933 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-29 03:56:52,771 newswright.scheduler INFO score 方向[AI 与软件工程] DONE 打分=64
+2026-09-29 03:56:52,771 apscheduler.executors.default INFO Job "run_job_safely (trigger: interval[0:15:00], next run at: 2026-09-29 04:09:48 CST)" executed successfully
+2026-09-29 04:09:48,249 apscheduler.executors.default INFO Running job "run_job_safely (trigger: interval[0:15:00], next run at: 2026-09-29 04:24:48 CST)" (scheduled at 2026-09-29 04:09:48.238285+08:00)
+2026-09-29 04:09:48,286 newswright.pipeline INFO 源 4 连续失败 5 次，本轮放行探测
+2026-09-29 04:09:49,555 httpx INFO HTTP Request: GET https://www.oflight.co.jp/feed.en.xml "HTTP/1.1 200 OK"
+2026-09-29 04:09:49,564 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,564 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,564 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,565 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,565 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,565 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,565 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,565 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,565 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,566 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,566 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,566 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,566 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,566 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,566 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,567 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,567 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,567 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,567 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,567 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,567 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,567 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,567 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,568 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,568 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,568 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,568 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,568 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,568 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,568 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,569 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,569 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,569 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,569 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,569 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,569 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,569 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,570 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,570 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,570 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,570 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,570 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,570 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,570 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,570 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,571 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,571 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,571 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,571 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,571 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,571 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,572 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,572 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,572 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,572 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,572 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,572 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:49,573 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-29 04:09:49,573 trafilatura.core ERROR empty HTML tree: None
+2026-09-29 04:09:49,573 trafilatura.core WARNING discarding data: None
+2026-09-29 04:09:50,600 httpx INFO HTTP Request: GET https://rss.arxiv.org/rss/cs.CV "HTTP/1.1 304 Not Modified"
+2026-09-29 04:09:51,548 httpx INFO HTTP Request: GET https://www.paddysun.top/feed "HTTP/1.1 304 Not Modified"
+2026-09-29 04:09:53,390 httpx INFO HTTP Request: GET https://www.cisa.gov/cybersecurity-advisories/all.xml "HTTP/1.1 403 Forbidden"
+2026-09-29 04:09:54,294 httpx INFO HTTP Request: GET https://www.ithome.com/rss/ "HTTP/1.1 200 OK"
+2026-09-29 04:09:55,813 httpx INFO HTTP Request: POST https://api.bocha.cn/v1/web-search "HTTP/1.1 200 "
+2026-09-29 04:09:56,887 httpx INFO HTTP Request: POST https://wsa.tencentcloudapi.com "HTTP/1.1 200 OK"
+2026-09-29 04:09:56,933 newswright.scheduler INFO fetch_round #131 FAILED（7 源）
+2026-09-29 04:09:56,957 newswright.scheduler INFO score 方向[AI 与软件工程] DONE 打分=0
+2026-09-29 04:09:56,957 apscheduler.executors.default INFO Job "run_job_safely (trigger: interval[0:15:00], next run at: 2026-09-29 04:24:48 CST)" executed successfully

@@ -58,6 +58,9 @@ python -m venv .venv
 | `GET /articles` · `GET /articles/{id}` · `GET /write-runs/{id}` | 文章 / 写作运行（含 prompt 快照与排序明细 payload） |
 | `GET /authors/{id}/memory` · `POST /feedback` | 记忆与反馈回流 |
 | `GET /usage/summary` · `GET /tasks?kind=` | 成本归因 / 任务队列 |
+| `GET /stream/b?direction_id=` | 登录态 B 流（OV2 拍板④）：高分排序 + 可调概率穿插低分≥阈值条目，真实评分原样返回（band=low_interleaved 标记） |
+| `GET /hot/board?direction_id=` | 热点面板数据契约（OV3 拍板②）：方向关键词 × 打分排序前 N 条搜索结果标题 |
+| `GET /stats/overview?days=` | 统计总览（OV4）：Token 按作者×调用点、四类失败口径、阶段成功率 |
 
 ## 能力速览
 
@@ -69,6 +72,11 @@ python -m venv .venv
 | ④ 搜索底座 | `app/search/`（base/bocha/tencent/registry/quota/pipeline） | "新增子类 + 注册一行"扩展；额度闸（SKIPPED_QUOTA 语义，search_call_log/search_quota 全记） |
 | ⑤ 排序底座 | `app/rerank/`（bocha_reranker/bocha_jev/moark_jev/llm） | score 归一化 0-100 + band 三档；阅读集预排序（author.rank_provider/rank_exclude_below，明细落 write_run.payload）；热点候选筛选（HOT_RANK_FILTER，默认关） |
 | 0 信任预留位 | `app/ingest/sanitize.py` | 落库前强制流经；SANITIZE_ENABLED 默认 false（pass-through）；REJECTED 全文照存；/stats/filters 统计 |
+| 写作管线（三阶段） | `app/authors/`（schema/gates/pipeline/importer） | author.json 全量配置驱动；四 draft 模式/修订遍/六门禁/gated·零修订重写/trace 落库；schema 见 `docs/author-json-schema.md` |
+| 防蒙蔽穿插（OV2） | `app/api/routes.py::stream_b` | 拍板④：低分≥阈值条目按概率穿插，INTERLEAVE_* env 可调，诚实评分 |
+| 热点面板数据（OV3） | `app/api/routes.py::hot_board` | 拍板②数据侧：关键词 × 打分排序前 N 标题 |
+| 统计总览（OV4） | `app/api/routes.py::stats_overview` | 仪表盘数据底座：Token 归因 / 四类失败 / 阶段成功率 |
+| 端到端串联（OV1） | `scripts/run_e2e.py` | 四通道→打分→写作→C 流一条龙 + 逐通道引用追溯报告（verify/e2e_report.md） |
 
 ## 可配置写作管线（第三阶段，M14-M17）
 
