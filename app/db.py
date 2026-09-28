@@ -38,6 +38,7 @@ def _migrate_added_columns() -> None:
             "rank_provider": "VARCHAR(30) NOT NULL DEFAULT 'none'",
             "rank_exclude_below": "INTEGER NOT NULL DEFAULT 30",
             "include_hot_brief": "BOOLEAN NOT NULL DEFAULT 0",
+            "author_json": "JSON",
         },
         "write_run": {
             "payload": "JSON",

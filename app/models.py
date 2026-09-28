@@ -104,6 +104,9 @@ class Author(Base):
     rank_exclude_below: Mapped[int] = mapped_column(Integer, default=30)  # 归一化 0-100
     # 热点风向段注入写作提示词（能力③→作者侧，M13）
     include_hot_brief: Mapped[bool] = mapped_column(Boolean, default=False)
+    # 可配置写作管线（M14）：author.json 全量配置（身份/管线/记忆层）；模型绑定不在此，
+    # 仍由本表 model 列（后台/DB 绑定）。NULL=未配置 JSON，走现行 single 路线，行为不变。
+    author_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     enabled: Mapped[bool] = mapped_column(Boolean, default=True)
 
 

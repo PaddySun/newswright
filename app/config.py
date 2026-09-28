@@ -67,6 +67,8 @@ MOARK_API_KEY = _require("MoarkAPIKey", "MOARK_API_KEY")
 
 DEEPSEEK_BASE_URL = _get("DEEPSEEK_BASE_URL") or "https://api.deepseek.com"
 DEEPSEEK_MODEL = _get("DEEPSEEK_MODEL") or "deepseek-chat"
+# 写作管线 think 路由（§3.2.4）：生成类节点可走 reasoner 档；实测不可用时回退 chat
+DEEPSEEK_REASONER_MODEL = _get("DEEPSEEK_REASONER_MODEL") or "deepseek-reasoner"
 MOARK_BASE_URL = _get("MOARK_BASE_URL") or "https://api.moark.com"
 MOARK_JEV_MODEL = _get("MOARK_JEV_MODEL") or "APUS-OpenJev-v1-9B"
 
