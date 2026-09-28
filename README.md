@@ -70,6 +70,26 @@ python -m venv .venv
 | ⑤ 排序底座 | `app/rerank/`（bocha_reranker/bocha_jev/moark_jev/llm） | score 归一化 0-100 + band 三档；阅读集预排序（author.rank_provider/rank_exclude_below，明细落 write_run.payload）；热点候选筛选（HOT_RANK_FILTER，默认关） |
 | 0 信任预留位 | `app/ingest/sanitize.py` | 落库前强制流经；SANITIZE_ENABLED 默认 false（pass-through）；REJECTED 全文照存；/stats/filters 统计 |
 
+## 可配置写作管线（第三阶段，M14-M17）
+
+`author.json` 驱动的多阶段写作执行器：作者级 JSON = 全量身份与管线配置（**模型不在 JSON**，DB `Author.model` 绑定）。
+
+```bash
+.venv/Scripts/python scripts/import_authors.py authors/luxun.json --model deepseek-chat   # 导入（round-trip 校验）
+.venv/Scripts/python scripts/run_write_once.py --author 鲁迅                               # 单篇写作
+.venv/Scripts/python scripts/run_overnight.py                                             # 夜间批跑（幂等断点续跑）
+.venv/Scripts/python scripts/export_writing.py --run 15                                   # 成稿/废稿导出 md
+.venv/Scripts/python scripts/morning_report.py --batch ovnight_20260929                   # 夜跑晨报
+.venv/Scripts/python scripts/extract_slices.py --top 16 --apply authors/tanya.json        # GBK 小说素材切片提取
+```
+
+- **管线**：outline（pyramid/variation/sectional/formula）+ draft 四模式（single/rolling/incubate/dictate）+ 修订遍（prune/rhythm；distort/callback/selfrev 占位）+ 六门禁（length/fingerprint/echo_check/citation/copyright/topic_dedup）+ 重写规则（gated_retry 附违规说明 / zero_revision 审计留痕）。
+- **引用契约**：正文 markdown `[^K]` 脚注 + 定义行，执行器解析后逐字校验绑定 `article.citations`（item_id + quote）。
+- **静态记忆块**：≤3 段 × ≤500 字硬预算注入（round_robin/recency/relevant + head/tail/u U 形放置），copyright n-gram 门禁防原著整段复制。
+- **trace 落库**：全节点 trace（输入摘要/输出全文/门禁结果/token/耗时）落 `write_run.payload`——废稿即被拒中间稿，DB 可查。
+- **think 路由**：逐节点 reasoner|chat 档位（provider 层按调用传档），JSON 节点恒 chat；档位不可用自动回退并留痕。
+- Schema 文档：`docs/author-json-schema.md`；示例：`authors/luxun.json`、`authors/tanya.json`。
+
 ## 快照：导出与回灌
 
 ```bash
