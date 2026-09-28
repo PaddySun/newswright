@@ -16,14 +16,17 @@ from sqlalchemy import DateTime
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-# 回灌顺序：外键依赖序
+# 回灌顺序：外键依赖序（hot_batch 先于 hot_topic）
 TABLE_ORDER = ["direction", "source", "item", "score_result", "author", "memory_entry",
-               "write_run", "article", "usage_log", "pipeline_task"]
+               "write_run", "article", "usage_log", "pipeline_task",
+               "hot_batch", "hot_topic", "search_call_log", "search_quota", "rank_call_log"]
 MODEL_MAP = {
     "direction": "Direction", "source": "Source", "item": "Item",
     "score_result": "ScoreResult", "author": "Author", "memory_entry": "MemoryEntry",
     "write_run": "WriteRun", "article": "Article", "usage_log": "UsageLog",
-    "pipeline_task": "PipelineTask",
+    "pipeline_task": "PipelineTask", "hot_batch": "HotBatch", "hot_topic": "HotTopic",
+    "search_call_log": "SearchCallLog", "search_quota": "SearchQuota",
+    "rank_call_log": "RankCallLog",
 }
 
 

@@ -144,6 +144,23 @@ def _render_reading_set(pairs: list[tuple[Item, ScoreResult]]) -> str:
     return "\n\n".join(blocks)
 
 
+def _hot_brief(db: Session, author: Author) -> str:
+    """热点风向段（能力③→作者侧）：定位是破茧房的风向信息而非可引用素材——
+    citations 校验只认阅读集 item，热点话题无全文天然不可引用（结构护栏）。"""
+    if not getattr(author, "include_hot_brief", False):
+        return ""
+    from ..models import HotBatch
+
+    batch = db.query(HotBatch).order_by(HotBatch.id.desc()).first()
+    if batch is None:
+        return ""
+    kws = "、".join(batch.keywords[:15]) if batch.keywords else "（无）"
+    return (
+        f"\n\n【本期全网热点风向（背景信息，非阅读集，禁止作为引用来源）】\n"
+        f"关键词：{kws}\n一句话综述：{batch.summary or '（无）'}\n"
+    )
+
+
 def _build_prompt(db: Session, author: Author, pairs: list[tuple[Item, ScoreResult]]) -> str:
     template = (PROMPTS_DIR / "writer_v1.md").read_text(encoding="utf-8")
     text = (
@@ -152,6 +169,7 @@ def _build_prompt(db: Session, author: Author, pairs: list[tuple[Item, ScoreResu
         .replace("{{global_system_prompt}}", author.global_system_prompt or "")
     )
     text = fill_placeholders(db, author, text)
+    text = text.replace("{{hot_brief}}", _hot_brief(db, author))
     return text.replace("{{reading_set}}", _render_reading_set(pairs) or "（本期阅读集为空）")
 
 

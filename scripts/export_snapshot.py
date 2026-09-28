@@ -21,7 +21,11 @@ def _dump(rows, path: Path) -> int:
 
 def main() -> int:
     from app.db import SessionLocal
-    from app.models import Article, Direction, Item, ScoreResult, Source, UsageLog, WriteRun
+    from app.models import (
+        Article, Author, Direction, HotBatch, HotTopic, Item, MemoryEntry,
+        PipelineTask, RankCallLog, ScoreResult, SearchCallLog, SearchQuota,
+        Source, UsageLog, WriteRun,
+    )
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     out_dir = PROJECT_ROOT / "data" / "snapshot" / stamp
@@ -35,7 +39,10 @@ def main() -> int:
                 d["_table"] = model.__tablename__
                 yield d
 
-        for model in (Direction, Source, Item, ScoreResult, Article, WriteRun, UsageLog):
+        models = (Direction, Source, Item, ScoreResult, Article, WriteRun, UsageLog,
+                  Author, MemoryEntry, PipelineTask, HotTopic, HotBatch,
+                  SearchCallLog, SearchQuota, RankCallLog)
+        for model in models:
             counts[model.__tablename__] = _dump(rows(model), out_dir / f"{model.__tablename__}.jsonl")
 
     print(f"快照已写入 {out_dir}")

@@ -169,3 +169,31 @@ def test_hot_rank_filter_toggle(db_session, monkeypatch):
     monkeypatch.setenv("HOT_RANK_FILTER", "true")
     out2 = hot_service.run_hot_round(db_session, triggered_by="test")
     assert out2["status"] == "DONE"
+
+
+def test_hot_brief_injection_guarded(db_session):
+    """V9 后半单测：include_hot_brief=true 注入热点段；引用校验仍只认阅读集 item。"""
+    from app.hot.service import run_hot_round
+    from app.models import HotBatch, HotTopic
+
+    d = _mk_direction(db_session, "HB")
+    # 造一个 hot_batch
+    batch = HotBatch(date="2026-09-28", keywords=["话题A", "话题B"], summary="综述",
+                     source_platforms=["weibo"], model="m")
+    db_session.add(batch)
+    db_session.commit()
+    db_session.add(HotTopic(platform="weibo", rank=1, title="话题A标题", batch_id=batch.id))
+    db_session.commit()
+
+    from app.authors.writer import _hot_brief
+
+    a = _mk_author(db_session, d, rank_provider="none")
+    a.name = "作者HB"
+    a.include_hot_brief = True
+    db_session.commit()
+    brief = _hot_brief(db_session, a)
+    assert "全网热点风向" in brief and "话题A" in brief and "禁止作为引用来源" in brief
+
+    a.include_hot_brief = False
+    db_session.commit()
+    assert _hot_brief(db_session, a) == ""

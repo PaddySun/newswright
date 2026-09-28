@@ -1,0 +1,117 @@
+2026-09-28 17:29:11,353 dotenv.main WARNING python-dotenv could not parse statement starting at line 13
+2026-09-28 17:29:11,353 dotenv.main WARNING python-dotenv could not parse statement starting at line 14
+2026-09-28 17:29:11,662 apscheduler.scheduler INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-09-28 17:29:11,662 apscheduler.scheduler INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-09-28 17:29:11,664 apscheduler.scheduler INFO Added job "run_job_safely" to job store "default"
+2026-09-28 17:29:11,664 apscheduler.scheduler INFO Added job "run_job_safely" to job store "default"
+2026-09-28 17:29:11,664 apscheduler.scheduler INFO Scheduler started
+2026-09-28 17:29:11,665 newswright.scheduler INFO 调度器已启动：fetch+15min（含 score 链）、hot+60min
+2026-09-28 17:29:11,665 apscheduler.executors.default INFO Running job "run_job_safely (trigger: interval[0:15:00], next run at: 2026-09-28 17:44:11 CST)" (scheduled at 2026-09-28 09:29:11.662583+00:00)
+2026-09-28 17:29:14,437 httpx INFO HTTP Request: GET https://www.oflight.co.jp/feed.en.xml "HTTP/1.1 200 OK"
+2026-09-28 17:29:15,306 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,306 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,306 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,307 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,307 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,307 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,307 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,307 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,307 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,308 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,308 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,308 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,308 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,308 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,308 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,308 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,308 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,308 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,309 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,309 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,309 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,309 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,309 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,309 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,309 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,309 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,309 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,309 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,310 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,310 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,310 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,310 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,310 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,310 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,310 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,310 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,310 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,311 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,311 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,311 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,311 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,311 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,311 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,311 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,311 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,311 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,311 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,312 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,312 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,312 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,312 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,312 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,312 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,312 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,312 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,312 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,312 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:15,313 trafilatura.utils ERROR parsed tree length: 0, wrong data type or not valid HTML
+2026-09-28 17:29:15,313 trafilatura.core ERROR empty HTML tree: None
+2026-09-28 17:29:15,313 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:17,303 httpx INFO HTTP Request: GET https://rss.arxiv.org/rss/cs.CV "HTTP/1.1 304 Not Modified"
+2026-09-28 17:29:18,384 httpx INFO HTTP Request: GET https://www.paddysun.top/feed "HTTP/1.1 200 OK"
+2026-09-28 17:29:19,432 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:19,435 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:19,439 trafilatura.core WARNING discarding data: None
+2026-09-28 17:29:21,458 httpx INFO HTTP Request: GET https://www.cisa.gov/cybersecurity-advisories/all.xml "HTTP/1.1 403 Forbidden"
+2026-09-28 17:29:22,336 httpx INFO HTTP Request: GET https://www.ithome.com/rss/ "HTTP/1.1 200 OK"
+2026-09-28 17:29:23,563 httpx INFO HTTP Request: GET https://api-docs.deepseek.com/news "HTTP/1.1 304 Not Modified"
+2026-09-28 17:29:24,591 httpx INFO HTTP Request: GET https://api-docs.deepseek.com/news/news260910 "HTTP/1.1 302 Found"
+2026-09-28 17:29:24,608 httpx INFO HTTP Request: GET https://api-docs.deepseek.com/news/news260910/ "HTTP/1.1 304 Not Modified"
+2026-09-28 17:29:25,775 httpx INFO HTTP Request: GET https://www.paddysun.top/archives/5330 "HTTP/1.1 200 OK"
+2026-09-28 17:29:26,929 httpx INFO HTTP Request: POST https://api.bocha.cn/v1/web-search "HTTP/1.1 200 "
+2026-09-28 17:29:27,947 httpx INFO HTTP Request: POST https://wsa.tencentcloudapi.com "HTTP/1.1 200 OK"
+2026-09-28 17:29:27,996 newswright.scheduler INFO fetch_round #53 FAILED（10 源）
+2026-09-28 17:29:28,987 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:30,687 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:32,298 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:34,114 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:35,711 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:37,523 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:39,128 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:40,815 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:42,666 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:44,541 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:46,428 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:47,804 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:49,451 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:51,163 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:52,961 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:54,673 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:56,375 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:58,125 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:29:59,802 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:01,568 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:03,317 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:05,043 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:06,635 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:08,692 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:10,336 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:11,897 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:13,647 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:15,407 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:17,120 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:18,993 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:20,489 httpx INFO HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2026-09-28 17:30:21,189 newswright.scheduler INFO score 方向[AI 与软件工程] DONE 打分=31
+2026-09-28 17:30:21,189 apscheduler.executors.default INFO Job "run_job_safely (trigger: interval[0:15:00], next run at: 2026-09-28 17:44:11 CST)" executed successfully
