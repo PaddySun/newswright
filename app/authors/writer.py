@@ -55,6 +55,84 @@ def assemble_reading_set(db: Session, author: Author, k: int | None = None) -> l
     return out
 
 
+RANK_POOL_K = 50  # 预排序候选池：先放宽到 50，排序后取 top-K
+
+
+def assemble_ranked_reading_set(
+    db: Session, author: Author, k: int | None = None
+) -> tuple[list[tuple[Item, ScoreResult]], dict]:
+    """阅读集装配（能力⑤应用点 1）：passed 候选 → rank(criteria=方向提示词) →
+    低分排除 → top-K。rank_provider=none 或排序失败时回退 relevance 排序（如实记录）。
+
+    返回 (pairs, rank_meta)；rank_meta 落 write_run.payload（候选 id/score/provider/耗时）。
+    """
+    import time as _time
+
+    from ..rerank import registry as rank_registry
+    from ..rerank.base import RankCandidate, RankError
+
+    k = k or config.WRITE_READING_SET_K
+    provider_name = (author.rank_provider or "none").strip()
+    if provider_name == "none":
+        return assemble_reading_set(db, author, k), {"rank_provider": "none"}
+
+    pool = assemble_reading_set(db, author, k=RANK_POOL_K)
+    meta: dict = {"rank_provider": provider_name, "pool": len(pool)}
+    if not pool:
+        return pool, meta
+
+    # 按方向分组排序（criteria=方向提示词；Demo 单方向）
+    by_direction: dict[int, list[tuple[Item, ScoreResult]]] = {}
+    for item, sr in pool:
+        by_direction.setdefault(sr.direction_id, []).append((item, sr))
+
+    ranked_pairs: list[tuple[tuple[Item, ScoreResult], dict]] = []
+    t0 = _time.monotonic()
+    try:
+        provider = rank_registry.get_provider(provider_name, db)
+        for direction_id, group in by_direction.items():
+            direction = db.get(Direction, direction_id)
+            if direction is None:
+                continue
+            results = provider.rank(
+                direction.prompt,
+                [RankCandidate(id=item.id, text=f"{item.title}\n{item.content_text or ''}")
+                 for item, _ in group],
+                criteria_key=direction.name,
+            )
+            score_by_id = {r.id: r for r in results}
+            for item, sr in group:
+                r = score_by_id.get(item.id)
+                if r is None:
+                    continue
+                ranked_pairs.append(((item, sr), {"rank_score": r.score, "rank_band": r.band}))
+    except RankError as e:
+        meta["rank_error"] = str(e)[:300]
+    meta["latency_ms"] = int((_time.monotonic() - t0) * 1000)
+
+    if not ranked_pairs:
+        # 排序失败/被限额/明细缺失：回退 relevance 口径，不丢阅读集
+        meta["fallback"] = "rank_failed_or_empty"
+        return assemble_reading_set(db, author, k), meta
+
+    threshold = author.rank_exclude_below
+    kept = [(pair, det) for pair, det in ranked_pairs if det["rank_score"] >= threshold]
+    if not kept:
+        # 全被排除（如排序后端与长 criteria 语义不匹配的退化场景）：回退而非清空阅读集
+        meta["fallback"] = "all_excluded"
+        return assemble_reading_set(db, author, k), meta
+    kept.sort(key=lambda pd: -pd[1]["rank_score"])
+    meta["ranked"] = len(ranked_pairs)
+    meta["kept"] = len(kept[:k])
+    meta["excluded"] = len(ranked_pairs) - len(kept)
+    meta["details"] = [
+        {"item_id": pair[0].id, "score": det["rank_score"], "band": det["rank_band"],
+         "relevance": pair[1].relevance_score}
+        for pair, det in ranked_pairs
+    ]
+    return [pair for pair, _ in kept[:k]], meta
+
+
 def _render_reading_set(pairs: list[tuple[Item, ScoreResult]]) -> str:
     blocks = []
     for item, sr in pairs:
@@ -110,11 +188,12 @@ def _parse_output(data: dict) -> dict:
 
 
 def run_write(db: Session, author: Author, *, triggered_by: str = "manual", model: str | None = None) -> WriteRun:
-    pairs = assemble_reading_set(db, author)
+    pairs, rank_meta = assemble_ranked_reading_set(db, author)
     run = WriteRun(
         author_id=author.id,
         triggered_by=triggered_by,
         reading_set_item_ids=[item.id for item, _ in pairs],
+        payload=rank_meta,
         prompt_snapshot="",
         model=model or author.model,
         status="FAILED",

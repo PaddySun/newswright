@@ -1,0 +1,232 @@
+{
+  "candidates": 30,
+  "direction": "AI 与软件工程",
+  "gold_band_distribution": {
+    "high": 15,
+    "mid": 10,
+    "low": 5
+  },
+  "providers": {
+    "bocha_reranker": {
+      "provider": "bocha_reranker",
+      "ok": true,
+      "latency_ms": 1220,
+      "returned": 30,
+      "band_agreement": 0.167,
+      "spearman_vs_relevance": 0.242,
+      "score_distribution": {
+        "min": 0.6,
+        "max": 16.4,
+        "band_dist": {
+          "high": 0,
+          "mid": 0,
+          "low": 30
+        }
+      },
+      "relevance_mean_per_pred_band": {
+        "high": null,
+        "mid": null,
+        "low": 66.6
+      }
+    },
+    "bocha_jev": {
+      "provider": "bocha_jev",
+      "ok": true,
+      "latency_ms": 6676,
+      "returned": 30,
+      "band_agreement": 0.767,
+      "spearman_vs_relevance": 0.625,
+      "score_distribution": {
+        "min": 0.1,
+        "max": 99.6,
+        "band_dist": {
+          "high": 15,
+          "mid": 12,
+          "low": 3
+        }
+      },
+      "relevance_mean_per_pred_band": {
+        "high": 77.5,
+        "mid": 69.2,
+        "low": 2.0
+      }
+    },
+    "moark_jev": {
+      "provider": "moark_jev",
+      "ok": true,
+      "latency_ms": 3636,
+      "returned": 30,
+      "band_agreement": 0.867,
+      "spearman_vs_relevance": 0.675,
+      "score_distribution": {
+        "min": 0.0,
+        "max": 99.9,
+        "band_dist": {
+          "high": 15,
+          "mid": 10,
+          "low": 5
+        }
+      },
+      "relevance_mean_per_pred_band": {
+        "high": 82.9,
+        "mid": 74.6,
+        "low": 1.8
+      }
+    },
+    "llm": {
+      "provider": "llm",
+      "ok": true,
+      "latency_ms": 2377,
+      "returned": 30,
+      "band_agreement": 0.4,
+      "spearman_vs_relevance": 0.757,
+      "score_distribution": {
+        "min": 2.0,
+        "max": 95.0,
+        "band_dist": {
+          "high": 6,
+          "mid": 6,
+          "low": 18
+        }
+      },
+      "relevance_mean_per_pred_band": {
+        "high": 83.7,
+        "mid": 84.3,
+        "low": 55.1
+      }
+    }
+  },
+  "reading_set_diff": {
+    "bocha_reranker": {
+      "topk": [
+        341,
+        24,
+        22,
+        249,
+        256,
+        101,
+        107,
+        155,
+        268,
+        110
+      ],
+      "excluded_from_base": [],
+      "added_vs_base": [],
+      "excluded_gold_relevance": [],
+      "meta_kept": null,
+      "meta_excluded": null,
+      "fallback": "all_excluded"
+    },
+    "bocha_jev": {
+      "topk": [
+        351,
+        16,
+        22,
+        24,
+        341,
+        202,
+        256,
+        155,
+        17,
+        107
+      ],
+      "excluded_from_base": [
+        249,
+        101,
+        268,
+        110
+      ],
+      "added_vs_base": [
+        351,
+        16,
+        202,
+        17
+      ],
+      "excluded_gold_relevance": [
+        88,
+        88,
+        82,
+        82
+      ],
+      "meta_kept": 10,
+      "meta_excluded": 0,
+      "fallback": null
+    },
+    "moark_jev": {
+      "topk": [
+        351,
+        22,
+        16,
+        341,
+        24,
+        256,
+        268,
+        17,
+        175,
+        202
+      ],
+      "excluded_from_base": [
+        249,
+        101,
+        107,
+        155,
+        110
+      ],
+      "added_vs_base": [
+        351,
+        16,
+        17,
+        175,
+        202
+      ],
+      "excluded_gold_relevance": [
+        88,
+        88,
+        88,
+        88,
+        82
+      ],
+      "meta_kept": 10,
+      "meta_excluded": 0,
+      "fallback": null
+    },
+    "llm": {
+      "topk": [
+        341,
+        22,
+        16,
+        17,
+        14,
+        351,
+        24,
+        268,
+        256,
+        168
+      ],
+      "excluded_from_base": [
+        249,
+        101,
+        107,
+        155,
+        110
+      ],
+      "added_vs_base": [
+        16,
+        17,
+        14,
+        351,
+        168
+      ],
+      "excluded_gold_relevance": [
+        88,
+        88,
+        88,
+        88,
+        82
+      ],
+      "meta_kept": 10,
+      "meta_excluded": 0,
+      "fallback": null
+    }
+  }
+}

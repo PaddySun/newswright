@@ -93,6 +93,38 @@ def _extract_keywords(db: Session, topics: list[HotTopic]) -> tuple[list[str], s
     raise JSONParseError(f"hot_keywords 两次失败: {last_err}")
 
 
+def _rank_filter_topics(db: Session, topics: list[HotTopic]) -> tuple[list[HotTopic], dict]:
+    """热点候选筛选（能力⑤应用点 2，默认关）：按「与站长方向的相关性」排序过滤后
+    再喂关键词提炼。榜单数据全量已落库，过滤只影响提炼输入。"""
+    import os
+
+    from ..rerank import registry as rank_registry
+    from ..rerank.base import RankCandidate, RankError
+    from ..models import Direction
+
+    if os.environ.get("HOT_RANK_FILTER", "").lower() not in ("1", "true", "yes", "on"):
+        return topics, {"hot_rank_filter": False}
+    provider_name = os.environ.get("HOT_RANK_PROVIDER") or "bocha_jev"
+    min_score = int(os.environ.get("HOT_RANK_MIN_SCORE") or 40)
+    direction = db.query(Direction).filter_by(enabled=True).first()
+    if direction is None:
+        return topics, {"hot_rank_filter": True, "error": "无启用方向"}
+    try:
+        provider = rank_registry.get_provider(provider_name, db)
+        results = provider.rank(
+            direction.prompt,
+            [RankCandidate(id=t.id, text=t.title) for t in topics],
+            criteria_key=f"hot:{direction.name}",
+        )
+    except RankError as e:
+        return topics, {"hot_rank_filter": True, "provider": provider_name,
+                        "error": str(e)[:200], "fallback": True}
+    score_by_id = {r.id: r.score for r in results}
+    kept = [t for t in topics if score_by_id.get(t.id, 0) >= min_score]
+    return (kept or topics), {"hot_rank_filter": True, "provider": provider_name,
+                              "input": len(topics), "kept": len(kept)}
+
+
 def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     """一轮热榜：多平台拉取 → 全量落 hot_topic → LLM 提炼 → hot_batch。"""
     if round_busy(db, "hot_round"):
@@ -154,9 +186,11 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     summary = ""
     model = ""
     kw_error = None
+    rank_meta: dict = {}
     if topics:
         try:
-            keywords, summary, model = _extract_keywords(db, topics)
+            llm_input, rank_meta = _rank_filter_topics(db, topics)
+            keywords, summary, model = _extract_keywords(db, llm_input)
         except Exception as e:  # noqa: BLE001  提炼失败不丢榜单数据
             kw_error = f"{type(e).__name__}: {e}"
             log.warning("关键词提炼失败: %s", e)
@@ -170,6 +204,7 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     _finish(db, task, status=task_status, stats={
         "platforms": platform_stats, "topics_stored": topic_count,
         "batch_id": batch_id, "keywords": keywords, "kw_error": kw_error,
+        **rank_meta,
     }, error=kw_error)
     return {
         "task_id": task.id, "status": task_status, "batch_id": batch_id,

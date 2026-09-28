@@ -34,6 +34,14 @@ def _migrate_added_columns() -> None:
             "source_config": "JSON",
             "content_hash": "VARCHAR(64)",
         },
+        "author": {
+            "rank_provider": "VARCHAR(30) NOT NULL DEFAULT 'none'",
+            "rank_exclude_below": "INTEGER NOT NULL DEFAULT 30",
+            "include_hot_brief": "BOOLEAN NOT NULL DEFAULT 0",
+        },
+        "write_run": {
+            "payload": "JSON",
+        },
         "item": {
             "sanitize_status": "VARCHAR(20) NOT NULL DEFAULT 'PENDING'",
             "sanitize_reason": "VARCHAR(500)",

@@ -99,6 +99,11 @@ class Author(Base):
     readable_directions: Mapped[list] = mapped_column(JSON, default=list)
     # JSON: {占位符名: 载入条数}，如 {"feedback_memory": 5, "topic_memory": 3}
     memory_config: Mapped[dict] = mapped_column(JSON, default=dict)
+    # 排序底座开关（能力⑤，M12）：none=不排序；bocha_reranker/bocha_jev/moark_jev/llm
+    rank_provider: Mapped[str] = mapped_column(String(30), default="none")
+    rank_exclude_below: Mapped[int] = mapped_column(Integer, default=30)  # 归一化 0-100
+    # 热点风向段注入写作提示词（能力③→作者侧，M13）
+    include_hot_brief: Mapped[bool] = mapped_column(Boolean, default=False)
     enabled: Mapped[bool] = mapped_column(Boolean, default=True)
 
 
@@ -120,6 +125,8 @@ class WriteRun(Base):
     author_id: Mapped[int] = mapped_column(ForeignKey("author.id"))
     triggered_by: Mapped[str] = mapped_column(String(50), default="manual")
     reading_set_item_ids: Mapped[list] = mapped_column(JSON, default=list)
+    # 排序明细/热点段等非结构化过程产物（M12：候选 id/score/provider/耗时）
+    payload: Mapped[dict] = mapped_column(JSON, default=dict)
     prompt_snapshot: Mapped[str] = mapped_column(Text, default="")
     decision: Mapped[str | None] = mapped_column(String(10), nullable=True)  # WRITE / SKIP
     article_id: Mapped[int | None] = mapped_column(ForeignKey("article.id"), nullable=True)
@@ -231,3 +238,20 @@ class SearchQuota(Base):
     period: Mapped[str] = mapped_column(String(10))  # minute / day
     period_key: Mapped[str] = mapped_column(String(20))
     count: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class RankCallLog(Base):
+    """排序调用日志（能力⑤）。选独立表而非复用 search_call_log 的理由：排序按
+    criteria 批次计（一次调用 N 候选），与搜索的 query 语义和限额口径不同，分开归因
+    便于 /stats/rank 的分档分布统计。同样受额度闸约束（provider 名即额度键）。"""
+    __tablename__ = "rank_call_log"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    provider: Mapped[str] = mapped_column(String(50))
+    candidate_count: Mapped[int] = mapped_column(Integer, default=0)
+    criteria_key: Mapped[str | None] = mapped_column(String(200), nullable=True)  # 方向名等
+    latency_ms: Mapped[int] = mapped_column(Integer, default=0)
+    ok: Mapped[bool] = mapped_column(Boolean, default=True)
+    status: Mapped[str] = mapped_column(String(20), default="ok")  # ok / error / blocked
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

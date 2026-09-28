@@ -117,3 +117,12 @@ SEARCH_QUOTA_DEFAULT_MINUTE = int(_get("SEARCH_QUOTA_DEFAULT_MINUTE") or 8)
 SEARCH_QUOTA_DEFAULT_DAY = int(_get("SEARCH_QUOTA_DEFAULT_DAY") or 200)
 # 每 provider 覆盖：SEARCH_QUOTA_<PROVIDER>_MINUTE / _DAY
 SEARCH_RESULT_ITEMS_PER_KEYWORD = int(_get("SEARCH_RESULT_ITEMS_PER_KEYWORD") or 10)
+
+# 相关性排序底座（能力⑤）：单次调用候选上限与候选文本截断（对应各家输入限制：
+# Bocha reranker 约 512 tokens/文档、Jev 32K ctx/问题、LLM 批量 JSON 输出）
+RANK_MAX_CANDIDATES = int(_get("RANK_MAX_CANDIDATES") or 30)
+RANK_TEXT_MAX_CHARS = int(_get("RANK_TEXT_MAX_CHARS") or 500)
+RANK_JEV_MAX_QUESTIONS = int(_get("RANK_JEV_MAX_QUESTIONS") or 32)
+# Bocha Jev（jev.bocha.cn，systemone 协议同族，限时免费——免费期结束后成本风险记录在案）
+BOCHA_JEV_BASE_URL = _get("BOCHA_JEV_BASE_URL") or "https://jev.bocha.cn"
+BOCHA_JEV_MODEL = _get("BOCHA_JEV_MODEL") or "bocha-jev-v1"

@@ -297,6 +297,38 @@ def stats_search(days: int = 7, db: Session = Depends(get_session)):
     return out
 
 
+# ---------- 排序统计（能力⑤） ----------
+
+@router.get("/stats/rank")
+def stats_rank(days: int = 7, db: Session = Depends(get_session)):
+    """排序调用统计：按 provider 聚合次数/延迟/被限额拦截；band 分布见
+    write_run.payload.details（排序明细随写作任务落库）。"""
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    from ..models import RankCallLog
+
+    rows = (
+        db.query(
+            RankCallLog.provider,
+            func.count(RankCallLog.id),
+            func.sum(func.cast(RankCallLog.ok, sqlalchemy.Integer)),
+            func.sum(func.cast(RankCallLog.status == "blocked", sqlalchemy.Integer)),
+            func.sum(RankCallLog.candidate_count),
+            func.avg(RankCallLog.latency_ms),
+        )
+        .filter(RankCallLog.created_at >= since)
+        .group_by(RankCallLog.provider)
+        .all()
+    )
+    out = []
+    for provider, n, ok_n, blocked_n, cands, lat in rows:
+        out.append({
+            "provider": provider, "calls": int(n), "ok_calls": int(ok_n or 0),
+            "failed_calls": int(n) - int(ok_n or 0), "quota_blocked": int(blocked_n or 0),
+            "candidates_total": int(cands or 0), "avg_latency_ms": round(float(lat or 0)),
+        })
+    return out
+
+
 # ---------- 统计（零信任过滤预留位验收项） ----------
 
 @router.get("/stats/filters")
