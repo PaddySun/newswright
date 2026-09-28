@@ -88,6 +88,10 @@ def _fetch_one(db: Session, src: Source):
     """按源类型分发抓取器（provider 接口化：新源类型加分支即可）。"""
     if src.type == "web":
         return fetch_web_source(db, src)
+    if src.type == "search":
+        from ..search.pipeline import fetch_search_source
+
+        return fetch_search_source(db, src)
     return fetch_source(db, src)
 
 

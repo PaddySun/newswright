@@ -1,0 +1,76 @@
+{
+  "keyword": "AI Agent 工程实践",
+  "providers": {
+    "bocha": {
+      "ok": true,
+      "latency_ms": 1004,
+      "results": 10,
+      "field_coverage": {
+        "title": 10,
+        "url": 10,
+        "snippet": 10,
+        "content": 10,
+        "published_at": 10
+      },
+      "sample": [
+        {
+          "title": "打造 AI 级 Agent 架构-CSDN博客",
+          "url": "https://blog.csdn.net/david_232656/article/details/160688082",
+          "snippet": "高级工程实践——打造\nAI\n级\nAgent\n架构\n课程时长:8-12\n学时(建议作为进阶课程)课程目标:从\"使用\nAI\n助手\"转向\"构建\nAI\n代理\",学习设计",
+          "date": "2026-05-01 14:56:04+08:00"
+        },
+        {
+          "title": "AI agent简介",
+          "url": "https://m.blog.csdn.net/finnjames/article/details/145762536",
+          "snippet": "AI Agent(人工智能代理) 是一种能够感知环境、自主决策并执行任务的智能程序或系统。它通过算法、数据和计算能力模拟人类或生物的行为逻辑,目标是完成特定目标",
+          "date": "2025-02-21 04:31:19+08:00"
+        },
+        {
+          "title": "AI项目拆解,33个AI Agent典型落地场景案例 - 今日头条",
+          "url": "https://www.toutiao.com/article/7481230153679372852/",
+          "snippet": "评论 收藏 2025-03-13 17:56 · AI大模型-老杨 AI Agent(人工智能代理)是一种能够自主感知环境、做出决策并执行任务的人工",
+          "date": "2025-03-13 17:56:00+08:00"
+        }
+      ]
+    },
+    "tencent": {
+      "ok": true,
+      "latency_ms": 1396,
+      "results": 10,
+      "field_coverage": {
+        "title": 10,
+        "url": 10,
+        "snippet": 10,
+        "content": 0,
+        "published_at": 0
+      },
+      "sample": [
+        {
+          "title": "Building Production-Ready AI Agents in 2026: Engineering Bes",
+          "url": "https://dev.to/bitpixelcoders/building-production-ready-ai-agents-in-2026-engineering-best-practices",
+          "snippet": "Building Production-Ready AI Agents in 2026: Engineering Best Practices Every De",
+          "date": "None"
+        },
+        {
+          "title": "AI Infra:2026年 AI Agent 落地主范式,意图驱动  人机交互约束  界面即时生成  执行基础设施化(",
+          "url": "https://luweiqing.com/gossip/2026-AI-Agent-Deployment-of-the-Main-Model-1.html",
+          "snippet": "AI Infra:2026年 AI Agent 落地主范式,意图驱动 × 人机交互约束 × 界面即时生成 × 执行基础设施化(一) Sluke的夹生饭｡执行可靠",
+          "date": "None"
+        },
+        {
+          "title": "How to Automate Software Development Workflows with AI Agent",
+          "url": "https://ucstrategies.com/news/how-to-automate-software-development-workflows-with-ai-agents",
+          "snippet": "How to Automate Software Development Workflows with AI Agents Unified Communicat",
+          "date": "None"
+        }
+      ]
+    }
+  },
+  "comparison": {
+    "bocha_domains": 8,
+    "tencent_domains": 9,
+    "domain_overlap": 1,
+    "url_overlap_exact": 0,
+    "field_diff_note": "bocha: content=summary 字段（summary=true 时有）；tencent(lite): content 为空、passage 作 snippet、score 0-1 在 raw"
+  }
+}

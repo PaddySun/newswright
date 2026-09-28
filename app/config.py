@@ -108,3 +108,12 @@ HOT_PLATFORMS = [
 ]
 # 进入关键词提炼的每平台条目上限（全量落库不受限；输入控制成本）
 HOT_KEYWORD_INPUT_PER_PLATFORM = int(_get("HOT_KEYWORD_INPUT_PER_PLATFORM") or 20)
+
+# 搜索额度（能力④B）：每分钟/每日上限，按 provider 配置。
+# 默认值依据（Demo 假设档，可被环境变量覆盖）：博查按官方定价页充值档位保守估计
+# （Web Search 未获实测配额文档，取保守值并如实标注）；腾讯 lite 版按控制台配额页
+# 假设档。首次触发 429 时按响应调整。每轮 2 关键词 × 双家 ≪ 默认日上限。
+SEARCH_QUOTA_DEFAULT_MINUTE = int(_get("SEARCH_QUOTA_DEFAULT_MINUTE") or 8)
+SEARCH_QUOTA_DEFAULT_DAY = int(_get("SEARCH_QUOTA_DEFAULT_DAY") or 200)
+# 每 provider 覆盖：SEARCH_QUOTA_<PROVIDER>_MINUTE / _DAY
+SEARCH_RESULT_ITEMS_PER_KEYWORD = int(_get("SEARCH_RESULT_ITEMS_PER_KEYWORD") or 10)

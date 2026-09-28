@@ -63,6 +63,8 @@ class Item(Base):
     sanitize_status: Mapped[str] = mapped_column(String(20), default="PENDING")
     sanitize_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
     sanitize_detail: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    # 通道原始响应存档（type=search：单条结果上下文；预留其他通道）
+    raw: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
@@ -200,3 +202,32 @@ class HotBatch(Base):
     source_platforms: Mapped[list] = mapped_column(JSON, default=list)
     model: Mapped[str] = mapped_column(String(100), default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class SearchCallLog(Base):
+    """搜索 API 调用日志（能力④，与 usage_log 同级纪律）：每次调用一行，成败/被拦截都记。"""
+    __tablename__ = "search_call_log"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    provider: Mapped[str] = mapped_column(String(50))
+    query: Mapped[str] = mapped_column(String(1000))
+    keyword_group: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    result_count: Mapped[int] = mapped_column(Integer, default=0)
+    latency_ms: Mapped[int] = mapped_column(Integer, default=0)
+    ok: Mapped[bool] = mapped_column(Boolean, default=True)
+    # ok / error / blocked(SKIPPED_QUOTA)
+    status: Mapped[str] = mapped_column(String(20), default="ok")
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class SearchQuota(Base):
+    """provider × 周期 的调用计数（period_key：日=YYYY-MM-DD，分钟=YYYY-MM-DDTHH:MM）。"""
+    __tablename__ = "search_quota"
+    __table_args__ = (UniqueConstraint("provider", "period", "period_key", name="uq_search_quota"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    provider: Mapped[str] = mapped_column(String(50))
+    period: Mapped[str] = mapped_column(String(10))  # minute / day
+    period_key: Mapped[str] = mapped_column(String(20))
+    count: Mapped[int] = mapped_column(Integer, default=0)

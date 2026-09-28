@@ -3,13 +3,25 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
+import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..db import get_session
-from ..models import Article, Author, Item, MemoryEntry, PipelineTask, ScoreResult, Source, UsageLog, WriteRun
+from ..models import (
+    Article,
+    Author,
+    Item,
+    MemoryEntry,
+    PipelineTask,
+    ScoreResult,
+    SearchCallLog,
+    Source,
+    UsageLog,
+    WriteRun,
+)
 from ..pipeline.runner import (
     enqueue_fetch_round,
     fetch_round,
@@ -250,6 +262,37 @@ def hot_batches(limit: int = 5, db: Session = Depends(get_session)):
             "source_platforms": b.source_platforms, "model": b.model,
             "topics_total": len(topics), "topics_per_platform": per_platform,
             "created_at": b.created_at,
+        })
+    return out
+
+
+# ---------- 搜索统计（能力④B） ----------
+
+@router.get("/stats/search")
+def stats_search(days: int = 7, db: Session = Depends(get_session)):
+    """按 provider × 日聚合：次数/成功/失败/被限额拦截/均延迟。"""
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    rows = (
+        db.query(
+            SearchCallLog.provider,
+            func.substr(func.cast(SearchCallLog.created_at, sqlalchemy.String), 1, 10).label("day"),
+            func.count(SearchCallLog.id),
+            func.sum(func.cast(SearchCallLog.ok, sqlalchemy.Integer)),
+            func.sum(func.cast(SearchCallLog.status == "blocked", sqlalchemy.Integer)),
+            func.avg(SearchCallLog.latency_ms),
+        )
+        .filter(SearchCallLog.created_at >= since)
+        .group_by(SearchCallLog.provider, "day")
+        .all()
+    )
+    out = []
+    for provider, day, n, ok_n, blocked_n, lat in rows:
+        out.append({
+            "provider": provider, "day": str(day), "calls": int(n),
+            "ok_calls": int(ok_n or 0),
+            "failed_calls": int(n) - int(ok_n or 0),
+            "quota_blocked": int(blocked_n or 0),
+            "avg_latency_ms": round(float(lat or 0)),
         })
     return out
 

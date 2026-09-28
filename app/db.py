@@ -38,6 +38,7 @@ def _migrate_added_columns() -> None:
             "sanitize_status": "VARCHAR(20) NOT NULL DEFAULT 'PENDING'",
             "sanitize_reason": "VARCHAR(500)",
             "sanitize_detail": "JSON",
+            "raw": "JSON",
         },
     }
     with engine.begin() as conn:

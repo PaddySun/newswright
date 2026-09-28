@@ -65,6 +65,12 @@ WEB_SOURCES = [
     },
 ]
 
+# 固定关注词（能力④C，M11）：每组可指定 provider；一词一查（多查询扩展记遗留）
+SEARCH_KEYWORDS = [
+    {"keyword": "AI Agent 工程实践", "provider": "bocha", "group": "agent"},
+    {"keyword": "大模型 推理优化", "provider": "tencent", "group": "llm"},
+]
+
 AUTHOR_MODEL = "deepseek-chat"
 
 
@@ -101,6 +107,15 @@ def main() -> int:
                 db.add(Source(direction_id=direction.id, url=w["url"], type="web",
                               enabled=True, source_config=w["config"]))
                 print(f"已添加网页监测源: {w['url']}")
+        db.commit()
+
+        for k in SEARCH_KEYWORDS:
+            surl = f"search://{k['provider']}/{k['keyword']}"
+            if db.query(Source).filter_by(url=surl).one_or_none() is None:
+                db.add(Source(direction_id=direction.id, url=surl, type="search", enabled=True,
+                              source_config={"keyword": k["keyword"], "provider": k["provider"],
+                                             "group": k["group"]}))
+                print(f"已添加搜索关键词源: {surl}")
         db.commit()
 
         if db.query(Author).filter_by(name="墨新").one_or_none() is None:
