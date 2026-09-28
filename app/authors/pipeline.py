@@ -33,7 +33,7 @@ from ..providers.deepseek import DeepSeekProvider
 from . import gates as G
 from .memory import fill_placeholders
 from .schema import AuthorConfigError, load_author_config
-from .writer import _hot_brief, assemble_ranked_reading_set
+from .writer import CitationError, _hot_brief, _norm, assemble_ranked_reading_set
 
 log = logging.getLogger("newswright.pipeline")
 
@@ -189,6 +189,7 @@ def _citation_discipline(min_count: int, pairs: list) -> str:
 - 文中的事实性陈述必须来自下方阅读集；每处事实引用在该句末紧跟上标标记 [^K]（K=1,2,3…按正文出现顺序连续编号，用半角方括号与尖号，形如 [^1]）。
 - 文末为每个编号写一行定义，格式严格为：[^K]: [条目 <item_id>] <逐字摘自该条目正文的原句>
 - 引用至少 {min_count} 条；quote 必须逐字摘自该条目正文（不许改写、拼接、虚构），校验器逐条做子串比对，失败即拒收。
+- 英文引文必须整词完整复制（不许改词、截断、加连字符或缩写，如 summed-update 不能写成 summed-up）。
 - 严禁写成"[1] 作者：《书名》"式的参考文献；引用来源只能是阅读集条目，不得是任何著作或记忆片段。{example}"""
 
 
@@ -230,11 +231,23 @@ def assemble_article_text(title: str, body: str, defs: dict[int, tuple[int, str]
     return body + ("\n\n" + "\n".join(lines) if lines else "")
 
 
+def _closest_sentence(item_body: str, quote: str) -> str:
+    """条目正文中与失败 quote 最相近的完整句（修订反馈用：编辑指出正确原文，门禁仍逐字校验终稿）。"""
+    import difflib
+
+    sents = [s.strip() for s in re.split(r"(?<=[。！？!?.])\s+|\n+", item_body or "") if len(s.strip()) >= 12]
+    q = _norm(quote)[:80]
+    best, best_ratio = "", 0.0
+    for s in sents:
+        r = difflib.SequenceMatcher(None, q, _norm(s)[:120]).ratio()
+        if r > best_ratio:
+            best, best_ratio = s, r
+    return best if best_ratio > 0.5 else ""
+
+
 def validate_citations_pipeline(text: str, defs: dict[int, tuple[int, str]],
                                 pairs: list, min_count: int) -> None:
     """引用门禁：编号↔定义 1:1、item 在阅读集内、quote 空白归一化子串命中。失败抛 CitationError。"""
-    from .writer import CitationError, _norm
-
     bodies = {item.id: item.content_text or "" for item, _ in pairs}
     marks = {int(m.group(1)) for m in FOOTNOTE_MARK_RE.finditer(FOOTNOTE_DEF_RE.sub("", text))}
     if len(defs) < min_count:
@@ -251,7 +264,10 @@ def validate_citations_pipeline(text: str, defs: dict[int, tuple[int, str]],
         if not quote:
             raise CitationError(f"[^{k}] 的 quote 为空")
         if _norm(quote) not in _norm(bodies[item_id]):
-            raise CitationError(f"[^{k}] 的 quote 在条目 {item_id} 正文中找不到（需逐字摘自原文）: {quote[:80]!r}")
+            hint = _closest_sentence(bodies[item_id], quote)
+            fix = f"条目 {item_id} 中相近的原句是：「{hint}」——请整句逐字复制，不要改写任何词。" if hint else ""
+            raise CitationError(
+                f"[^{k}] 的 quote 在条目 {item_id} 正文中找不到（需逐字摘自原文，不许改词/截断/缩写）: {quote[:80]!r}。{fix}")
 
 
 # ---------------- 执行器 ----------------
@@ -455,10 +471,17 @@ class PipelineRunner:
         return text
 
     def node_revise(self, text: str, feedback: str) -> str:
+        length_note = ""
+        m = re.search(r"字数 (\d+) ([<>]) (\d+)", feedback)
+        if m:
+            lo = (self.cfg["route"]["gates"].get("length") or {}).get("min", 600)
+            hi = (self.cfg["route"]["gates"].get("length") or {}).get("max", 1400)
+            length_note = (f"\n【长度】当前 {m.group(1)} 字，须在 {lo}-{hi} 字区间"
+                           f"（{'超了就大刀阔斧删' if m.group(2) == '>' else '不足就扩写展开'}）。")
         messages = [
             {"role": "system", "content": self._system},
             {"role": "user", "content":
-                f"【你的稿子】\n{text}\n\n【编辑器检出的问题（必须全部消除）】\n{feedback}\n\n"
+                f"【你的稿子】\n{text}\n\n【编辑器检出的问题（必须全部消除）】\n{feedback}\n{length_note}\n"
                 "【要求】保持事实不变；风格锚与记忆片段的具体文句不得复用；只输出修订后全文。\n"
                 + _citation_discipline((self.cfg["route"]["gates"].get("citation") or {})
                                        .get("min_count", 2), self.pairs)
