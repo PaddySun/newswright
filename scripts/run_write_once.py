@@ -15,17 +15,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.authors.writer import run_write  # noqa: E402
+from app.authors.writer import run_write  # noqa: E402  (route_signature 已由显式比较取代)
 from app.db import SessionLocal, init_db  # noqa: E402
 from app.models import Article, Author, WriteRun  # noqa: E402
-
-
-def route_signature(payload: dict) -> str:
-    return json.dumps({
-        "draft": (payload.get("route") or {}).get("draft"),
-        "window": payload.get("reading_window"),
-        "batch": payload.get("batch_id"),
-    }, sort_keys=True, ensure_ascii=False)
 
 
 def main() -> int:
@@ -52,14 +44,13 @@ def main() -> int:
         window = tuple(int(x) for x in args.window.split(",")) if args.window else None
         overrides = json.loads(args.override) if args.override else None
 
-        # 幂等：同 batch + 同 route 签名 + 已 OK 的 write_run 不重复执行
+        # 幂等：同 batch + 同 (window, overrides) 签名 + 已 OK 的 write_run 不重复执行
         if args.batch_id and not args.force:
             for r in db.query(WriteRun).filter_by(author_id=author.id).all():
                 p = r.payload or {}
-                if p.get("batch_id") == args.batch_id and r.status == "OK" and \
-                        route_signature(p) == route_signature({
-                            "route": p.get("route"), "reading_window": window,
-                            "batch_id": args.batch_id}):
+                if p.get("batch_id") == args.batch_id and r.status == "OK" \
+                        and (p.get("reading_window") or None) == (window or None) \
+                        and (p.get("route", {}).get("overrides") or None) == (overrides or None):
                     print(json.dumps({"skipped": True, "write_run_id": r.id,
                                       "article_id": r.article_id}, ensure_ascii=False))
                     return 0

@@ -375,3 +375,176 @@ def stats_filters(days: int = 7, db: Session = Depends(get_session)):
         "rule": _shape(rule_rows),
         "sanitize": _shape(sanitize_rows),
     }
+
+
+# ---------- OV2：防蒙蔽穿插 B 流（拍板④） ----------
+
+def interleave_low_score(ranked: list[dict], low_pool: list[dict], *,
+                         probability: float, enabled: bool = True,
+                         seed: int | None = None) -> tuple[list[dict], dict]:
+    """按高分排序展示时以可调概率随机穿插"被记分器打低分但高于最低阈值"的条目。
+
+    诚实展示真实评分不变（穿插条目带 band="low_interleaved" 标记供前端弱化呈现）；
+    总开关关闭时原样返回。概率语义：高分列表每个空位独立以 probability 概率插入
+    一条低分条目（低分池用尽即止）；seed 供测试确定性复现。
+    """
+    import random
+
+    meta = {"enabled": enabled, "probability": probability, "inserted": 0}
+    if not enabled or not low_pool or probability <= 0:
+        return ranked, meta
+    rng = random.Random(seed)
+    out: list[dict] = []
+    pool = list(low_pool)
+    for item in ranked:
+        if pool and rng.random() < probability:
+            low = pool.pop(0)
+            out.append({**low, "band": "low_interleaved"})
+            meta["inserted"] += 1
+        out.append(item)
+    if pool and ranked:  # 尾部补齐剩余穿插额度（概率耗尽未触发的部分不再强插）
+        pass
+    return out, meta
+
+
+@router.get("/stream/b")
+def stream_b(direction_id: int | None = None, limit: int = 50,
+             interleave: bool = True, db: Session = Depends(get_session)):
+    """登录态 B 流列表（拍板④）：按高分排序 + 可调概率穿插低分（≥最低阈值）条目，
+    真实评分原样返回，穿插条目 band 标记 low_interleaved。"""
+    import os
+
+    from .. import config
+
+    enabled = interleave and config.SANITIZE_ENABLED is not None and os.environ.get(
+        "INTERLEAVE_ENABLED", "1").strip().lower() not in ("0", "false", "off")
+    probability = float(os.environ.get("INTERLEAVE_PROBABILITY") or 0.2)
+    min_threshold = int(os.environ.get("INTERLEAVE_MIN_THRESHOLD") or 40)
+
+    q = (db.query(Item, ScoreResult)
+         .join(ScoreResult, ScoreResult.item_id == Item.id)
+         .filter(ScoreResult.status == "OK", ScoreResult.passed.is_(True),
+                 Item.fetch_status == "FETCHED")
+         .order_by(ScoreResult.relevance_score.desc()))
+    if direction_id is not None:
+        q = q.filter(ScoreResult.direction_id == direction_id)
+    ranked = [
+        {"id": item.id, "title": item.title, "url": item.url,
+         "relevance": sr.relevance_score, "quality": sr.quality_score,
+         "band": sr.band, "reason": sr.reason, "source_id": item.source_id}
+        for item, sr in q.limit(min(limit, 300)).all()
+    ]
+    # 低分但高于最低阈值（被记分器打低、本不进流的条目——数据全量已存）
+    lq = (db.query(Item, ScoreResult)
+          .join(ScoreResult, ScoreResult.item_id == Item.id)
+          .filter(ScoreResult.status == "OK", ScoreResult.passed.is_(False),
+                  ScoreResult.relevance_score >= min_threshold,
+                  Item.fetch_status == "FETCHED")
+          .order_by(ScoreResult.relevance_score.desc()))
+    if direction_id is not None:
+        lq = lq.filter(ScoreResult.direction_id == direction_id)
+    low_pool = [
+        {"id": item.id, "title": item.title, "url": item.url,
+         "relevance": sr.relevance_score, "quality": sr.quality_score,
+         "band": sr.band, "reason": sr.reason, "source_id": item.source_id}
+        for item, sr in lq.limit(50).all()
+    ]
+    merged, meta = interleave_low_score(ranked, low_pool, probability=probability,
+                                        enabled=enabled)
+    return {"items": merged[:limit], "interleave": meta}
+
+
+# ---------- OV3：热点面板数据端点（拍板②数据侧） ----------
+
+@router.get("/hot/board")
+def hot_board(direction_id: int, top_n: int = 5, db: Session = Depends(get_session)):
+    """机场屏数据契约：方向级关键词 × 各关键词下打分排序前 N 条搜索结果标题
+    （含 URL 与分数）。关键词 = 方向的搜索关键词（Source type=search）+ 最近
+    hot_batch 提炼关键词（仅展示，无搜索结果组）。"""
+    from ..models import HotBatch
+
+    kws: list[dict] = []
+    for src in db.query(Source).filter_by(direction_id=direction_id, type="search",
+                                          enabled=True).all():
+        keyword = (src.source_config or {}).get("keyword") or src.url
+        rows = (db.query(Item, ScoreResult)
+                .join(ScoreResult, ScoreResult.item_id == Item.id)
+                .filter(Item.source_id == src.id, ScoreResult.status == "OK",
+                        Item.fetch_status == "FETCHED")
+                .order_by(ScoreResult.relevance_score.desc())
+                .limit(min(top_n, 20)).all())
+        kws.append({
+            "keyword": keyword, "keyword_group": (src.source_config or {}).get("group"),
+            "provider": (src.source_config or {}).get("provider"),
+            "results": [
+                {"item_id": item.id, "title": item.title, "url": item.url,
+                 "relevance": sr.relevance_score, "band": sr.band}
+                for item, sr in rows
+            ],
+        })
+    hb = db.query(HotBatch).order_by(HotBatch.id.desc()).first()
+    return {
+        "direction_id": direction_id,
+        "keywords": kws,
+        "hot_trending_keywords": (hb.keywords if hb else []),
+        "hot_batch_id": hb.id if hb else None,
+    }
+
+
+# ---------- OV4：统计总览（正式版仪表盘数据底座） ----------
+
+@router.get("/stats/overview")
+def stats_overview(days: int = 7, db: Session = Depends(get_session)):
+    """Token 按作者/调用点、四类失败口径计数、不写统计、管线各阶段成功率。"""
+    from ..models import PipelineTask, WriteRun
+
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+
+    token_by_author: dict[str, dict] = {}
+    for provider, rid, cp, n, pt, ct in (
+        db.query(UsageLog.provider, UsageLog.ref_id, UsageLog.call_point,
+                 func.count(UsageLog.id), func.sum(UsageLog.prompt_tokens),
+                 func.sum(UsageLog.completion_tokens))
+        .filter(UsageLog.ref_type == "author", UsageLog.created_at >= since)
+        .group_by(UsageLog.provider, UsageLog.ref_id, UsageLog.call_point).all()
+    ):
+        if rid is None:
+            continue
+        d = token_by_author.setdefault(str(rid), {})
+        d[cp] = {"calls": n, "prompt_tokens": int(pt or 0), "completion_tokens": int(ct or 0)}
+
+    fetch_failed = (db.query(func.count(PipelineTask.id))
+                    .filter(PipelineTask.kind == "fetch", PipelineTask.status == "FAILED",
+                            PipelineTask.updated_at >= since).scalar()) or 0
+    score_failed = (db.query(func.count(ScoreResult.id))
+                    .filter(ScoreResult.status == "FAILED",
+                            ScoreResult.created_at >= since).scalar()) or 0
+    write_failed = (db.query(func.count(WriteRun.id))
+                    .filter(WriteRun.status == "FAILED", WriteRun.created_at >= since).scalar()) or 0
+    skip_writes = (db.query(func.count(WriteRun.id))
+                   .filter(WriteRun.decision == "SKIP", WriteRun.created_at >= since).scalar()) or 0
+
+    write_total = (db.query(func.count(WriteRun.id))
+                   .filter(WriteRun.created_at >= since).scalar()) or 0
+    write_ok = (db.query(func.count(WriteRun.id))
+                .filter(WriteRun.status == "OK", WriteRun.created_at >= since).scalar()) or 0
+    fetch_tasks = (db.query(func.count(PipelineTask.id))
+                   .filter(PipelineTask.kind == "fetch", PipelineTask.updated_at >= since).scalar()) or 0
+    fetch_done = (db.query(func.count(PipelineTask.id))
+                  .filter(PipelineTask.kind == "fetch", PipelineTask.status == "DONE",
+                          PipelineTask.updated_at >= since).scalar()) or 0
+
+    return {
+        "window_days": days,
+        "token_by_author": token_by_author,
+        "failures": {
+            "fetch_failed": fetch_failed,
+            "score_failed": score_failed,
+            "write_failed": write_failed,
+            "write_skipped": skip_writes,
+        },
+        "stage_success_rate": {
+            "fetch": round(fetch_done / fetch_tasks, 4) if fetch_tasks else None,
+            "write": round(write_ok / write_total, 4) if write_total else None,
+        },
+    }

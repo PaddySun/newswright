@@ -275,20 +275,21 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
     return summary
 
 
-def write_task(db: Session, author_id: int, *, triggered_by: str = "manual") -> dict:
-    """触发一次作者写作，状态经 pipeline_task 落库。"""
+def write_task(db: Session, author_id: int, *, triggered_by: str = "manual",
+               **run_kwargs) -> dict:
+    """触发一次作者写作，状态经 pipeline_task 落库（run_kwargs 透传 batch_id 等）。"""
     from ..models import Author
     from ..authors.writer import run_write
 
     author = db.get(Author, author_id)
     if author is None:
         raise ValueError(f"author {author_id} 不存在")
-    task = _new_task(db, kind="write", payload={"author_id": author_id})
+    task = _new_task(db, kind="write", payload={"author_id": author_id, **run_kwargs})
     task.status = "RUNNING"
     task.attempts += 1
     db.commit()
     try:
-        run = run_write(db, author, triggered_by=triggered_by)
+        run = run_write(db, author, triggered_by=triggered_by, **run_kwargs)
         task.payload = {**task.payload, "write_run_id": run.id, "decision": run.decision,
                         "article_id": run.article_id}
         task.status = "DONE" if run.status == "OK" else "FAILED"

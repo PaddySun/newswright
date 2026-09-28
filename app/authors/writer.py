@@ -7,6 +7,7 @@ quote 能在该条目正文中子串命中（空白归一化）；违规整体�
 from __future__ import annotations
 
 import re
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,7 +26,9 @@ _WS_RE = re.compile(r"\s+")
 
 
 def _norm(s: str) -> str:
-    return _WS_RE.sub("", (s or "")).lower()
+    """空白归一化 + NFKC 宽度归一化：引文匹配对「空白/全半角」格式差异鲁棒，
+    内容仍须逐字连续命中（夜跑实测：RSS 源文半角标点 vs 模型全角书写）。"""
+    return _WS_RE.sub("", unicodedata.normalize("NFKC", (s or ""))).lower()
 
 
 def assemble_reading_set(db: Session, author: Author, k: int | None = None) -> list[tuple[Item, ScoreResult]]:

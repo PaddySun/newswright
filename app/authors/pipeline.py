@@ -41,8 +41,9 @@ READING_BODY_MAX_CHARS = 1200
 FOOTNOTE_DEF_RE = re.compile(r"^\[\^(\d+)\]\s*:\s*\[条目\s*(\d+)\]\s*(.*)$", re.M)
 FOOTNOTE_MARK_RE = re.compile(r"\[\^(\d+)\]")
 
-# 节点默认 max_tokens（lab 实证口径）；output.max_tokens_per_node 可覆写
-NODE_MAX_TOKENS = {"w_outline": 900, "w_incubate": 1400, "w_draft": 4000,
+# 节点默认 max_tokens（lab 实证口径 + 夜跑实测校准：outline 长brief 截断→2000）；
+# output.max_tokens_per_node 可覆写
+NODE_MAX_TOKENS = {"w_outline": 2000, "w_incubate": 1400, "w_draft": 4000,
                    "w_prune": 2600, "w_rhythm": 2600, "w_revise": 2600}
 
 # JSON 节点保持 chat 档（lab studio A/B：JSON 节点 reasoner 无风格优势且成本 ×1.8）
@@ -185,9 +186,11 @@ def _citation_discipline(min_count: int, pairs: list) -> str:
             example = (f"\n- 示例（设条目 {item.id} 正文含「{sent[:60]}」）：\n"
                        f"  正文：……{sent[:40]}……[^1]\n"
                        f"  文末定义行：[^1]: [条目 {item.id}] {sent[:60]}\n")
+    ids = "、".join(str(item.id) for item, _ in pairs)
     return f"""【引用纪律（硬约束）】
 - 文中的事实性陈述必须来自下方阅读集；每处事实引用在该句末紧跟上标标记 [^K]（K=1,2,3…按正文出现顺序连续编号，用半角方括号与尖号，形如 [^1]）。
 - 文末为每个编号写一行定义，格式严格为：[^K]: [条目 <item_id>] <逐字摘自该条目正文的原句>
+- 本期可用条目 ID 只有这些：{ids}——引用其他任何 ID 一律无效。
 - 引用至少 {min_count} 条；quote 必须逐字摘自该条目正文（不许改写、拼接、虚构），校验器逐条做子串比对，失败即拒收。
 - 英文引文必须整词完整复制（不许改词、截断、加连字符或缩写，如 summed-update 不能写成 summed-up）。
 - 严禁写成"[1] 作者：《书名》"式的参考文献；引用来源只能是阅读集条目，不得是任何著作或记忆片段。{example}"""
@@ -200,7 +203,8 @@ def _draft_task(cfg: dict, pairs: list, *, incubate: dict | None = None,
     length = gates.get("length") or {}
     lo, hi = length.get("min", 600), length.get("max", 1400)
     task = _citation_discipline((gates.get("citation") or {}).get("min_count", 2), pairs)
-    task += f"\n\n【输出格式】Markdown 正文（不要 HTML；不要一级标题），{lo}-{hi} 字，结尾不写总结腔套话。"
+    task += (f"\n\n【输出格式】Markdown 正文（不要 HTML）。第一行必须是标题：# 开头、"
+             f"不超过 30 字、不含脚注标记；标题后空一行接正文。全文 {lo}-{hi} 字，结尾不写总结腔套话。")
     if incubate:
         task += "\n\n【你的腹稿（照此落笔，可微调）】\n" + json.dumps(incubate, ensure_ascii=False, indent=1)
     if outline and section:
@@ -376,8 +380,14 @@ class PipelineRunner:
     def _title(text: str) -> str:
         for line in text.splitlines():
             s = line.strip().lstrip("#").strip()
-            if s:
+            if not s:
+                continue
+            s = FOOTNOTE_MARK_RE.sub("", s).strip()  # 防标题带脚注标记
+            if len(s) <= 40:
                 return s[:120]
+            # 首行是整句而非标题（夜跑实测形态）：在 40 字内首个句读处截断
+            cut = re.search(r"[。：；！？，]", s[:40])
+            return s[:cut.end() - 1] if cut else s[:40]
         return "（无题）"
 
     # ---- 节点 ----
