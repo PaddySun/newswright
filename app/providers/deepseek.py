@@ -77,7 +77,12 @@ class DeepSeekProvider(HTTPProvider):
         if json_mode and effective_tier != "reasoner":
             payload["response_format"] = {"type": "json_object"}
         if max_tokens:
-            payload["max_tokens"] = max_tokens
+            if effective_tier == "reasoner":
+                # M15 实测：reasoner 的 CoT 计入 completion_tokens，小上限会全部耗在
+                # 思考上导致 content 为空（tokens_out 恰等于 max_tokens 截断）——抬高到 8192。
+                payload["max_tokens"] = max(max_tokens, 8192)
+            else:
+                payload["max_tokens"] = max_tokens
         try:
             body = self._call(
                 payload,

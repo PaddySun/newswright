@@ -173,12 +173,23 @@ def _refs_listing(pairs: list) -> str:
     return "\n\n".join(lines)
 
 
-def _citation_discipline(min_count: int) -> str:
+def _citation_discipline(min_count: int, pairs: list) -> str:
+    """引用契约：格式 + 用真实条目构造的动态示例（M15 实测：静态描述不够，
+    模型会写成学术式 [1] 著作引用——给出含真实 item_id 的示例后依从性显著提高）。"""
+    example = ""
+    if pairs:
+        item = pairs[0][0]
+        sent = next((s.strip() for s in re.split(r"[。！？\n]", item.content_text or "")
+                     if len(s.strip()) >= 12), "")
+        if sent:
+            example = (f"\n- 示例（设条目 {item.id} 正文含「{sent[:60]}」）：\n"
+                       f"  正文：……{sent[:40]}……[^1]\n"
+                       f"  文末定义行：[^1]: [条目 {item.id}] {sent[:60]}\n")
     return f"""【引用纪律（硬约束）】
-- 文中的事实性陈述必须来自下方阅读集；每处事实引用在句末标脚注 [^K]（K=1,2,3…按正文出现顺序连续编号）。
+- 文中的事实性陈述必须来自下方阅读集；每处事实引用在该句末紧跟上标标记 [^K]（K=1,2,3…按正文出现顺序连续编号，用半角方括号与尖号，形如 [^1]）。
 - 文末为每个编号写一行定义，格式严格为：[^K]: [条目 <item_id>] <逐字摘自该条目正文的原句>
-- 引用至少 {min_count} 条；quote 必须逐字摘自该条目正文（不许改写、拼接、虚构），校验器逐条比对，失败即拒收。
-- 阅读集之外的任何材料（含记忆片段、热点风向）一律不得作为引用来源。"""
+- 引用至少 {min_count} 条；quote 必须逐字摘自该条目正文（不许改写、拼接、虚构），校验器逐条做子串比对，失败即拒收。
+- 严禁写成"[1] 作者：《书名》"式的参考文献；引用来源只能是阅读集条目，不得是任何著作或记忆片段。{example}"""
 
 
 def _draft_task(cfg: dict, pairs: list, *, incubate: dict | None = None,
@@ -187,7 +198,7 @@ def _draft_task(cfg: dict, pairs: list, *, incubate: dict | None = None,
     gates = cfg["route"]["gates"]
     length = gates.get("length") or {}
     lo, hi = length.get("min", 600), length.get("max", 1400)
-    task = _citation_discipline((gates.get("citation") or {}).get("min_count", 2))
+    task = _citation_discipline((gates.get("citation") or {}).get("min_count", 2), pairs)
     task += f"\n\n【输出格式】Markdown 正文（不要 HTML；不要一级标题），{lo}-{hi} 字，结尾不写总结腔套话。"
     if incubate:
         task += "\n\n【你的腹稿（照此落笔，可微调）】\n" + json.dumps(incubate, ensure_ascii=False, indent=1)
@@ -397,7 +408,20 @@ class PipelineRunner:
             {"role": "user", "content": user_ctx + "\n\n" + task},
         ]
         content, _ = self._call("w_draft", messages, temperature=0.9)
+        if not content.strip():
+            # M15 实测守卫：reasoner 档 CoT 耗尽上限时正文为空 → 回退 chat 重试一次
+            self.trace[-1]["discarded"] = "empty_output"
+            tier = self._tier("w_draft")
+            if tier == "reasoner":
+                self.provider.reasoner_available = False
+                self.trace[-1]["note"] = "reasoner 正文为空，本 run 后续调用回退 chat"
+                content, _ = self._call("w_draft", messages, temperature=0.9)
+            if not content.strip():
+                raise PipelineAbort("草稿为空（两次调用均无正文）")
         return content.strip()
+
+    _FOOTNOTE_KEEP = ("【脚注保全（硬约束）】初稿中全部 [^K] 上标标记与文末定义行"
+                      "（[^K]: [条目 <id>] <原句>）原样保留，一条都不许删改；引用不足则按引用纪律补足。")
 
     def node_pass(self, ptype: str, params: dict, text: str) -> str:
         """修订遍；distort/callback/selfrev 为占位接口（本阶段 passthrough + 记录）。"""
@@ -411,7 +435,7 @@ class PipelineRunner:
                 f"（当前 {{n}} 字）。只输出删节后全文。").replace("{n}", str(len(G.clean_text(text))))
             messages = [
                 {"role": "system", "content": self._system},
-                {"role": "user", "content": f"【你的初稿】\n{text}\n\n{instr}"},
+                {"role": "user", "content": f"【你的初稿】\n{text}\n\n{instr}\n{self._FOOTNOTE_KEEP}"},
             ]
             content, _ = self._call(node, messages, temperature=0.6)
             return content.strip()
@@ -420,7 +444,8 @@ class PipelineRunner:
                 {"role": "system", "content": self._system},
                 {"role": "user", "content": f"【你的初稿】\n{text}\n\n"
                  "【任务】节奏重构遍：调整长短句节奏（短句砸重点，长句铺陈），"
-                 "删除可有可无的字句。保持事实、脚注标记与结构不变。只输出修订后全文。"},
+                 "删除可有可无的字句。保持事实、脚注标记与结构不变。只输出修订后全文。"
+                 f"\n{self._FOOTNOTE_KEEP}"},
             ]
             content, _ = self._call(node, messages, temperature=0.8)
             return content.strip()
@@ -434,8 +459,10 @@ class PipelineRunner:
             {"role": "system", "content": self._system},
             {"role": "user", "content":
                 f"【你的稿子】\n{text}\n\n【编辑器检出的问题（必须全部消除）】\n{feedback}\n\n"
-                "【要求】保持事实与脚注引用纪律不变（引用编号与定义行完整保留，缺引用则补）；"
-                "风格锚与记忆片段的具体文句不得复用；只输出修订后全文。"},
+                "【要求】保持事实不变；风格锚与记忆片段的具体文句不得复用；只输出修订后全文。\n"
+                + _citation_discipline((self.cfg["route"]["gates"].get("citation") or {})
+                                       .get("min_count", 2), self.pairs)
+                + "\n" + self._FOOTNOTE_KEEP},
         ]
         content, _ = self._call("w_revise", messages, temperature=0.8)
         return content.strip()
@@ -591,7 +618,13 @@ def run_pipeline_write(
     """
     cfg = dict(author.author_json or {})
     if route_overrides:
-        cfg = {**cfg, "route": {**cfg.get("route", {}), **route_overrides}}
+        merged_route = {**cfg.get("route", {})}
+        for k, v in route_overrides.items():
+            if isinstance(v, dict) and isinstance(merged_route.get(k), dict):
+                merged_route[k] = {**merged_route[k], **v}
+            else:
+                merged_route[k] = v
+        cfg = {**cfg, "route": merged_route}
     try:
         cfg = load_author_config(cfg)
     except AuthorConfigError as e:

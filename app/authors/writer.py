@@ -205,13 +205,17 @@ def _parse_output(data: dict) -> dict:
     return data
 
 
-def run_write(db: Session, author: Author, *, triggered_by: str = "manual", model: str | None = None) -> WriteRun:
+def run_write(db: Session, author: Author, *, triggered_by: str = "manual", model: str | None = None,
+              batch_id: str | None = None, reading_window: tuple[int, int] | None = None,
+              route_overrides: dict | None = None) -> WriteRun:
     # 可配置写作管线分派（M14）：有 author.json 的作者走 JSON 驱动管线；
     # 无 JSON 作者走现行 single 路线，行为不变（迁移策略：声明式上层，不推倒）。
     if author.author_json:
         from .pipeline import run_pipeline_write
 
-        return run_pipeline_write(db, author, triggered_by=triggered_by, model=model)
+        return run_pipeline_write(db, author, triggered_by=triggered_by, model=model,
+                                  batch_id=batch_id, reading_window=reading_window,
+                                  route_overrides=route_overrides)
 
     pairs, rank_meta = assemble_ranked_reading_set(db, author)
     run = WriteRun(
