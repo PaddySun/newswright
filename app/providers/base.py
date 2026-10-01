@@ -62,6 +62,7 @@ def record_usage(
     cache_hit_tokens: int = 0,
     reasoning_tokens: int = 0,
     finish_reason: str | None = None,
+    item_count: int | None = None,
     latency_ms: int = 0,
     ok: bool = True,
     error: str | None = None,
@@ -79,6 +80,7 @@ def record_usage(
             cache_hit_tokens=cache_hit_tokens,
             reasoning_tokens=reasoning_tokens,
             finish_reason=finish_reason,
+            item_count=item_count,
             latency_ms=latency_ms,
             ok=ok,
             error=_scrub(error)[:2000] if error else None,
@@ -101,7 +103,8 @@ class LLMProvider(ABC):
     def _post(self, payload: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
         """发一次请求，返回 (响应体, 计量信息)。计量信息含
         prompt_tokens / completion_tokens / billing_units，可选
-        cache_hit_tokens / reasoning_tokens / finish_reason。抛 httpx/ProviderError。"""
+        cache_hit_tokens / reasoning_tokens / finish_reason / item_count。
+        抛 httpx/ProviderError。"""
 
     def tier_request(self, payload: dict[str, Any], *, model_tier: str | None) -> dict[str, Any]:
         """按调用档位改写请求 payload 的 provider 钩子（默认不改写——纯模型名档位，
@@ -136,6 +139,7 @@ class LLMProvider(ABC):
                     cache_hit_tokens=meter.get("cache_hit_tokens", 0),
                     reasoning_tokens=meter.get("reasoning_tokens", 0),
                     finish_reason=meter.get("finish_reason"),
+                    item_count=meter.get("item_count"),
                     latency_ms=latency_ms,
                     ok=True,
                     ref_type=ref_type,

@@ -11,3 +11,5 @@ data/snapshot/
 scratch/
 *.egg-info/
 verify
+
+data/eval/

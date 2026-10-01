@@ -79,6 +79,13 @@ DEEPSEEK_TIER_MODE = _get("DEEPSEEK_TIER_MODE") or "thinking_params"
 DEEPSEEK_REASONER_MODEL = _get("DEEPSEEK_REASONER_MODEL") or "deepseek-reasoner"
 MOARK_BASE_URL = _get("MOARK_BASE_URL") or "https://api.moark.com"
 MOARK_JEV_MODEL = _get("MOARK_JEV_MODEL") or "APUS-OpenJev-v1-9B"
+# NeoHorse-Jev-4B（EV7 实测新配置；不改变 MOARK_JEV_MODEL 默认行为）
+MOARK_JEV_MODEL_NEOHORSE = _get("MOARK_JEV_MODEL_NEOHORSE") or "NeoHorse-Jev-4B"
+# moark embedding（能力⑥，注册不接线）：默认模型与单请求批量上限
+MOARK_EMBED_MODEL = _get("MOARK_EMBED_MODEL") or "Qwen3-Embedding-0.6B"
+EMBED_BATCH_SIZE = int(_get("EMBED_BATCH_SIZE") or 32)
+# moark rerank（/v1/rerank，注册不接线）：默认模型
+MOARK_RERANK_MODEL = _get("MOARK_RERANK_MODEL") or "Qwen3-Reranker-0.6B"
 
 # 搜索/排序底座 Key（可选：缺失时对应通道降级关闭，不阻塞启动）
 BOCHA_API_KEY = _get("bochaaiAPIKey", "BOCHAAI_API_KEY", "BOCHA_API_KEY")

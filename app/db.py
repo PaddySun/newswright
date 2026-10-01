@@ -47,6 +47,7 @@ def _migrate_added_columns() -> None:
             "cache_hit_tokens": "INTEGER NOT NULL DEFAULT 0",
             "reasoning_tokens": "INTEGER NOT NULL DEFAULT 0",
             "finish_reason": "VARCHAR(40)",
+            "item_count": "INTEGER",
         },
         "item": {
             "sanitize_status": "VARCHAR(20) NOT NULL DEFAULT 'PENDING'",

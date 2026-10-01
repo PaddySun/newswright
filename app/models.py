@@ -169,6 +169,8 @@ class UsageLog(Base):
     cache_hit_tokens: Mapped[int] = mapped_column(Integer, default=0)
     reasoning_tokens: Mapped[int] = mapped_column(Integer, default=0)
     finish_reason: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    # embedding 类调用的输入条数（LLM 调用恒 NULL）
+    item_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
     latency_ms: Mapped[int] = mapped_column(Integer, default=0)
     ok: Mapped[bool] = mapped_column(Boolean, default=True)
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
