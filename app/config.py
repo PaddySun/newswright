@@ -66,8 +66,16 @@ DEEPSEEK_API_KEY = _require("DeepSeekAPIKey", "DEEPSEEK_API_KEY")
 MOARK_API_KEY = _require("MoarkAPIKey", "MOARK_API_KEY")
 
 DEEPSEEK_BASE_URL = _get("DEEPSEEK_BASE_URL") or "https://api.deepseek.com"
-DEEPSEEK_MODEL = _get("DEEPSEEK_MODEL") or "deepseek-chat"
-# 写作管线 think 路由（§3.2.4）：生成类节点可走 reasoner 档；实测不可用时回退 chat
+# 官方模型 ID（2026-10 文档）：deepseek-flash | deepseek-v4-pro；旧名 deepseek-chat 为
+# 兼容别名（响应实报 flash）。默认值改为官方名，.env 旧值仍可覆盖。
+DEEPSEEK_MODEL = _get("DEEPSEEK_MODEL") or "deepseek-flash"
+# 写作管线 think 路由（官方口径）：思考由 thinking/reasoning_effort 参数控制而非模型名；
+# DEEPSEEK_THINKING_MODEL 仅在想换高档模型（如 deepseek-v4-pro）时覆盖，默认随主模型。
+DEEPSEEK_THINKING_MODEL = _get("DEEPSEEK_THINKING_MODEL") or DEEPSEEK_MODEL
+DEEPSEEK_REASONING_EFFORT = _get("DEEPSEEK_REASONING_EFFORT") or "high"
+# 档位路由模式：thinking_params=官方参数路由（默认）；model_name=旧模型名档位
+# （仅非官方网关不认 thinking 参数且必须换模型名时使用——此时设 DEEPSEEK_REASONER_MODEL）
+DEEPSEEK_TIER_MODE = _get("DEEPSEEK_TIER_MODE") or "thinking_params"
 DEEPSEEK_REASONER_MODEL = _get("DEEPSEEK_REASONER_MODEL") or "deepseek-reasoner"
 MOARK_BASE_URL = _get("MOARK_BASE_URL") or "https://api.moark.com"
 MOARK_JEV_MODEL = _get("MOARK_JEV_MODEL") or "APUS-OpenJev-v1-9B"

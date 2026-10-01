@@ -21,10 +21,24 @@ from ..models import UsageLog
 log = logging.getLogger("newswright.providers")
 
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
+# 官方错误码语义（2026-10 文档）：402 余额不足、401 认证失败、400/422 参数错误——
+# 全部不可重试（重试只会烧日志）；429/5xx 可重试。
+FATAL_STATUS_MESSAGE = {
+    400: "请求体格式错误（400）",
+    401: "API key 认证失败（401）",
+    402: "账户余额不足（402）——请充值后重试",
+    422: "请求参数错误（422）",
+}
+
+# finish_reason 官方语义：length=截断（max_tokens/上下文）、content_filter=被过滤
+# （不可重试）、insufficient_system_resource/aborted=服务端中断（可重试）、stop/tool_calls 正常
+RETRYABLE_FINISH_REASONS = {"insufficient_system_resource", "aborted"}
+FATAL_FINISH_REASONS = {"content_filter"}
 
 
 class ProviderError(Exception):
     """重试耗尽或不可恢复的 provider 错误（message 不得含 Key）。"""
+    retryable = False
 
 
 class JSONParseError(Exception):
@@ -45,6 +59,9 @@ def record_usage(
     prompt_tokens: int = 0,
     completion_tokens: int = 0,
     billing_units: int = 0,
+    cache_hit_tokens: int = 0,
+    reasoning_tokens: int = 0,
+    finish_reason: str | None = None,
     latency_ms: int = 0,
     ok: bool = True,
     error: str | None = None,
@@ -59,6 +76,9 @@ def record_usage(
             prompt_tokens=prompt_tokens,
             completion_tokens=completion_tokens,
             billing_units=billing_units,
+            cache_hit_tokens=cache_hit_tokens,
+            reasoning_tokens=reasoning_tokens,
+            finish_reason=finish_reason,
             latency_ms=latency_ms,
             ok=ok,
             error=_scrub(error)[:2000] if error else None,
@@ -80,7 +100,13 @@ class LLMProvider(ABC):
     @abstractmethod
     def _post(self, payload: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
         """发一次请求，返回 (响应体, 计量信息)。计量信息含
-        prompt_tokens / completion_tokens / billing_units。抛 httpx/ProviderError。"""
+        prompt_tokens / completion_tokens / billing_units，可选
+        cache_hit_tokens / reasoning_tokens / finish_reason。抛 httpx/ProviderError。"""
+
+    def tier_request(self, payload: dict[str, Any], *, model_tier: str | None) -> dict[str, Any]:
+        """按调用档位改写请求 payload 的 provider 钩子（默认不改写——纯模型名档位，
+        任何 OpenAI 兼容 provider 零改动兼容；DeepSeek 覆盖为官方 thinking 参数）。"""
+        return payload
 
     def _call(
         self,
@@ -107,6 +133,9 @@ class LLMProvider(ABC):
                     prompt_tokens=meter.get("prompt_tokens", 0),
                     completion_tokens=meter.get("completion_tokens", 0),
                     billing_units=meter.get("billing_units", 0),
+                    cache_hit_tokens=meter.get("cache_hit_tokens", 0),
+                    reasoning_tokens=meter.get("reasoning_tokens", 0),
+                    finish_reason=meter.get("finish_reason"),
                     latency_ms=latency_ms,
                     ok=True,
                     ref_type=ref_type,
@@ -157,7 +186,10 @@ class HTTPProvider(LLMProvider):
             e.retryable = True  # type: ignore[attr-defined]
             raise e
         if resp.status_code >= 400:
-            raise ProviderError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
+            # 官方错误码语义映射（402 余额不足 / 401 认证 / 400·422 参数），全部不可重试
+            msg = FATAL_STATUS_MESSAGE.get(resp.status_code,
+                                           f"HTTP {resp.status_code}")
+            raise ProviderError(f"{msg}: {_scrub(resp.text[:300])}")
         return resp
 
     @staticmethod
@@ -167,7 +199,18 @@ class HTTPProvider(LLMProvider):
             "prompt_tokens": int(usage.get("prompt_tokens") or 0),
             "completion_tokens": int(usage.get("completion_tokens") or 0),
             "billing_units": 0,
+            # 官方 usage 细节（缓存命中 / 思维链 token；其他 provider 缺省为 0）
+            "cache_hit_tokens": int(usage.get("prompt_cache_hit_tokens")
+                                    or (usage.get("prompt_tokens_details") or {}).get("cached_tokens") or 0),
+            "reasoning_tokens": int((usage.get("completion_tokens_details") or {}).get("reasoning_tokens") or 0),
         }
+
+    @staticmethod
+    def _finish_reason(body: dict[str, Any]) -> str | None:
+        try:
+            return body["choices"][0].get("finish_reason")
+        except (KeyError, IndexError, TypeError):
+            return None
 
 
 def parse_strict_json(text: str) -> dict[str, Any]:

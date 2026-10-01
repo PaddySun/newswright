@@ -10,3 +10,4 @@ data/snapshot/
 .pytest_cache/
 scratch/
 *.egg-info/
+verify

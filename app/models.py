@@ -165,6 +165,10 @@ class UsageLog(Base):
     completion_tokens: Mapped[int] = mapped_column(Integer, default=0)
     # moark 等非 token 计费方使用（deepseek 恒 0）
     billing_units: Mapped[int] = mapped_column(Integer, default=0)
+    # DeepSeek 官方 usage 细节（2026-10 文档）：上下文缓存命中与思考模式思维链 token
+    cache_hit_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    reasoning_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    finish_reason: Mapped[str | None] = mapped_column(String(40), nullable=True)
     latency_ms: Mapped[int] = mapped_column(Integer, default=0)
     ok: Mapped[bool] = mapped_column(Boolean, default=True)
     error: Mapped[str | None] = mapped_column(Text, nullable=True)

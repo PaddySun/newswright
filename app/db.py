@@ -43,6 +43,11 @@ def _migrate_added_columns() -> None:
         "write_run": {
             "payload": "JSON",
         },
+        "usage_log": {
+            "cache_hit_tokens": "INTEGER NOT NULL DEFAULT 0",
+            "reasoning_tokens": "INTEGER NOT NULL DEFAULT 0",
+            "finish_reason": "VARCHAR(40)",
+        },
         "item": {
             "sanitize_status": "VARCHAR(20) NOT NULL DEFAULT 'PENDING'",
             "sanitize_reason": "VARCHAR(500)",

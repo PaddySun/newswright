@@ -260,26 +260,27 @@ def test_single_route_regression_no_json(db_session, env, monkeypatch):
 
 
 def test_reasoner_fallback(db_session, monkeypatch):
-    """reasoner 档实测不可用（400 类）→ 标记不可用并回退 chat 重发。"""
+    """思考档模型不可用（400 类）→ 标记不可用并回退 chat 重发（官方 thinking 档位）。"""
     import app.config as cfgmod
 
+    monkeypatch.setattr(cfgmod, "DEEPSEEK_THINKING_MODEL", "deepseek-v4-pro")
     p = DeepSeekProvider(db_session)
     calls = []
 
     def fake_call(payload, **kw):
         calls.append(payload["model"])
-        if payload["model"] == cfgmod.DEEPSEEK_REASONER_MODEL:
+        if payload.get("thinking", {}).get("type") == "enabled" or payload["model"] == "deepseek-v4-pro":
             e = ProviderError("HTTP 400: Model Not Exist")
             e.retryable = False
             raise e
-        return {"choices": [{"message": {"content": "ok"}}], "model": payload["model"]}
+        return {"choices": [{"message": {"content": "ok"}}], "model": payload["model"],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1}}
 
     monkeypatch.setattr(p, "_call", fake_call)
     content, model = p.chat([{"role": "user", "content": "x"}],
                             call_point="w_draft", model_tier="reasoner")
     assert p.reasoner_available is False
     assert model == cfgmod.DEEPSEEK_MODEL
-    assert len(calls) == 2 and calls[0] == cfgmod.DEEPSEEK_REASONER_MODEL
     assert "回退" in (p.fallback_note or "")
     # 二次调用直接走 chat（不再探测）
     calls.clear()

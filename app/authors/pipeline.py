@@ -318,6 +318,10 @@ class PipelineRunner:
             "output": content,
             "tokens_in": usage.get("prompt_tokens", 0),
             "tokens_out": usage.get("completion_tokens", 0),
+            # 官方 usage 细节（2026-10 文档）：缓存命中 / 思维链 / 停止原因
+            "cache_hit_tokens": usage.get("cache_hit_tokens", 0),
+            "reasoning_tokens": usage.get("reasoning_tokens", 0),
+            "finish_reason": usage.get("finish_reason"),
             "latency_ms": int((time.monotonic() - t0) * 1000),
             "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
