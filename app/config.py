@@ -1,4 +1,4 @@
-"""配置读取：Key 与模型名等来自仓库上一级目录的 .env，缺失即报错。
+"""配置读取：Key 与模型名等来自仓库根目录的 .env（可用 NEWSWRIGHT_ENV_FILE 覆盖），缺失即报错。
 
 .env 解析：先用 python-dotenv；对 dotenv 解析不了的行（如本项目 .env 中腾讯
 Key 用空格分隔而非 `=`），用容错解析补齐——按首个 `=`/`:`/空白切分，只补不覆盖。
@@ -13,7 +13,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-ENV_FILE = Path(os.environ.get("NEWSWRIGHT_ENV_FILE", str(PROJECT_ROOT.parent / ".env")))
+ENV_FILE = Path(os.environ.get("NEWSWRIGHT_ENV_FILE", str(PROJECT_ROOT / ".env")))
 
 load_dotenv(ENV_FILE)
 

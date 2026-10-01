@@ -7,7 +7,7 @@ RSS 抓取 / 定点网页监测 / 搜索关键词 → 去重 → 规则初筛 �
 ## 环境要求
 
 - Python 3.11+（实测 3.13）
-- 真实 `.env` 位于**仓库上一级目录**（`../.env`）：
+- 真实 `.env` 位于**仓库根目录**（`./.env`，可复制 `.env.example` 后填入；路径可用 `NEWSWRIGHT_ENV_FILE` 覆盖）：
   - 必需：`DeepSeekAPIKey`、`MoarkAPIKey`
   - 搜索/排序（可选，缺失时对应通道降级关闭）：`bochaaiAPIKey`（博查三件套同一把 Key）、`tencentSecretId`/`tencentSecretKey`（腾讯 wsa，CAM 子账号凭据）
   - Key 任何情况下不进 git；`.env` 解析兼容 `KEY=value` 与空格分隔两种形态（config.py 容错）。
