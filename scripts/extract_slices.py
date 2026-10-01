@@ -10,8 +10,8 @@
 4. 多样性：每文件最多 3 片、同文件 50 字首部去重、全局按分排序取前 N。
 
 用法：
-  python scripts/extract_slices.py --top 16 --out authors/tanya_slices.json
-  python scripts/extract_slices.py --top 16 --apply authors/tanya.json
+  python scripts/extract_slices.py --top 16 --out config/authors/tanya_slices.json
+  python scripts/extract_slices.py --top 16 --apply config/authors/tanya.json
 """
 from __future__ import annotations
 
@@ -102,7 +102,7 @@ def has_voice(cand: dict) -> bool:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=16)
-    ap.add_argument("--out", default=str(ROOT / "authors" / "tanya_slices.json"))
+    ap.add_argument("--out", default=str(ROOT / "config" / "authors" / "tanya_slices.json"))
     ap.add_argument("--apply", default=None, help="把切片写入该 author.json 的 memory.static_blocks")
     args = ap.parse_args()
 
