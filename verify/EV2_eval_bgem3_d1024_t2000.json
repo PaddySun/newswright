@@ -1,0 +1,294 @@
+{
+ "model_key": "bgem3",
+ "model": "bge-m3",
+ "dims": 1024,
+ "trunc": 2000,
+ "ev2_routing_per_query": [
+  {
+   "brief": "News",
+   "query": "local small model deployment inference optimization consumer GPU quantization decision routing",
+   "n_pos": 7,
+   "n_neg": 65,
+   "recall@5": 0.0,
+   "recall@10": 0.0,
+   "mrr": 0.002,
+   "sep_auc": 0.798,
+   "mix@10": [
+    0,
+    0
+   ]
+  },
+  {
+   "brief": "News",
+   "query": "I run personal AI infrastructure and want first-hand engineering writeups on local 4B-9B model deployment, quantization and VRAM optimization, OpenAI-compatible LLM gateways with key pooling and rate limiting, MCP server releases, coding-agent harnesses, and LLM evaluation methodology with real benchmark data",
+   "n_pos": 7,
+   "n_neg": 65,
+   "recall@5": 0.143,
+   "recall@10": 0.143,
+   "mrr": 0.033,
+   "sep_auc": 0.829,
+   "mix@10": [
+    0,
+    1
+   ]
+  },
+  {
+   "brief": "News",
+   "query": "本地小模型部署与推理优化 量化 显存技巧 LLM网关 路由 评测方法",
+   "n_pos": 7,
+   "n_neg": 65,
+   "recall@5": 0.0,
+   "recall@10": 0.0,
+   "mrr": 0.002,
+   "sep_auc": 0.859,
+   "mix@10": [
+    0,
+    0
+   ]
+  },
+  {
+   "brief": "Hacker News",
+   "query": "Show HN local inference LLM gateway eval tooling MCP agent",
+   "n_pos": 26,
+   "n_neg": 37,
+   "recall@5": 0.0,
+   "recall@10": 0.0,
+   "mrr": 0.004,
+   "sep_auc": 0.653,
+   "mix@10": [
+    0,
+    0
+   ]
+  },
+  {
+   "brief": "Hacker News",
+   "query": "Show HN or release posts about running small language models locally on consumer GPUs, LLM gateways and proxies like LiteLLM, evaluation and benchmark tooling, MCP and agent infrastructure, plus first-hand engineering deep dives and postmortems with real numbers",
+   "n_pos": 26,
+   "n_neg": 37,
+   "recall@5": 0.0,
+   "recall@10": 0.038,
+   "mrr": 0.011,
+   "sep_auc": 0.736,
+   "mix@10": [
+    0,
+    1
+   ]
+  },
+  {
+   "brief": "Hacker News",
+   "query": "本地推理 小模型 LLM 网关 评测工具 MCP 智能体",
+   "n_pos": 26,
+   "n_neg": 37,
+   "recall@5": 0.0,
+   "recall@10": 0.038,
+   "mrr": 0.011,
+   "sep_auc": 0.788,
+   "mix@10": [
+    0,
+    1
+   ]
+  },
+  {
+   "brief": "Blog",
+   "query": "personal blog essays hands-on projects real experience tech gossip weekly curation",
+   "n_pos": 50,
+   "n_neg": 14,
+   "recall@5": 0.02,
+   "recall@10": 0.02,
+   "mrr": 0.012,
+   "sep_auc": 0.75,
+   "mix@10": [
+    0,
+    2
+   ]
+  },
+  {
+   "brief": "Blog",
+   "query": "Looking for personal blog posts with genuine human voice and information gain: philosophical essays from real experience, hands-on tool testing and self-hosting pitfalls with concrete details, tech or blog circle gossip, and well-curated link roundups, not AI-generated template content or reprinted press releases",
+   "n_pos": 50,
+   "n_neg": 14,
+   "recall@5": 0.0,
+   "recall@10": 0.0,
+   "mrr": 0.003,
+   "sep_auc": 0.663,
+   "mix@10": [
+    0,
+    1
+   ]
+  },
+  {
+   "brief": "Blog",
+   "query": "个人博客 真实经历 实践记录 折腾踩坑 圈内八卦 优质周刊",
+   "n_pos": 50,
+   "n_neg": 14,
+   "recall@5": 0.02,
+   "recall@10": 0.02,
+   "mrr": 0.015,
+   "sep_auc": 0.503,
+   "mix@10": [
+    0,
+    2
+   ]
+  }
+ ],
+ "ev2_routing_restricted_pool": [
+  {
+   "brief": "News",
+   "n_pos": 7,
+   "recall@5": 0.0,
+   "recall@10": 0.143,
+   "mrr": 0.041
+  },
+  {
+   "brief": "News",
+   "n_pos": 7,
+   "recall@5": 0.286,
+   "recall@10": 0.286,
+   "mrr": 0.225
+  },
+  {
+   "brief": "News",
+   "n_pos": 7,
+   "recall@5": 0.0,
+   "recall@10": 0.0,
+   "mrr": 0.019
+  },
+  {
+   "brief": "Hacker News",
+   "n_pos": 26,
+   "recall@5": 0.115,
+   "recall@10": 0.154,
+   "mrr": 0.079
+  },
+  {
+   "brief": "Hacker News",
+   "n_pos": 26,
+   "recall@5": 0.115,
+   "recall@10": 0.154,
+   "mrr": 0.092
+  },
+  {
+   "brief": "Hacker News",
+   "n_pos": 26,
+   "recall@5": 0.115,
+   "recall@10": 0.192,
+   "mrr": 0.093
+  },
+  {
+   "brief": "Blog",
+   "n_pos": 50,
+   "recall@5": 0.04,
+   "recall@10": 0.1,
+   "mrr": 0.048
+  },
+  {
+   "brief": "Blog",
+   "n_pos": 50,
+   "recall@5": 0.02,
+   "recall@10": 0.08,
+   "mrr": 0.029
+  },
+  {
+   "brief": "Blog",
+   "n_pos": 50,
+   "recall@5": 0.04,
+   "recall@10": 0.08,
+   "mrr": 0.046
+  }
+ ],
+ "ev2_note": "restricted_pool=主口径（259 标注条内检索）；全库 per_query 为参考（标注密度 3.8%，绝对 Recall 被未标注条目稀释）",
+ "ev3_crosslingual": {
+  "en→zh": {
+   "n": 15,
+   "recall@1": 0.933,
+   "recall@5": 1.0,
+   "recall@10": 1.0,
+   "mrr": 0.967
+  },
+  "zh→en": {
+   "n": 15,
+   "recall@1": 0.8,
+   "recall@5": 1.0,
+   "recall@10": 1.0,
+   "mrr": 0.9
+  },
+  "en→ja": {
+   "n": 5,
+   "recall@1": 0.8,
+   "recall@5": 0.8,
+   "recall@10": 0.8,
+   "mrr": 0.812
+  }
+ },
+ "ev4_neardup": {
+  "sim_pos_exact_mean": 0.9537,
+  "sim_pos_para_mean": 0.8323,
+  "sim_neg_hard_mean": 0.8643,
+  "sim_neg_random_mean": 0.3934,
+  "auc_pos_vs_neg": 0.845,
+  "auc_pos_vs_hard_neg": 0.747,
+  "gap_pos_mean_minus_hard_neg_mean": 0.0659,
+  "n_pairs": {
+   "pos_exact": 71,
+   "pos_para": 17,
+   "neg_hard": 47,
+   "neg_random": 30
+  }
+ },
+ "ev4_exploration_tail": [
+  {
+   "brief": "News",
+   "tail_labeled_n": 8,
+   "tail_score_ge40": 0,
+   "tail_score_max": 25
+  },
+  {
+   "brief": "News",
+   "tail_labeled_n": 6,
+   "tail_score_ge40": 0,
+   "tail_score_max": 15
+  },
+  {
+   "brief": "News",
+   "tail_labeled_n": 6,
+   "tail_score_ge40": 1,
+   "tail_score_max": 45
+  },
+  {
+   "brief": "Hacker News",
+   "tail_labeled_n": 5,
+   "tail_score_ge40": 0,
+   "tail_score_max": 15
+  },
+  {
+   "brief": "Hacker News",
+   "tail_labeled_n": 5,
+   "tail_score_ge40": 0,
+   "tail_score_max": 15
+  },
+  {
+   "brief": "Hacker News",
+   "tail_labeled_n": 1,
+   "tail_score_ge40": 0,
+   "tail_score_max": 15
+  },
+  {
+   "brief": "Blog",
+   "tail_labeled_n": 5,
+   "tail_score_ge40": 3,
+   "tail_score_max": 78
+  },
+  {
+   "brief": "Blog",
+   "tail_labeled_n": 5,
+   "tail_score_ge40": 2,
+   "tail_score_max": 55
+  },
+  {
+   "brief": "Blog",
+   "tail_labeled_n": 1,
+   "tail_score_ge40": 0,
+   "tail_score_max": 0
+  }
+ ]
+}

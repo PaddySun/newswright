@@ -1,0 +1,86 @@
+{
+ "models": {
+  "qwen06": {
+   "model": "Qwen3-Embedding-0.6B",
+   "ok": true,
+   "dims": [
+    1024
+   ],
+   "latency_s": 1.06,
+   "lang_probe_ok": true
+  },
+  "qwen4": {
+   "model": "Qwen3-Embedding-4B",
+   "ok": true,
+   "dims": [
+    1024
+   ],
+   "latency_s": 1.19,
+   "lang_probe_ok": true
+  },
+  "qwen8": {
+   "model": "Qwen3-Embedding-8B",
+   "ok": true,
+   "dims": [
+    1024
+   ],
+   "latency_s": 1.55,
+   "lang_probe_ok": true
+  },
+  "jina4": {
+   "model": "jina-embeddings-v4",
+   "ok": true,
+   "dims": [
+    2048
+   ],
+   "latency_s": 1.39,
+   "lang_probe_ok": true
+  },
+  "bgem3": {
+   "model": "bge-m3",
+   "ok": true,
+   "dims": [
+    1024
+   ],
+   "latency_s": 1.26,
+   "lang_probe_ok": true
+  }
+ },
+ "dimensions_behavior_512": {
+  "qwen06": {
+   "requested": 512,
+   "actual": 512,
+   "mrl_512_ok": true,
+   "silently_ignored": false
+  },
+  "qwen4": {
+   "requested": 512,
+   "actual": 512,
+   "mrl_512_ok": true,
+   "silently_ignored": false
+  },
+  "qwen8": {
+   "requested": 512,
+   "actual": 512,
+   "mrl_512_ok": true,
+   "silently_ignored": false
+  },
+  "jina4": {
+   "requested": 512,
+   "actual": 2048,
+   "mrl_512_ok": false,
+   "silently_ignored": true
+  },
+  "bgem3": {
+   "requested": 512,
+   "actual": 1024,
+   "mrl_512_ok": false,
+   "silently_ignored": true
+  }
+ },
+ "error_behavior": {
+  "empty_string": "no-error (returned normally)",
+  "invalid_dims": "moark_embed embedding 失败（重试 0 次后放弃）: HTTP 400: {\"error\":{\"code\":\"400\",\"message\":\"无效的参数数组长度: 'input' 长度是 '26' 到 '1000'\",\"type\":\"server_error\"}}"
+ },
+ "metering": "全部探测经 provider 层，usage_log call_point=embed_*（免费也记账）"
+}

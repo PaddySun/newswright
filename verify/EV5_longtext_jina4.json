@@ -1,0 +1,38 @@
+{
+ "model_key": "jina4",
+ "n_items": 36,
+ "truncation_recall": {
+  "512": {
+   "recall@1": 0.861,
+   "recall@5": 0.972,
+   "mean_rank": 1.64,
+   "worst_rank": 14,
+   "n_valid": 36,
+   "fails": []
+  },
+  "1000": {
+   "recall@1": 0.833,
+   "recall@5": 0.944,
+   "mean_rank": 1.69,
+   "worst_rank": 13,
+   "n_valid": 36,
+   "fails": []
+  },
+  "2000": {
+   "recall@1": 0.778,
+   "recall@5": 0.972,
+   "mean_rank": 1.83,
+   "worst_rank": 17,
+   "n_valid": 36,
+   "fails": []
+  },
+  "None": {
+   "recall@1": 0.833,
+   "recall@5": 0.972,
+   "mean_rank": 1.28,
+   "worst_rank": 6,
+   "n_valid": 36,
+   "fails": []
+  }
+ }
+}

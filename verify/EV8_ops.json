@@ -1,0 +1,111 @@
+{
+ "latency_per_item": {
+  "Qwen3-Embedding-0.6B": {
+   "batches": 162,
+   "items_total": 20436,
+   "ms_per_item": 20.5,
+   "prompt_tokens_total": 3532242,
+   "tokens_reported_zero": false
+  },
+  "Qwen3-Embedding-8B": {
+   "batches": 440,
+   "items_total": 8284,
+   "ms_per_item": 117.2,
+   "prompt_tokens_total": 1249734,
+   "tokens_reported_zero": false
+  },
+  "Qwen3-Embedding-4B": {
+   "batches": 107,
+   "items_total": 6812,
+   "ms_per_item": 130.7,
+   "prompt_tokens_total": 1177414,
+   "tokens_reported_zero": false
+  },
+  "jina-embeddings-v4": {
+   "batches": 107,
+   "items_total": 6812,
+   "ms_per_item": 427.0,
+   "prompt_tokens_total": 0,
+   "tokens_reported_zero": true
+  },
+  "bge-m3": {
+   "batches": 107,
+   "items_total": 6812,
+   "ms_per_item": 76.8,
+   "prompt_tokens_total": 985275,
+   "tokens_reported_zero": false
+  }
+ },
+ "burst_free_tier": {
+  "requests": 30,
+  "status_codes": {
+   "200": 30
+  },
+  "wall_s": 32.2,
+  "rps_free_observed": 0.93
+ },
+ "storage_estimate": {
+  "Qwen3-Embedding-0.6B@1024": {
+   "bytes_per_vec": 4096,
+   "raw_6812_items_mb": 27.9,
+   "sqlite_page_overhead_est_mb": 31.3,
+   "sqlite_file_pages": 6813
+  },
+  "Qwen3-Embedding-4B@1024": {
+   "bytes_per_vec": 4096,
+   "raw_6812_items_mb": 27.9,
+   "sqlite_page_overhead_est_mb": 31.3,
+   "sqlite_file_pages": 6813
+  },
+  "Qwen3-Embedding-8B@1024": {
+   "bytes_per_vec": 4096,
+   "raw_6812_items_mb": 27.9,
+   "sqlite_page_overhead_est_mb": 31.3,
+   "sqlite_file_pages": 6813
+  },
+  "jina-embeddings-v4@2048": {
+   "bytes_per_vec": 8192,
+   "raw_6812_items_mb": 55.8,
+   "sqlite_page_overhead_est_mb": 62.5,
+   "sqlite_file_pages": 13625
+  },
+  "bge-m3@1024": {
+   "bytes_per_vec": 4096,
+   "raw_6812_items_mb": 27.9,
+   "sqlite_page_overhead_est_mb": 31.3,
+   "sqlite_file_pages": 6813
+  },
+  "brute_force_numpy_1024d_ms": 0.86
+ },
+ "neohorse_billing": {
+  "APUS-OpenJev-v1-9B": {
+   "calls": 114,
+   "input_tokens": 170472,
+   "output_tokens": 360,
+   "billing_units": 360,
+   "latency_ms_mean": 1364.0,
+   "note": "systemone usage 含 expanded_input_tokens（ criteria 展开后）与 input_tokens 两口径，adapter 记 input_tokens"
+  },
+  "NeoHorse-Jev-4B": {
+   "calls": 101,
+   "input_tokens": 87142,
+   "output_tokens": 0,
+   "billing_units": 0,
+   "latency_ms_mean": 1148.0,
+   "note": "systemone usage 含 expanded_input_tokens（ criteria 展开后）与 input_tokens 两口径，adapter 记 input_tokens"
+  },
+  "SemIf-OpenJev-4B": {
+   "calls": 72,
+   "input_tokens": 82194,
+   "output_tokens": 168,
+   "billing_units": 168,
+   "latency_ms_mean": 1096.0,
+   "note": "systemone usage 含 expanded_input_tokens（ criteria 展开后）与 input_tokens 两口径，adapter 记 input_tokens"
+  }
+ },
+ "batch_limits_observed": {
+  "Qwen3-Embedding-0.6B": "1000 条/请求（1001→400）",
+  "Qwen3-Embedding-4B": "100 条/请求（128→400 'maximum of 100 inputs'）",
+  "Qwen3-Embedding-8B/jina/bge": "64 批实测触发服务端按 token 拆批重编号 index（数量校验护栏拦截，生产建议批 ≤16-32）"
+ }
+}

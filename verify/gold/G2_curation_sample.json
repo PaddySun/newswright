@@ -1,0 +1,222 @@
+[
+ {
+  "a": {
+   "id": "md:c4502885-e6b3-43e5-9d3c-4cec942e54d1",
+   "title": "Node.js 26.3.0 (Current)"
+  },
+  "b": {
+   "id": "md:2d944e13-e06a-48ed-8d84-ee88ae7978ed",
+   "title": "Node.js 12.11.0 (Current)"
+  },
+  "how": "fuzzy-0.86"
+ },
+ {
+  "a": {
+   "id": "md:39176486-cd85-4d5e-a1b6-fbb86f6e35aa",
+   "title": "Node.js 17.6.0 (Current)"
+  },
+  "b": {
+   "id": "md:6509a9d4-21ac-4c70-8070-dd4a5d7e2b1d",
+   "title": "Node.js 16.12.0 (Current)"
+  },
+  "how": "fuzzy-0.91"
+ },
+ {
+  "a": {
+   "id": "md:5b79d879-3b95-4585-aab3-cd661f7661d5",
+   "title": "Node.js 25.2.1 (Current)"
+  },
+  "b": {
+   "id": "md:8f0d5f75-57f4-457f-8aa5-ca2f52103786",
+   "title": "Node.js 24.0.1 (Current)"
+  },
+  "how": "fuzzy-0.88"
+ },
+ {
+  "a": {
+   "id": "md:0a866f5d-2be6-49cc-80d9-e40e5b03c317",
+   "title": "Node.js 26.8.1 (Current)"
+  },
+  "b": {
+   "id": "md:3d374ee2-51d3-4ba8-8bfa-ce6582691ef6",
+   "title": "Node.js 26.10.0 (Current)"
+  },
+  "how": "fuzzy-0.91"
+ },
+ {
+  "a": {
+   "id": "md:c4502885-e6b3-43e5-9d3c-4cec942e54d1",
+   "title": "Node.js 26.3.0 (Current)"
+  },
+  "b": {
+   "id": "md:75ccc4e9-d360-49e9-b8a7-b8cc33e4bfcb",
+   "title": "Node.js 16.3.0 (Current)"
+  },
+  "how": "fuzzy-0.94"
+ },
+ {
+  "a": {
+   "id": "md:6994213f-08d7-42fc-b6c6-cb86ad0f917c",
+   "title": "Node.js 26.1.0 (Current)"
+  },
+  "b": {
+   "id": "md:6a9aa24d-ea62-4491-8117-cee43e0b5614",
+   "title": "Node.js 9.7.1 (Current)"
+  },
+  "how": "fuzzy-0.85"
+ },
+ {
+  "a": {
+   "id": "md:6c6553c1-fd40-4418-bc77-537617f751b1",
+   "title": "Node.js 26.4.0 (Current)"
+  },
+  "b": {
+   "id": "md:67b572bf-1c25-4f9e-a113-fb327dfa9a84",
+   "title": "Node.js 8.0.0 (Current)"
+  },
+  "how": "fuzzy-0.85"
+ },
+ {
+  "a": {
+   "id": "md:01ce7f54-0dd4-4472-ba6a-7a773d206361",
+   "title": "Node.js 26.8.0 (Current)"
+  },
+  "b": {
+   "id": "md:0abffcd4-f326-44bd-92d2-7c6341220727",
+   "title": "Node.js 6.0.0 (Current)"
+  },
+  "how": "fuzzy-0.91"
+ },
+ {
+  "a": {
+   "id": "md:c4502885-e6b3-43e5-9d3c-4cec942e54d1",
+   "title": "Node.js 26.3.0 (Current)"
+  },
+  "b": {
+   "id": "md:67852307-7bae-43f3-8e4f-e8fe6bfa69e6",
+   "title": "Node.js 22.7.0 (Current)"
+  },
+  "how": "fuzzy-0.88"
+ },
+ {
+  "a": {
+   "id": "md:d5457e90-4150-48d9-9e5e-fe6202da24b0",
+   "title": "Node.js 26.6.0 (Current)"
+  },
+  "b": {
+   "id": "md:7dc78cda-b88d-4dff-b37b-f6cd11cbfdb2",
+   "title": "Node.js 20.3.0 (Current)"
+  },
+  "how": "fuzzy-0.88"
+ },
+ {
+  "a": {
+   "id": "md:0fe5e191-ac79-47f8-88c9-b657891643f5",
+   "title": "GPT-5.3-Codex System Card"
+  },
+  "b": {
+   "id": "md:9f8779be-497b-4776-a78d-bebe7e621f74",
+   "title": "GPT-5 System Card"
+  },
+  "how": "fuzzy-0.82"
+ },
+ {
+  "a": {
+   "id": "md:968c4b1f-91e1-4a93-9a5c-db7a8a550c45",
+   "title": "Node.js 15.7.0 (Current)"
+  },
+  "b": {
+   "id": "md:32c0037a-1007-4b65-91a5-6929334a21eb",
+   "title": "Node.js 21.6.1 (Current)"
+  },
+  "how": "fuzzy-0.82"
+ },
+ {
+  "a": {
+   "id": "md:39176486-cd85-4d5e-a1b6-fbb86f6e35aa",
+   "title": "Node.js 17.6.0 (Current)"
+  },
+  "b": {
+   "id": "md:5fcc2a45-5823-4fd1-8f83-ec0cda4e3ea6",
+   "title": "Node.js 7.9.0 (Current)"
+  },
+  "how": "fuzzy-0.91"
+ },
+ {
+  "a": {
+   "id": "md:e1b8c1e7-3985-44cb-8f8f-e612390c8bcf",
+   "title": "Node.js 26.3.1 (Current)"
+  },
+  "b": {
+   "id": "md:a8284299-03fa-45ad-a733-ed019e4ab41c",
+   "title": "Node.js 23.6.0 (Current)"
+  },
+  "how": "fuzzy-0.88"
+ },
+ {
+  "a": {
+   "id": "md:39176486-cd85-4d5e-a1b6-fbb86f6e35aa",
+   "title": "Node.js 17.6.0 (Current)"
+  },
+  "b": {
+   "id": "md:4ba44045-8ae2-49f6-a965-9c5a41bcc316",
+   "title": "Node.js 24.0.0 (Current)"
+  },
+  "how": "fuzzy-0.82"
+ },
+ {
+  "a": {
+   "id": "md:37cecec3-7f6d-4344-a758-d28d58c287f1",
+   "title": "Node.js 15.6.0 (Current)"
+  },
+  "b": {
+   "id": "md:48112486-6187-46bb-a4d7-f9916da89d6d",
+   "title": "Node.js 10.0.0 (Current)"
+  },
+  "how": "fuzzy-0.88"
+ },
+ {
+  "a": {
+   "id": "md:b01d43c7-ee4f-4005-818c-428d0d943f5a",
+   "title": "July 2021 Security Releases"
+  },
+  "b": {
+   "id": "md:9978803a-5932-4436-9414-25fdf343e038",
+   "title": "July 2021 Security Releases"
+  },
+  "how": "exact-norm"
+ },
+ {
+  "a": {
+   "id": "md:9148c565-01cd-45af-8d73-5787564f2070",
+   "title": "Node.js 26.2.0 (Current)"
+  },
+  "b": {
+   "id": "md:5c44ecb7-f82a-4643-8a84-b83fd1f5604c",
+   "title": "Node.js 9.4.0 (Current)"
+  },
+  "how": "fuzzy-0.85"
+ },
+ {
+  "a": {
+   "id": "md:c4502885-e6b3-43e5-9d3c-4cec942e54d1",
+   "title": "Node.js 26.3.0 (Current)"
+  },
+  "b": {
+   "id": "md:3c761dce-54e3-4d7b-9621-01ed0a37f5df",
+   "title": "Node.js 17.1.0 (Current)"
+  },
+  "how": "fuzzy-0.82"
+ },
+ {
+  "a": {
+   "id": "md:2f6c0c4d-fa06-4df4-beb2-9142395f92b7",
+   "title": "Node.js 24.18.0 (LTS)"
+  },
+  "b": {
+   "id": "md:a6e3fcaa-8012-4c8e-8e9a-cac8358346d9",
+   "title": "Node.js 22.12.0 (LTS)"
+  },
+  "how": "fuzzy-0.86"
+ }
+]

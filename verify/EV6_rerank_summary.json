@@ -1,0 +1,106 @@
+[
+ {
+  "config": "moark_reranker_bge_v2_m3",
+  "mode": "long_briefing",
+  "band_agree": 0.145,
+  "spearman": -0.129,
+  "spearman_per_brief": {
+   "3c394504": 0.098,
+   "4c5b25ca": -0.282,
+   "97c6d38b": -0.202
+  },
+  "latency_ms_median": 1435,
+  "prompt_tokens_per_call": 0
+ },
+ {
+  "config": "moark_reranker_bge_v2_m3",
+  "mode": "short_query",
+  "band_agree": 0.145,
+  "spearman": -0.83,
+  "spearman_per_brief": {
+   "3c394504": -0.825,
+   "4c5b25ca": -0.829,
+   "97c6d38b": -0.836
+  },
+  "latency_ms_median": 1306,
+  "prompt_tokens_per_call": 0
+ },
+ {
+  "config": "moark_reranker_qwen3_06b",
+  "mode": "long_briefing",
+  "band_agree": 0.167,
+  "spearman": 0.039,
+  "spearman_per_brief": {
+   "3c394504": 0.649,
+   "4c5b25ca": 0.005,
+   "97c6d38b": -0.536
+  },
+  "latency_ms_median": 1215,
+  "prompt_tokens_per_call": 352550
+ },
+ {
+  "config": "moark_reranker_qwen3_06b",
+  "mode": "short_query",
+  "band_agree": 0.156,
+  "spearman": -0.172,
+  "spearman_per_brief": {
+   "3c394504": 0.103,
+   "4c5b25ca": -0.518,
+   "97c6d38b": -0.102
+  },
+  "latency_ms_median": 1188,
+  "prompt_tokens_per_call": 128602
+ },
+ {
+  "config": "moark_reranker_qwen3_4b",
+  "mode": "long_briefing",
+  "band_agree": 0.265,
+  "spearman": 0.446,
+  "spearman_per_brief": {
+   "3c394504": 0.559,
+   "4c5b25ca": 0.467,
+   "97c6d38b": 0.312
+  },
+  "latency_ms_median": 1966,
+  "prompt_tokens_per_call": 352550
+ },
+ {
+  "config": "moark_reranker_qwen3_4b",
+  "mode": "short_query",
+  "band_agree": 0.145,
+  "spearman": -0.031,
+  "spearman_per_brief": {
+   "3c394504": 0.284,
+   "4c5b25ca": 0.135,
+   "97c6d38b": -0.512
+  },
+  "latency_ms_median": 1630,
+  "prompt_tokens_per_call": 128602
+ },
+ {
+  "config": "moark_reranker_qwen3_8b",
+  "mode": "long_briefing",
+  "band_agree": 0.272,
+  "spearman": 0.493,
+  "spearman_per_brief": {
+   "3c394504": 0.626,
+   "4c5b25ca": 0.649,
+   "97c6d38b": 0.204
+  },
+  "latency_ms_median": 1999,
+  "prompt_tokens_per_call": 352550
+ },
+ {
+  "config": "moark_reranker_qwen3_8b",
+  "mode": "short_query",
+  "band_agree": 0.145,
+  "spearman": -0.065,
+  "spearman_per_brief": {
+   "3c394504": 0.379,
+   "4c5b25ca": -0.544,
+   "97c6d38b": -0.03
+  },
+  "latency_ms_median": 2165,
+  "prompt_tokens_per_call": 128602
+ }
+]

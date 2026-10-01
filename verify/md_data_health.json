@@ -1,0 +1,310 @@
+{
+  "db": "C:\\Users\\paddy\\Desktop\\dev\\newswright\\newswright\\data\\eval\\morningdeck_eval.db",
+  "counts": {
+    "news_items": 6615,
+    "sources": 93,
+    "day_briefs": 3,
+    "daily_reports": 7,
+    "report_items": 16,
+    "api_usage_logs": 120
+  },
+  "per_brief": [
+    {
+      "brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "title": "News",
+      "briefing": "User persona: senior engineer running personal infrastructure, AI/LLM focus.\n\nSCORE HIGH (70-100) — directly relevant, first-hand, actionable:\n- Decision-style / typed-output small models (Jev family, APUS-OpenJev, SemIf, Bespoke-Nimble), single-forward-pass scoring, decision/routing engines\n- Local small-model deployment & inference optimization on consumer GPUs: 4B-9B models, quantization, VRAM tricks, BERT/encoder fine-tuning\n- LLM gateway & API infrastructure: OpenAI-compatible proxies/gateways, key pooling, accounting/quota, rate limiting, model routing (Bifrost, LiteLLM, one-api class)\n- LLM evaluation & benchmarking methodology: harness design, pass@k / sampling experiments, scoring pipelines, model comparison with real data\n- Coding-agent tooling & protocols: Claude Code, Codex, MCP (spec & server releases), agent harnesses, session/trajectory tooling\n- Self-hosting & perimeter security ops: WordPress hardening, WAF (SafeLine/Chaitin), fail2ban, abuse IP reporting, CDN (EdgeOne) caching & rules, SSH/ufw/ipset hardening, Docker ops\n- First-hand version releases of tools/models actually in use: DeepSeek, Qwen, GLM, OpenAI, Anthropic; MCP spec; Bifrost/LiteLLM; RSSHub; Docker; WordPress core; Ubuntu LTS point releases\n- Chinese-NLP engineering: comment sentiment, moderation pipelines, 舆情 monitoring\n\nSCORE MID (40-69) — adjacent or limited increment:\n- AI industry news with real technical substance (architecture, training, benchmark details)\n- AI policy/regulation with concrete technical impact analysis\n- Well-written engineering deep-dives outside core topics (distributed systems, databases, networking, Rust/Go ecosystems)\n- AI history & academic retrospectives with modern takeaways; paper digests with usable methods\n- Technical blog infrastructure: static sites, headless CMS, theme development\n\nSCORE LOW (0-39) — out of scope or thin:\n- Pure politics, entertainment, sports; consumer product reviews; crypto/finance\n- Funding/PR/marketing without technical content; reposts/aggregations with no original increment\n- Paper-level pure theory with no implementation path\n- Frontend design/UX news, career/salary/forum gossip threads",
+      "briefing_chars": 2167,
+      "items": 6218,
+      "scored": 13,
+      "ge60": 3,
+      "le30": 9,
+      "score_min": 3,
+      "score_max": 92,
+      "score_mean": 32.5
+    },
+    {
+      "brief_id": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+      "title": "Hacker News",
+      "briefing": "User persona: senior engineer, AI/LLM infrastructure focus. This brief is Hacker News only — judge by HN post type AND content relevance.\n\nSCORE HIGH (70-100):\n- Show HN with working repo/demo in my areas: decision/typed-output small models, local inference on consumer GPUs, LLM gateways/proxies, eval & benchmark tooling, agent/MCP tooling, self-hosting security tooling\n- First-hand release announcements & changelogs of tools/models in use (DeepSeek, Qwen, GLM, OpenAI, Anthropic, MCP, LiteLLM/Bifrost, RSSHub, Docker, WordPress)\n- Engineering deep-dives & postmortems: how-we-built-X, incident write-ups, security research with technical detail, WAF/CDN/fail2ban border defense\n- Benchmark/eval methodology with real numbers; inference optimization (quantization, VRAM, BERT/encoder fine-tuning)\n\nSCORE MID (40-69):\n- Solid general engineering posts: distributed systems, databases, networking, Rust/Go ecosystem\n- AI industry news with technical substance (architecture/training/benchmarks)\n- Ops war stories and infrastructure economics with usable data\n\nSCORE LOW (0-39):\n- Ask HN career/salary/advice threads; HN meta discussions about HN\n- Startup funding/marketing/launches without working tech; hype takes without technical content\n- Politics, culture-war, consumer product chatter; reposted blog summaries of already-known news",
+      "briefing_chars": 1340,
+      "items": 308,
+      "scored": 6,
+      "ge60": 0,
+      "le30": 3,
+      "score_min": 14,
+      "score_max": 58,
+      "score_mean": 32.7
+    },
+    {
+      "brief_id": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+      "title": "Blog",
+      "briefing": "这是一个「个人博客与博客聚合」简报，打分对象多为长文与随笔。请按\"作者的真实人味\"和\"信息增量\"判定，不要按题材热度判定。\n\n最爱看（70-100）：\n- 哲思随笔：有趣、新奇、有独到见解，观点来自作者真实的经历与思考，而非空转概念\n- 个人实践：亲自动手做过的事——工具/服务的实测与推荐、踩坑记录、自建折腾全过程，带真实细节（数据、截图、失败经过、真实花费）\n- 圈内吃瓜八卦：科技圈/博客圈的轶事、恩怨、翻车、爆料——注意是圈内人的真事，不是娱乐圈明星新闻\n- 优质聚合/周刊：作者自己筛选编排的链接合集，按选品质量给中高分（选品眼光本身就是增量）\n\n还可以看（40-69）：\n- 旅行见闻、新奇经历，有具体地点和细节\n- 游戏、影视的真诚推荐与评价，出自个人体验而非通稿\n- 与上述主题无关但写得好的个人随笔，有人味、可读\n\n最不喜欢（0-39）：\n- 纯 AI 批量生成的内容：结构模板化、小标题工整得可疑、面面俱到却没有任何个人经验细节\n- 转载/照搬：政策原文、新闻通稿、他人文章的全文搬运，作者没有增加自己的判断（例：全文都是政策原文的\"政策分析\"）\n- 无病呻吟的文青腔、装腔作势的说教：辞藻堆砌、故弄玄虚、没有信息增量",
+      "briefing_chars": 519,
+      "items": 89,
+      "scored": 0,
+      "ge60": 0,
+      "le30": 0,
+      "score_min": null,
+      "score_max": null,
+      "score_mean": null
+    }
+  ],
+  "report_items_crosscheck": {
+    "n": 16,
+    "score_equal": 16,
+    "sample": [
+      {
+        "rs": 92,
+        "ns": 92,
+        "pos": 1,
+        "title": "Anthropic releases Sonnet 5.5, which it calls a significantl"
+      },
+      {
+        "rs": 82,
+        "ns": 82,
+        "pos": 2,
+        "title": "GenRec: An LLM-Backed Recommendation Ranker at NetflixConfer"
+      },
+      {
+        "rs": 70,
+        "ns": 70,
+        "pos": 3,
+        "title": "Google is killing off Gemini’s Gems in favor of ‘skills’"
+      },
+      {
+        "rs": 35,
+        "ns": 35,
+        "pos": 4,
+        "title": "苹果 macOS 27.0.1 正式版发布"
+      },
+      {
+        "rs": 30,
+        "ns": 30,
+        "pos": 5,
+        "title": "AMD will acquire Fei-Fei Li’s World Labs for $8.2 billion"
+      },
+      {
+        "rs": 28,
+        "ns": 28,
+        "pos": 6,
+        "title": "AMD is acquiring AI company World Labs in a deal worth more "
+      },
+      {
+        "rs": 25,
+        "ns": 25,
+        "pos": 7,
+        "title": "苹果 visionOS 27.0.1 正式版发布"
+      },
+      {
+        "rs": 25,
+        "ns": 25,
+        "pos": 8,
+        "title": "苹果 iOS/iPadOS 27.0.1 正式版发布"
+      }
+    ]
+  },
+  "nulls": {
+    "total": 6615,
+    "title": 0,
+    "link": 0,
+    "raw_content": 1214,
+    "clean_content": 1213,
+    "web_content": 6602,
+    "summary": 6596,
+    "score": 6596,
+    "published_at": 0
+  },
+  "status_dist": {
+    "DONE": 6219,
+    "ERROR": 118,
+    "NEW": 278
+  },
+  "scored_count": 19,
+  "lang_dist_heuristic": {
+    "en": 6138,
+    "zh": 476,
+    "ja": 1
+  },
+  "clean_content_len": {
+    "n": 6615,
+    "p50": 178,
+    "p90": 2187,
+    "p99": 21464,
+    "max": 160882,
+    "ge2000": 702
+  },
+  "web_content_len": {
+    "n": 13,
+    "p50": 3543,
+    "p90": 5033,
+    "ge2000": 8
+  },
+  "sources_top": [
+    {
+      "name": "Vercel Blog",
+      "url": "https://vercel.com/atom",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 1613
+    },
+    {
+      "name": "OpenAI 博客",
+      "url": "https://openai.com/news/rss.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 1230
+    },
+    {
+      "name": "Node.js Blog",
+      "url": "https://nodejs.org/en/feed/blog.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 1057
+    },
+    {
+      "name": "Supabase Blog",
+      "url": "https://supabase.com/rss.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 423
+    },
+    {
+      "name": "IT之家",
+      "url": "https://www.ithome.com/rss/",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 327
+    },
+    {
+      "name": "Astro Blog",
+      "url": "https://astro.build/rss.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 188
+    },
+    {
+      "name": "Svelte Blog",
+      "url": "https://svelte.dev/blog/rss.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 105
+    },
+    {
+      "name": "Next.js Blog",
+      "url": "https://nextjs.org/feed.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 80
+    },
+    {
+      "name": "Nature",
+      "url": "https://www.nature.com/nature.rss",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 75
+    },
+    {
+      "name": "Wired",
+      "url": "https://www.wired.com/feed/rss",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 73
+    },
+    {
+      "name": "Tailwind CSS Blog",
+      "url": "https://tailwindcss.com/feeds/feed.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 63
+    },
+    {
+      "name": "TechCrunch",
+      "url": "https://techcrunch.com/feed/",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 60
+    },
+    {
+      "name": "博友圈",
+      "url": "https://www.boyouquan.com/feed.xml?sort=latest",
+      "day_brief_id": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+      "items": 55
+    },
+    {
+      "name": "Nuxt Blog",
+      "url": "https://nuxt.com/blog/rss.xml",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 51
+    },
+    {
+      "name": "Product Hunt",
+      "url": "https://www.producthunt.com/feed",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 51
+    },
+    {
+      "name": "Python Blog",
+      "url": "https://blog.python.org/feeds/posts/default",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 50
+    },
+    {
+      "name": "Smashing Magazine",
+      "url": "https://www.smashingmagazine.com/feed/",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 40
+    },
+    {
+      "name": "Newest AI",
+      "url": "https://hnrss.org/newest?q=AI",
+      "day_brief_id": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+      "items": 33
+    },
+    {
+      "name": "Simon Willison's Blog",
+      "url": "https://simonwillison.net/atom/everything/",
+      "day_brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+      "items": 32
+    },
+    {
+      "name": "Hacker News Best",
+      "url": "https://hnrss.org/best",
+      "day_brief_id": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+      "items": 30
+    }
+  ],
+  "title_dup": {
+    "exact_normalized_dup_groups": 68,
+    "dup_items_total": 140,
+    "top10": [
+      [
+        "communityday",
+        4
+      ],
+      [
+        "teamupdate",
+        3
+      ],
+      [
+        "usingclaudecodespendingyoureffort",
+        3
+      ],
+      [
+        "thestateofenterpriseai",
+        2
+      ],
+      [
+        "gpt4",
+        2
+      ],
+      [
+        "wejustshippedsupportfortheugliestpartofhttpvary",
+        2
+      ],
+      [
+        "claudesonnet55",
+        2
+      ],
+      [
+        "askhnfinetuningstrategies",
+        2
+      ],
+      [
+        "askhncanwetranslatenormalrustaxumtolean4withoutrestrictions",
+        2
+      ],
+      [
+        "askhnhowiscodereviewholdingupatyourcompany",
+        2
+      ]
+    ]
+  }
+}

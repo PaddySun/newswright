@@ -1,0 +1,3136 @@
+{
+ "built_at": "2026-10-01",
+ "thresholds": {
+  "positive": 60,
+  "negative": 30
+ },
+ "briefs": [
+  {
+   "brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "title": "News",
+   "briefing": "User persona: senior engineer running personal infrastructure, AI/LLM focus.\n\nSCORE HIGH (70-100) — directly relevant, first-hand, actionable:\n- Decision-style / typed-output small models (Jev family, APUS-OpenJev, SemIf, Bespoke-Nimble), single-forward-pass scoring, decision/routing engines\n- Local small-model deployment & inference optimization on consumer GPUs: 4B-9B models, quantization, VRAM tricks, BERT/encoder fine-tuning\n- LLM gateway & API infrastructure: OpenAI-compatible proxies/gateways, key pooling, accounting/quota, rate limiting, model routing (Bifrost, LiteLLM, one-api class)\n- LLM evaluation & benchmarking methodology: harness design, pass@k / sampling experiments, scoring pipelines, model comparison with real data\n- Coding-agent tooling & protocols: Claude Code, Codex, MCP (spec & server releases), agent harnesses, session/trajectory tooling\n- Self-hosting & perimeter security ops: WordPress hardening, WAF (SafeLine/Chaitin), fail2ban, abuse IP reporting, CDN (EdgeOne) caching & rules, SSH/ufw/ipset hardening, Docker ops\n- First-hand version releases of tools/models actually in use: DeepSeek, Qwen, GLM, OpenAI, Anthropic; MCP spec; Bifrost/LiteLLM; RSSHub; Docker; WordPress core; Ubuntu LTS point releases\n- Chinese-NLP engineering: comment sentiment, moderation pipelines, 舆情 monitoring\n\nSCORE MID (40-69) — adjacent or limited increment:\n- AI industry news with real technical substance (architecture, training, benchmark details)\n- AI policy/regulation with concrete technical impact analysis\n- Well-written engineering deep-dives outside core topics (distributed systems, databases, networking, Rust/Go ecosystems)\n- AI history & academic retrospectives with modern takeaways; paper digests with usable methods\n- Technical blog infrastructure: static sites, headless CMS, theme development\n\nSCORE LOW (0-39) — out of scope or thin:\n- Pure politics, entertainment, sports; consumer product reviews; crypto/finance\n- Funding/PR/marketing without technical content; reposts/aggregations with no original increment\n- Paper-level pure theory with no implementation path\n- Frontend design/UX news, career/salary/forum gossip threads"
+  },
+  {
+   "brief_id": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "title": "Hacker News",
+   "briefing": "User persona: senior engineer, AI/LLM infrastructure focus. This brief is Hacker News only — judge by HN post type AND content relevance.\n\nSCORE HIGH (70-100):\n- Show HN with working repo/demo in my areas: decision/typed-output small models, local inference on consumer GPUs, LLM gateways/proxies, eval & benchmark tooling, agent/MCP tooling, self-hosting security tooling\n- First-hand release announcements & changelogs of tools/models in use (DeepSeek, Qwen, GLM, OpenAI, Anthropic, MCP, LiteLLM/Bifrost, RSSHub, Docker, WordPress)\n- Engineering deep-dives & postmortems: how-we-built-X, incident write-ups, security research with technical detail, WAF/CDN/fail2ban border defense\n- Benchmark/eval methodology with real numbers; inference optimization (quantization, VRAM, BERT/encoder fine-tuning)\n\nSCORE MID (40-69):\n- Solid general engineering posts: distributed systems, databases, networking, Rust/Go ecosystem\n- AI industry news with technical substance (architecture/training/benchmarks)\n- Ops war stories and infrastructure economics with usable data\n\nSCORE LOW (0-39):\n- Ask HN career/salary/advice threads; HN meta discussions about HN\n- Startup funding/marketing/launches without working tech; hype takes without technical content\n- Politics, culture-war, consumer product chatter; reposted blog summaries of already-known news"
+  },
+  {
+   "brief_id": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "title": "Blog",
+   "briefing": "这是一个「个人博客与博客聚合」简报，打分对象多为长文与随笔。请按\"作者的真实人味\"和\"信息增量\"判定，不要按题材热度判定。\n\n最爱看（70-100）：\n- 哲思随笔：有趣、新奇、有独到见解，观点来自作者真实的经历与思考，而非空转概念\n- 个人实践：亲自动手做过的事——工具/服务的实测与推荐、踩坑记录、自建折腾全过程，带真实细节（数据、截图、失败经过、真实花费）\n- 圈内吃瓜八卦：科技圈/博客圈的轶事、恩怨、翻车、爆料——注意是圈内人的真事，不是娱乐圈明星新闻\n- 优质聚合/周刊：作者自己筛选编排的链接合集，按选品质量给中高分（选品眼光本身就是增量）\n\n还可以看（40-69）：\n- 旅行见闻、新奇经历，有具体地点和细节\n- 游戏、影视的真诚推荐与评价，出自个人体验而非通稿\n- 与上述主题无关但写得好的个人随笔，有人味、可读\n\n最不喜欢（0-39）：\n- 纯 AI 批量生成的内容：结构模板化、小标题工整得可疑、面面俱到却没有任何个人经验细节\n- 转载/照搬：政策原文、新闻通稿、他人文章的全文搬运，作者没有增加自己的判断（例：全文都是政策原文的\"政策分析\"）\n- 无病呻吟的文青腔、装腔作势的说教：辞藻堆砌、故弄玄虚、没有信息增量"
+  }
+ ],
+ "items": [
+  {
+   "item_id": "md:e9f0e7ab-4c5b-488c-869b-932be9918ff1",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 28,
+   "title": "AMD is acquiring AI company World Labs in a deal worth more than $8 billion",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:3b8a5637-07d7-4070-9057-25750b1dd45b",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 70,
+   "title": "Google is killing off Gemini’s Gems in favor of ‘skills’",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20
+   }
+  },
+  {
+   "item_id": "md:2c1362e2-ff65-445c-8b8d-5059665b7819",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 3,
+   "title": "Shark’s NeverChange Air Purifier Is Nearly Half Off Right Now",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 10
+   }
+  },
+  {
+   "item_id": "md:3c259588-ddbd-4504-9bf4-e7d25dfe3038",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "zh",
+   "md_score": 4,
+   "title": "小米米家筒灯 / 射灯 3 Pro 新品今日开售：国补价 129.2~169.2 元",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5
+   }
+  },
+  {
+   "item_id": "md:e46ff7d6-f0f4-4c3c-9f13-99c40796c584",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "zh",
+   "md_score": 15,
+   "title": "苹果 iPadOS 26.7.1 正式版发布",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5
+   }
+  },
+  {
+   "item_id": "md:97c946ae-77a0-41b7-91dd-ead853f8dc5d",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 30,
+   "title": "AMD will acquire Fei-Fei Li’s World Labs for $8.2 billion",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:7fbe5c73-bda6-4d7f-b232-3cad6f2c6ecb",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 82,
+   "title": "GenRec: An LLM-Backed Recommendation Ranker at NetflixConference",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:a5446239-0d91-42b8-a869-00f8a33cfe5e",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "zh",
+   "md_score": 35,
+   "title": "苹果 macOS 27.0.1 正式版发布",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5
+   }
+  },
+  {
+   "item_id": "md:80a1fbef-23e3-4339-9bd1-c097627534b1",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "zh",
+   "md_score": 25,
+   "title": "苹果 iOS/iPadOS 27.0.1 正式版发布",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:1c711832-edd7-4ffc-a89d-8c69e9fdc045",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "zh",
+   "md_score": 25,
+   "title": "苹果 visionOS 27.0.1 正式版发布",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:44579d3d-827b-4ec3-a951-5aeab6523903",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 92,
+   "title": "Anthropic releases Sonnet 5.5, which it calls a significantly cheaper, faster work partner",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 85,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:93fa01df-37b7-4d57-9353-c0f642875f39",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 8,
+   "title": "Palantir founder purchases large swath of forest in Sweden",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:bfe0ed0e-d411-456f-b71f-c19daa4ad54a",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": 5,
+   "title": "F1 in Azerbaijan: That was almost a close-run thing",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:0ce0801a-cd83-40ea-bf88-82062f75694f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Svelte 5 is alive",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:6d706100-1b28-4465-bd09-5ce6304b70be",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Version 0.7.12",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:1f8fa25b-fe32-4a57-82a2-f16754b70512",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "The Videos from the Meetup",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:958123c1-f8b4-4cc6-9a4b-417287e23b70",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Meet the Vercel AI Accelerator Participants",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:42a2cf33-4ecb-46f9-90b5-9d848e087a9f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Super serves thousands of domains from a single codebase with Next.js and Vercel",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:46820877-9ddb-42b1-bb7f-c4cdbb418abe",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Cyber Operation: Russian-speaking malware tooling",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:5145f8b9-8ac1-472d-a772-b7a381a23dc5",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Next.js 14.1",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35
+   }
+  },
+  {
+   "item_id": "md:c8ede009-5bea-4cec-b189-375bd5e1db18",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "BrowseComp: a benchmark for browsing agents",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:06a74074-9c9e-4b44-aec0-8959b202234f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "release-publish/2e09d9e2e60a-1790478175: fix(release): publish plugins with scoped dependency forks ",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 10
+   }
+  },
+  {
+   "item_id": "md:3f4f6062-3f78-42cb-bc47-75c2a59170ad",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Introducing the Codex app",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 88,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:e424c4a2-5959-4c6d-b950-fc373430f54f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "NetNewsWire 7.1.4 (7213) for iOS",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:87434e3e-7d50-4da3-bb10-b2792a518dc1",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Two years of OpenAI Academy",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20
+   }
+  },
+  {
+   "item_id": "md:f5682128-e8e7-454d-b36d-bb4a10bbc380",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Claimed deployments now include third-party resources",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:af06b4f1-cdd9-4a4e-b7c4-89c31f14397c",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Base fee for Observability Plus removed",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35
+   }
+  },
+  {
+   "item_id": "md:3d8fa8c2-7014-4f0a-9361-8c085a037aef",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Techniques for training large neural networks",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72
+   }
+  },
+  {
+   "item_id": "md:dd888639-7408-4c09-af78-279d5185bbaa",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Version 0.6.16 (stable)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 10
+   }
+  },
+  {
+   "item_id": "md:b19f9b73-a263-4c46-b881-a60da8403659",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Trip report: Node.js collaboration summit (2026 London)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:ad302a27-b722-420a-b181-a8352fd0a55f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 23.11.0 (Current)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 30,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35
+   }
+  },
+  {
+   "item_id": "md:88315f29-249b-4356-bf66-c155652b9f0f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "A-Mem: Agentic Memory for LLM Agents",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:1b9a19d6-2113-4277-80a1-5be1c800c9f3",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 6.14.1 (LTS)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 10,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 20
+   }
+  },
+  {
+   "item_id": "md:5ecb06f8-dcad-4202-a8af-e68ebf1743c5",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Top 10 Launches of LWX",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:6d4c0591-0757-41a3-b735-2d23a1cbc1b2",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "xAI joins the Vercel Marketplace ",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:c9439d0e-801c-4180-8a2d-78f086489656",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Alpha Launch Postmortem",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78
+   }
+  },
+  {
+   "item_id": "md:f63e2d43-d224-4d42-8cab-696a4637c0be",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 16.1.0 (Current)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:64db822b-2ce1-40bf-802f-edc043348d28",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "GLP-1 drugs fail to help some people lose weight — scientists are on a quest for answers",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:ab0a42fa-95ed-4aa6-ae05-d57a6b987ed1",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 8.16.0 (LTS)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:123e9d65-35a4-4878-9e42-e91412a8c08a",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Applications of AI at OpenAI",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:bf104529-7a2c-4152-b4cb-ba3ca6c7c77b",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "npm 1.0: The New 'ls'",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:20563f86-9db7-46f1-a2b5-52fed83323ad",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "AI-powered fuzzing with the GitHub Security Lab Taskflow Agent",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 88
+   }
+  },
+  {
+   "item_id": "md:4c997af5-8392-4435-bb45-d3eff2399932",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Sanity balances experimentation and performance with Vercel Edge Middleware ",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:b4f4cfa6-f367-4805-b237-f6daad5b39fb",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 20.19.1 (LTS)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 30,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20
+   }
+  },
+  {
+   "item_id": "md:1db14861-b591-449e-9238-3e4b914f6214",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js v12 to v14",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:978ac236-5bfd-4924-bb1b-66e988a19130",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "\n\t\t\t\t\tOpportunities for AI in Accessibility\t\t\t\t",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 75,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:2a12ce3a-bc36-484c-98f9-a03beb8399aa",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Affordable and Fast Migration",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:4672b0fc-c736-4db8-9953-20f848bd389f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Gemini 3.8 text-to-speech models now available on AI Gateway",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:21b0b0e4-a532-4bbe-81c6-d19446b3ea5a",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Support for now.json will be removed on March 31, 2026",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:7aebfeca-eff9-4117-9a67-16dacc3cc4bd",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Welcoming Brad Cornes to the Team",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:cc3bde3a-1fad-4218-bd6e-41c03d92c77e",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Introducing Forge: the open source pipeline for generating SDKs, CLIs, docs, and more",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:918560de-ac17-4ece-a042-e7962978e609",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Protecting AI apps from bots and bad actors with Vercel and Kasada",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:c750426b-b90a-42f9-88dd-9e322f50748f",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Building AI infrastructure with the Effingham County community",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:e52fd020-7c45-4fd4-af9f-9985f4ffd616",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "SearchGPT is a prototype of new AI search features",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 10,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:ffcc77bd-a43f-4955-9ab1-590752d78825",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "What's new in Astro - April 2026",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:63cb29d3-1422-45f0-af0b-7b57c21d4528",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Ten years",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20
+   }
+  },
+  {
+   "item_id": "md:31c125bf-1f2a-4d72-b61a-f51451427f82",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "DALL·E now available without waitlist",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:a297a642-86a5-4d43-912e-6545620772b9",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Introducing Vercel Monitoring",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:a9e0105a-a43d-41dc-88fa-be82dcce5dbe",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "The AI Hype Index: AI loves cheating",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:93016190-1cc2-4258-83fc-66dc6a697393",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Trip report: Node.js collaboration summit (2024 Dublin)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:db836c0c-2624-4aa8-8abd-3ff7992a4297",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 0.6.6",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 20,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0
+   }
+  },
+  {
+   "item_id": "md:f19bdfd8-b689-4503-885b-a84ecc4c5144",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "A sandbox without a network boundary is only half a sandbox",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 82,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:72ec1429-40db-4b29-8df9-e4d4b645b41b",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Starlight April Update",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:14402028-11be-44ed-a767-62184a47d97a",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 4.8.3 (Maintenance)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5
+   }
+  },
+  {
+   "item_id": "md:507dbd6c-a2f9-4ef8-9690-d14e2e8a942d",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "OpenAI and Foxconn collaborate to strengthen U.S. manufacturing across the AI supply chain",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35
+   }
+  },
+  {
+   "item_id": "md:0d57cac0-e448-43bb-bad2-a0de736a16ce",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Quoting @therealcornpop",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:ce41a47f-390d-40bc-89c2-faf44661fe0a",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Supabase Bootstrap: the fastest way to launch a new project",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:f0965f3a-92ea-4561-bbc1-183f5a6961a4",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "How to Customize a Model to Learn New Tricks",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:501a3985-2106-49ee-b085-815a5c51136b",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Security updates for all active release lines, July 2017",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 10,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:833001a4-bc78-41e0-b063-94bebdde4dae",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Working with 400,000 teachers to shape the future of AI in schools",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:ceb3e167-df28-4875-8367-a45a88e0ee69",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Zero-JavaScript View Transitions",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:3291985e-3e2b-49cb-92af-45208d5c1a8c",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Vercel Domains overhauled with instant search and at-cost pricing",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35
+   }
+  },
+  {
+   "item_id": "md:d140be62-09c4-4ce0-9fd0-c93bb24cfa74",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "GLM-5 is live on AI Gateway",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:13d5f39e-c60d-47e2-be39-225dcc86e781",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Upcoming Next.js September Security Release",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:10fb0fa1-c105-46af-b9e0-0b33915e5b40",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Skills Night: 69,000+ ways agents are getting smarter",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72
+   }
+  },
+  {
+   "item_id": "md:11dc1485-b191-4ceb-bf38-641aa1267e79",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Election information and safeguards in 2026",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:a84be1c4-0238-4ced-a0ee-c23ca67e2991",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "CRLite: Fast, private, and comprehensive certificate revocation checking in Firefox",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:243a4749-c823-4a66-943e-3a549fd1fbc4",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Prisma joins the Vercel Marketplace",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:c9bb4ca4-3fd7-4a9b-ae53-47995d39cc08",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 14.15.1 (LTS)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 20
+   }
+  },
+  {
+   "item_id": "md:dbddbc1a-8418-4a0e-8daa-3e5bf278726c",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "OpenAI API",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 20,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:a2aa3fad-c98f-468d-b6cc-6cb6dca294f3",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "How a global agency built a web innovation engine in two months ",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:f2094880-1433-4c32-b848-d86be65a8d51",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Creative writing with GPT-5",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:018c2f54-6b90-4960-88c8-99c1024d7060",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "zh",
+   "md_score": null,
+   "title": "我的天，FSMone SG两天申请下来了！",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:77176091-ada5-4535-a7a7-00b2919344b9",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "OpenAI Robotics Symposium 2019",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:c4c07859-a693-48e0-a53e-def603e38d9b",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 22.22.0 (LTS)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:747a7f46-34f8-447f-ae82-2c76535e7d80",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "GLM 5.3 FlashX now available on AI Gateway",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:4926638b-81d0-40ea-ac09-7a665c3f1dc3",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "In Memory of Mikeal Rogers: A Builder of Communities",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 75,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:54a13479-be35-44f9-9b54-c7cbe114af4c",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Sandboxes now expire based on last use",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:49c529df-6997-4b7c-b93b-55babe4ea8fc",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Airbnb widens access to GPT-6 Astra and OpenAI frontier models",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:047de5bd-d6a3-4538-827a-bdd25439b0b6",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Node.js 16.6.1 (Current)",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:85509cb1-3e90-495f-ab40-8c0aebe0e7c8",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "langchain-core==1.6.5",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 42,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 62
+   }
+  },
+  {
+   "item_id": "md:30040479-81fc-420c-93f9-270ad0e28e3e",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "The gene-regulatory evolution of the human skeleton",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:b4ec99ca-ec33-492a-b3de-f1c391104f2d",
+   "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+   "lang": "en",
+   "md_score": null,
+   "title": "Unsupervised sentiment neuron",
+   "scores": {
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:b5491c78-46c7-423d-a618-455f7a0ed49f",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "折腾进行中：换了一圈截图工具，最后留在了截图吧",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25
+   }
+  },
+  {
+   "item_id": "md:ca533204-40fc-4f4a-980c-31e3fa6bc6cc",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Atao’s Space：我要当爸了，老婆怀孕了",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:4e852687-f8eb-43e1-9011-f8e14a93e83e",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "叁拾玖",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:a10199cd-fd27-4d52-be18-982c9eb7e851",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Jackie的博客：假期见闻-关于天灾",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:d208ac94-2d07-41cd-a0cd-dd9aa78edcee",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "慢墨：写字的取势",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:1928e134-f29f-4c8d-a102-a27c60992189",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "obaby 𝐢‍𝐧⃝ void：open -a Simulator Unable to find application named ‘Simulator’",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:317e081c-8570-487f-8cc2-ec8b0cd9161f",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "兜兜爸投资笔记：没有好消息就是利空",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:ac1923f4-0b59-40bd-b503-5371495ba17d",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Serendipity：把本地 AI 英语学习项目部署到云服务器：我的 Docker 镜像与 1Panel 上线实录",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55
+   }
+  },
+  {
+   "item_id": "md:fad02e2e-9f44-4e41-ac23-1c2c47ec42fc",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "做了一个报纸风格的 WordPress Markdown 主题",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:b0d97cab-ee08-42a7-969b-eced3eca8319",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "林子浩的博客：聊一下洗发水的生产日期问题",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:0ae33ab9-10c6-4540-a57b-c5726ad0e7c3",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Zeruns's Blog：雨云 14900K 镇江BGP高防游戏云VPS，4核8G 15兆 仅需123元/月，MC开服最佳选择！",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:289ef5d6-457a-483e-90fe-fcfc0235c638",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "落梦陳的小站",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:b7128107-817c-44fb-9d7d-0e822a307949",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "风渡言：中秋节老掌沟徒步",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:e80a593a-ca1d-4349-92f5-836e0ed0bcfc",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "大象笔记：如何组织 MES 系统中上千个繁杂的功能",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:2ec4405d-548a-4009-9ca0-d8f2da8d9752",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Xe_iu的杂物间：[日记] 老家用水难题",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:2660defb-c528-450b-a682-921df0dd093b",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "拾音集：用Codex开发的「速查油价」微信小程序，正式上线啦",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25
+   }
+  },
+  {
+   "item_id": "md:74397d00-1af1-458c-ad36-d6d7eba16285",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "湘铭：2026中秋",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 35,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:2e5526bb-0ac7-42d6-98a7-520484d0a9cb",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "WordPress 平稳换主题：从本地验证到稳态的四阶段",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:0e2f329b-424e-48b2-82a6-9a579acf97dd",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "en",
+   "md_score": null,
+   "title": "TaOS",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 10
+   }
+  },
+  {
+   "item_id": "md:07fd2356-abe7-4381-b2ec-d77c9d89625e",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "故事的程序猿：全球装得最多的10个AI Skills，出处都在这儿",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 42
+   }
+  },
+  {
+   "item_id": "md:9bf3b35c-f4f7-4c05-93fe-d660a2f1f122",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "怯犬",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:1e08ea53-a00a-4111-8334-9c8a34d2ed02",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Tony Bai：Go与Rust同日交卷：一场关于“可移植SIMD”的路线之争",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 62
+   }
+  },
+  {
+   "item_id": "md:727a35f0-1c04-4f6f-a3aa-58100e90d091",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "WordPress 主题更换后的服务器运维与排错实录",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:ec7c78a8-6cf4-4364-babc-23ba32dd30ea",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "知享客",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:2fc06b17-88bd-4691-94e8-ad3350c5488b",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "网站防护架构图：四层防线与它们的静默失败",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78
+   }
+  },
+  {
+   "item_id": "md:2594b002-a960-49e3-812c-298b02a6d1be",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Coffee Break Clojure, Vol.3",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:a831adce-7f11-4b9a-8ecd-c2373e19cf97",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "陶其的个人博客",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:303646cf-a530-4417-a33b-377215422a38",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "I'm Marcus：正宗美式英语",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:9835a763-4232-4385-bb17-0303b77740a4",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "大大的小蜗牛",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:815c4067-9e3f-4e56-bbe5-fe2b610c0c26",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "夏至日测地球：利用太阳影子计算地球半径",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:c5ac3f86-5947-47e6-b85d-d26c14c6d327",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "折腾进行中：Snow Shot：常驻 13MB 的截图工具，把 PixPin 的会员功能全免费了",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:43c577f4-3ea3-4d53-aa1b-a85c75b6c396",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "李锋镝的博客：给主题增加了游客中心功能",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:b327ea16-8ed3-4905-81d9-c8440d68aed1",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "大脑充血 Vol.100",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5
+   }
+  },
+  {
+   "item_id": "md:929a9a43-3a0f-4e77-b499-fa8df0872544",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "是琐碎的小事让我活着",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:b823b1db-7cd6-41d2-8af7-eaf0a4af69ea",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "折腾进行中：给博客页脚加了两行数字：静态站直连 Umami 的零后端玩法",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45
+   }
+  },
+  {
+   "item_id": "md:36151109-e20c-49e9-8e6b-f62e4708cc67",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "魏文超博客：《山楂》",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:966f9ee5-2d8e-43c7-a6ec-a162a15a51d4",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "自”妍” WordPress 主题性能实测",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 62,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 62
+   }
+  },
+  {
+   "item_id": "md:8a7e3346-910e-4739-95ea-9046c90098ae",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "CC的数字花园：《最后生还者Part1》补完记录",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:3f863609-ca58-45a6-86ce-8c750f4e385a",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "青萍叙事：手机上批量转矢量图：logo 放大不糊，印刷雕刻都能用",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 8,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5
+   }
+  },
+  {
+   "item_id": "md:86772112-48f9-4ee2-b064-7fe1673b7fa4",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "鸦鸦的巢穴：NAS 挪窝日记：移动光猫+小米路由器 实现IPv6远程访问",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55
+   }
+  },
+  {
+   "item_id": "md:057d7052-8793-4199-84e5-72a84ebe2252",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Sheep5的博客：搭建了一个Cloudreve私有云盘",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:943bc739-c68f-404c-9dfe-7469baabb630",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "酥米的小站：酥米的碎碎念（17），中秋节快乐",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 42,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:0b4f54ea-3f4d-4f2f-87fe-dc4e41b4870f",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "记忆角落：VictoriaLogs vector 采集报 TLS 证书验证失败的排查记录",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:8a83ab33-8cd8-496d-aa58-86d40b7c4761",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "莫比乌斯：你会痛苦吗 II",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5
+   }
+  },
+  {
+   "item_id": "md:5705e413-9c56-4c7c-a347-698213993f6c",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "崔话记：与女儿参加志愿者活动、七公里爬山徒步",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:79ff353a-ccee-472e-b64a-2b1c91b63ad1",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "老刘博客：体验了一下华为官方换电池服务",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:4d7cbcac-57ac-4db9-a62a-5bd5a34f91f5",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "FGHRSH 日记簿",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:38ded048-ffa8-48ca-a75c-4eafdb427dbe",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "天才只待两周：一次 AOCI 双臂对照实测",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 82
+   }
+  },
+  {
+   "item_id": "md:9815ec7e-cb2d-425b-8572-825617aa5a2f",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "风雨行者：立体步行街的夜景（20260927）",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 35,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:96a351bc-33a3-498d-910d-e5ea8ea2c799",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "老张博客：这些天，我又折腾了些啥！？",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25
+   }
+  },
+  {
+   "item_id": "md:8f6c67b4-1be1-4059-81eb-6a480de527c9",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Coffee Break Clojure, Vol.0",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:076d1ddf-e0f8-4217-b30a-b75935bea1cc",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "益友网站：如果你在海边遇见了她",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:aa82e56a-ecef-419b-ac5a-cf2d46160221",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "大模型 API 的 URL 是谁设计的",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55
+   }
+  },
+  {
+   "item_id": "md:10faedea-f6f0-40df-b169-cb5e5619e21c",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "不曾长大：也算用AI干了点事",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:4c08cb65-0a1e-4432-a0a0-e976ecd802e0",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "FindingX：数学是一门科学吗？——从发明与发现之间到世界的底层代码",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5
+   }
+  },
+  {
+   "item_id": "md:4183c922-e9a2-4c55-b4d6-18041c7aa177",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "極客死亡計劃：大脑充血 Vol.100",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15
+   }
+  },
+  {
+   "item_id": "md:3ff78671-7682-4c8b-b79a-e88e8521c817",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "流情的博客：中秋三日",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 62,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:9265f3b3-243e-496b-864f-b05c4673c5b6",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "执迷者X：中秋复盘：3.6 亿 Token、89 篇内容，和一次“技术 vs 业务”的提醒",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:01f1c0ce-3c40-48be-82c8-b3ddda5ebe65",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "磊的博客",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:37f2998f-afad-4b3b-8ea8-d5c5c12800c9",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "云从",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:8b843533-fd21-4b7c-a5d8-7f2fc02d935a",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "徐建伟：打呼噜",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:4c4e1118-9d28-404c-ac4c-e8336516f0f1",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "晓正杨博客",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:3b86e8e2-f5a7-47ef-bd86-c994c8ddbe42",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "XBSTACK：iPhone Duo 怎么适配？Apple 官方指南下的 UIKit、Tab Bar 与折叠布局实战",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:21143262-7f3e-470c-9baf-d9fa89cdd7cd",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Coffee Break Clojure, Vol.1",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:98fb8a7a-31c3-4528-8a83-be0e072a5b35",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "可怖的沉默",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:dae33e5d-2754-4f6f-b863-4784001000d7",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "躬行笔记：线上 499 突然飙升：别只怪客户端，真正的超时可能藏在上游",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55
+   }
+  },
+  {
+   "item_id": "md:6a43b3c2-a353-43e6-b026-10e131183c25",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "小猪的窝：京喜自营套路",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:0f68f62c-3a64-4bef-b080-c78c89bdf283",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "向叔记事簿：一年出货四千多万部 iPhone，旧手机去了哪里",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 8
+   }
+  },
+  {
+   "item_id": "md:29ee183e-5390-4561-bde0-c2aaf7189ce3",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Coffee Break Clojure, Vol.2",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15
+   }
+  },
+  {
+   "item_id": "md:c77c0ab2-d14a-4c47-b46e-e8459c3a22a7",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "VibeCoding中AI测试全绿之后,谁在测谎？",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72
+   }
+  },
+  {
+   "item_id": "md:f77dc1a0-4ee5-4150-9f24-5b2f374a96a7",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Tian-Yan：什麼是 human being？",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:e91bc91c-f3ea-47b3-9000-c5d71508e200",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "胡拉图说：如何配置一个好用的浏览器",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15
+   }
+  },
+  {
+   "item_id": "md:b06af508-15b2-46d2-b3a6-c91641749010",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "大脑充血 Vol.99",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 82,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15
+   }
+  },
+  {
+   "item_id": "md:92be5f2c-8af3-4f09-96da-90a1b6bf6f4b",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "acevs：反自学机制",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5
+   }
+  },
+  {
+   "item_id": "md:f2e195b0-c676-4c81-94bf-c91436b03f34",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "徐果萍博客网：网站之殇 引子一个网站引发杯具",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0
+   }
+  },
+  {
+   "item_id": "md:1f9b5ac0-d1cd-47a7-ac7b-e1027a5b51d5",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Jev 是谁带火的:System 1 决策模型考证与实测",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 92,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78
+   }
+  },
+  {
+   "item_id": "md:4eca1418-b8ed-4af2-ae67-9f7fdee68ddd",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "让 Agent 清理磁盘:工具选型、安全边界与实测结果",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 88,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72
+   }
+  },
+  {
+   "item_id": "md:d1b20ef6-7547-4fa2-acb4-a628ed3cfdff",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "Rain：月刊 · 第二期",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 12
+   }
+  },
+  {
+   "item_id": "md:20f585c5-d62e-44ea-8520-880b679ce979",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "地球上最后的夜晚",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:fac59f82-99f4-4b24-a871-ede78fc9a3d2",
+   "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+   "lang": "zh",
+   "md_score": null,
+   "title": "空白：2026-09-28 13:02",
+   "scores": {
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5
+   }
+  },
+  {
+   "item_id": "md:a5652361-db87-4b8c-91fc-5893a52dfa47",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": 14,
+   "title": "The AI as the New Compiler",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:8ef493f2-485c-41f7-9ed7-6db357ebbdab",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": 38,
+   "title": "Nvidia launches new tool to keep AI agents from going rogue",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45
+   }
+  },
+  {
+   "item_id": "md:de58309c-9390-41df-8359-5c1b371c6bb1",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": 30,
+   "title": "Reliable AI automation done right (not with a model)",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:3a8532ea-cc1d-43a5-b688-621837cce8a7",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": 58,
+   "title": "SBX env: consistent and shareable AI sandbox configurations",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:81afdbe9-d50d-42fc-9411-d8dab75211d3",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": 22,
+   "title": "AMD to buy Fei-Fei Li's AI startup for $8B",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:d2fe970c-634c-4229-b8da-986621f9fc96",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": 34,
+   "title": "OpenAI Scraps Release of New AI Model over Safety Concerns",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45
+   }
+  },
+  {
+   "item_id": "md:f68e5644-7137-4877-b408-9b58d89e3984",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Benchmarking AI Gateways: GoModel vs. LiteLLM vs. Portkey vs. Bifrost",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 88,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72
+   }
+  },
+  {
+   "item_id": "md:bf02defa-5738-415f-9686-59ebeb85d22c",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Ask HN: React Native or Flutter when the back end is Node?",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:83ed85a8-d10e-4969-b7c9-db99da26b774",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Lingo.dev (YC F24) is hiring a senior content engineer (Remote, worldwide)",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5
+   }
+  },
+  {
+   "item_id": "md:61e3e54e-e7c6-4022-a1ff-3c66835ca097",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "SubImage (YC W25) Is Hiring a Founding Engineer in SF",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 10,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0
+   }
+  },
+  {
+   "item_id": "md:dd230340-ed2d-467f-8b8a-4bf39af3d4ed",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "We built muse from scratch, but it is definitely inspired by OpenClaw",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 35
+   }
+  },
+  {
+   "item_id": "md:61026979-4cf5-4340-b154-dd19be0f3d40",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "LLM Benchmark for de-identification and synthesis",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 35
+   }
+  },
+  {
+   "item_id": "md:6ca38ced-3035-4b3e-8d65-e5cb5e08270e",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: I built a tool that runs 258 automated checks against a WordPress site",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72
+   }
+  },
+  {
+   "item_id": "md:482ebccc-12cb-4342-86a9-764c886f940e",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Roame (YC S23) Is Hiring Viral Content Editor",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0
+   }
+  },
+  {
+   "item_id": "md:db637099-fb24-443d-a8e0-ede1536b6e68",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Sonnet 5.5",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 85,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 85,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20
+   }
+  },
+  {
+   "item_id": "md:283992ba-41df-42ca-a5d2-c1c5348ddc1c",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Build native iOS and Android apps at once, with your own AI",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:b30a944a-ab5b-434d-bf96-af743b4fd8e6",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Public Browser MCP – +48% speed -33% token/session vs. AgentBrowser",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 82,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 82,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78
+   }
+  },
+  {
+   "item_id": "md:95e269ed-8e0d-4b28-8704-f12dc2b6a57f",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Merge Claude Code desktop sessions across accounts (macOS)",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:6e717edc-e16c-43c4-8ad9-801afe577285",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Press Start – A Playable Museum of Video Game History",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:a043f6f9-7326-4808-b8e2-efd80d5cf005",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Forge Tools",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25
+   }
+  },
+  {
+   "item_id": "md:e358cffd-359b-4f7a-bc4c-40ee93c3ea44",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "EnigmaForge – an LLM benchmark where the question is hidden in the story",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 62,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:35b58bcb-4e69-4990-9b3b-56a2f8085d30",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: I built a tool that gives any website an API and MCP",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:32223490-632e-4946-adce-2f821097b776",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "An Antidote to Roko's Basilisk",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 8,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72
+   }
+  },
+  {
+   "item_id": "md:88ab3106-184b-4cb2-baca-0116792131c4",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "OpenClaw 2.0",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:a92ff56b-2896-4e26-9dc0-7ced07012152",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "PostmarketOS is rebranding as Nura",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:91e31163-19e0-4e06-aad6-fa83b8283800",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Incident LiteLLM/Telnyx supply-chain attacks, with guidance",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 88,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:016cc6e9-53ee-4212-bec9-2635cbd67a9b",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Fail2ban or Ban 2 Fail",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:82a0b17e-4f12-4254-b31d-479e393dc619",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Tachyon – Java MCP Server SDK",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:b78d193e-03b4-403e-82d5-aed0c8ce349b",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "In an $80 motel room, a discovery to shed light on the origins of life",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:0fcdd6a9-149f-4575-9142-b29998462011",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Claude Sonnet 5.5",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 85,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 85
+   }
+  },
+  {
+   "item_id": "md:475fb85d-df61-418d-b7b5-6e5823e4148e",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Fail2zig. A single-binary fail2ban replacement written in Zig",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 82,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78
+   }
+  },
+  {
+   "item_id": "md:cb80f3ce-c591-4e3a-97c6-188b80a4afb3",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "4-Bit Rotational Quantization: -45% RAM, <1% recall drop vs. TurboQuant",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:4dec75c5-ba45-41bf-a7fb-790c16389dd0",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "The Risks of Ignoring API Security During Mobile App Security Testing",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:e44ea69d-3dde-4448-9972-e1d30a94b1bb",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Can AI Control a Spacecraft?",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 35
+   }
+  },
+  {
+   "item_id": "md:bea6c010-a993-45f3-80d7-b307bf4d093c",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: iCli – Postgres health reporter and index optimizer",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45
+   }
+  },
+  {
+   "item_id": "md:f0339bbe-ffb4-41c6-904a-9d16d99e4c51",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Crowdsec: A Fail2Ban alternative written in Go",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 82,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:d16ff6b0-e2ff-47a1-a04b-a11074d0079d",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: EDA Benchmark Leaderboard",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:5d985fe5-d3b0-4dcc-a843-3e18e9a6d5cf",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Joseph Szabo’s pictures of American adolescents",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:8de69e8d-2e0a-45e6-b84e-4171265b6256",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "SpaceX's Starship launching to orbit for first time ever today",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:568be96c-eade-469f-857f-98470450056a",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "OpenClaw v2026.9.3: Live browser automation, persistent skills, and cloud work",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20
+   }
+  },
+  {
+   "item_id": "md:92ce3044-fbf0-4742-8b8c-b80b0a00d8fa",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: WordPress search and replace that doesn't corrupt serialized data",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55
+   }
+  },
+  {
+   "item_id": "md:07547ac1-6881-4450-b364-b146a9b4a24e",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Launch HN: Vespper (YC F24) – SOTA Docx MCP",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72
+   }
+  },
+  {
+   "item_id": "md:718accd6-b9ec-4c8e-a830-33150ded73df",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "OpenClaw Dashboards: Personal Use, Team Workflows, and Building Your Own",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:7003d522-5157-41d4-900d-00947d119ed2",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "China's AI Ecosystem: A Background Explainer",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:68216caf-def4-412d-a140-89fb8251406b",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: DeltaReview – AI-powered code diff analysis tool",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 35
+   }
+  },
+  {
+   "item_id": "md:9096ad31-f28f-4f7d-a2bb-afa9859ceda7",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Zep AI (YC W24) Is Hiring a Head of Forward Deployed Engineering",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 10,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5
+   }
+  },
+  {
+   "item_id": "md:8a126e76-4f53-4692-96c7-a1ed031fde66",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "The many failures leading to the LiteLLM compromise",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 82,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:cd42a507-c92b-49c8-80f6-524e738118da",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Category Name Needed for OpenClaw, Hermes, Grok Bot",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15
+   }
+  },
+  {
+   "item_id": "md:b0cecec3-d009-443b-84fb-c98aee9d712e",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "How to Create Your Own Personal AI Benchmark",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:903a9bc3-383c-4fef-8b41-c9ba7f8b8c40",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Waitwise, Replace Claude Code's spinner with anything usefull",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:e5a1ae03-6a74-4639-bbcd-f3cc2af733b9",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Why WordPress Is Still the #1 CMS in 2026",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:a70e6626-833c-48f2-9038-6d358684d143",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "go/codegolf benchmark: frontier models vs. Google's 2015 code golfers",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:7e043c1c-fbf5-4b30-914e-4d7aa025b099",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Daily Refreshed drop-in replacement for LiteLLM's model price map",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:7a0c6c3b-8640-4f8d-b815-0661a2a24135",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Quantization-Aware Healing:a compressed 4-bit model that outperf full-precision",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:7a99f290-0c96-4e55-bd98-8f48290fea07",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Scientists solve 1840s space weather mystery",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 20
+   }
+  },
+  {
+   "item_id": "md:c7b17860-2508-40af-a4b5-3626819b2993",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: WordPress security skills for coding agents",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:a34998f1-63c4-4897-8617-f9bb7fc7663c",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "When did Google get so weird?",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72
+   }
+  },
+  {
+   "item_id": "md:078e330a-e022-4dfd-bbcb-155f0c4fd802",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Jiga (YC W21) Is Hiring Product Engineer (Remote/US)",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0
+   }
+  },
+  {
+   "item_id": "md:38341b8b-a2cb-464f-96d5-03b059da60c5",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Nvidia launched a tool designed to stop AI agents from going rogue. How it works",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:8dff492d-6e05-455a-b725-16ec0678e646",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Facebook Lost the Trust of Its Eyes",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:4d6a21c3-3ea6-4ac8-9a0d-b03cc1dc4545",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Claude Code Integration with iTerm2 Is Legitimately Awesome",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:ea279c68-3f90-4c5a-8eea-09d1b4dbc5d6",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Prompting Claude Opus 5.5",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:57c0e072-d5aa-468d-a2c6-9d9083113a46",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Ember-1",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55
+   }
+  },
+  {
+   "item_id": "md:4ba8f62b-6061-4f29-a25c-008c848966a8",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Add hourly schedules to your ChatGPT Ads",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 45
+   }
+  },
+  {
+   "item_id": "md:bf57b80c-775f-4b38-abe8-d427de190d17",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "A lockfile could have saved you from the LiteLLM attack",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72
+   }
+  },
+  {
+   "item_id": "md:4beb3947-686d-448a-83c1-9d4d34d5603a",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Fail2ban – Remote Code Execution",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 88,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 88,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:05c8f2b0-d1b4-4ab4-80e3-46f7942ae02c",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "I stress-tested LLM quantization by deliberately breaking models",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:e7bea2c7-2df5-4672-b323-daf0a65364db",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Ask HN: Finetuning strategies",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:6ac0bb9d-d54a-4ae9-95e7-b0129f60e705",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "SB 923 is Law: CCPA deletion rights now reach third-party data",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 30
+   }
+  },
+  {
+   "item_id": "md:1e7f8087-936c-4eff-af88-f248d5bc29c0",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: Remria – A Cloud Computer OS",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 45,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:fc806cf3-8d1c-45c5-b090-849cb23680e4",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Run OpenClaw with Muse Glimmer Locally on Mac",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:a5c1c728-d91b-4326-ad3f-6c77a3bea3a8",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Kyber (YC W23) Is Hiring a Forward Deployed Engineer",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0
+   }
+  },
+  {
+   "item_id": "md:1be7c739-edc9-42c1-b4ac-ab06ad36818b",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Reset Fail2ban Database",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:b09d3c43-ad87-4ec2-acbf-4cf86641e227",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Gooseworks (YC W23) Is Hiring – Founding Creative Engineer",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 0,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 0,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0
+   }
+  },
+  {
+   "item_id": "md:63517bc2-8141-42f5-9d3c-b250cf998057",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Fail2ban 1.0.1",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:d23261fa-298c-4e6e-8d2d-419de8462ee2",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Benchmark: MariaDB vs. MemCP drop-in replacement WordPress",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 45,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:bd6f2790-5bde-43a9-b63f-c725c5d6f0d8",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "AssBench is all You need to benchmark LLM Harness Intelligence /s",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 15,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 15,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 30
+   }
+  },
+  {
+   "item_id": "md:85aa3d33-c09c-49b5-ba3b-36c696561639",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Synthetic Hospital: Physician-Validated Longitudinal EHR Benchmark",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 55,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 15
+   }
+  },
+  {
+   "item_id": "md:901b256d-0b2a-4d3f-8a48-492378f537ef",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Unsurprisingly, Meta's new Muse AI agent blatantly ignores users permissions",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:8a9af648-7fb6-4875-9989-de638de1ede0",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "VSArena – The official open browser benchmark for embodied AI",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 25
+   }
+  },
+  {
+   "item_id": "md:49bfa407-06a6-436e-bc2f-727797278d25",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "GrapheneOS – When an app is slow",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 25,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 72,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 25
+   }
+  },
+  {
+   "item_id": "md:7b90b6f0-de0a-4b4a-b3bb-bdf34573256a",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Show HN: A dashboard for tracking usage limits across Claude, Codex, and Cursor",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 55,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 72,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:404701c8-b2d6-4b16-afc2-5820d24b62c8",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Premium plugins/template (theme) WordPress and PHP script premium",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 5,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0
+   }
+  },
+  {
+   "item_id": "md:e96ed069-f4f1-40ad-8731-e9f639cf4317",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "I made a visual workspace for AI Automations",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 35,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 35,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:e14c65f7-f061-4925-a3e9-fddc92fb9076",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "LLM Quantization Part 2.5: Do Floats Dream of Real Numbers?",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 78,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 78,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 55
+   }
+  },
+  {
+   "item_id": "md:03c0f9c0-8a7d-4241-b2d9-824333ace35d",
+   "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+   "lang": "en",
+   "md_score": null,
+   "title": "Cekura (YC F24) Is Hiring",
+   "scores": {
+    "3c394504-e064-4704-9c70-3c2cb1e6d303": 5,
+    "4c5b25ca-952e-4499-851e-269ade19125a": 10,
+    "97c6d38b-d68e-44d0-81d8-741518ad38d4": 0
+   }
+  }
+ ],
+ "scoring_failures": 0,
+ "note": "scores[bid] 为 deepseek 以该 brief briefing 作 rubric 的自评分；md_score 为 morningdeck 原生分（仅 19 条，作一致性锚点）。"
+}

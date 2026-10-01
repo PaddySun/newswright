@@ -1,0 +1,47 @@
+[
+ {
+  "brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "brief_title": "News",
+  "query": "local small model deployment inference optimization consumer GPU quantization decision routing"
+ },
+ {
+  "brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "brief_title": "News",
+  "query": "I run personal AI infrastructure and want first-hand engineering writeups on local 4B-9B model deployment, quantization and VRAM optimization, OpenAI-compatible LLM gateways with key pooling and rate limiting, MCP server releases, coding-agent harnesses, and LLM evaluation methodology with real benchmark data"
+ },
+ {
+  "brief_id": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "brief_title": "News",
+  "query": "本地小模型部署与推理优化 量化 显存技巧 LLM网关 路由 评测方法"
+ },
+ {
+  "brief_id": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "brief_title": "Hacker News",
+  "query": "Show HN local inference LLM gateway eval tooling MCP agent"
+ },
+ {
+  "brief_id": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "brief_title": "Hacker News",
+  "query": "Show HN or release posts about running small language models locally on consumer GPUs, LLM gateways and proxies like LiteLLM, evaluation and benchmark tooling, MCP and agent infrastructure, plus first-hand engineering deep dives and postmortems with real numbers"
+ },
+ {
+  "brief_id": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "brief_title": "Hacker News",
+  "query": "本地推理 小模型 LLM 网关 评测工具 MCP 智能体"
+ },
+ {
+  "brief_id": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "brief_title": "Blog",
+  "query": "personal blog essays hands-on projects real experience tech gossip weekly curation"
+ },
+ {
+  "brief_id": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "brief_title": "Blog",
+  "query": "Looking for personal blog posts with genuine human voice and information gain: philosophical essays from real experience, hands-on tool testing and self-hosting pitfalls with concrete details, tech or blog circle gossip, and well-curated link roundups, not AI-generated template content or reprinted press releases"
+ },
+ {
+  "brief_id": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "brief_title": "Blog",
+  "query": "个人博客 真实经历 实践记录 折腾踩坑 圈内八卦 优质周刊"
+ }
+]

@@ -1,0 +1,44 @@
+{
+ "model_key": "bgem3",
+ "n_items": 36,
+ "truncation_recall": {
+  "512": {
+   "recall@1": 0.806,
+   "recall@5": 1.0,
+   "mean_rank": 1.31,
+   "worst_rank": 4,
+   "n_valid": 36,
+   "fails": []
+  },
+  "1000": {
+   "recall@1": 0.861,
+   "recall@5": 1.0,
+   "mean_rank": 1.36,
+   "worst_rank": 5,
+   "n_valid": 36,
+   "fails": []
+  },
+  "2000": {
+   "recall@1": 0.861,
+   "recall@5": 1.0,
+   "mean_rank": 1.25,
+   "worst_rank": 4,
+   "n_valid": 36,
+   "fails": []
+  },
+  "None": {
+   "recall@1": 0.914,
+   "recall@5": 1.0,
+   "mean_rank": 1.17,
+   "worst_rank": 4,
+   "n_valid": 35,
+   "fails": [
+    {
+     "i": 17,
+     "chars": 44285,
+     "error": "moark_embed embedding 失败（重试 0 次后放弃）: HTTP 400: {\"error\": \"The 1 sample exceeds the 8192 token limit (actual 12192). Please shorten the text.\"}"
+    }
+   ]
+  }
+ }
+}

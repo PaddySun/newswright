@@ -1,0 +1,20 @@
+{
+ "neohorse": {
+  "model": "NeoHorse-Jev-4B",
+  "band_acc": 0.5,
+  "reading_acc": 0.542,
+  "version_acc": 0.958
+ },
+ "apus9b": {
+  "model": "APUS-OpenJev-v1-9B",
+  "band_acc": 0.667,
+  "reading_acc": 0.375,
+  "version_acc": 0.958
+ },
+ "semif4b": {
+  "model": "SemIf-OpenJev-4B",
+  "band_acc": 0.417,
+  "reading_acc": 0.458,
+  "version_acc": 0.917
+ }
+}

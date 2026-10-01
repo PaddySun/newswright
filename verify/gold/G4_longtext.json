@@ -1,0 +1,229 @@
+{
+ "built_at": "2026-10-01",
+ "items": [
+  {
+   "item_id": "md:b74e43c1-2caf-4ba3-a7b1-a6267382b7f5",
+   "lang": "en",
+   "chars": 8257,
+   "title": "What’s new in Svelte: April 2025"
+  },
+  {
+   "item_id": "md:060edd81-a8ea-4d61-9b8a-0dbdcc1b051f",
+   "lang": "en",
+   "chars": 6934,
+   "title": "What’s new in Svelte: October 2020"
+  },
+  {
+   "item_id": "md:8beb68fa-8ff0-4b10-9462-5c222c968a39",
+   "lang": "en",
+   "chars": 15694,
+   "title": "AI SDK 7 is now available"
+  },
+  {
+   "item_id": "md:0b5fb1d0-28f4-4c86-8c2c-a6e92f670a98",
+   "lang": "en",
+   "chars": 2292,
+   "title": "GPT-5.6 Sol is 50% off on AI Gateway for the next month"
+  },
+  {
+   "item_id": "md:f7454446-8c0b-4a57-94b3-9652d38e1753",
+   "lang": "en",
+   "chars": 13475,
+   "title": "Announcing TypeScript 5.9 Beta"
+  },
+  {
+   "item_id": "md:8b7b77b6-0238-4fb8-81c2-9bfae6a3453b",
+   "lang": "en",
+   "chars": 2300,
+   "title": "CVE-2025-32421"
+  },
+  {
+   "item_id": "md:992eb8df-57c3-4b14-a5bc-df3e676b0933",
+   "lang": "en",
+   "chars": 9795,
+   "title": "What’s new in Svelte: June 2023"
+  },
+  {
+   "item_id": "md:2c40fad8-afa9-4ba1-9b7e-2b7b89667aba",
+   "lang": "en",
+   "chars": 15560,
+   "title": "Why Accessibility Is An Operational Capability, Not A Feature"
+  },
+  {
+   "item_id": "md:ce2b4562-fb5b-42f3-87d3-3bd8870d1781",
+   "lang": "en",
+   "chars": 2863,
+   "title": "Advancing Python typing"
+  },
+  {
+   "item_id": "md:a3df6891-94e2-4578-9418-e68581cf70bb",
+   "lang": "en",
+   "chars": 5301,
+   "title": "GitHub Actions leaking secrets when Miri output is cached"
+  },
+  {
+   "item_id": "md:2594b002-a960-49e3-812c-298b02a6d1be",
+   "lang": "zh",
+   "chars": 15908,
+   "title": "Coffee Break Clojure, Vol.3"
+  },
+  {
+   "item_id": "md:0ad02d50-7951-4a52-98a6-0505c4c5a601",
+   "lang": "en",
+   "chars": 7163,
+   "title": "DeepsecBench: evaluating model performance in finding cybersecurity vulnerabilities"
+  },
+  {
+   "item_id": "md:fbe80fca-6a7b-4ff6-b792-aa1644518b08",
+   "lang": "en",
+   "chars": 6392,
+   "title": "The zen of Just Writing CSS"
+  },
+  {
+   "item_id": "md:a94aed48-a8dd-435c-b9bf-ce56de208e09",
+   "lang": "en",
+   "chars": 10716,
+   "title": "Announcing Vue 3.3"
+  },
+  {
+   "item_id": "md:5e3e91e3-e7a1-48e9-b99c-8a76ce7e8e90",
+   "lang": "en",
+   "chars": 21149,
+   "title": "\n\t\t\t\t\tTo Ignite a Personalization Practice, Run this Prepersonalization Workshop\t\t\t\t"
+  },
+  {
+   "item_id": "md:51882435-33eb-403f-97c5-83ce0807aab9",
+   "lang": "en",
+   "chars": 12938,
+   "title": "AWS Weekly Roundup: AWS Builder Center mobile apps, Amazon Connect Talent GA, Amazon Corretto 27, an"
+  },
+  {
+   "item_id": "md:00a79fab-f796-4d8e-b5e1-5eb8b8c0af5b",
+   "lang": "en",
+   "chars": 12982,
+   "title": "Advent of Svelte"
+  },
+  {
+   "item_id": "md:df31f89b-78e7-4bc2-bf81-c7c051835e61",
+   "lang": "en",
+   "chars": 44311,
+   "title": "Announcing TypeScript 6.0"
+  },
+  {
+   "item_id": "md:0177b869-38bb-4354-b7f2-ff55addecbbb",
+   "lang": "en",
+   "chars": 9593,
+   "title": "DeepSeek overtakes Google on volume, cost per token falls 13.6%"
+  },
+  {
+   "item_id": "md:b208eff2-fa45-41ef-ad3e-41353cd6a1dc",
+   "lang": "en",
+   "chars": 10238,
+   "title": "AWS Weekly Roundup: EC2 application status checks, IAM role manager, OpenAI Daybreak on Bedrock, and"
+  },
+  {
+   "item_id": "md:892268c5-7a4a-48be-a33e-6ea3a233f71f",
+   "lang": "en",
+   "chars": 6438,
+   "title": "Announcing Svelte 4"
+  },
+  {
+   "item_id": "md:4f8c71b6-a2c1-4835-9a83-ba8ddc1fe941",
+   "lang": "en",
+   "chars": 14242,
+   "title": "openclaw 2026.9.6"
+  },
+  {
+   "item_id": "md:20f9fb7a-64cd-4ce1-9744-e2588ff4ebf1",
+   "lang": "en",
+   "chars": 12926,
+   "title": "Introducing Amazon CloudWatch Omni: AI-powered observability for generative AI and agentic workloads"
+  },
+  {
+   "item_id": "md:0df6b4e2-5290-4a45-8034-35eba0c44e1f",
+   "lang": "en",
+   "chars": 12101,
+   "title": "The Download: a bid to scrap the virtual wall and AI hits Climate Week"
+  },
+  {
+   "item_id": "md:4e133f2e-625c-49b7-9b47-d0dbaf13b0d1",
+   "lang": "en",
+   "chars": 8213,
+   "title": "What’s new in Svelte: March 2026"
+  },
+  {
+   "item_id": "md:ade7b392-b2dd-4096-b5a2-cfa1353dbffd",
+   "lang": "en",
+   "chars": 2941,
+   "title": " Routing rules now available on AI Gateway"
+  },
+  {
+   "item_id": "md:125e17ab-b157-49d9-8a0b-42a2623a5ed8",
+   "lang": "en",
+   "chars": 5451,
+   "title": "Build realtime voice agents on AI Gateway"
+  },
+  {
+   "item_id": "md:e51b7197-44fd-4454-9f54-1861a8bfc866",
+   "lang": "en",
+   "chars": 7748,
+   "title": "Vue 2.7 is Now in Beta"
+  },
+  {
+   "item_id": "md:d6c231fc-be99-4b26-a72f-6d1687283135",
+   "lang": "en",
+   "chars": 11084,
+   "title": "Inside the Vercel intern experience"
+  },
+  {
+   "item_id": "md:2a5b6bd8-2e35-4a0f-9b42-a49c907f0e0f",
+   "lang": "en",
+   "chars": 14353,
+   "title": "Write less code"
+  },
+  {
+   "item_id": "md:55d8e9db-d8e1-4263-96db-dfa2a76ffbe5",
+   "lang": "en",
+   "chars": 9722,
+   "title": "0.12.11"
+  },
+  {
+   "item_id": "md:fc7f2122-bd14-446e-8a93-db28c54235fa",
+   "lang": "en",
+   "chars": 2262,
+   "title": "Default Enablement of Copilot features for Copilot Business and Enterprise"
+  },
+  {
+   "item_id": "md:af82f219-8376-44a7-98a4-de2c876c72d6",
+   "lang": "en",
+   "chars": 8400,
+   "title": "Introducing Vercel for Slack"
+  },
+  {
+   "item_id": "md:4ffdde35-f973-4d78-b0b3-a04ede4827ec",
+   "lang": "en",
+   "chars": 5553,
+   "title": "Compute that takes any shape"
+  },
+  {
+   "item_id": "md:09cf0265-67a2-4f31-9a22-ef7cf557de23",
+   "lang": "en",
+   "chars": 9825,
+   "title": "AWS Weekly Roundup: Claude Fable 5.1 on AWS, Amazon Linux 2027 preview, AWS Certified AI Business St"
+  },
+  {
+   "item_id": "md:a84be1c4-0238-4ced-a0ee-c23ca67e2991",
+   "lang": "en",
+   "chars": 9525,
+   "title": "CRLite: Fast, private, and comprehensive certificate revocation checking in Firefox"
+  }
+ ],
+ "pool_size": 641,
+ "truncations": [
+  512,
+  1000,
+  2000,
+  null
+ ],
+ "note": "截断口径对正文生效（标题恒保留）；None 测试模型上下文直吃长文（Qwen3 8K / bge-m3 8K / jina 32K）。"
+}
