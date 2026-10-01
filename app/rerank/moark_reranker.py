@@ -22,6 +22,8 @@ from .base import RankCandidate, RankError, RankProvider, RankedResult
 
 class MoarkRerankerProvider(RankProvider):
     name = "moark_reranker"
+    # 实测限制（2026-10-01）：documents 上限 25 条/请求（26 → 400 明示 '1' 到 '25'）
+    max_documents_per_request = 25
 
     def __init__(
         self,
@@ -42,6 +44,14 @@ class MoarkRerankerProvider(RankProvider):
         self._query_max_chars = query_max_chars
 
     def _rank(self, criteria: str, candidates: list[RankCandidate]) -> list[RankedResult]:
+        out: list[RankedResult] = []
+        for i in range(0, len(candidates), self.max_documents_per_request):
+            out.extend(
+                self._rank_chunk(criteria, candidates[i : i + self.max_documents_per_request])
+            )
+        return out
+
+    def _rank_chunk(self, criteria: str, candidates: list[RankCandidate]) -> list[RankedResult]:
         import httpx
 
         from ..providers.base import RETRYABLE_STATUS, _scrub

@@ -70,7 +70,8 @@ python -m venv .venv
 | ② 网页监测 | `app/ingest/web.py`（source type=web） | etag/内容 sha256 变更检测；版本 guid 全量保存；列表页可选 LLM 抽取（call_point=web_extract） |
 | ③ 热榜聚合 | `app/hot/service.py` | newsnow 类聚合 API 多平台全量落 hot_topic → deepseek 提炼 hot_batch（call_point=hot_keywords）；作者 include_hot_brief 注入风向段（不可引用） |
 | ④ 搜索底座 | `app/search/`（base/bocha/tencent/registry/quota/pipeline） | "新增子类 + 注册一行"扩展；额度闸（SKIPPED_QUOTA 语义，search_call_log/search_quota 全记） |
-| ⑤ 排序底座 | `app/rerank/`（bocha_reranker/bocha_jev/moark_jev/llm） | score 归一化 0-100 + band 三档；阅读集预排序（author.rank_provider/rank_exclude_below，明细落 write_run.payload）；热点候选筛选（HOT_RANK_FILTER，默认关） |
+| ⑤ 排序底座 | `app/rerank/`（bocha_reranker/bocha_jev/moark_jev/moark_reranker/llm） | score 归一化 0-100 + band 三档；阅读集预排序（author.rank_provider/rank_exclude_below，明细落 write_run.payload）；热点候选筛选（HOT_RANK_FILTER，默认关） |
+| ⑥ 向量底座（注册不接线） | `app/embedding/`（base/moark/registry） | EmbeddingProvider 抽象 + moark /v1/embeddings 适配（dimensions 透传/expected_dims 护栏/分批重试）；计量 call_point=embed + item_count；选型实测见 M18-M20 |
 | 0 信任预留位 | `app/ingest/sanitize.py` | 落库前强制流经；SANITIZE_ENABLED 默认 false（pass-through）；REJECTED 全文照存；/stats/filters 统计 |
 | 写作管线（三阶段） | `app/authors/`（schema/gates/pipeline/importer） | author.json 全量配置驱动；四 draft 模式/修订遍/六门禁/gated·零修订重写/trace 落库；schema 见 `docs/author-json-schema.md` |
 | 防蒙蔽穿插（OV2） | `app/api/routes.py::stream_b` | 拍板④：低分≥阈值条目按概率穿插，INTERLEAVE_* env 可调，诚实评分 |
@@ -110,8 +111,30 @@ python -m venv .venv
 ```bash
 .venv/Scripts/python scripts/test_search_providers.py   # V10①②：双家连通+归一化比对
 .venv/Scripts/python scripts/run_v11_ranking.py         # V11：排序一致性/排除效果/成本
-.venv/Scripts/python -m pytest tests/ -q                # 43 passed
+.venv/Scripts/python -m pytest tests/ -q                # 85 passed
 ```
+
+## 向量与排序选型实测（M18-M20，2026-10-01）
+
+moark 免费档 embedding/reranker/Jev 模型选型实测：数据底座 = morningdeck 运行导出
+（6615 条）+ newswright 中文补齐（6812 条语料）。**适配器已落仓、注册不接线**（接线属
+正式版决策）。详见 `doc/草稿与过程文件/向量与排序实测-验证报告-20261001.md`。
+
+- **Embedding 推荐**：主 Qwen3-Embedding-0.6B @1024（20.5ms/条、R@5 最高、1000 条/批、
+  MRL 可砍 512 近无损）；质量优先 jina-embeddings-v4（跨语言 R@5 0.978、近重复 AUC 0.919，
+  但 427ms/条且免费档 usage 报 0）；备 bge-m3（长文 R@5=1.0、8K 硬报错诚实）。
+  Qwen3 家族越大越差（4B/8B sep_auc 反降）。
+- **截断口径**：正文 2000 字符（512 已可用，全文直吃 R@1 增益 ≤8pp 且 bge >8192 tok 硬 400）。
+- **Rerank**：Qwen3-Reranker-8B/4B **直吃长方向提示词**（ρ≈0.45-0.49 vs 打分），
+  短查询全面负相关——V11 bocha_reranker 短查询问题被结构性解决（Qwen3 系特有能力，
+  bge-reranker-v2-m3 长短皆负）；band 阈值（0.75/0.20）与 rubric 分带不对齐，只用排序；
+  documents ≤25 条/请求。
+- **NeoHorse-Jev-4B**：不推荐替代 APUS-9B（安全判定疑似全 REJECT 退化 0.583 vs 0.792、
+  分段 0.500 vs 0.667、排序全面弱）；免费（billing_units=0）是唯一优势；
+  **16 问/请求为平台级硬限制**（422 `Expected 1..16` 实锤，NeoHorse/APUS 同限）。
+- 服务端限制实测：embeddings input ≤1000 条（0.6B）/100 条（4B）；大批按 token 静默
+  拆批重编号 index（数量护栏必须开）；6812 条×1024 维仅 ~28MB、暴力检索 0.86ms
+  ——万条级无需向量索引。
 
 ## 已知边界
 

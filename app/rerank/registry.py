@@ -55,10 +55,7 @@ def _fixed_neohorse() -> type:
         name = "moark_jev_neohorse"
 
         def __init__(self, db: Session) -> None:
-            from ..providers.base import HTTPProvider
-
-            HTTPProvider.__init__(
-                self,
+            super(MoarkJevRankProvider, self).__init__(
                 db,
                 base_url=config.MOARK_BASE_URL,
                 api_key=config.MOARK_API_KEY,

@@ -297,6 +297,31 @@ def eval_config(model_key: str, dims: int | None, trunc: int) -> dict:
             "mix@10": (len(mixed), len(labeled)),
         })
 
+    # 限池检索（主口径）：标注集 259 条内检索排序——全库绝对 Recall 在稀疏标注
+    # （259/6812=3.8%）下无意义；限池口径回答"金标正例是否排在金标负例前面"。
+    labeled_ids = [iid for iid in labels if iid in id2idx]
+    lab_idx = np.array([id2idx[i] for i in labeled_ids])
+    per_query_r = []
+    for qi, q in enumerate(queries):
+        own = q["brief_id"]
+        sub = sims[qi][lab_idx]
+        order2 = np.argsort(-sub)
+        ranked2 = [labeled_ids[j] for j in order2]
+        pos_ids2 = [iid for iid in labeled_ids
+                    if labels[iid]["brief_owner"] == own
+                    and (labels[iid]["scores"].get(own) or 0) >= 60]
+        ranks2 = [ranked2.index(i) + 1 for i in pos_ids2]
+        k5 = sum(1 for r in ranks2 if r <= 5) / len(pos_ids2) if pos_ids2 else None
+        k10 = sum(1 for r in ranks2 if r <= 10) / len(pos_ids2) if pos_ids2 else None
+        mrr2 = sum(1.0 / r for r in ranks2) / len(pos_ids2) if pos_ids2 else None
+        per_query_r.append({
+            "brief": briefs[own],
+            "n_pos": len(pos_ids2),
+            "recall@5": None if k5 is None else round(k5, 3),
+            "recall@10": None if k10 is None else round(k10, 3),
+            "mrr": None if mrr2 is None else round(mrr2, 3),
+        })
+
     # EV3 跨语言 known-item
     g3 = json.loads((GOLD_DIR / "G3_known_item.json").read_text(encoding="utf-8"))
     cases = [c for c in g3["cases"] if c.get("query")]
@@ -374,6 +399,9 @@ def eval_config(model_key: str, dims: int | None, trunc: int) -> dict:
         "dims": dims or "default",
         "trunc": trunc,
         "ev2_routing_per_query": per_query,
+        "ev2_routing_restricted_pool": per_query_r,
+        "ev2_note": "restricted_pool=主口径（259 标注条内检索）；全库 per_query 为参考"
+                    "（标注密度 3.8%，绝对 Recall 被未标注条目稀释）",
         "ev3_crosslingual": ev3,
         "ev4_neardup": ev4,
         "ev4_exploration_tail": expl,
@@ -398,23 +426,36 @@ def eval_longtext(model_key: str, dims: int | None) -> dict:
     for trunc in [512, 1000, 2000, None]:
         texts = [c["text"][len(c["title"]):].strip()[:trunc] if c["text"].startswith(c["title"])
                  else c["text"][:trunc] for c in items]
-        p, s = provider_for(model_key)
-        try:
-            vecs = p.embed(texts, dimensions=dims, call_point="embed_longtext")
-        finally:
-            s.close()
-        mat = np.array(vecs, dtype=np.float32)
+        # 长文本逐条发送：服务端按 token 预算拆批会重编号 index（EV1 实测），
+        # 且单条失败可定位到具体条目（如实记录，不猜补）
+        mat_rows: list = []
+        fails = []
+        for i, t in enumerate(texts):
+            p, s = provider_for(model_key)
+            try:
+                v = p.embed([t], dimensions=dims, call_point="embed_longtext")
+                mat_rows.append(v[0])
+            except EmbeddingError as e:
+                fails.append({"i": i, "chars": len(t), "error": str(e)[:150]})
+                mat_rows.append(None)
+            finally:
+                s.close()
+        valid = [(i, r) for i, r in enumerate(mat_rows) if r is not None]
+        q_ok = [q_mat[i] for i, _ in valid]
+        mat = np.array([r for _, r in valid], dtype=np.float32)
         mat = mat / np.linalg.norm(mat, axis=1, keepdims=True)
-        sims = q_mat @ mat.T
+        sims = np.array(q_ok) @ mat.T
         ranks = []
-        for i in range(len(items)):
-            order = np.argsort(-sims[i])
-            ranks.append(int(np.where(order == i)[0][0]) + 1)
+        for row, (i, _) in zip(sims, valid):
+            order = np.argsort(-row)
+            ranks.append(int(np.where(order == list(x for x, _ in valid).index(i))[0][0]) + 1)
         res[str(trunc)] = {
-            "recall@1": round(sum(1 for r in ranks if r == 1) / len(ranks), 3),
-            "recall@5": round(sum(1 for r in ranks if r <= 5) / len(ranks), 3),
+            "recall@1": round(sum(1 for r in ranks if r == 1) / len(valid), 3),
+            "recall@5": round(sum(1 for r in ranks if r <= 5) / len(valid), 3),
             "mean_rank": round(float(np.mean(ranks)), 2),
             "worst_rank": max(ranks),
+            "n_valid": len(valid),
+            "fails": fails,
         }
     return {"model_key": model_key, "n_items": len(items), "truncation_recall": res}
 
@@ -462,13 +503,15 @@ def report() -> None:
     for f in sorted(VERIFY.glob("EV2_eval_*.json")):
         d = json.loads(f.read_text(encoding="utf-8"))
         pq = d["ev2_routing_per_query"]
-        def avg(k):
-            vals = [x[k] for x in pq if x.get(k) is not None]
+        rq = d.get("ev2_routing_restricted_pool", [])
+        def avg(items, k):
+            vals = [x[k] for x in items if x.get(k) is not None]
             return round(sum(vals) / len(vals), 3) if vals else None
         rows.append({
             "model": d["model"], "dims": d["dims"], "trunc": d["trunc"],
-            "recall@5": avg("recall@5"), "recall@10": avg("recall@10"),
-            "mrr": avg("mrr"), "sep_auc": avg("sep_auc"),
+            "recall@5": avg(rq, "recall@5"), "recall@10": avg(rq, "recall@10"),
+            "mrr": avg(rq, "mrr"),
+            "sep_auc": avg(pq, "sep_auc"),
             "ev3_recall@5": (
                 round(float(np.mean([v["recall@5"] for v in d["ev3_crosslingual"].values()])), 3)
                 if d["ev3_crosslingual"] else None),
