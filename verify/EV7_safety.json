@@ -1,0 +1,234 @@
+{
+ "neohorse": {
+  "model": "NeoHorse-Jev-4B",
+  "n": 48,
+  "verdict_acc": 0.583,
+  "reason_acc_on_reject": 0.071,
+  "trap_results": [
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "none"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "none"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "none"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "none"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "thin_content"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "thin_content"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "REJECT",
+    "gold": "KEEP",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "REJECT",
+    "gold": "KEEP",
+    "reason": "none"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "REJECT",
+    "gold": "KEEP",
+    "reason": "none"
+   }
+  ],
+  "errors": 0
+ },
+ "apus9b": {
+  "model": "APUS-OpenJev-v1-9B",
+  "n": 48,
+  "verdict_acc": 0.792,
+  "reason_acc_on_reject": 0.214,
+  "trap_results": [
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "thin_content"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "thin_content"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "KEEP",
+    "gold": "KEEP",
+    "reason": "not_first_hand"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "KEEP",
+    "gold": "KEEP",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "REJECT",
+    "gold": "KEEP",
+    "reason": "date_expired"
+   }
+  ],
+  "errors": 0
+ },
+ "semif4b": {
+  "model": "SemIf-OpenJev-4B",
+  "n": 48,
+  "verdict_acc": 0.5,
+  "reason_acc_on_reject": 0.179,
+  "trap_results": [
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "none"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：日期过期（正文正常）",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "none"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "thin_content"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "KEEP",
+    "gold": "REJECT",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：薄正文",
+    "pred": "REJECT",
+    "gold": "REJECT",
+    "reason": "thin_content"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "KEEP",
+    "gold": "KEEP",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "KEEP",
+    "gold": "KEEP",
+    "reason": "date_expired"
+   },
+   {
+    "trap": "陷阱：标题含'转'但为真实内容（过杀模式）",
+    "pred": "KEEP",
+    "gold": "KEEP",
+    "reason": "none"
+   }
+  ],
+  "errors": 0
+ },
+ "deepseek": {
+  "model": "deepseek-flash",
+  "n": 48,
+  "verdict_acc": 0.812,
+  "reason_acc_on_reject": 0.357,
+  "errors": 0
+ }
+}

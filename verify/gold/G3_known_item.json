@@ -1,0 +1,251 @@
+{
+ "built_at": "2026-10-01",
+ "cases": [
+  {
+   "item_id": "md:9f52d917-8feb-41ac-b675-1e23ec0bcf96",
+   "query_lang": "zh",
+   "query": "稀疏 Transformer 生成模型 长序列预测",
+   "item_lang": "en",
+   "title": "Generative modeling with sparse transformers"
+  },
+  {
+   "item_id": "md:08169743-e100-4ca2-9606-eba0c9c2df0b",
+   "query_lang": "zh",
+   "query": "青少年和家长的人工智能素养资源",
+   "item_lang": "en",
+   "title": "AI literacy resources for teens and parents"
+  },
+  {
+   "item_id": "md:2cb2c2b3-4a6c-4712-975e-c8fa639f2234",
+   "query_lang": "zh",
+   "query": "Mux 如何用 AI SDK 实现持久化视频工作流",
+   "item_lang": "en",
+   "title": "How Mux shipped durable video workflows with their @mux/ai SDK"
+  },
+  {
+   "item_id": "md:6012bc5a-deb2-4ae6-b6c9-69e8a93ce24f",
+   "query_lang": "zh",
+   "query": "Copilot 自动修复 记忆功能 安全警报",
+   "item_lang": "en",
+   "title": "Agentic autofix now uses Copilot Memory"
+  },
+  {
+   "item_id": "md:df936c8b-24f2-4bc2-b4fd-bff4c2da754b",
+   "query_lang": "zh",
+   "query": "Vercel Next.js 14 构建大型网站",
+   "item_lang": "en",
+   "title": "Building the most ambitious sites on the Web with Vercel and Next.js 14"
+  },
+  {
+   "item_id": "md:3b8a466e-5c7d-4deb-87c2-feb7ab809e76",
+   "query_lang": "zh",
+   "query": "Vercel 零配置部署 Go 后端",
+   "item_lang": "en",
+   "title": "Zero-configuration Go backend support"
+  },
+  {
+   "item_id": "md:f7b51f51-432f-4f32-a538-34b9b30b5e9b",
+   "query_lang": "zh",
+   "query": "Next.js 快速动画图片画廊搭建教程",
+   "item_lang": "en",
+   "title": "Building a fast, animated image gallery with Next.js"
+  },
+  {
+   "item_id": "md:01538600-6569-4240-a4c4-395469b18eb9",
+   "query_lang": "zh",
+   "query": "CSS 自定义高亮 API 与导航匹配技巧",
+   "item_lang": "en",
+   "title": "What’s !important #17: Custom Highlight API, CSS Navigation Matching, Fixing text-stroke, and More"
+  },
+  {
+   "item_id": "md:ea82fe5e-2493-4113-a4c4-5720a3411be7",
+   "query_lang": "zh",
+   "query": "Vercel Pro 套餐更新 团队协作 定价",
+   "item_lang": "en",
+   "title": "A more flexible Pro plan for modern teams"
+  },
+  {
+   "item_id": "md:103ec9b2-6580-4c98-b86a-6e1d001623a3",
+   "query_lang": "zh",
+   "query": "框架定义基础设施是什么",
+   "item_lang": "en",
+   "title": "Framework-defined infrastructure"
+  },
+  {
+   "item_id": "md:aab7951a-0cf3-4d33-952d-db00718b01a1",
+   "query_lang": "zh",
+   "query": "next-forge 6 新版本有哪些更新",
+   "item_lang": "en",
+   "title": "next-forge 6 is now available"
+  },
+  {
+   "item_id": "md:c6d81ab7-0cfe-4995-a2ae-5331a7f24bc2",
+   "query_lang": "zh",
+   "query": "Svelte 2021年6月更新内容",
+   "item_lang": "en",
+   "title": "What’s new in Svelte: June 2021"
+  },
+  {
+   "item_id": "md:bca8bef1-b03f-496d-8fd2-c217f1282f8c",
+   "query_lang": "zh",
+   "query": "Svelte 2023年10月更新内容",
+   "item_lang": "en",
+   "title": "What’s new in Svelte: October 2023"
+  },
+  {
+   "item_id": "md:442144dd-e1ec-40fc-b616-cf283845a6e0",
+   "query_lang": "zh",
+   "query": "Emburse 网站性能提升 4 倍 Vercel",
+   "item_lang": "en",
+   "title": "How Emburse increased site performance by 4x with Vercel"
+  },
+  {
+   "item_id": "md:5755fc7e-d8c9-46af-af63-b1daf2f8a143",
+   "query_lang": "zh",
+   "query": "异常告警支持邮件通知",
+   "item_lang": "en",
+   "title": "Anomaly alerts now available via email"
+  },
+  {
+   "item_id": "nw:47",
+   "query_lang": "en",
+   "query": "雷鸟鹤 6 系列 27 款 QD-Mini LED 电视价格 55 98 英寸",
+   "item_lang": "zh",
+   "title": "雷鸟鹤 6 系列 27 款 QD-Mini LED 电视开售：55-98 英寸，3175 元起"
+  },
+  {
+   "item_id": "nw:2027",
+   "query_lang": "en",
+   "query": "Honor 700 Pro back display X series 7-inch battery foldable phone leak",
+   "item_lang": "zh",
+   "title": "荣耀年底新机曝光：700 Pro 系列有原生背屏、X 新品主打 7 英寸大屏 + 超万级大电池，阔折叠加速中"
+  },
+  {
+   "item_id": "nw:50",
+   "query_lang": "en",
+   "query": "小鹏汇天 飞行汽车 普通人打飞的 还要几年 价格",
+   "item_lang": "zh",
+   "title": "小鹏汇天赵德力：普通人“打飞的”至少还得 5 年，就比现在的滴滴稍微贵一点点"
+  },
+  {
+   "item_id": "nw:2012",
+   "query_lang": "en",
+   "query": "米家冰箱 Pro 439L 法式自动制冰 售价 参数",
+   "item_lang": "zh",
+   "title": "小米“米家冰箱 Pro 439L 法式自动制冰”开售，4999 元"
+  },
+  {
+   "item_id": "nw:1487",
+   "query_lang": "en",
+   "query": "iQOO Pad Ultra price specs release date",
+   "item_lang": "zh",
+   "title": "首销 5999 元起：iQOO Pad Ultra 小平板发布，第六代骁龙 8 超级至尊版芯片、五重风冷散热"
+  },
+  {
+   "item_id": "md:3ce62f27-4b18-41a1-82a0-f57d2d251bc8",
+   "query_lang": "en",
+   "query": "16-year-old AI finds Microsoft internal API vulnerability 17 trillion records bounty",
+   "item_lang": "zh",
+   "title": "16 岁少年用 AI 发现微软内部 API 漏洞：涉及超 17 万亿行数据，获 5000 美元赏金"
+  },
+  {
+   "item_id": "nw:346",
+   "query_lang": "en",
+   "query": "how to improve large language model inference efficiency optimization techniques",
+   "item_lang": "zh",
+   "title": "如何实现大模型的高效推理?"
+  },
+  {
+   "item_id": "nw:1540",
+   "query_lang": "en",
+   "query": "Google Pixel 11a renders Tensor G6 MediaTek modem specs",
+   "item_lang": "zh",
+   "title": "谷歌 Pixel 11a 手机渲染图曝光：Tensor G6 芯片、联发科调制解调器"
+  },
+  {
+   "item_id": "nw:1464",
+   "query_lang": "en",
+   "query": "EVGA insider recalls NVIDIA partnership Founders Edition pressure AIC MSRP losses",
+   "item_lang": "zh",
+   "title": "EVGA 内部人士回顾与英伟达合作：公版显卡的出现导致 AIC 承压，曾亏本销售 MSRP 型号"
+  },
+  {
+   "item_id": "nw:68",
+   "query_lang": "en",
+   "query": "China AR-E800 drone first public flight heavy lift",
+   "item_lang": "zh",
+   "title": "我国自研 AR-E800 无人机公开首飞：单机单日运输量达 14 吨，拥有 4800 米高海拔作业能力"
+  },
+  {
+   "item_id": "nw:352",
+   "query_lang": "en",
+   "query": "how to design an AI agent architecture with LLM reasoning and tool use",
+   "item_lang": "zh",
+   "title": "打造 AI 级 Agent 架构-CSDN博客"
+  },
+  {
+   "item_id": "nw:444",
+   "query_lang": "en",
+   "query": "Kimi K3.1 model leak release date context window",
+   "item_lang": "zh",
+   "title": "月之暗面最强 AI 模型：Kimi K3.1 前端标识泄露，预计将在近期发布"
+  },
+  {
+   "item_id": "nw:481",
+   "query_lang": "en",
+   "query": "Anthropic Claude Sonnet 5.5 release speed improvement agentic coding",
+   "item_lang": "zh",
+   "title": "Anthropic 发布 Claude Sonnet 5.5：速度提升 30%，智能体编码性能反超 Opus 5.5"
+  },
+  {
+   "item_id": "nw:2042",
+   "query_lang": "en",
+   "query": "Call of Duty Modern Warfare 4 PC features ultrawide ray tracing DLSS",
+   "item_lang": "zh",
+   "title": "《使命召唤：现代战争 4》游戏 PC 版特性官宣：支持超宽屏、光追、HDR10+ 与插帧等"
+  },
+  {
+   "item_id": "nw:473",
+   "query_lang": "en",
+   "query": "16-year-old AI finds Microsoft internal API vulnerability 17 trillion records bounty",
+   "item_lang": "zh",
+   "title": "16 岁少年用 AI 发现微软内部 API 漏洞：涉及超 17 万亿行数据，获 5000 美元赏金"
+  },
+  {
+   "item_id": "md:9f52d917-8feb-41ac-b675-1e23ec0bcf96",
+   "query_lang": "ja",
+   "query": "スパーストランスフォーマーによる生成モデリング",
+   "item_lang": "en",
+   "title": "Generative modeling with sparse transformers"
+  },
+  {
+   "item_id": "md:df936c8b-24f2-4bc2-b4fd-bff4c2da754b",
+   "query_lang": "ja",
+   "query": "Vercel Next.js 14 発表 アップデート ウェブサイト構築",
+   "item_lang": "en",
+   "title": "Building the most ambitious sites on the Web with Vercel and Next.js 14"
+  },
+  {
+   "item_id": "md:2cb2c2b3-4a6c-4712-975e-c8fa639f2234",
+   "query_lang": "ja",
+   "query": "Mux @mux/ai SDK 耐久性のある動画ワークフロー 実装方法",
+   "item_lang": "en",
+   "title": "How Mux shipped durable video workflows with their @mux/ai SDK"
+  },
+  {
+   "item_id": "md:ea82fe5e-2493-4113-a4c4-5720a3411be7",
+   "query_lang": "ja",
+   "query": "Vercel Proプラン 変更 チーム向け 料金体系",
+   "item_lang": "en",
+   "title": "A more flexible Pro plan for modern teams"
+  },
+  {
+   "item_id": "md:5755fc7e-d8c9-46af-af63-b1daf2f8a143",
+   "query_lang": "ja",
+   "query": "Vercel 異常アラート メール通知 設定方法",
+   "item_lang": "en",
+   "title": "Anomaly alerts now available via email"
+  }
+ ],
+ "note": "known-item 金标：查询语言≠条目语言（en→zh/zh→en/ja→en）。morningdeck 语料日文条目仅 1 条（体检实测），日文侧以「日文查询命中英文条目」覆盖跨语言方向。"
+}

@@ -1,0 +1,576 @@
+[
+ {
+  "item_id": "md:3a8532ea-cc1d-43a5-b688-621837cce8a7",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 72,
+  "text": "SBX env: consistent and shareable AI sandbox configurations\nArticle URL: <https://docs.docker.com/ai/sandboxes/configuration/environment-files>\n\nComments URL: <https://news.ycombinator.com/item?id=49885345>\n\nPoints: 1\n\n# Comments: 0",
+  "title": "SBX env: consistent and shareable AI sandbox configurations"
+ },
+ {
+  "item_id": "md:4beb3947-686d-448a-83c1-9d4d34d5603a",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 88,
+  "text": "Fail2ban – Remote Code Execution\nArticle URL: <https://research.securitum.com/fail2ban-remote-code-execution/>\n\nComments URL: <https://news.ycombinator.com/item?id=28679761>\n\nPoints: 170\n\n# Comments: 63",
+  "title": "Fail2ban – Remote Code Execution"
+ },
+ {
+  "item_id": "md:f0339bbe-ffb4-41c6-904a-9d16d99e4c51",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 82,
+  "text": "Crowdsec: A Fail2Ban alternative written in Go\nArticle URL: <https://github.com/crowdsecurity/crowdsec>\n\nComments URL: <https://news.ycombinator.com/item?id=24826792>\n\nPoints: 170\n\n# Comments: 93",
+  "title": "Crowdsec: A Fail2Ban alternative written in Go"
+ },
+ {
+  "item_id": "md:8a126e76-4f53-4692-96c7-a1ed031fde66",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 88,
+  "text": "The many failures leading to the LiteLLM compromise\nArticle URL: <https://lwn.net/Articles/1064693/>\n\nComments URL: <https://news.ycombinator.com/item?id=47711937>\n\nPoints: 4\n\n# Comments: 1",
+  "title": "The many failures leading to the LiteLLM compromise"
+ },
+ {
+  "item_id": "md:7a0c6c3b-8640-4f8d-b815-0661a2a24135",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 78,
+  "text": "Quantization-Aware Healing:a compressed 4-bit model that outperf full-precision\nArticle URL: <https://huggingface.co/blog/MultiverseComputingCAI/quantization-aware-healing>\n\nComments URL: <https://news.ycombinator.com/item?id=49432882>\n\nPoints: 3\n\n# Comments: 0",
+  "title": "Quantization-Aware Healing:a compressed 4-bit model that outperf full-precision"
+ },
+ {
+  "item_id": "md:0fcdd6a9-149f-4575-9142-b29998462011",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 85,
+  "text": "Claude Sonnet 5.5\nArticle URL: <https://www.anthropic.com/claude-sonnet-5-5>\n\nComments URL: <https://news.ycombinator.com/item?id=49881850>\n\nPoints: 177\n\n# Comments: 130",
+  "title": "Claude Sonnet 5.5"
+ },
+ {
+  "item_id": "md:f68e5644-7137-4877-b408-9b58d89e3984",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 88,
+  "text": "Benchmarking AI Gateways: GoModel vs. LiteLLM vs. Portkey vs. Bifrost\nArticle URL: <https://enterpilot.io/blog/benchmarking-ai-gateways-gomodel-litellm-portkey-bifrost-june-2026/>\n\nComments URL: <https://news.ycombinator.com/item?id=48688213>\n\nPoints: 4\n\n# Comments: 9",
+  "title": "Benchmarking AI Gateways: GoModel vs. LiteLLM vs. Portkey vs. Bifrost"
+ },
+ {
+  "item_id": "md:57c0e072-d5aa-468d-a2c6-9d9083113a46",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 72,
+  "text": "Ember-1\nArticle URL: <https://fireworks.ai/blog/ember-1>\n\nComments URL: <https://news.ycombinator.com/item?id=49868830>\n\nPoints: 569\n\n# Comments: 243",
+  "title": "Ember-1"
+ },
+ {
+  "item_id": "md:db637099-fb24-443d-a8e0-ede1536b6e68",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 85,
+  "text": "Sonnet 5.5\nArticle URL: <https://www.anthropic.com/claude-sonnet-5-5>\n\nComments URL: <https://news.ycombinator.com/item?id=49881850>\n\nPoints: 422\n\n# Comments: 290",
+  "title": "Sonnet 5.5"
+ },
+ {
+  "item_id": "md:cb80f3ce-c591-4e3a-97c6-188b80a4afb3",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 78,
+  "text": "4-Bit Rotational Quantization: -45% RAM, <1% recall drop vs. TurboQuant\nArticle URL: <https://weaviate.io/blog/4-bit-rotational-quantization>\n\nComments URL: <https://news.ycombinator.com/item?id=49743523>\n\nPoints: 5\n\n# Comments: 0",
+  "title": "4-Bit Rotational Quantization: -45% RAM, <1% recall drop vs. TurboQuant"
+ },
+ {
+  "item_id": "md:63517bc2-8141-42f5-9d3c-b250cf998057",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 78,
+  "text": "Fail2ban 1.0.1\nArticle URL: <https://github.com/fail2ban/fail2ban/releases/tag/1.0.1>\n\nComments URL: <https://news.ycombinator.com/item?id=33207589>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "Fail2ban 1.0.1"
+ },
+ {
+  "item_id": "md:e14c65f7-f061-4925-a3e9-fddc92fb9076",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 78,
+  "text": "LLM Quantization Part 2.5: Do Floats Dream of Real Numbers?\nArticle URL: <https://www.lttlabs.com/articles/2026/07/21/llm-quantization-part-2-5-do-floats-dream-of-real-numbers>\n\nComments URL: <https://news.ycombinator.com/item?id=49417261>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "LLM Quantization Part 2.5: Do Floats Dream of Real Numbers?"
+ },
+ {
+  "item_id": "md:016cc6e9-53ee-4212-bec9-2635cbd67a9b",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 72,
+  "text": "Fail2ban or Ban 2 Fail\nArticle URL: <https://ww.telent.net/2020/12/22/fail2ban_or_ban_2_fail>\n\nComments URL: <https://news.ycombinator.com/item?id=25511413>\n\nPoints: 1\n\n# Comments: 1",
+  "title": "Fail2ban or Ban 2 Fail"
+ },
+ {
+  "item_id": "md:05c8f2b0-d1b4-4ab4-80e3-46f7942ae02c",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 78,
+  "text": "I stress-tested LLM quantization by deliberately breaking models\nArticle URL: <https://github.com/gracejackson-sudo/quant-delta-predictor>\n\nComments URL: <https://news.ycombinator.com/item?id=49823211>\n\nPoints: 1\n\n# Comments: 0",
+  "title": "I stress-tested LLM quantization by deliberately breaking models"
+ },
+ {
+  "item_id": "md:61026979-4cf5-4340-b154-dd19be0f3d40",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 72,
+  "text": "LLM Benchmark for de-identification and synthesis\nArticle URL: <https://huggingface.co/datasets/TonicAI/Privacy-Bench>\n\nComments URL: <https://news.ycombinator.com/item?id=49818370>\n\nPoints: 3\n\n# Comments: 2",
+  "title": "LLM Benchmark for de-identification and synthesis"
+ },
+ {
+  "item_id": "md:8a9af648-7fb6-4875-9989-de638de1ede0",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 55,
+  "text": "VSArena – The official open browser benchmark for embodied AI\nArticle URL: <https://vsarena.vercel.app>\n\nComments URL: <https://news.ycombinator.com/item?id=49821427>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "VSArena – The official open browser benchmark for embodied AI"
+ },
+ {
+  "item_id": "md:d2fe970c-634c-4229-b8da-986621f9fc96",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 35,
+  "text": "OpenAI Scraps Release of New AI Model over Safety Concerns\nArticle URL: <https://www.wsj.com/tech/ai/openai-chatgpt-model-release-cancel-safety-5a2f9f42>\n\nComments URL: <https://news.ycombinator.com/item?id=49885133>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "OpenAI Scraps Release of New AI Model over Safety Concerns"
+ },
+ {
+  "item_id": "md:e7bea2c7-2df5-4672-b323-daf0a65364db",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 45,
+  "text": "Ask HN: Finetuning strategies\nWhats the best and cheapest way to finetune an llm?\n\n*** ** * ** ***\n\nComments URL: <https://news.ycombinator.com/item?id=49881077>\n\nPoints: 1\n\n# Comments: 1",
+  "title": "Ask HN: Finetuning strategies"
+ },
+ {
+  "item_id": "md:7003d522-5157-41d4-900d-00947d119ed2",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 35,
+  "text": "China's AI Ecosystem: A Background Explainer\nArticle URL: <https://oxfordchinapolicylab.org/research/china-s-ai-ecosystem-a-background-explainer>\n\nComments URL: <https://news.ycombinator.com/item?id=49883579>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "China's AI Ecosystem: A Background Explainer"
+ },
+ {
+  "item_id": "md:85aa3d33-c09c-49b5-ba3b-36c696561639",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 55,
+  "text": "Synthetic Hospital: Physician-Validated Longitudinal EHR Benchmark\nArticle URL: <https://arxiv.org/abs/2609.30027>\n\nComments URL: <https://news.ycombinator.com/item?id=49845852>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "Synthetic Hospital: Physician-Validated Longitudinal EHR Benchmark"
+ },
+ {
+  "item_id": "md:6ca38ced-3035-4b3e-8d65-e5cb5e08270e",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 45,
+  "text": "Show HN: I built a tool that runs 258 automated checks against a WordPress site\nArticle URL: <https://wpaudit.cc/>\n\nComments URL: <https://news.ycombinator.com/item?id=49532036>\n\nPoints: 1\n\n# Comments: 2",
+  "title": "Show HN: I built a tool that runs 258 automated checks against a WordPress site"
+ },
+ {
+  "item_id": "md:92ce3044-fbf0-4742-8b8c-b80b0a00d8fa",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 55,
+  "text": "Show HN: WordPress search and replace that doesn't corrupt serialized data\nArticle URL: <https://github.com/ibrahimhajjaj/lucid-search-replace>\n\nComments URL: <https://news.ycombinator.com/item?id=49553453>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "Show HN: WordPress search and replace that doesn't corrupt serialized data"
+ },
+ {
+  "item_id": "md:8ef493f2-485c-41f7-9ed7-6db357ebbdab",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 35,
+  "text": "Nvidia launches new tool to keep AI agents from going rogue\nArticle URL: <https://www.cnn.com/2026/09/28/business/nvidia-ai-safety-system>\n\nComments URL: <https://news.ycombinator.com/item?id=49884188>\n\nPoints: 1\n\n# Comments: 0",
+  "title": "Nvidia launches new tool to keep AI agents from going rogue"
+ },
+ {
+  "item_id": "md:38341b8b-a2cb-464f-96d5-03b059da60c5",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 55,
+  "text": "Nvidia launched a tool designed to stop AI agents from going rogue. How it works\nArticle URL: <https://www.businessinsider.com/nvidia-launches-open-agent-safety-platform-ai-going-rogue-2026-9>\n\nComments URL: <https://news.ycombinator.com/item?id=49883636>\n\nPoints: 2\n\n# Comments: 1",
+  "title": "Nvidia launched a tool designed to stop AI agents from going rogue. How it works"
+ },
+ {
+  "item_id": "md:568be96c-eade-469f-857f-98470450056a",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 55,
+  "text": "OpenClaw v2026.9.3: Live browser automation, persistent skills, and cloud work\nArticle URL: <https://docs.openclaw.ai/releases/2026.9.3>\n\nComments URL: <https://news.ycombinator.com/item?id=49623711>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "OpenClaw v2026.9.3: Live browser automation, persistent skills, and cloud work"
+ },
+ {
+  "item_id": "md:e5a1ae03-6a74-4639-bbcd-f3cc2af733b9",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 15,
+  "text": "Why WordPress Is Still the #1 CMS in 2026\nArticle URL: <https://wpaudit.cc/blog/why-wordpress-is-the-worlds-number-one-cms-2026/>\n\nComments URL: <https://news.ycombinator.com/item?id=49723009>\n\nPoints: 1\n\n# Comments: 1",
+  "title": "Why WordPress Is Still the #1 CMS in 2026"
+ },
+ {
+  "item_id": "md:88ab3106-184b-4cb2-baca-0116792131c4",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 0,
+  "text": "OpenClaw 2.0\nArticle URL: <https://docs.openclaw.ai/releases/2026.8.1>\n\nComments URL: <https://news.ycombinator.com/item?id=49505871>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "OpenClaw 2.0"
+ },
+ {
+  "item_id": "md:6e717edc-e16c-43c4-8ad9-801afe577285",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 15,
+  "text": "Show HN: Press Start – A Playable Museum of Video Game History\nHi HN,\n\nI was testing out Opus and built something I've wanted to build for a very long time.\n\nIt's a fully interactive playable museum of video game history.\n\nScroll and you progress through a corridor with rooms dedicated to each era of Video game history, designed and made to sound like that era with playable games based off of that era's games.\n\nThere are a bunch of easter eggs and a lot to learn about video games.\n\nEnjoy the exhibits.\n\n*** ** * ** ***\n\nComments URL: <https://news.ycombinato",
+  "title": "Show HN: Press Start – A Playable Museum of Video Game History"
+ },
+ {
+  "item_id": "md:8dff492d-6e05-455a-b725-16ec0678e646",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 15,
+  "text": "Facebook Lost the Trust of Its Eyes\nComments URL: <https://news.ycombinator.com/item?id=49882820>\n\nPoints: 1\n\n# Comments: 0",
+  "title": "Facebook Lost the Trust of Its Eyes"
+ },
+ {
+  "item_id": "md:6ac0bb9d-d54a-4ae9-95e7-b0129f60e705",
+  "brief_owner": "3c394504-e064-4704-9c70-3c2cb1e6d303",
+  "gold_score": 15,
+  "text": "SB 923 is Law: CCPA deletion rights now reach third-party data\nArticle URL: <https://www.getprivisy.com/blog/sb-923-ccpa-right-to-delete-signed>\n\nComments URL: <https://news.ycombinator.com/item?id=49883345>\n\nPoints: 35\n\n# Comments: 11",
+  "title": "SB 923 is Law: CCPA deletion rights now reach third-party data"
+ },
+ {
+  "item_id": "md:20563f86-9db7-46f1-a2b5-52fed83323ad",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 72,
+  "text": "AI-powered fuzzing with the GitHub Security Lab Taskflow Agent\n*If you're new to fuzzing and want to learn the fundamentals first, check out our Fuzzing 101 course at [gh.io/fuzzing101](https://gh.io/fuzzing101).*\n\nContinuous fuzzing is not a magic solution that solves all your problems . Even projects that have been enrolled in OSS-Fuzz for years can still hide critical bugs, and the reason is almost always the same: someone needs to keep an eye on coverage, write new harnesses for the code that nobody is reaching, and triage the crashes that come out the ",
+  "title": "AI-powered fuzzing with the GitHub Security Lab Taskflow Agent"
+ },
+ {
+  "item_id": "md:10fb0fa1-c105-46af-b9e0-0b33915e5b40",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 72,
+  "text": "Skills Night: 69,000+ ways agents are getting smarter\nThe room was full of people who had already used skills.\n\nTuesday night we hosted Skills Night in San Francisco, an event for developers building on and around [skills.sh](https://skills.sh), the open skills ecosystem we've been growing since the idea started as a single weekend of writing. What began as Shu Ding sitting down to document everything he knows about React has grown into over 69,000 skills, 2 million skill CLI installs, and a community moving incredibly fast.  \n\nHere is what we lear",
+  "title": "Skills Night: 69,000+ ways agents are getting smarter"
+ },
+ {
+  "item_id": "md:747a7f46-34f8-447f-ae82-2c76535e7d80",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 72,
+  "text": "GLM 5.3 FlashX now available on AI Gateway\n[GLM 5.3 FlashX](https://vercel.com/ai-gateway/models/glm-5.3-flashx) is now available on AI Gateway.\n\nGLM 5.3 FlashX is a high-speed serving option for Z.ai's multimodal coding model, delivering inference at \\~200 tokens per second for faster streamed responses.\n\nThe higher serving speed is useful for coding agents, tool loops, and interactive applications where users wait on generated output.\n\nUse `zai/glm-5.3-flashx` across API formats and in coding agents:  \n\nTo use it in a coding agent, see",
+  "title": "GLM 5.3 FlashX now available on AI Gateway"
+ },
+ {
+  "item_id": "md:f19bdfd8-b689-4503-885b-a84ecc4c5144",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 78,
+  "text": "A sandbox without a network boundary is only half a sandbox\nRunning untrusted code safely requires more than separating it from the host. You also have to control what that code can reach.\n\nThis matters more as AI agents gain the ability to read files, execute commands, install packages, and generate programs of their own. A microVM can prevent that code from accessing the host or another workload. By itself, it cannot stop the code from exfiltrating data, probing internal services, attacking systems elsewhere on the internet, or using credentials availa",
+  "title": "A sandbox without a network boundary is only half a sandbox"
+ },
+ {
+  "item_id": "md:3f4f6062-3f78-42cb-bc47-75c2a59170ad",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 88,
+  "text": "Introducing the Codex app\nIntroducing the Codex app for macOS---a command center for AI coding and software development with multiple agents, parallel workflows, and long-running tasks.",
+  "title": "Introducing the Codex app"
+ },
+ {
+  "item_id": "md:d140be62-09c4-4ce0-9fd0-c93bb24cfa74",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 72,
+  "text": "GLM-5 is live on AI Gateway\nYou can now access GLM-5 via [AI Gateway](https://vercel.com/ai-gateway) with no other provider accounts required.\n\nGLM-5 from Z.AI is now available on AI Gateway. Compared to GLM-4.7, GLM-5 adds multiple thinking modes, improved long-range planning and memory, and better handling of complex multi-step agent tasks. It's particularly strong at agentic coding, autonomous tool use, and extracting structured data from documents like contracts and financial reports.\n\nTo use this model, set model to `",
+  "title": "GLM-5 is live on AI Gateway"
+ },
+ {
+  "item_id": "md:44579d3d-827b-4ec3-a951-5aeab6523903",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 85,
+  "text": "Anthropic releases Sonnet 5.5, which it calls a significantly cheaper, faster work partner\nAnthropic has released the newest version of its mid-range model, boasting faster response times and less token burn.",
+  "title": "Anthropic releases Sonnet 5.5, which it calls a significantly cheaper, faster wo"
+ },
+ {
+  "item_id": "md:ce41a47f-390d-40bc-89c2-faf44661fe0a",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 35,
+  "text": "Supabase Bootstrap: the fastest way to launch a new project\nLaunch a new hosted Supabase project directly from the CLI using pre-built applications.",
+  "title": "Supabase Bootstrap: the fastest way to launch a new project"
+ },
+ {
+  "item_id": "md:46820877-9ddb-42b1-bb7f-c4cdbb418abe",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 45,
+  "text": "Cyber Operation: Russian-speaking malware tooling\nOpenAI banned accounts likely linked to Russian-speaking criminal groups, using AI to build malware loaders, evasion layers, credential-theft scripts, and C2 infrastructure.",
+  "title": "Cyber Operation: Russian-speaking malware tooling"
+ },
+ {
+  "item_id": "md:c8ede009-5bea-4cec-b189-375bd5e1db18",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 55,
+  "text": "BrowseComp: a benchmark for browsing agents\nBrowseComp: a benchmark for browsing agents.",
+  "title": "BrowseComp: a benchmark for browsing agents"
+ },
+ {
+  "item_id": "md:88315f29-249b-4356-bf66-c155652b9f0f",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 55,
+  "text": "A-Mem: Agentic Memory for LLM Agents\nArticle URL: <https://arxiv.org/abs/2502.12110>\n\nComments URL: <https://news.ycombinator.com/item?id=49877747>\n\nPoints: 2\n\n# Comments: 0",
+  "title": "A-Mem: Agentic Memory for LLM Agents"
+ },
+ {
+  "item_id": "md:cc3bde3a-1fad-4218-bd6e-41c03d92c77e",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 55,
+  "text": "Introducing Forge: the open source pipeline for generating SDKs, CLIs, docs, and more\nToday we're introducing [Forge](https://github.com/cloudflare/forge), a fresh approach to generating SDKs, CLIs, docs, and libraries. Forge is an open source, pluggable generation pipeline that anyone can deploy and run for free.\n\nForge is early in its life, but already generates the output required for the [cf CLI](https://blog.cloudflare.com/cloudflare-cf-cli-launch/), and over the next few months will power Cloudflare's API documentation, SDKs, and much more.\n\nWe built Forge because we needed",
+  "title": "Introducing Forge: the open source pipeline for generating SDKs, CLIs, docs, and"
+ },
+ {
+  "item_id": "md:85509cb1-3e90-495f-ab40-8c0aebe0e7c8",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 42,
+  "text": "langchain-core==1.6.5\nChanges since langchain-core==1.6.4\n\nrelease(core): 1.6.5 ([#40816](https://github.com/langchain-ai/langchain/pull/40816))  \n\nfix(core): abbreviate long tool IDs in XML buffer strings ([#40792](https://github.com/langchain-ai/langchain/pull/40792))",
+  "title": "langchain-core==1.6.5"
+ },
+ {
+  "item_id": "md:4672b0fc-c736-4db8-9953-20f848bd389f",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 55,
+  "text": "Gemini 3.8 text-to-speech models now available on AI Gateway\n[Gemini 3.8 Flash-Lite TTS](https://vercel.com/ai-gateway/models/gemini-3.8-flash-lite-tts) and [Gemini 3.8 Flash TTS](https://vercel.com/ai-gateway/models/gemini-3.8-flash-tts) from Google are now available on [AI Gateway](https://vercel.com/ai-gateway).\n\nBoth models take text and generate speech in more than 100 languages. They support long-form narration, control over delivery, and two-speaker dialogue.\n\n* `google/gemini-3.8-flash-lite-tts` is suited to high-volume speech generation, with con",
+  "title": "Gemini 3.8 text-to-speech models now available on AI Gateway"
+ },
+ {
+  "item_id": "md:3d8fa8c2-7014-4f0a-9361-8c085a037aef",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 55,
+  "text": "Techniques for training large neural networks\nLarge neural networks are at the core of many recent advances in AI, but training them is a difficult engineering and research challenge which requires orchestrating a cluster of GPUs to perform a single synchronized calculation.",
+  "title": "Techniques for training large neural networks"
+ },
+ {
+  "item_id": "md:6d4c0591-0757-41a3-b735-2d23a1cbc1b2",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 45,
+  "text": "xAI joins the Vercel Marketplace \nxAI's Grok models are now available in the [Vercel Marketplace](https://vercel.com/marketplace/xai), making it easy to integrate conversational AI into your Vercel projects.\n\n* Get started with xAI's free plan---no additional signup through the Marketplace\n\n* Access Grok's large language models (LLMs) directly from your Vercel projects\n\n* Simplify authentication and API key management through automatically configured environment variables\n\n* Pay only for what you use with integrated billing thro",
+  "title": "xAI joins the Vercel Marketplace "
+ },
+ {
+  "item_id": "md:c4c07859-a693-48e0-a53e-def603e38d9b",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 45,
+  "text": "Node.js 22.22.0 (LTS)\n",
+  "title": "Node.js 22.22.0 (LTS)"
+ },
+ {
+  "item_id": "md:0ce0801a-cd83-40ea-bf88-82062f75694f",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 15,
+  "text": "Svelte 5 is alive\nAfter almost 18 months of development, comprising thousands of commits from dozens of contributors, Svelte 5 is finally stable.\n\nIt's the most significant release in the project's history. Svelte 5 is a ground-up rewrite: your apps will be faster, smaller and more reliable. You'll be able to write more consistent and idiomatic code. For newcomers to the framework, there's less stuff to learn.\n\nDespite all that, Svelte is almost completely backwards-compatible with Svelte 4 --- for the majority o",
+  "title": "Svelte 5 is alive"
+ },
+ {
+  "item_id": "md:507dbd6c-a2f9-4ef8-9690-d14e2e8a942d",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 25,
+  "text": "OpenAI and Foxconn collaborate to strengthen U.S. manufacturing across the AI supply chain\nOpenAI and Foxconn are collaborating to design and manufacture next-generation AI infrastructure hardware in the U.S. The partnership will develop multiple generations of data-center systems, strengthen U.S. supply chains, and build key components domestically to accelerate advanced AI infrastructure.",
+  "title": "OpenAI and Foxconn collaborate to strengthen U.S. manufacturing across the AI su"
+ },
+ {
+  "item_id": "md:c750426b-b90a-42f9-88dd-9e322f50748f",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 15,
+  "text": "Building AI infrastructure with the Effingham County community\nOpenAI announces Project Camellia in Effingham County, Georgia, with commitments to responsible energy, community investment, jobs, and access to Codex.",
+  "title": "Building AI infrastructure with the Effingham County community"
+ },
+ {
+  "item_id": "md:5ecb06f8-dcad-4202-a8af-e68ebf1743c5",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 0,
+  "text": "Top 10 Launches of LWX\nOur CEO takes a look at his favorite ships from LWX",
+  "title": "Top 10 Launches of LWX"
+ },
+ {
+  "item_id": "md:a297a642-86a5-4d43-912e-6545620772b9",
+  "brief_owner": "4c5b25ca-952e-4499-851e-269ade19125a",
+  "gold_score": 25,
+  "text": "Introducing Vercel Monitoring\nWe're excited to share some new additions to our observability suite: Monitoring, now generally available for Pro and Enterprise teams and Logs for users on all plans. These tools give teams on Vercel the ability to quickly identify and resolve issues before they become major problems with an aggregated view of web traffic and performance data.\n\n[Read more](https://vercel.com/blog/introducing-monitoring)",
+  "title": "Introducing Vercel Monitoring"
+ },
+ {
+  "item_id": "md:815c4067-9e3f-4e56-bbe5-fe2b610c0c26",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 88,
+  "text": "夏至日测地球：利用太阳影子计算地球半径\nLong Luo 在夏至日（2026 年 6 月 21 日）复刻埃拉托色尼测量地球的实验：由于这天太阳直射北回归线，只需测量所在地正午时的影子，就能结合两地距离计算地球半径。文中介绍了基于纬度差 Δθ 与距离 d 的地球半径公式 R≈d/Δθ，并记录了在深圳（当地时间正午约 12:25）实际拍摄影子数据的过程。",
+  "title": "夏至日测地球：利用太阳影子计算地球半径"
+ },
+ {
+  "item_id": "md:d1b20ef6-7547-4fa2-acb4-a628ed3cfdff",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 78,
+  "text": "Rain：月刊 · 第二期\n上个月写完第一期月刊的时候，我其实不太确定还会不会有第二期。很多事情我都是开了头，然后就停在那里。 所以这篇能写出来，我自己先松了口气。 先看一下这个月的数据# 这次统计从 8 月 27 日到 9 月 27 日，刚好接上上一期。 4.01k 位访客 5.63k 次访问 70.2k 次页面浏览 43% 跳出率 4′07″ 平均访问时长 数据来自自建 Umami，统计时间：8 月 27 日---9 月 27 日。 访客差不多翻了一倍，从 2.1k 到 4k。页面浏览从 1.2 万涨到 7 万，这个数字我不太敢当真。一次访问平均要看十几页，不像正常读者的行为。9 月 12 日那天一下有将近 8000 次浏览，大概率是爬虫，或者我自己调试时刷出来的。所以这个月我更愿意看访客和访问次数，它们比浏览量诚实。 访问最多的页面依次是首页、归档、友链、朋友圈和留言板。文章里读的人最多的还是《自动上架系统》。外部来源里，必应排第一，后面是博友圈、bf.zzxworld.com、80tz.cn，还有上期推荐过的 AIOVTUE-雪。能从友链点进来，说明这个圈子真的在流动。 顺便：统计换成了自建 Umami#",
+  "title": "Rain：月刊 · 第二期"
+ },
+ {
+  "item_id": "md:b5491c78-46c7-423d-a618-455f7a0ed49f",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 88,
+  "text": "折腾进行中：换了一圈截图工具，最后留在了截图吧\nWindows 上的截图软件我换过不少，能留下来的没几个。劝退我的原因基本就三类：功能太少、UI 发卡、后台常驻太重。前两个还能忍，第三个是真受不了------就截个图而已，有必要常年占着我几百 MB 内存吗。 截图吧是这段时间换过来的，用了一阵子，目前没换回去的打算。 https://github.com/1003129155/jietuba 三类劝退，它一个都没踩# 先说清楚我挑截图工具的三条线，不然\"好用\"两个字没意义。 劝退类型 具体长什么样 截图吧 功能少 截完只能画个框，长截图没有，OCR 让你自己开网页 长截图 / OCR / 钉图 / GIF / 扫码 / PDF 导出都在一个程序里 UI 卡 选区跟手慢半拍，标注重绘掉帧，多屏不同缩放直接错位 选区走独立合成层，多屏混合 DPI 无缝截图 占用高 为了一个偶尔才用的功能常驻几百 MB 作者 README 写的是常驻十几 MB 甚至几 MB 级别 第三条我没拿任务管理器认真测过，只是体感上它属于\"你不会注意到它开着\"的那类。这个数字你信 README 就好，别信我的感觉。 它凭什么让我留下# 功能密度高，但不是堆功能# ",
+  "title": "折腾进行中：换了一圈截图工具，最后留在了截图吧"
+ },
+ {
+  "item_id": "md:36151109-e20c-49e9-8e6b-f62e4708cc67",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 62,
+  "text": "魏文超博客：《山楂》\n生活虽然琐碎，但如果用文字记录下来，或许也就有了一些诗意。我还常想，诗意和生命的琐碎相比，只能是一时的情绪罢了。心情好，生活就有了诗意，如果在心情好时，还能把心静下来，对生活的小事加以简单的思考，那么这盎然的诗意就能化身为文字了。 今天早上的北京怀柔，让我第一次感知到了丝丝凉意，继而秋日的初阳洒在我身上后，让我感觉无比舒畅温暖。于是就打算记录昨天的一件小事，并借此打发上班时的无聊时光。 昨天的天气很好，冷热适宜。下午四点下班后，我拿上水杯背起音箱包，打算去户外唱会儿歌。可是当我骑摩托车到强学路和光源街交叉口时，我被路边的一些小东西吸引住了，于是就停了下来。 这些小东西，是颜色深红的山楂果。怀柔怀北镇郊区的光源街，道路两旁种了两排山楂树，沿着街道的走向，往东西两端铺展开来。在路口的这棵山楂树下，散乱掉落着几十粒山楂果，我所说的小东西，就是它们。 把音箱包搁在路边，然后蹲下，俯身拾起一粒山楂果，捏在手指间细致打量它。因为前一天刚下过雨，它身上有些泥痕。轻轻搓拭几下，让它在掌心里打几个滚，它的表面就干净了。它通体深红，个头约和大拇指指肚一样大，身上还有很多小白点。可能在路上晒得久了，刚拾起时",
+  "title": "魏文超博客：《山楂》"
+ },
+ {
+  "item_id": "md:a10199cd-fd27-4d52-be18-982c9eb7e851",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 88,
+  "text": "Jackie的博客：假期见闻-关于天灾\n回老家已有两天，这两天也是天天往乡下跑，前段时间发生了百年一遇的水灾，之前只是通过短视频平台或者零零碎碎的一些文字了解到当地的实际情况，这次回去是眼见为实，亲眼看到了这场天灾后家乡的实际面貌，结合长辈们的口述，大致整理了下实际情况与我们在新闻上看到内容的区别，说几个印象最深的事情吧，真相往往更加残酷： 新闻上说的死亡人数两个，其实根本不止，只是因为新闻中死去的那两个有报道价值：一个30多岁的邻村男子是在通知同村人撤离时在返程途中被突然而来的山洪冲走，另外一个是没法隐瞒必须上报，其余的就他们所知的有些老人来不及撤离，没了，一个水电站的大股东在撤离前去机房打算关闭机器，最后山洪突然将其卷走，被赔了68w...大家都说还好，这次的山洪不是发生在晚上，不然死亡人数不堪设想... 通往我老家的组（村的下级单位）盘山路有一段塌方，马路只剩原来的1/3，无法通车，挖机过来需要在剩余位置往内侧多挖几米，然而这块区域是归属于某一个村民，这个村民狮子大开口，想漫天要价，不然就拦着不让修路通车。最后我叔叔出面甩了500给他，强行让挖机施工，这才恢复通车，让我们得以驾车回家 同样的还是这段路，上面这个挖机是联",
+  "title": "Jackie的博客：假期见闻-关于天灾"
+ },
+ {
+  "item_id": "md:86772112-48f9-4ee2-b064-7fe1673b7fa4",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 88,
+  "text": "鸦鸦的巢穴：NAS 挪窝日记：移动光猫+小米路由器 实现IPv6远程访问\n设备：中兴 H60G 光猫 + 小米路由器 4A 千兆版 + 绿联云 NAS 目标：NAS 放老家，异地远程访问，光猫桥接、小米路由器拨号、IPv6 远程访问 NAS 一、背景 搬家了，NAS 跟着挪窝，网络环境完全变了。新宿舍是校园网，限制较多不适合折腾 NAS，于是把 NAS 放老家，工作时远程访问。老家是中国移动宽带，光猫（中兴 H60G，固件 V1.3.2）默认路由模式，小米路由器二级路由。想改成桥接模式让小米路由器拨号，顺便搞 IPv6 远程访问 NAS。 异地操作技巧：绿联 NAS 里装了 Firefox 浏览器，配合绿联自带的远程桌面功能，人在外面也能直接操控家里的浏览器，光猫和路由器后台都能远程改。 整个过程踩了无数坑，记录下来供参考。 二、获取光猫超级管理员密码 已知信息 光猫型号：中兴 H60G 固件：V1.3.2 普通用户：user / \\*\\*\\*\\*\\*\\*（光猫底部标签上有） MAC 地址：34:55:94:XX:XX:XX 尝试过的方法 网上流传的默认超密：aDm8H%MdA、CMCCAdmin 等，新固件全改了，无效 光猫开启 Telnet 的 URL ",
+  "title": "鸦鸦的巢穴：NAS 挪窝日记：移动光猫+小米路由器 实现IPv6远程访问"
+ },
+ {
+  "item_id": "md:38ded048-ffa8-48ca-a75c-4eafdb427dbe",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 88,
+  "text": "天才只待两周：一次 AOCI 双臂对照实测\nAI 编码代理读代码比人快，但上下文有限，且每次会话都\"从头入职\"。我用同任务、同模型的双臂对照实测 AOCI：成本几乎持平（+0.7%），真实工具错误率从 8.0% 降到 3.2%，错误从\"已执行的破坏\"变成\"被拦截的意图\"。当 agent 干得比人审得快，只有审计执行轨迹才能发现测试假绿。\n\n[Source](https://www.paddysun.top/archives/5330)",
+  "title": "天才只待两周：一次 AOCI 双臂对照实测"
+ },
+ {
+  "item_id": "md:1928e134-f29f-4c8d-a102-a27c60992189",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 72,
+  "text": "obaby 𝐢‍𝐧⃝ void：open -a Simulator Unable to find application named ‘Simulator’\nosX 27 xcode 27 更新之后，hbuilder 会报下面的错误： uniapp Command failed: open -a Simulator Unable to find application named 'Simulator' 问题的关键在于新的模拟器不叫Simulator，叫做 Device Hub，要解决这个问题也简单，直接吧Device Hub 复制一份出来 改名叫做Simulator就可以了。 如果模拟器不兼容，通过下面的命令安装universal版本 xcodebuild -downloadPlatform iOS -buildVersion 26.5 -architectureVariant universal 实际效果：",
+  "title": "obaby 𝐢‍𝐧⃝ void：open -a Simulator Unable to find application named ‘Simulator’"
+ },
+ {
+  "item_id": "md:8a83ab33-8cd8-496d-aa58-86d40b7c4761",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 78,
+  "text": "莫比乌斯：你会痛苦吗 II\n这个系列居然继续下去了，因为我真的收到了对方的回信。在回信里，这位朋友提到了一个非常有趣的话题： 看了你的文章，看看自己小区周围随处可见的包子店，和玩耍疯闹的小孩。我问我母亲：\"妈，我们小区周围最多可以开几家包子店？\"我母亲用诧异的目光看了我一眼，嘟囔回道：\"你想吃包子了吗？我们小区周围好像有个四五家。\"我突然意识到，人就是人，随处可见的、擦肩而过的......写过什么文字，我不知道；过着什么人生、什么生活，我不知道。也许你与我匆匆路过过，但我从来没有意识到周围的人是有\"生命意识\"的，可以写下这些东西。 我确实是一个善于观察生活的人，比如在吃饭的当下，可以很快识别出哪一桌在吵架、或是哪一桌正在搞破鞋。但这种观察生活本身，并不是什么能力，我只是把它总结为\"好奇心\"，而这个好奇心的背后，可能有大量的模型、结构。 例如两个人吵架，我会本能地用剧本的角度，去观察他们彼此之间的能量变化，期待着反转的发生；或是看到一个人因为无能狂怒，把一个本属于自己的责任发泄到无辜者身上时，我会很快在心理防御机制当中找到对应的模型。 如果硬要说，这种冷漠旁观本身确实是\"痛苦\"的，因为观察者本身也是被自我观察的样本",
+  "title": "莫比乌斯：你会痛苦吗 II"
+ },
+ {
+  "item_id": "md:e80a593a-ca1d-4349-92f5-836e0ed0bcfc",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 78,
+  "text": "大象笔记：如何组织 MES 系统中上千个繁杂的功能\n今天下班点五点一到，我就跑路了。也许是中秋国庆双假期 buff，也许是开发 MES 太透支身体了。今天边开发新功能，边修复历史遗留 bug，开发了 5 个新功能，修复了十几个各式 bug。但更我绝望的是，开发了两个月，依旧有几百个功能还没有实现。这些功能看起来很乱，从旧版功能统计看，很多是一个月都没有人用的功能。 这里不讨论这些鲜有人使用的功能是否有存在的必要，我更想找到一种更合理的组织方式，能让功能点一目了然，而不是去点完一级菜单，二级三级，甚至四级才能找到一个名字抽象到不知所云的功能。 特别对于我这种新入职的新人来说，一个陌生的制造领域，整个生产工艺都不太了解。虽然依靠 ai 可以快速实现新功能，但是我甚至不知道开发的这个功能有什么用？🥲 谁会去用？我下午强迫自己慢下来，每开发一个功能，就去让 DeepSeek 解释一下这里的领域术语，了解工艺流程。可是依旧感觉很混沌。 灵感 晚上，在睡前的健身时间，我突然想到，是否可以通过一种更形象的方式，把整个 mes 流程具象化的呈现出来。在每个节点上，标注出对应的功能。有点像数字孪生的效果，但是又不需要做得那么精细。只要能把工艺流程表达清楚",
+  "title": "大象笔记：如何组织 MES 系统中上千个繁杂的功能"
+ },
+ {
+  "item_id": "md:4eca1418-b8ed-4af2-ae67-9f7fdee68ddd",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 88,
+  "text": "让 Agent 清理磁盘:工具选型、安全边界与实测结果\nC 盘可用 7GB、E 盘可用 11.7GB,使用率 99%,连浏览器更新包都装不下。本文记录一次完整的 Agent 清理实战:工具怎么选、安全边界怎么划、两个 CLI 各自踩了什么坑、最终释放了多少空间、哪些空间不能碰。\n\n[Source](https://www.paddysun.top/archives/5313)",
+  "title": "让 Agent 清理磁盘:工具选型、安全边界与实测结果"
+ },
+ {
+  "item_id": "md:43c577f4-3ea3-4d53-aa1b-a85c75b6c396",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 78,
+  "text": "李锋镝的博客：给主题增加了游客中心功能\n不少独立博客站长都选择关闭站点注册，即便开放注册，实际注册用户也寥寥无几。加之主流建站系统默认接入 Gravatar 全球头像服务，行业内也普遍习惯以邮箱作为访客标识，这套方案足够简便，被大家广泛沿用。 但随之而来的短板也很明显：访客没有站点账号，在本站的评论记录、浏览足迹等信息，就无法统一归集展示。 近些年越来越多站 \\[...\\] 给主题增加了游客中心功能最先出现在李锋镝的博客。",
+  "title": "李锋镝的博客：给主题增加了游客中心功能"
+ },
+ {
+  "item_id": "md:98fb8a7a-31c3-4528-8a83-be0e072a5b35",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 78,
+  "text": "可怖的沉默\n一年前有位泛泛之交随口说过一句话，我现在都还记得：\"没有声音很恐怖。\"人独处的时候似乎总要放点东西当背景音，听着音乐或者电视的声音，貌似不会那么空洞。其实与人共处时也一样，哪怕是上班前在电梯里相见，似乎也要想办法填补沉默，都不说话的话会很尴尬。\n\n另一种让人不安的沉默是没有回应，讲笑话、分享故事或任何只要不是「今天天气不错」这种言之无物的话，如果被说出后没有收到任何回应，似乎会让人倍受打击。写博客也是，如果没有一个人评论，似乎也会让人失望。矛盾的是，人又时常想让人闭嘴，屏蔽甚至反击互联网上的蠢人。人或许只是想听到自己想听的声音。\n\n周末和同事出去玩。经过一场时而评论周边街景以填充沉默的车程后，终于到了动物园。\n\n上次去动物园我还很小很小，我对那里的动物已经没了印象，只记得当时父母买了一只珠鸡，它的羽毛黑色中带有珍珠一样的白色斑点。我记得我当时很喜欢它，还给他取名叫「小美」。没过多久我就在黑暗的厨房里大哭，反复喊着「小美」的名字。它被端上了餐桌，我不记得之后发生了什么，我也不知道我到底有没有吃小美。我相信当时厨房开着灯，可在我记忆里，无论是厨房还是餐厅，都黑黑的，家人在黑暗中大快朵颐，我",
+  "title": "可怖的沉默"
+ },
+ {
+  "item_id": "md:96a351bc-33a3-498d-910d-e5ea8ea2c799",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 88,
+  "text": "老张博客：这些天，我又折腾了些啥！？\n开学时才注册了workbuddy，正赶上又薅了教师节的羊毛，攒了一些积分。想着这些积分可不能浪费了，就又开始折腾起来了。 输入法 从接触电脑就学的五笔输入法，但是苦于一些字不会用五笔打出来又不得不切换成拼音。早些年就折腾过在QQ拼音输入法导入了五笔码而达到了\"五笔拼音混输\"的功能。随着输入法的发展，现在输入法基本上都支持五笔拼音混输了。搜狗输入法用了很多年了，一直忍受着它的广告，连火绒都拦截不了它的弹窗广告。所以，用WorkBuddy第一个就是折腾的输入法。使用小狼毫输入法为平台，同时部署了极点五笔、万象拼音，以达到\"极点五笔+万象拼音\"的混输，《小狼毫 万象拼音 + 极点五笔 三方案部署教程》介绍了详细教程。为了有不同的输入体验，又折腾了\"雾凇拼音+极点五笔\"的混输。 WordPress主题 目前使用的这款主题是从满心的Typecho主题Riven复刻而来，添加了自己想要的功能。在6月11号上线之前，就经过大大小小的几十个版本的修复，上线后也增加了多动态调用等功能。自更换主题之后，感觉文章的阅读量猛然下降，一篇文章发布五六天之后，点击阅读量才有四五十，感觉很不对蛋。后来让WorkBu",
+  "title": "老张博客：这些天，我又折腾了些啥！？"
+ },
+ {
+  "item_id": "md:6a43b3c2-a353-43e6-b026-10e131183c25",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 72,
+  "text": "小猪的窝：京喜自营套路\n作为二手东多年老用户，一般急件会优选京东自营购买，当天或次日就能收到保真的商品。 后来一些福利通过二手东领，手上的领货码一直没有用完。由于被限定在比较有限的品类内选择，导致好些领货码赶在到期前才急忙用完。 既然急，那就容易被套路套上。最近我用领货码在上面买了杂七杂八的东西数十单，大部分是京东超市的粮油日杂品。提交订单时，页面醒目位置会有个顺手买的推荐栏目。这个栏目推荐的商品直观上便宜不少，通常是几块或者十来块的搭配，标题简洁，单凭图片和简洁的标题，很容易让人联想到是常见的大品牌产品。 下单时，我确实是这样认为的，但问题恰好就发生在\"我这样认为\"上。陆续收到商品时，由于太多而且分散，又不是急需品。因此我会把快递堆一边等有空再拆。后来发现有些商品并非我心目中想买的东西。如这个剃须刀片： 我实际上要买的是威锋或者锋速的刀片，因为消耗比较快，我平时都是顺手买的。想不到就这样中招了。到货这个牌子锋刃，没有听过，但是它就是京东挂名自营产品。到手品质只能说便宜没有好货，但是真品吉列威锋刀头其实也不贵，这种山寨品实在让我感到不适。价格就几块钱不好退，说到底也是我看错下的单，感觉自己吃了鳖一样。 拆完全",
+  "title": "小猪的窝：京喜自营套路"
+ },
+ {
+  "item_id": "md:ca533204-40fc-4f4a-980c-31e3fa6bc6cc",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 55,
+  "text": "Atao’s Space：我要当爸了，老婆怀孕了\n确定怀孕 早期时老婆每天很早就睡醒起来了，以前闹钟响了还不想起来。后来姨妈推迟了几天就在家测了一下。结果真显示 \\[...\\] 我要当爸了，老婆怀孕了最先出现在Atao's Space。",
+  "title": "Atao’s Space：我要当爸了，老婆怀孕了"
+ },
+ {
+  "item_id": "md:74397d00-1af1-458c-ad36-d6d7eba16285",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 35,
+  "text": "湘铭：2026中秋\n又是一年中秋节。 从十八岁离家开始，到现在整整十二年，一轮了。十二个中秋，十二轮月亮，散落在五个省份的天空里------湖北的月，新疆的月，四川的月，福建的月，安徽的月。每一轮都圆，每一轮都亮，可每一轮看下来，心里总觉得少点什么。 少的是什么呢？说不太清。可能是母亲端出来的那盘切好的月饼，可能是父亲在院子里敬月的背影。也可能，只是十八岁之前那个不用想\"少了什么\"的自己。 从上学到上班，从十八岁到二十八岁。流动的是时间，也是思念。人越长大越容易思乡，这句话以前不信，现在信了。年轻的时候，做决定是往外跑的，觉得世界那么大，哪里的月亮不是月亮？可走得越远，看得越多，越发现------月亮是一样的月亮，可看月亮的人，心境不一样了。那时候做的决定，如今看来也不是完美无瑕。至少，在思乡这件事上，是判断失误的。 独在异乡为异客，每逢佳节倍思亲。这句诗，十八岁读是课文，三十岁读，是人生。 2026年9月24日，中秋前夕。我和老婆在成都的朋友，大老远跑来找我们玩。上次聚，还是在成都。那时候我们几个在草坪上野炊，吹着风，烤着肉，打着麻将，划水聊天，好像日子永远不会变。这次朋友能来一起赏月，我心里是暖的。他",
+  "title": "湘铭：2026中秋"
+ },
+ {
+  "item_id": "md:943bc739-c68f-404c-9dfe-7469baabb630",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 42,
+  "text": "酥米的小站：酥米的碎碎念（17），中秋节快乐\n发文章的时间可能刚过中秋节一天，但还是祝大家中秋和国庆节快乐，愿你们在假期中团团圆圆，美美满满！ 学校初适应# 开学的那一周，说实话，我还有点不太适应大学的生活。毕竟习惯了高中和初中那种循规蹈矩的节奏，一下子切换到自由自主的学习氛围，心里难免有些担忧。 可爱的茂密学长 大学里大大小小的事情，都得自己一件件去安排、去完成，刚开始确实觉得有点手忙脚乱。 不过，经过这一周的慢慢磨合，感觉自己也渐渐找到了节奏，适应了不少。上课的状态也越来越好了 回乡好风光，祭神拜祖度中秋# 中秋这天的清晨，是在回乡祭祖的路上开启的。小电动往乡镇深处开，城市的喧嚣渐渐退去，山野与田畴铺展开来，满目的青绿一下子洗清了眼底的浮躁。 正值晚稻抽穗扬花的时节，路两旁的稻田长得正盛。修长的稻叶擎着饱满的稻穗，嫩黄的花穗缀在其间，风拂过时翻起层层绿浪，连空气里都浮着淡淡的稻香。 田埂边、草丛间，随处可见细碎的白花顶着明黄的花心，热热闹闹地开在野地里，不张扬却自有生机，是乡间独有的秋日美景。 进村转过坡地，那座老活动场撞进眼里。斑驳的红砖房、锈迹斑斑的篮球架、掉了色的健身器材，都静静立在阳光下。后山的草木长得繁茂，浓绿漫过坡",
+  "title": "酥米的小站：酥米的碎碎念（17），中秋节快乐"
+ },
+ {
+  "item_id": "md:f77dc1a0-4ee5-4150-9f24-5b2f374a96a7",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 45,
+  "text": "Tian-Yan：什麼是 human being？\n最近非常喜歡巴倫波因在演出前講的一段話，是他在指揮艾爾加的《威風凜凜進行曲》之前，對臺下觀眾說的一段開場白。逐字稿如下（這是我直接聽打的，應該沒有太大瑕疵）： The main problem today is not the policies of this country and of that country. The main problem of today is there is not enough education. That there is not enough education for music, we know for a long time. But now there is not enough education about whom we are, about what is a human being and how is he to relate with others of the same kind. You know, our profession, the musical profession, is the only one that",
+  "title": "Tian-Yan：什麼是 human being？"
+ },
+ {
+  "item_id": "md:10faedea-f6f0-40df-b169-cb5e5619e21c",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 55,
+  "text": "不曾长大：也算用AI干了点事\n在AI火热的当下，我对AI的利用可以说是微乎其微，用的最多的也不过是在豆包和Deepseek提问和生成\"八股文\"。曾经也装过一个生图的程序，玩了几天就腻了，一是效果就那样（电脑配置不高），二是只能用别人做好的模型觉得生出来的图总是一张脸，自己训练模型又没那硬件条件。 \\[...\\]",
+  "title": "不曾长大：也算用AI干了点事"
+ },
+ {
+  "item_id": "md:303646cf-a530-4417-a33b-377215422a38",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 55,
+  "text": "I'm Marcus：正宗美式英语\n据我统计，有超过三分之二的美国人平时口语中会用以下几个让你高考英语变不及格的语法错误： Me and my friend ... （这里指的是主语。） 美国文化里，「我」永远是最重要的啦，而且这样说很有韵律，欲罢不能。年轻人里你几乎听不到 My friend and I 这样的说法了。 I'm done / I'm finished. 高中里上外教的英语课时，外教选我做小游戏（具体忘了）。他问我 Are you ready? 我嘴巴一快，回答道 I'm finished 结果哄堂大笑，同学都觉得我这句话的被动式意思是「我被干掉了。」当时连我也是这么认为的。 100% 的美国人用被动式的好不好？我没听见过一个人说 I've done 或者 I've finished。 If I was you, ... 「显然，I 后面不是 am 就是 was 呀，怎么还会有别的可能？我们美国人可不会自找麻烦再想到什么 I were you 这种可能性的。」 There's two ways to do things. 从大佬粗的装修工，到藤校毕业的博士，都一致认为 there's 作为「有」本身已经是",
+  "title": "I'm Marcus：正宗美式英语"
+ },
+ {
+  "item_id": "md:92be5f2c-8af3-4f09-96da-90a1b6bf6f4b",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 55,
+  "text": "acevs：反自学机制\n看到一个这个观点，大致意思是说，有的人发现教科书，同一个相关概念打散分散到不同章节，有时候逻辑混乱，有时候证明略，有时候含糊不清，学明白了理顺了，发现脉络清晰 自然，再回头看教科书隐约有一股力量，阻扰你自学，甚至让你花钱上补习班学。 又想起牛顿还是谁发表 论文还是书，专门搞的晦涩难懂，避免普通人给他差评，以后遇到看不懂的可以ai看看让他用普通人的普通语言讲述，现在大势所趋也是这个趋势，遇到高深难懂的书，或者文字，直接差评就可以了，我先差评王东岳的书，看过一次，在没看第二次了。不过王东岳好像又是自学且自成一派的。他把牛顿的壁垒学自学学会了。矛盾，相当于自学学会了反自学。",
+  "title": "acevs：反自学机制"
+ },
+ {
+  "item_id": "md:d208ac94-2d07-41cd-a0cd-dd9aa78edcee",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 55,
+  "text": "慢墨：写字的取势\n过去一段时间里，我认为写字应该向右下取势。后来发现横画过于倾斜，字形不稳。 最近我写字时常向右上取势，字形也因此稍稍向右偏。时间长了，发现也不能一味这样：有些字适合，有些字向右上取势反而不好看。 我觉得可以先求平正，再根据每个字的特点和整篇文字的章法调整。如果整篇文字都朝同一个方向取势，可能会显得呆板。但要写得流畅又不呆板，可能还得花很长时间练习，才能找到适合自己的方式。 临隶书《乙瑛碑》： 临颜真卿楷书《颜勤礼碑》：",
+  "title": "慢墨：写字的取势"
+ },
+ {
+  "item_id": "md:3b86e8e2-f5a7-47ef-bd86-c994c8ddbe42",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 55,
+  "text": "XBSTACK：iPhone Duo 怎么适配？Apple 官方指南下的 UIKit、Tab Bar 与折叠布局实战\n基于 Apple 最新 iPhone Duo 官方文档，系统梳理 UIKit App 的 Size Classes、系统导航、自定义 Tab Bar、Safe Area、Reserved Regions、折叠姿态与 Xcode 27.1 测试方法。",
+  "title": "XBSTACK：iPhone Duo 怎么适配？Apple 官方指南下的 UIKit、Tab Bar 与折叠布局实战"
+ },
+ {
+  "item_id": "md:2594b002-a960-49e3-812c-298b02a6d1be",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 55,
+  "text": "Coffee Break Clojure, Vol.3\n[上一篇](https://www.geedea.pro/article/tutorial-clj-2)\n\n我们讨论了不同类型的形式，了解了函数、Lambda、宏和特殊形式的皮毛，也学会了用一些基本的运算符、`let` 和 `if` 等等。今天的文章要讨论集合数据类型。不过在此之前，我们还是先看看普通的数据类型有哪些。\n\n今天的文章有点长，所以读的时候，呃...... 准备一杯大号的咖啡？\n\n## 你已经知道和你可能不知道的\n\n和大部分编程语言一样，Clojure 支持数字、浮点数、字符串和布尔值。\n\n由于 Clojure 是运行在 JVM 上的，所以这些数据类型都对应一个 Java 类。数字是 `Long` 不是 `Int`，前者能表示的最大数是 2 的 63 次方减 1，也就是有 64 位，第一位是符号位，后者是 32 位。\n\n和 Java 一样，Clojure 没有无符号数（unsigned int）。\n\nClojure 还能在这些类型上调用 Java 的方法，比如 `String.getBytes()`。  \n\n```clojure\n(seq (.getBytes \"Hello",
+  "title": "Coffee Break Clojure, Vol.3"
+ },
+ {
+  "item_id": "md:8b843533-fd21-4b7c-a5d8-7f2fc02d935a",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 25,
+  "text": "徐建伟：打呼噜\n提到打呼噜估计身边好多人都有这毛病，我本人对别人打呼噜并没有偏见，换句话讲那也不是他想打的，但打呼噜真的是影响别人。记得上班的时候，有个同事晚上睡觉就打呼噜，吵的大家都睡不好，那声音此起彼伏，没办法只好换地方睡觉，要不一晚上也别想睡。有人打呼噜声音小，还好，最起码听着还能入眠。有人打呼噜声音很大，整个房间都能听见，甚至走廊也会回声，一晚上都是这声音，仿佛开个喇叭在广播一样，你说放歌曲或听故事还能带入梦乡，可打呼噜就好比有人在你身边不听的发出怪异的声音...",
+  "title": "徐建伟：打呼噜"
+ },
+ {
+  "item_id": "md:289ef5d6-457a-483e-90fe-fcfc0235c638",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 0,
+  "text": "落梦陳的小站\n落梦陳的小站",
+  "title": "落梦陳的小站"
+ },
+ {
+  "item_id": "md:0e2f329b-424e-48b2-82a6-9a579acf97dd",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 0,
+  "text": "TaOS\nTaOS",
+  "title": "TaOS"
+ },
+ {
+  "item_id": "md:ec7c78a8-6cf4-4364-babc-23ba32dd30ea",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 0,
+  "text": "知享客\n知享客",
+  "title": "知享客"
+ },
+ {
+  "item_id": "md:4e852687-f8eb-43e1-9011-f8e14a93e83e",
+  "brief_owner": "97c6d38b-d68e-44d0-81d8-741518ad38d4",
+  "gold_score": 0,
+  "text": "叁拾玖\n叁拾玖",
+  "title": "叁拾玖"
+ }
+]

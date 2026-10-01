@@ -1,0 +1,38 @@
+{
+ "model_key": "qwen06",
+ "n_items": 36,
+ "truncation_recall": {
+  "512": {
+   "recall@1": 0.75,
+   "recall@5": 0.889,
+   "mean_rank": 2.64,
+   "worst_rank": 19,
+   "n_valid": 36,
+   "fails": []
+  },
+  "1000": {
+   "recall@1": 0.75,
+   "recall@5": 0.889,
+   "mean_rank": 2.44,
+   "worst_rank": 21,
+   "n_valid": 36,
+   "fails": []
+  },
+  "2000": {
+   "recall@1": 0.722,
+   "recall@5": 0.889,
+   "mean_rank": 2.36,
+   "worst_rank": 18,
+   "n_valid": 36,
+   "fails": []
+  },
+  "None": {
+   "recall@1": 0.778,
+   "recall@5": 0.944,
+   "mean_rank": 1.78,
+   "worst_rank": 12,
+   "n_valid": 36,
+   "fails": []
+  }
+ }
+}

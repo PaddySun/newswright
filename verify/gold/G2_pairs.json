@@ -1,0 +1,1833 @@
+{
+ "built_at": "2026-10-01",
+ "positive_exact": [
+  {
+   "a": {
+    "id": "md:b01d43c7-ee4f-4005-818c-428d0d943f5a",
+    "title": "July 2021 Security Releases"
+   },
+   "b": {
+    "id": "md:9978803a-5932-4436-9414-25fdf343e038",
+    "title": "July 2021 Security Releases"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:368d9726-d52a-4c50-b8a0-728d63c7edeb",
+    "title": "Evade Reddit tracking, keep old.reddit.com layout permanently"
+   },
+   "b": {
+    "id": "md:e21dc1fe-e2a4-4cc3-afe3-f644041a7568",
+    "title": "Evade Reddit tracking, keep old.reddit.com layout permanently"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:68d3c757-f916-4536-9309-53f6ec982194",
+    "title": "Community Day"
+   },
+   "b": {
+    "id": "md:5384ee5d-7b5d-4420-8a80-297565a06678",
+    "title": "Community Day"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:9c565a3c-0703-4cb5-ae81-a21bdc6c165e",
+    "title": "OpenClaw Dashboards: Personal Use, Team Workflows, and Building Your Own"
+   },
+   "b": {
+    "id": "md:718accd6-b9ec-4c8e-a830-33150ded73df",
+    "title": "OpenClaw Dashboards: Personal Use, Team Workflows, and Building Your Own"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:8c7493fb-b8f2-4a1f-9b11-09b7b42ca5cd",
+    "title": "Using Claude Code: Spending your effort"
+   },
+   "b": {
+    "id": "md:ebf920ef-4bd4-4582-a5ef-a8071ad5bcd5",
+    "title": "Using Claude Code: Spending your effort"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:2a0b92df-a30f-4c18-aec1-80522a50ddad",
+    "title": "OpenClaw Completes Security Audit"
+   },
+   "b": {
+    "id": "md:f3f086dc-d765-431b-99b4-4f98cf5fbb48",
+    "title": "OpenClaw Completes Security Audit"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:e5a8e8a1-1833-47d5-bd0f-5ae3e60a82e6",
+    "title": "The state of enterprise AI"
+   },
+   "b": {
+    "id": "md:2fa778c3-f5fb-483e-8516-e43234089602",
+    "title": "The state of enterprise AI"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:50b37fb9-c9c2-4370-9f03-68f695a6291b",
+    "title": "Usage metrics API adds pull request review stages"
+   },
+   "b": {
+    "id": "md:32077491-3422-4534-8fb4-1634e3523ebe",
+    "title": "Usage metrics API adds pull request review stages"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:48d325eb-8cde-4da6-bd3f-a38681a67d09",
+    "title": "Biggest design mistake I made when we moved OpenClaw to SQLite: using sync db"
+   },
+   "b": {
+    "id": "md:4cc2bb48-6355-4f1d-b789-fd1fb25432e9",
+    "title": "Biggest design mistake I made when we moved OpenClaw to SQLite: using sync db"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:6f60ace0-9a8d-4ec5-bc7f-128a15f2354f",
+    "title": "Using AI to develop software while being Anti-AI"
+   },
+   "b": {
+    "id": "md:da9bf4d5-fe53-4611-9532-ee2ca60ae063",
+    "title": "Using AI to develop software while being Anti-AI"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:5f22654e-efb9-456a-898a-24b9756e0e08",
+    "title": "Ask HN: Finetuning strategies"
+   },
+   "b": {
+    "id": "md:e7bea2c7-2df5-4672-b323-daf0a65364db",
+    "title": "Ask HN: Finetuning strategies"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:08231750-71a8-4f82-b79b-da945a3f323b",
+    "title": "Team update"
+   },
+   "b": {
+    "id": "md:1cc085cf-a140-46e1-bcdf-053fb4b961e9",
+    "title": "Team update"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:22de5774-0b9f-4ee7-8cd3-16d15d20de5f",
+    "title": "OpenClaw 2.0, Accidentally"
+   },
+   "b": {
+    "id": "md:a245350a-5589-4063-a518-60e030efde81",
+    "title": "OpenClaw 2.0, Accidentally"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:3377ea87-504d-4519-a2df-ffd6411bcd72",
+    "title": "It's Time to Investigate the AI Labs"
+   },
+   "b": {
+    "id": "md:5cad92f6-9495-4ddb-9cda-246eca412889",
+    "title": "It's Time to Investigate the AI Labs"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:96c8e673-bfa7-41b7-829c-f4e9871eb0f6",
+    "title": "Next.js 6 and Nextjs.org"
+   },
+   "b": {
+    "id": "md:1f80e834-38fd-4010-bb3d-54c705afb542",
+    "title": "Next.js 6 and Nextjs.org"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:e4f0d425-335d-4f75-b7e8-b7814673485e",
+    "title": "EnigmaForge – an LLM benchmark where the question is hidden in the story"
+   },
+   "b": {
+    "id": "md:e358cffd-359b-4f7a-bc4c-40ee93c3ea44",
+    "title": "EnigmaForge – an LLM benchmark where the question is hidden in the story"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:11a735d0-cf6d-4e44-ad2d-277d0a3dac38",
+    "title": "Ask HN: JEV for K1 Tax Forms"
+   },
+   "b": {
+    "id": "md:798750e1-efb1-4f57-8a1e-c205338e0f6e",
+    "title": "Ask HN: JEV for K1 Tax Forms"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:f5f327f8-d949-4b68-97b5-74b5db22a028",
+    "title": "Ask HN: Finding Communities as an Introvert"
+   },
+   "b": {
+    "id": "md:57f2c0bb-62d7-46da-91ed-6b67cb8d389b",
+    "title": "Ask HN: Finding Communities as an Introvert"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:17174216-44f1-4933-8dae-b3b5134b4350",
+    "title": "Palantir founder purchases large swath of forest in Sweden"
+   },
+   "b": {
+    "id": "md:93fa01df-37b7-4d57-9353-c0f642875f39",
+    "title": "Palantir founder purchases large swath of forest in Sweden"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:36fd20e0-aab4-435a-977e-00d12a871edd",
+    "title": "Coding Is Not Solved"
+   },
+   "b": {
+    "id": "md:8a3af6f3-b2ca-4bf3-8308-27c8e8d27f11",
+    "title": "Coding Is Not Solved"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:68d3c757-f916-4536-9309-53f6ec982194",
+    "title": "Community Day"
+   },
+   "b": {
+    "id": "md:d5172c91-c805-479d-b7cc-08cdb9a530d1",
+    "title": "Community Day"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:48a961e6-f932-477b-a2ef-f0379421d9f7",
+    "title": "Updates to GitHub Copilot for Slack and Microsoft Teams"
+   },
+   "b": {
+    "id": "md:165a59db-5255-4562-b964-2ba0abcd0013",
+    "title": "Updates to GitHub Copilot for Slack and Microsoft Teams"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:45d6f2d4-9bdb-4565-9d95-e39c1046d770",
+    "title": "Community Day"
+   },
+   "b": {
+    "id": "md:5384ee5d-7b5d-4420-8a80-297565a06678",
+    "title": "Community Day"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:6cf6372c-4c2f-448e-8e6b-2b79e08666e0",
+    "title": "Show HN: DeltaReview – AI-powered code diff analysis tool"
+   },
+   "b": {
+    "id": "md:68216caf-def4-412d-a140-89fb8251406b",
+    "title": "Show HN: DeltaReview – AI-powered code diff analysis tool"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:c4b90309-c315-4ab2-89a6-c4a143f8d214",
+    "title": "Category Name Needed for OpenClaw, Hermes, Grok Bot"
+   },
+   "b": {
+    "id": "md:cd42a507-c92b-49c8-80f6-524e738118da",
+    "title": "Category Name Needed for OpenClaw, Hermes, Grok Bot"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:d1baa0d9-e59f-4138-be39-4c0cb91e5c70",
+    "title": "Ask HN: What are people doing with their OpenClaw set ups now?"
+   },
+   "b": {
+    "id": "md:93bdd025-b4ac-4cea-b5c7-05151645acfa",
+    "title": "Ask HN: What are people doing with their OpenClaw set ups now?"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:4160e051-928f-4c2e-89c3-7e2f69c10c49",
+    "title": "Hashnode runs the fastest blogs on the web with Vercel"
+   },
+   "b": {
+    "id": "md:b71070fd-b6ce-45c6-a14d-35a978515b84",
+    "title": "Hashnode runs the fastest blogs on the web with Vercel"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:f2a21992-f5bc-49a7-9b8d-d585b65ef2e0",
+    "title": "OpenSSL security releases do not require Node.js security releases"
+   },
+   "b": {
+    "id": "md:c083efe6-65ea-4f69-9423-56ec40b561a3",
+    "title": "OpenSSL security releases do not require Node.js security releases"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:6187992a-9a38-4196-ad1d-118e664c4ee5",
+    "title": "Ask HN: How can I get a job as a software developer in Qatar?"
+   },
+   "b": {
+    "id": "md:2285dc21-9d32-456a-b340-ac6d1b22c0ae",
+    "title": "Ask HN: How can I get a job as a software developer in Qatar?"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:c94c362f-a6ec-4728-865e-92f8dee68eed",
+    "title": "LLM Policies: Progress at All Costs"
+   },
+   "b": {
+    "id": "md:6d655914-77e3-4461-a22a-ca99d16e17c4",
+    "title": "LLM Policies: Progress at All Costs"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:8ab32b65-209c-45dd-b05e-ad9eb86ea328",
+    "title": "Tell HN: New Chat Control vote tomorrow"
+   },
+   "b": {
+    "id": "md:3b70c684-4ab1-4653-bb56-5b9f2e2f3b50",
+    "title": "Tell HN: New Chat Control vote tomorrow"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:75901403-ac04-4464-988c-a7b9bd606e5e",
+    "title": "GitHub Copilot weekly releases — September 21"
+   },
+   "b": {
+    "id": "md:c7605d00-5deb-4a8c-a3b7-2ea135b56ca9",
+    "title": "GitHub Copilot weekly releases — September 21"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:713df06a-4ad4-4413-8944-33c311f2a0ba",
+    "title": "OpenClaw Is Open Source"
+   },
+   "b": {
+    "id": "md:6da1effd-fb51-4ffe-a3b5-db62d9461cde",
+    "title": "OpenClaw Is Open Source"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:fc7f2122-bd14-446e-8a93-db28c54235fa",
+    "title": "Default Enablement of Copilot features for Copilot Business and Enterprise"
+   },
+   "b": {
+    "id": "md:72b2a3d4-e67c-4da9-8254-789c54f7212f",
+    "title": "Default Enablement of Copilot features for Copilot Business and Enterprise"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:c7697157-1a5f-4808-aa9c-022c91eeb11b",
+    "title": "Management is forcing us to use AI"
+   },
+   "b": {
+    "id": "md:ee2cfc2e-127c-4988-b25b-e726a469245a",
+    "title": "Management is forcing us to use AI"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:a4c455ad-79eb-42d1-878d-6a66ecfdf53c",
+    "title": "Next.js 6.1"
+   },
+   "b": {
+    "id": "md:4339225b-1dcc-4ed7-bc19-6ffb8e889a90",
+    "title": "Next.js 6.1"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:bbbbd4d4-7c77-4796-8f89-9dd96f741532",
+    "title": "Parley: Federated, decentralised chat that speaks plain IRC"
+   },
+   "b": {
+    "id": "md:cfb5b8e3-1760-4c27-beed-ff7867d28043",
+    "title": "Parley: Federated, decentralised chat that speaks plain IRC"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:2e752fac-08f5-4263-ba69-0ecb1f56c4dc",
+    "title": "Next version of OpenClaw uses a decision model to decide between steer or queue"
+   },
+   "b": {
+    "id": "md:f08a8464-484a-45fb-b7a6-70c290d61e0c",
+    "title": "Next version of OpenClaw uses a decision model to decide between steer or queue"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:c7d51634-a399-4eed-9af8-901d8490c296",
+    "title": "Ask HN: Can we translate normal Rust (axum) to Lean 4 without restrictions?"
+   },
+   "b": {
+    "id": "md:98e387f7-af7e-4e42-984c-2534053bc647",
+    "title": "Ask HN: Can we translate normal Rust (axum) to Lean 4 without restrictions?"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:75a935f9-e384-4a41-bfea-8f642d2179b0",
+    "title": "Pirating the Pirates"
+   },
+   "b": {
+    "id": "md:56fb2ecd-49e5-45e5-a7e5-46fd35c611be",
+    "title": "Pirating the Pirates"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:e2602521-d33f-41a3-afdd-32dfbc8a8d5c",
+    "title": "Next.js 5: Universal Webpack, CSS Imports, Plugins and Zones"
+   },
+   "b": {
+    "id": "md:17b4defc-3d11-4186-aa59-481591431e69",
+    "title": "Next.js 5: Universal Webpack, CSS Imports, Plugins and Zones"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:a89127b7-8937-4816-94a3-84f838aa7d2e",
+    "title": "Pwning OpenClaw and Other Agents with Prompt Laundering"
+   },
+   "b": {
+    "id": "md:3b32449b-6184-4b0e-8e4c-d4f154876152",
+    "title": "Pwning OpenClaw and Other Agents with Prompt Laundering"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:2b693e07-54b2-4c64-8055-0994e5cbe191",
+    "title": "Improvements and fixes"
+   },
+   "b": {
+    "id": "md:3b9643e2-a4b7-4578-a37b-442ddc9d15a1",
+    "title": "Improvements and fixes"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:08231750-71a8-4f82-b79b-da945a3f323b",
+    "title": "Team update"
+   },
+   "b": {
+    "id": "md:b3324944-d34d-4589-8117-5f63c68f343a",
+    "title": "Team update"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:07ff9fc9-6db6-4dd9-8a9c-67c9b05e7964",
+    "title": "Show HN: Memcode ships open source OpenClaw and Hermes baseline in public beta"
+   },
+   "b": {
+    "id": "md:f1a64ce1-1fc8-4677-80bb-9ab1cfab5ae3",
+    "title": "Show HN: Memcode ships open source OpenClaw and Hermes baseline in public beta"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:dd121d27-471d-405a-b0a0-0de4c2d610e0",
+    "title": "An Antidote to Roko's Basilisk"
+   },
+   "b": {
+    "id": "md:32223490-632e-4946-adce-2f821097b776",
+    "title": "An Antidote to Roko's Basilisk"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:fc4d4094-0b68-470d-a3c5-306928c506bc",
+    "title": "Meta admits Muse's likeness to OpenClaw isn't a coincidence"
+   },
+   "b": {
+    "id": "md:2cb652bc-0ef1-4c82-99ee-6e240ab4f67f",
+    "title": "Meta admits Muse's likeness to OpenClaw isn't a coincidence"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:45d6f2d4-9bdb-4565-9d95-e39c1046d770",
+    "title": "Community Day"
+   },
+   "b": {
+    "id": "md:d5172c91-c805-479d-b7cc-08cdb9a530d1",
+    "title": "Community Day"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:1c7f25c7-3cec-43c3-8c69-62335d403505",
+    "title": "Agentic autofix now uses Copilot Memory"
+   },
+   "b": {
+    "id": "md:6012bc5a-deb2-4ae6-b6c9-69e8a93ce24f",
+    "title": "Agentic autofix now uses Copilot Memory"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:ac1ea62d-d25a-445f-aefb-330955729bf1",
+    "title": "OpenSSL update assessment, and Node.js project plans"
+   },
+   "b": {
+    "id": "md:48a29dd1-b7ac-47ad-9a0a-dc5387e9a87d",
+    "title": "OpenSSL update assessment, and Node.js project plans"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:06fac338-fdde-4592-b0fc-88e1e346ccdf",
+    "title": "OpenClaw Improves User Onboarding"
+   },
+   "b": {
+    "id": "md:fde930ac-9dfc-4298-8993-0e96e3e7fd13",
+    "title": "OpenClaw Improves User Onboarding"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:78f023a7-8c92-4e80-a69f-7c8cd70bbdba",
+    "title": "Launch HN: Vespper (YC F24) – SOTA Docx MCP"
+   },
+   "b": {
+    "id": "md:07547ac1-6881-4450-b364-b146a9b4a24e",
+    "title": "Launch HN: Vespper (YC F24) – SOTA Docx MCP"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:4c37ff24-66b8-4025-aa7b-22f3ed6ad231",
+    "title": "What is the closest thing we have to Iron man's desk?"
+   },
+   "b": {
+    "id": "md:cf0f82b3-b96c-4209-88cc-e2afccdc34b4",
+    "title": "What is the closest thing we have to Iron man's desk?"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:8762bd36-39b2-43ed-8a65-d8fca670d358",
+    "title": "Run OpenClaw with Muse Glimmer Locally on Mac"
+   },
+   "b": {
+    "id": "md:fc806cf3-8d1c-45c5-b090-849cb23680e4",
+    "title": "Run OpenClaw with Muse Glimmer Locally on Mac"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:0e6c301f-ed8b-44a9-b5ce-f89c844baa0f",
+    "title": "OpenClaw 2.0"
+   },
+   "b": {
+    "id": "md:88ab3106-184b-4cb2-baca-0116792131c4",
+    "title": "OpenClaw 2.0"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:b565adb7-8432-495c-a0d1-9c908f087723",
+    "title": "Show HN: Hinge MCP"
+   },
+   "b": {
+    "id": "md:3bdadc34-d4ab-43c7-84e2-43aaab346993",
+    "title": "Show HN: Hinge MCP"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:4442863f-fdb1-42fc-bc9b-0a2fe92e057b",
+    "title": "OpenClaw: Maintainers Round Table [video]"
+   },
+   "b": {
+    "id": "md:10cf47ef-f65f-4f0b-b22c-2fb25e0fe1e3",
+    "title": "OpenClaw: Maintainers Round Table [video]"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:231f1380-6e5e-4ac7-8df7-b3ce3f2cc265",
+    "title": "The Risks of Ignoring API Security During Mobile App Security Testing"
+   },
+   "b": {
+    "id": "md:4dec75c5-ba45-41bf-a7fb-790c16389dd0",
+    "title": "The Risks of Ignoring API Security During Mobile App Security Testing"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:c47cbe18-f66f-42d5-9cec-5e65b4329b6f",
+    "title": "Syndicate OS – self-hosted multi-agent federation (Hermes and OpenClaw minions)"
+   },
+   "b": {
+    "id": "md:667f8682-f986-449f-9357-0dcc89afe4d3",
+    "title": "Syndicate OS – self-hosted multi-agent federation (Hermes and OpenClaw minions)"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:1cc085cf-a140-46e1-bcdf-053fb4b961e9",
+    "title": "Team update"
+   },
+   "b": {
+    "id": "md:b3324944-d34d-4589-8117-5f63c68f343a",
+    "title": "Team update"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:8c7493fb-b8f2-4a1f-9b11-09b7b42ca5cd",
+    "title": "Using Claude Code: Spending your effort"
+   },
+   "b": {
+    "id": "md:e319a928-b1ff-413c-a4ed-eed4b6f44516",
+    "title": "Using Claude Code: Spending your effort"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:dcd6c8d4-8485-44c3-a60e-5da02c3e2dd0",
+    "title": "Ask HN: How is code review holding up at your company?"
+   },
+   "b": {
+    "id": "md:4c9a0f9e-7ce6-480a-ae56-b4d18db742a1",
+    "title": "Ask HN: How is code review holding up at your company?"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:bbabf10d-9de2-4cdd-bb7d-e3e7576a901b",
+    "title": "We built muse from scratch, but it is definitely inspired by OpenClaw"
+   },
+   "b": {
+    "id": "md:dd230340-ed2d-467f-8b8a-4bf39af3d4ed",
+    "title": "We built muse from scratch, but it is definitely inspired by OpenClaw"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:50e7b4c8-76b7-47c1-a9a1-baf4b6138258",
+    "title": "We just shipped support for the ugliest part of HTTP: Vary"
+   },
+   "b": {
+    "id": "md:dedb1adb-ac05-4ad3-b018-02f532ea8f62",
+    "title": "We just shipped support for the ugliest part of HTTP: Vary"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:5384ee5d-7b5d-4420-8a80-297565a06678",
+    "title": "Community Day"
+   },
+   "b": {
+    "id": "md:d5172c91-c805-479d-b7cc-08cdb9a530d1",
+    "title": "Community Day"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:edcd23ef-1ae9-477a-8481-d6adf51224ad",
+    "title": "Run OpenClaw on Cua Cloud Fleet"
+   },
+   "b": {
+    "id": "md:173b39e4-bba9-46ad-9c51-8ba85269d253",
+    "title": "Run OpenClaw on Cua Cloud Fleet"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:df61af83-e202-41b0-89b3-c5777203300a",
+    "title": "Ask HN: Is OpenClaw Still Worth Exploring or Is It “So Last Year”?"
+   },
+   "b": {
+    "id": "md:1ca83a36-395b-4896-bbdd-1ee6cb391f32",
+    "title": "Ask HN: Is OpenClaw Still Worth Exploring or Is It “So Last Year”?"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:e0c67134-e533-4d28-92ec-92315e9c5af5",
+    "title": "OpenClaw v2026.9.3: Live browser automation, persistent skills, and cloud work"
+   },
+   "b": {
+    "id": "md:568be96c-eade-469f-857f-98470450056a",
+    "title": "OpenClaw v2026.9.3: Live browser automation, persistent skills, and cloud work"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:68d3c757-f916-4536-9309-53f6ec982194",
+    "title": "Community Day"
+   },
+   "b": {
+    "id": "md:45d6f2d4-9bdb-4565-9d95-e39c1046d770",
+    "title": "Community Day"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:db2982ce-101c-4804-9339-fd36c9a12017",
+    "title": "Enterprise managed settings in-product validator"
+   },
+   "b": {
+    "id": "md:14f7a2b8-4552-4357-b87c-c2a52e917a51",
+    "title": "Enterprise managed settings in-product validator"
+   },
+   "how": "exact-norm"
+  },
+  {
+   "a": {
+    "id": "md:ebf920ef-4bd4-4582-a5ef-a8071ad5bcd5",
+    "title": "Using Claude Code: Spending your effort"
+   },
+   "b": {
+    "id": "md:e319a928-b1ff-413c-a4ed-eed4b6f44516",
+    "title": "Using Claude Code: Spending your effort"
+   },
+   "how": "exact-norm"
+  }
+ ],
+ "positive_paraphrase": [
+  {
+   "a": {
+    "id": "md:971834c1-0e26-4983-b2a6-4a2971e675cc",
+    "title": "全新领克 20 上市 1 小时大定突破 14663 台，限时专享价 11.88 万元起"
+   },
+   "b": {
+    "id": "md:0625c479-4ef9-4533-a3ed-6996edce2cdd",
+    "title": "全新领克 20 上市：全系标配激光雷达、800V 高压平台，限时专享价 11.88 万元起"
+   },
+   "how": "rare-toks:万元起,全新领克"
+  },
+  {
+   "a": {
+    "id": "md:7d5ec852-4109-43dc-80c5-f2551c05799f",
+    "title": "Moonshot AI's Kimi K2 0905 model is now supported in Vercel AI Gateway"
+   },
+   "b": {
+    "id": "md:e156903f-31c6-4eca-9c65-e2e59ed672e9",
+    "title": "Moonshot AI's Kimi K2 model is now supported in Vercel AI Gateway"
+   },
+   "how": "rare-toks:moonshotaiskimik,modelisnowsupportedinvercelaigateway"
+  },
+  {
+   "a": {
+    "id": "md:951b0686-ce9c-405c-a499-d1def44242b4",
+    "title": "AMD to Buy Fei-Fei Li's World Labs AI Startup for $8.2B"
+   },
+   "b": {
+    "id": "md:44733cc9-cd46-4c5f-a9ff-4b4dbeaafddd",
+    "title": "AMD acquiring Fei-Fei Li's World Labs AI firm in deal worth $8.2B"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:951b0686-ce9c-405c-a499-d1def44242b4",
+    "title": "AMD to Buy Fei-Fei Li's World Labs AI Startup for $8.2B"
+   },
+   "b": {
+    "id": "md:a660b9d7-af41-4a72-9a31-60af378c1476",
+    "title": "World Labs Is Joining AMD"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:951b0686-ce9c-405c-a499-d1def44242b4",
+    "title": "AMD to Buy Fei-Fei Li's World Labs AI Startup for $8.2B"
+   },
+   "b": {
+    "id": "md:97c946ae-77a0-41b7-91dd-ead853f8dc5d",
+    "title": "AMD will acquire Fei-Fei Li’s World Labs for $8.2 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:951b0686-ce9c-405c-a499-d1def44242b4",
+    "title": "AMD to Buy Fei-Fei Li's World Labs AI Startup for $8.2B"
+   },
+   "b": {
+    "id": "md:81afdbe9-d50d-42fc-9411-d8dab75211d3",
+    "title": "AMD to buy Fei-Fei Li's AI startup for $8B"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:951b0686-ce9c-405c-a499-d1def44242b4",
+    "title": "AMD to Buy Fei-Fei Li's World Labs AI Startup for $8.2B"
+   },
+   "b": {
+    "id": "md:e9f0e7ab-4c5b-488c-869b-932be9918ff1",
+    "title": "AMD is acquiring AI company World Labs in a deal worth more than $8 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:44733cc9-cd46-4c5f-a9ff-4b4dbeaafddd",
+    "title": "AMD acquiring Fei-Fei Li's World Labs AI firm in deal worth $8.2B"
+   },
+   "b": {
+    "id": "md:a660b9d7-af41-4a72-9a31-60af378c1476",
+    "title": "World Labs Is Joining AMD"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:44733cc9-cd46-4c5f-a9ff-4b4dbeaafddd",
+    "title": "AMD acquiring Fei-Fei Li's World Labs AI firm in deal worth $8.2B"
+   },
+   "b": {
+    "id": "md:97c946ae-77a0-41b7-91dd-ead853f8dc5d",
+    "title": "AMD will acquire Fei-Fei Li’s World Labs for $8.2 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:44733cc9-cd46-4c5f-a9ff-4b4dbeaafddd",
+    "title": "AMD acquiring Fei-Fei Li's World Labs AI firm in deal worth $8.2B"
+   },
+   "b": {
+    "id": "md:81afdbe9-d50d-42fc-9411-d8dab75211d3",
+    "title": "AMD to buy Fei-Fei Li's AI startup for $8B"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:44733cc9-cd46-4c5f-a9ff-4b4dbeaafddd",
+    "title": "AMD acquiring Fei-Fei Li's World Labs AI firm in deal worth $8.2B"
+   },
+   "b": {
+    "id": "md:e9f0e7ab-4c5b-488c-869b-932be9918ff1",
+    "title": "AMD is acquiring AI company World Labs in a deal worth more than $8 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:a660b9d7-af41-4a72-9a31-60af378c1476",
+    "title": "World Labs Is Joining AMD"
+   },
+   "b": {
+    "id": "md:97c946ae-77a0-41b7-91dd-ead853f8dc5d",
+    "title": "AMD will acquire Fei-Fei Li’s World Labs for $8.2 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:a660b9d7-af41-4a72-9a31-60af378c1476",
+    "title": "World Labs Is Joining AMD"
+   },
+   "b": {
+    "id": "md:81afdbe9-d50d-42fc-9411-d8dab75211d3",
+    "title": "AMD to buy Fei-Fei Li's AI startup for $8B"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:a660b9d7-af41-4a72-9a31-60af378c1476",
+    "title": "World Labs Is Joining AMD"
+   },
+   "b": {
+    "id": "md:e9f0e7ab-4c5b-488c-869b-932be9918ff1",
+    "title": "AMD is acquiring AI company World Labs in a deal worth more than $8 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:97c946ae-77a0-41b7-91dd-ead853f8dc5d",
+    "title": "AMD will acquire Fei-Fei Li’s World Labs for $8.2 billion"
+   },
+   "b": {
+    "id": "md:81afdbe9-d50d-42fc-9411-d8dab75211d3",
+    "title": "AMD to buy Fei-Fei Li's AI startup for $8B"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:97c946ae-77a0-41b7-91dd-ead853f8dc5d",
+    "title": "AMD will acquire Fei-Fei Li’s World Labs for $8.2 billion"
+   },
+   "b": {
+    "id": "md:e9f0e7ab-4c5b-488c-869b-932be9918ff1",
+    "title": "AMD is acquiring AI company World Labs in a deal worth more than $8 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  },
+  {
+   "a": {
+    "id": "md:81afdbe9-d50d-42fc-9411-d8dab75211d3",
+    "title": "AMD to buy Fei-Fei Li's AI startup for $8B"
+   },
+   "b": {
+    "id": "md:e9f0e7ab-4c5b-488c-869b-932be9918ff1",
+    "title": "AMD is acquiring AI company World Labs in a deal worth more than $8 billion"
+   },
+   "how": "manual-AMD-WorldLabs"
+  }
+ ],
+ "negative_hard": [
+  {
+   "a": {
+    "id": "md:b5a57c72-44b3-4fdc-b377-138951149794",
+    "title": "Launch Week 8 Community Highlights"
+   },
+   "b": {
+    "id": "md:31b64d49-04b9-41b4-9e56-5e5a24026311",
+    "title": "Launch Week 7 Community Highlights"
+   },
+   "how": "rare-toks:launchweek,communityhighlights"
+  },
+  {
+   "a": {
+    "id": "md:ac66ab84-6609-42a7-9650-104d8509477c",
+    "title": "Building an autonomous financial analyst with o1 and o3-mini"
+   },
+   "b": {
+    "id": "md:d43a80ff-a94e-473a-9060-43a2ce7deabe",
+    "title": "Introducing OpenAI o3 and o4-mini"
+   },
+   "how": "rare-toks:ando,mini"
+  },
+  {
+   "a": {
+    "id": "md:b19f9b73-a263-4c46-b881-a60da8403659",
+    "title": "Trip report: Node.js collaboration summit (2026 London)"
+   },
+   "b": {
+    "id": "md:06ce1e3e-3eda-44d3-b588-c601bcb41ce1",
+    "title": "Trip report: Node.js collaboration summit (2024 London)"
+   },
+   "how": "rare-toks:london,tripreportnodejscollaborationsummit"
+  },
+  {
+   "a": {
+    "id": "md:f9a28865-3883-41f4-a365-c4f4ab70becd",
+    "title": "Launch Week 7 Hackathon Winners"
+   },
+   "b": {
+    "id": "md:cc580140-e5e1-45bc-b74a-37c60d79fac6",
+    "title": "Launch Week 6 Hackathon Winners"
+   },
+   "how": "rare-toks:launchweek,hackathonwinners"
+  },
+  {
+   "a": {
+    "id": "md:6414abbb-83f6-4e1f-be19-12dff60a9598",
+    "title": "Vercel Sandbox now supports up to 32 vCPU + 64 GB RAM configurations"
+   },
+   "b": {
+    "id": "md:672a4d97-6742-475e-9b89-6b2b363a3a33",
+    "title": "Vercel Sandbox now supports 1 vCPU + 2 GB RAM configurations"
+   },
+   "how": "rare-toks:vcpu,gbramconfigurations"
+  },
+  {
+   "a": {
+    "id": "md:f2ba6513-9c0b-4161-9df1-23101ebd5de6",
+    "title": "Introducing GPT-5.1 for developers"
+   },
+   "b": {
+    "id": "md:a7d3c921-bb42-496c-8781-7a2e37b5d7f9",
+    "title": "Introducing GPT-5 for developers"
+   },
+   "how": "rare-toks:fordevelopers,introducinggpt"
+  },
+  {
+   "a": {
+    "id": "md:c6d8111f-9d27-4542-be39-c80ddc62ca13",
+    "title": "Supabase Launch Week 13 Hackathon Winners"
+   },
+   "b": {
+    "id": "md:980408db-65fe-43d1-a606-54c04acea6e8",
+    "title": "Supabase Launch Week 12 Hackathon Winners"
+   },
+   "how": "rare-toks:hackathonwinners,supabaselaunchweek"
+  },
+  {
+   "a": {
+    "id": "md:1f880c1c-111b-4a51-8d97-497f5777ac67",
+    "title": "Supabase Launch Week 12 Hackathon"
+   },
+   "b": {
+    "id": "md:c11ee196-1779-46a9-a82e-02d50bc8f11b",
+    "title": "Supabase Launch Week 8 Hackathon"
+   },
+   "how": "rare-toks:supabaselaunchweek,hackathon"
+  },
+  {
+   "a": {
+    "id": "md:cc580140-e5e1-45bc-b74a-37c60d79fac6",
+    "title": "Launch Week 6 Hackathon Winners"
+   },
+   "b": {
+    "id": "md:6b761e39-1cb0-4b60-970b-918bda5655f5",
+    "title": "Launch Week 5 Hackathon Winners"
+   },
+   "how": "rare-toks:launchweek,hackathonwinners"
+  },
+  {
+   "a": {
+    "id": "md:bed6ac60-f7c8-49db-a51f-05e603465fb9",
+    "title": "Launch Week 8 Hackathon Winners"
+   },
+   "b": {
+    "id": "md:cc580140-e5e1-45bc-b74a-37c60d79fac6",
+    "title": "Launch Week 6 Hackathon Winners"
+   },
+   "how": "rare-toks:launchweek,hackathonwinners"
+  },
+  {
+   "a": {
+    "id": "md:bed6ac60-f7c8-49db-a51f-05e603465fb9",
+    "title": "Launch Week 8 Hackathon Winners"
+   },
+   "b": {
+    "id": "md:f9a28865-3883-41f4-a365-c4f4ab70becd",
+    "title": "Launch Week 7 Hackathon Winners"
+   },
+   "how": "rare-toks:launchweek,hackathonwinners"
+  },
+  {
+   "a": {
+    "id": "md:bed6ac60-f7c8-49db-a51f-05e603465fb9",
+    "title": "Launch Week 8 Hackathon Winners"
+   },
+   "b": {
+    "id": "md:6b761e39-1cb0-4b60-970b-918bda5655f5",
+    "title": "Launch Week 5 Hackathon Winners"
+   },
+   "how": "rare-toks:launchweek,hackathonwinners"
+  },
+  {
+   "a": {
+    "id": "md:9772ba2e-ad54-486a-912c-fc9edf9cbb3e",
+    "title": "Addendum to GPT-5.2 System Card: GPT-5.2-Codex"
+   },
+   "b": {
+    "id": "md:ffebc97d-7838-4abe-8a43-4baaaece107d",
+    "title": "Addendum to GPT-5 system card: GPT-5-Codex"
+   },
+   "how": "rare-toks:systemcardgpt,addendumtogpt,codex"
+  },
+  {
+   "a": {
+    "id": "md:f9a28865-3883-41f4-a365-c4f4ab70becd",
+    "title": "Launch Week 7 Hackathon Winners"
+   },
+   "b": {
+    "id": "md:6b761e39-1cb0-4b60-970b-918bda5655f5",
+    "title": "Launch Week 5 Hackathon Winners"
+   },
+   "how": "rare-toks:launchweek,hackathonwinners"
+  },
+  {
+   "a": {
+    "id": "md:15db499a-54aa-4187-971c-9c7f76762908",
+    "title": "Microsoft Plugs Nearly 1,000 Security Holes"
+   },
+   "b": {
+    "id": "md:066cfcd2-19cb-43a6-9d60-d562fef8066e",
+    "title": "Microsoft Plugs Nearly 400 Security Holes"
+   },
+   "how": "rare-toks:microsoftplugsnearly,securityholes"
+  },
+  {
+   "a": {
+    "id": "md:a86b9b23-56e8-4d88-b6dd-cfc728571226",
+    "title": "Supabase Launch Week 15 Hackathon"
+   },
+   "b": {
+    "id": "md:c11ee196-1779-46a9-a82e-02d50bc8f11b",
+    "title": "Supabase Launch Week 8 Hackathon"
+   },
+   "how": "rare-toks:supabaselaunchweek,hackathon"
+  },
+  {
+   "a": {
+    "id": "md:a86b9b23-56e8-4d88-b6dd-cfc728571226",
+    "title": "Supabase Launch Week 15 Hackathon"
+   },
+   "b": {
+    "id": "md:1f880c1c-111b-4a51-8d97-497f5777ac67",
+    "title": "Supabase Launch Week 12 Hackathon"
+   },
+   "how": "rare-toks:supabaselaunchweek,hackathon"
+  },
+  {
+   "a": {
+    "id": "md:01ce7f54-0dd4-4472-ba6a-7a773d206361",
+    "title": "Node.js 26.8.0 (Current)"
+   },
+   "b": {
+    "id": "md:968c4b1f-91e1-4a93-9a5c-db7a8a550c45",
+    "title": "Node.js 15.7.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:0a5d8dfa-c051-4d78-aa4b-3bcbf49a4334",
+    "title": "Node.js 25.8.1 (Current)"
+   },
+   "b": {
+    "id": "md:09dcb299-028e-411f-b87d-ac38b1df3006",
+    "title": "Node.js 12.2.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:e1b8c1e7-3985-44cb-8f8f-e612390c8bcf",
+    "title": "Node.js 26.3.1 (Current)"
+   },
+   "b": {
+    "id": "md:4d8d4f82-8db5-4cb3-8306-fc0df8a923e1",
+    "title": "Node.js 11.5.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:6994213f-08d7-42fc-b6c6-cb86ad0f917c",
+    "title": "Node.js 26.1.0 (Current)"
+   },
+   "b": {
+    "id": "md:c0bdb178-a00d-4025-a384-ef7275130e62",
+    "title": "Node.js 21.6.0 (Current)"
+   },
+   "how": "fuzzy-0.94"
+  },
+  {
+   "a": {
+    "id": "md:c4502885-e6b3-43e5-9d3c-4cec942e54d1",
+    "title": "Node.js 26.3.0 (Current)"
+   },
+   "b": {
+    "id": "md:517f59e3-cdbb-4bf9-a4fb-42c3598e6a34",
+    "title": "Node.js 8.2.0 (Current)"
+   },
+   "how": "fuzzy-0.91"
+  },
+  {
+   "a": {
+    "id": "md:9148c565-01cd-45af-8d73-5787564f2070",
+    "title": "Node.js 26.2.0 (Current)"
+   },
+   "b": {
+    "id": "md:e0430b92-4c64-40d2-8fe3-377f51d6ea0f",
+    "title": "Node.js 10.1.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:0a5d8dfa-c051-4d78-aa4b-3bcbf49a4334",
+    "title": "Node.js 25.8.1 (Current)"
+   },
+   "b": {
+    "id": "md:0ec72727-65e6-4122-9b15-daa7a164eb76",
+    "title": "Node.js 9.11.1 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:6c6553c1-fd40-4418-bc77-537617f751b1",
+    "title": "Node.js 26.4.0 (Current)"
+   },
+   "b": {
+    "id": "md:95d19a5c-3515-4ed1-92ba-f8c3098f7300",
+    "title": "Node.js 6.6.0 (Current)"
+   },
+   "how": "fuzzy-0.91"
+  },
+  {
+   "a": {
+    "id": "md:01ce7f54-0dd4-4472-ba6a-7a773d206361",
+    "title": "Node.js 26.8.0 (Current)"
+   },
+   "b": {
+    "id": "md:a1f95343-2280-4068-8644-0714f5ced1fb",
+    "title": "Node.js 16.4.0 (Current)"
+   },
+   "how": "fuzzy-0.88"
+  },
+  {
+   "a": {
+    "id": "md:c2d48540-ca85-4911-8be8-cb5dbdf7bd17",
+    "title": "Node.js 17.7.0 (Current)"
+   },
+   "b": {
+    "id": "md:6a9aa24d-ea62-4491-8117-cee43e0b5614",
+    "title": "Node.js 9.7.1 (Current)"
+   },
+   "how": "fuzzy-0.85"
+  },
+  {
+   "a": {
+    "id": "md:6c6553c1-fd40-4418-bc77-537617f751b1",
+    "title": "Node.js 26.4.0 (Current)"
+   },
+   "b": {
+    "id": "md:dbeda8d9-0a20-4f52-856c-5df438449177",
+    "title": "Node.js 12.6.0 (Current)"
+   },
+   "how": "fuzzy-0.94"
+  },
+  {
+   "a": {
+    "id": "md:557004ea-30d3-468c-a874-a487a42068bc",
+    "title": "Node.js 24.18.1 (LTS)"
+   },
+   "b": {
+    "id": "md:2d1761ac-52f8-492b-8128-4c29532b59f6",
+    "title": "Node.js 24.11.0 (LTS)"
+   },
+   "how": "fuzzy-0.93"
+  },
+  {
+   "a": {
+    "id": "md:23b45b39-6ab0-4b9e-a580-44d4d69468b1",
+    "title": "Node.js 26.5.1 (Current)"
+   },
+   "b": {
+    "id": "md:2b42717d-a5a6-4cf0-9d3f-4a0abac4f53a",
+    "title": "Node.js 9.6.0 (Current)"
+   },
+   "how": "fuzzy-0.85"
+  },
+  {
+   "a": {
+    "id": "md:0a866f5d-2be6-49cc-80d9-e40e5b03c317",
+    "title": "Node.js 26.8.1 (Current)"
+   },
+   "b": {
+    "id": "md:bb01c9fc-ad71-4ab0-a9c5-37b08c8c66b1",
+    "title": "Node.js 12.8.1 (Current)"
+   },
+   "how": "fuzzy-0.94"
+  },
+  {
+   "a": {
+    "id": "md:968c4b1f-91e1-4a93-9a5c-db7a8a550c45",
+    "title": "Node.js 15.7.0 (Current)"
+   },
+   "b": {
+    "id": "md:469a11ee-9601-4bff-8f5f-9349875424dd",
+    "title": "Node.js 23.8.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:d5457e90-4150-48d9-9e5e-fe6202da24b0",
+    "title": "Node.js 26.6.0 (Current)"
+   },
+   "b": {
+    "id": "md:6994213f-08d7-42fc-b6c6-cb86ad0f917c",
+    "title": "Node.js 26.1.0 (Current)"
+   },
+   "how": "fuzzy-0.94"
+  },
+  {
+   "a": {
+    "id": "md:b4ab63d0-f2e5-49c9-a919-704f6d57566a",
+    "title": "Starlight 0.42"
+   },
+   "b": {
+    "id": "md:2427736c-eeef-454a-8728-f9d048486163",
+    "title": "Starlight 0.32"
+   },
+   "how": "fuzzy-0.92"
+  },
+  {
+   "a": {
+    "id": "md:773dd78e-a9ef-457f-ada4-d82f6eb6048f",
+    "title": "Tailwind CSS v2.1"
+   },
+   "b": {
+    "id": "md:a14c1bc1-caa3-4311-9585-dcfad531640a",
+    "title": "Tailwind CSS v2.0"
+   },
+   "how": "fuzzy-0.93"
+  },
+  {
+   "a": {
+    "id": "md:e1b8c1e7-3985-44cb-8f8f-e612390c8bcf",
+    "title": "Node.js 26.3.1 (Current)"
+   },
+   "b": {
+    "id": "md:a1f95343-2280-4068-8644-0714f5ced1fb",
+    "title": "Node.js 16.4.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:0a5d8dfa-c051-4d78-aa4b-3bcbf49a4334",
+    "title": "Node.js 25.8.1 (Current)"
+   },
+   "b": {
+    "id": "md:67852307-7bae-43f3-8e4f-e8fe6bfa69e6",
+    "title": "Node.js 22.7.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:39176486-cd85-4d5e-a1b6-fbb86f6e35aa",
+    "title": "Node.js 17.6.0 (Current)"
+   },
+   "b": {
+    "id": "md:48965b30-7c4f-4fa4-a0f1-849f3679cb07",
+    "title": "Node.js 9.2.1 (Current)"
+   },
+   "how": "fuzzy-0.85"
+  },
+  {
+   "a": {
+    "id": "md:0a866f5d-2be6-49cc-80d9-e40e5b03c317",
+    "title": "Node.js 26.8.1 (Current)"
+   },
+   "b": {
+    "id": "md:a8284299-03fa-45ad-a733-ed019e4ab41c",
+    "title": "Node.js 23.6.0 (Current)"
+   },
+   "how": "fuzzy-0.88"
+  },
+  {
+   "a": {
+    "id": "md:c2d48540-ca85-4911-8be8-cb5dbdf7bd17",
+    "title": "Node.js 17.7.0 (Current)"
+   },
+   "b": {
+    "id": "md:fa18dfe1-95d2-470c-85a1-d9e1d187b473",
+    "title": "Node.js 25.8.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:0a5d8dfa-c051-4d78-aa4b-3bcbf49a4334",
+    "title": "Node.js 25.8.1 (Current)"
+   },
+   "b": {
+    "id": "md:e52b2669-2633-45d8-87a2-0b07bddd9828",
+    "title": "Node.js 11.3.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  },
+  {
+   "a": {
+    "id": "md:6a6c5f26-0438-4140-aac5-4acb19fb56ed",
+    "title": "Node.js 26.5.0 (Current)"
+   },
+   "b": {
+    "id": "md:d172e4d6-d361-4491-9f0e-4f8c5e32170f",
+    "title": "Node.js 16.0.0 (Current)"
+   },
+   "how": "fuzzy-0.88"
+  },
+  {
+   "a": {
+    "id": "md:97815129-fe45-4ff8-bf68-9ac9e7fe0754",
+    "title": "Node.js 24.15.0 (LTS)"
+   },
+   "b": {
+    "id": "md:5496536c-d713-4121-93b2-758fd628e858",
+    "title": "Node.js 8.15.0 (LTS)"
+   },
+   "how": "fuzzy-0.89"
+  },
+  {
+   "a": {
+    "id": "md:575b067c-cffe-4832-891b-1a7f6e8e31c1",
+    "title": "Introducing GPT-5.5"
+   },
+   "b": {
+    "id": "md:e3576871-f134-4768-ba6c-3bf9c6dea053",
+    "title": "Introducing GPTs"
+   },
+   "how": "fuzzy-0.90"
+  },
+  {
+   "a": {
+    "id": "md:5324a0ac-c2ba-4464-8f19-54b226233948",
+    "title": "Node.js 26.0.0 (Current)"
+   },
+   "b": {
+    "id": "md:3689b5d8-25ba-43ca-93e2-ecc32b57397a",
+    "title": "Node.js 22.5.0 (Current)"
+   },
+   "how": "fuzzy-0.88"
+  },
+  {
+   "a": {
+    "id": "md:189ebbaf-88ad-4392-919d-22f9baf97b2b",
+    "title": "Node.js 14.19.1 (LTS)"
+   },
+   "b": {
+    "id": "md:917a8b1a-9973-44aa-8e0f-d3f2466a9599",
+    "title": "Node.js 14.20.1 (LTS)"
+   },
+   "how": "fuzzy-0.86"
+  },
+  {
+   "a": {
+    "id": "md:0a5d8dfa-c051-4d78-aa4b-3bcbf49a4334",
+    "title": "Node.js 25.8.1 (Current)"
+   },
+   "b": {
+    "id": "md:da9698b5-bd74-4424-9c73-631c9ed2274c",
+    "title": "Node.js 16.5.0 (Current)"
+   },
+   "how": "fuzzy-0.82"
+  }
+ ],
+ "negative_random": [
+  {
+   "a": {
+    "id": "md:297f7b5c-c0bd-4bfe-91df-08c50498fe26",
+    "title": "Analyzing the evidence that helps businesses win “product not received” disputes"
+   },
+   "b": {
+    "id": "md:b565adb7-8432-495c-a0d1-9c908f087723",
+    "title": "Show HN: Hinge MCP"
+   },
+   "sim": 0.171
+  },
+  {
+   "a": {
+    "id": "md:8a9af648-7fb6-4875-9989-de638de1ede0",
+    "title": "VSArena – The official open browser benchmark for embodied AI"
+   },
+   "b": {
+    "id": "md:e6aaa2b6-f19d-402f-9bda-7de1cf5da4e3",
+    "title": "Vercel Sandbox routing is now 18x faster globally"
+   },
+   "sim": 0.172
+  },
+  {
+   "a": {
+    "id": "md:526894cd-88af-46b9-a89b-e7157ae75fcd",
+    "title": "Homa: The End of TCP for AI Clusters [video]"
+   },
+   "b": {
+    "id": "md:08789145-bf11-455c-a111-6c268b3c88b9",
+    "title": "What’s new in Svelte: March 2021"
+   },
+   "sim": 0.138
+  },
+  {
+   "a": {
+    "id": "md:649ab413-3ecb-44ed-b0a6-463d0a40a951",
+    "title": "Organic two-dimensional van der Waals heterostructures"
+   },
+   "b": {
+    "id": "md:798750e1-efb1-4f57-8a1e-c205338e0f6e",
+    "title": "Ask HN: JEV for K1 Tax Forms"
+   },
+   "sim": 0.174
+  },
+  {
+   "a": {
+    "id": "md:1ca83a36-395b-4896-bbdd-1ee6cb391f32",
+    "title": "Ask HN: Is OpenClaw Still Worth Exploring or Is It “So Last Year”?"
+   },
+   "b": {
+    "id": "md:c8eb06d5-665f-46ea-86bb-7684007fd3ba",
+    "title": "Node.js 8.15.1 (LTS)"
+   },
+   "sim": 0.127
+  },
+  {
+   "a": {
+    "id": "md:da171aed-b102-4d61-94ae-20b14eb54f26",
+    "title": "Control who can manage connectors in Vercel Connect"
+   },
+   "b": {
+    "id": "md:de58309c-9390-41df-8359-5c1b371c6bb1",
+    "title": "Reliable AI automation done right (not with a model)"
+   },
+   "sim": 0.186
+  },
+  {
+   "a": {
+    "id": "md:0d42fae8-7d47-4417-b820-fceafde383a8",
+    "title": "Show HN: Guardmcp – I scanned the official MCP registry with a config scanner"
+   },
+   "b": {
+    "id": "md:1ea5553d-7b9b-4d1d-ba2d-c678dc7388c2",
+    "title": "Subscribe to webhook events for Vercel Flags"
+   },
+   "sim": 0.14
+  },
+  {
+   "a": {
+    "id": "md:a4bac1ed-7918-4337-9afe-b1c946ff648b",
+    "title": "How ChatGPT adoption has expanded"
+   },
+   "b": {
+    "id": "md:a245350a-5589-4063-a518-60e030efde81",
+    "title": "OpenClaw 2.0, Accidentally"
+   },
+   "sim": 0.196
+  },
+  {
+   "a": {
+    "id": "md:aa82e56a-ecef-419b-ac5a-cf2d46160221",
+    "title": "大模型 API 的 URL 是谁设计的"
+   },
+   "b": {
+    "id": "md:8a4e075f-35cd-420b-bae0-71c29837399c",
+    "title": "Version 0.7.8 (unstable)"
+   },
+   "sim": 0.121
+  },
+  {
+   "a": {
+    "id": "md:01cc8f86-f684-4b01-8ed9-04bc9df16be3",
+    "title": "0.12.19"
+   },
+   "b": {
+    "id": "md:3aa527b4-3f2f-4475-a3bd-4e45d3d2c3e8",
+    "title": "Cua (YC P25) Is Hiring a Founding Technical GTM Lead"
+   },
+   "sim": 0.043
+  },
+  {
+   "a": {
+    "id": "md:6e717edc-e16c-43c4-8ad9-801afe577285",
+    "title": "Show HN: Press Start – A Playable Museum of Video Game History"
+   },
+   "b": {
+    "id": "md:38ded048-ffa8-48ca-a75c-4eafdb427dbe",
+    "title": "天才只待两周：一次 AOCI 双臂对照实测"
+   },
+   "sim": 0.06
+  },
+  {
+   "a": {
+    "id": "md:f6ede98a-01a2-4eb0-b6ac-b9814d8fc906",
+    "title": "\n        refactor(gateway): schedule presence publication (#160369)\n    "
+   },
+   "b": {
+    "id": "md:6a43b3c2-a353-43e6-b026-10e131183c25",
+    "title": "小猪的窝：京喜自营套路"
+   },
+   "sim": 0.0
+  },
+  {
+   "a": {
+    "id": "md:e7449bb3-5b24-4add-860c-e2c11e0c3845",
+    "title": "CyberAv3ngers: Iran-linked cyber research activity"
+   },
+   "b": {
+    "id": "md:198bb72d-91cb-493a-bd3e-96bc617e44e7",
+    "title": "Opalite Health (YC W26) Is Hiring – Founding GTM"
+   },
+   "sim": 0.198
+  },
+  {
+   "a": {
+    "id": "md:f8a74f12-5af1-4c49-b63d-76002da9d842",
+    "title": "New funding to build towards AGI"
+   },
+   "b": {
+    "id": "md:10faedea-f6f0-40df-b169-cb5e5619e21c",
+    "title": "不曾长大：也算用AI干了点事"
+   },
+   "sim": 0.05
+  },
+  {
+   "a": {
+    "id": "md:485f33e1-ad91-40cb-8931-efe90f2f7c7f",
+    "title": "CVE-2025-57752"
+   },
+   "b": {
+    "id": "md:3b70c684-4ab1-4653-bb56-5b9f2e2f3b50",
+    "title": "Tell HN: New Chat Control vote tomorrow"
+   },
+   "sim": 0.136
+  },
+  {
+   "a": {
+    "id": "md:1c3913a5-81a2-4736-a203-74b212ee04be",
+    "title": "Information disclosure in Flags SDK (CVE-2025-46332)"
+   },
+   "b": {
+    "id": "md:10cf47ef-f65f-4f0b-b22c-2fb25e0fe1e3",
+    "title": "OpenClaw: Maintainers Round Table [video]"
+   },
+   "sim": 0.182
+  },
+  {
+   "a": {
+    "id": "md:242b5bd2-b738-4922-bc5e-6bd4c432cc72",
+    "title": "llm-anthropic 0.29"
+   },
+   "b": {
+    "id": "md:1b992a61-7395-48b8-a411-03b110c0b7f9",
+    "title": "LiteLLM sends AI requests. Conduct decides which ones shouldn't be sent"
+   },
+   "sim": 0.162
+  },
+  {
+   "a": {
+    "id": "md:3b86e8e2-f5a7-47ef-bd86-c994c8ddbe42",
+    "title": "XBSTACK：iPhone Duo 怎么适配？Apple 官方指南下的 UIKit、Tab Bar 与折叠布局实战"
+   },
+   "b": {
+    "id": "md:223ead41-ca92-4a30-9109-bdbe180eca69",
+    "title": "Introducing the Intelligence Age"
+   },
+   "sim": 0.154
+  },
+  {
+   "a": {
+    "id": "md:ed1cb90b-cd37-4a87-80fa-16d9db74caaa",
+    "title": "The LLM Job Paradox"
+   },
+   "b": {
+    "id": "md:2c7f0fb6-77af-4b5e-a13f-28a93d0f9b90",
+    "title": "Qwen3.8-Flash-Next non-uniform quantization runs on 2 RTX3090s"
+   },
+   "sim": 0.176
+  },
+  {
+   "a": {
+    "id": "md:cc3eb7d4-681c-4efe-b6bc-0c1bb0d297d4",
+    "title": "More flexible Environment Variables in Edge Functions and Middleware"
+   },
+   "b": {
+    "id": "md:9835a763-4232-4385-bb17-0303b77740a4",
+    "title": "大大的小蜗牛"
+   },
+   "sim": 0.0
+  },
+  {
+   "a": {
+    "id": "md:3a7f497f-6401-464c-b988-81f92390b66e",
+    "title": "Fail2Ban"
+   },
+   "b": {
+    "id": "md:bbb50953-cdff-4eaa-a40f-2b63daeb3e70",
+    "title": "Node.js 5.7.0 (Current)"
+   },
+   "sim": 0.083
+  },
+  {
+   "a": {
+    "id": "md:86772112-48f9-4ee2-b064-7fe1673b7fa4",
+    "title": "鸦鸦的巢穴：NAS 挪窝日记：移动光猫+小米路由器 实现IPv6远程访问"
+   },
+   "b": {
+    "id": "md:e5a0ae3a-99aa-4cb4-b9e8-b59e6087687e",
+    "title": "Superhuman Go"
+   },
+   "sim": 0.047
+  },
+  {
+   "a": {
+    "id": "md:62d70db0-c596-4fdc-ab66-2ec1228c0c4c",
+    "title": "Node.js 10.13.0 (LTS)"
+   },
+   "b": {
+    "id": "md:82a0b17e-4f12-4254-b31d-479e393dc619",
+    "title": "Show HN: Tachyon – Java MCP Server SDK"
+   },
+   "sim": 0.14
+  },
+  {
+   "a": {
+    "id": "md:9815ec7e-cb2d-425b-8572-825617aa5a2f",
+    "title": "风雨行者：立体步行街的夜景（20260927）"
+   },
+   "b": {
+    "id": "md:1ba1ee8f-7fcc-4fa5-978e-5382de2bed40",
+    "title": "Transform rules are now available in vercel.json"
+   },
+   "sim": 0.0
+  },
+  {
+   "a": {
+    "id": "md:c546cb8f-909a-452c-9dd7-8331de6a6e6b",
+    "title": "Security – WordPress disable PHP public access, serve static pages via htaccess"
+   },
+   "b": {
+    "id": "md:1e4a4696-19f8-481a-82d9-bb58bf17849b",
+    "title": "From Nine Hundred to One: How We Hired Robin Malfait"
+   },
+   "sim": 0.093
+  },
+  {
+   "a": {
+    "id": "md:ec27e332-5cf2-4a4e-9777-3c1172923a2b",
+    "title": "Tell HN: If you are going to slop the web, don't use Chrome MCP"
+   },
+   "b": {
+    "id": "md:247db97b-6c58-466e-ac00-b9b1cf4ec088",
+    "title": "What’s new in Svelte: November 2023"
+   },
+   "sim": 0.16
+  },
+  {
+   "a": {
+    "id": "md:577dafa0-08b0-4889-8610-c2476e726d9f",
+    "title": "How We Used Codex to Ship Sora for Android in 28 Days"
+   },
+   "b": {
+    "id": "md:96a351bc-33a3-498d-910d-e5ea8ea2c799",
+    "title": "老张博客：这些天，我又折腾了些啥！？"
+   },
+   "sim": 0.0
+  },
+  {
+   "a": {
+    "id": "md:37f2998f-afad-4b3b-8ea8-d5c5c12800c9",
+    "title": "云从"
+   },
+   "b": {
+    "id": "md:22ccf733-ba3b-4954-9d44-0fb498c46067",
+    "title": "Node.js 22.15.1 (LTS)"
+   },
+   "sim": 0.0
+  },
+  {
+   "a": {
+    "id": "md:ebc73fa5-28a8-4b64-bbe1-935382e7d138",
+    "title": "FBI reportedly declares ‘cyber security incident’ after hackers steal agents’ personal data"
+   },
+   "b": {
+    "id": "md:368e172e-076f-4eab-b15c-bf50e01aaa51",
+    "title": "Pacing the Frontier is not the actual goal for AI labs"
+   },
+   "sim": 0.149
+  },
+  {
+   "a": {
+    "id": "md:317e081c-8570-487f-8cc2-ec8b0cd9161f",
+    "title": "兜兜爸投资笔记：没有好消息就是利空"
+   },
+   "b": {
+    "id": "md:be8bdcda-1e93-41c7-acf1-69c1e4cd8f06",
+    "title": "Astro 5.0"
+   },
+   "sim": 0.0
+  }
+ ],
+ "curation": {
+  "method": "标题归一化精确配对（exact-norm）+ 字面相似 fuzzy≥0.82 + 稀有词重叠（df≤6 ×2 + ratio≥0.35）自动候选 → 执行 agent 逐对人工判定",
+  "rare_tok_candidates": 19,
+  "rare_tok_true_para": 2,
+  "boilerplate_family_lesson": "Node.js/Tailwind/Supabase 等版本号模板标题构成假近重复家族（8070 fuzzy 对中 7765 对属此类）——near-dup 判定必须结合发布日期/实体版本，纯标题相似度会大量误报；转入 hard negative 集利用",
+  "deviation": "任务书要求'同事件异措辞对≥30'：语料真实同事件异措辞对仅17 对（+71 对同事件同措辞转采对）——morningdeck 源间重叠以转采同标题为主，改写式重复几乎不存在"
+ }
+}

@@ -1,0 +1,19 @@
+{# base.html.j2 — SSR 基础模板占位（G0/D3 骨架）
+
+公开页/登录页 Jinja2 SSR 的公共骨架位。正式 UI 里程碑落地：
+- <head>：meta/OG 标签、AI 标识、robots 策略注入位
+- <body>：内容区块（模式 A 404 自定义 HTML / 模式 B 降深列表 / 模式 C 文章页）
+
+本文件仅为占位，不含任何实际页面结构。
+#}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}newswright{% endblock %}</title>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {% block content %}{% endblock %}
+</body>
+</html>

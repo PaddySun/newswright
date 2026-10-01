@@ -1,0 +1,444 @@
+{
+ "built_at": "2026-10-01",
+ "n": 48,
+ "cases": [
+  {
+   "item_id": "md:363f5a2e-62d9-4f88-8eec-58ebb709a383",
+   "title": "Vercel now supports customizing platform error pages",
+   "published": "2026-01-23 13:00:00+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "date_expired",
+   "note": "陷阱：日期过期（正文正常）"
+  },
+  {
+   "item_id": "md:6066a97b-518d-4cce-a965-f04a98a71bd6",
+   "title": "\n\t\t\t\t\tFrom Beta to Bedrock: Build Products that Stick.\t\t\t\t",
+   "published": "2025-04-23 18:04:31+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "date_expired",
+   "note": "陷阱：日期过期（正文正常）"
+  },
+  {
+   "item_id": "md:6a7af9da-d3cf-45cb-9fd9-7d7e8e0f9a6e",
+   "title": "Opus 4.6 Fast Mode available on AI Gateway",
+   "published": "2026-04-07 08:00:00+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "date_expired",
+   "note": "陷阱：日期过期（正文正常）"
+  },
+  {
+   "item_id": "md:1c66726a-f869-44a3-95c4-8903fd694cb5",
+   "title": "Scale to one: How Fluid solves cold starts",
+   "published": "2025-09-18 13:00:00+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "date_expired",
+   "note": "陷阱：日期过期（正文正常）"
+  },
+  {
+   "item_id": "md:ae013102-b918-4546-8687-00c12d6bfeee",
+   "title": "Physical AI chip developer SiMa.ai hits $1.45B valuation",
+   "published": "2026-09-28 15:29:21+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "thin_content",
+   "note": "陷阱：薄正文"
+  },
+  {
+   "item_id": "md:552df029-abd1-4918-a821-315ffa0cfe9b",
+   "title": "26秒攻陷11家机构：AI智能体第一次像蜂群一样打过来",
+   "published": "2026-09-28 17:24:49.073026+00",
+   "lang": "zh",
+   "gold_verdict": "REJECT",
+   "gold_reason": "thin_content",
+   "note": "陷阱：薄正文"
+  },
+  {
+   "item_id": "md:ea8f5a69-5f28-49d6-b23a-cacc3d348717",
+   "title": "比起折痕， iPhone Duo 的交互设计更加令人着迷",
+   "published": "2026-09-28 07:00:00+00",
+   "lang": "zh",
+   "gold_verdict": "REJECT",
+   "gold_reason": "thin_content",
+   "note": "陷阱：薄正文"
+  },
+  {
+   "item_id": "md:d62df25c-a5e2-40fd-af7a-537d9cdb3692",
+   "title": "一口气搞懂 45 个 AI 术语：从 LLM 到 Ontology",
+   "published": "2026-09-28 17:24:49.073038+00",
+   "lang": "zh",
+   "gold_verdict": "REJECT",
+   "gold_reason": "thin_content",
+   "note": "陷阱：薄正文"
+  },
+  {
+   "item_id": "md:4ad56cf0-b1b1-4eb8-a2c6-0423850f6740",
+   "title": "消息称《GTA6》发售后 R 星将转战开发《黑色洛城 2》 ：瞄准 2030 年发售，以旧金山为背景",
+   "published": "2026-09-28 14:56:57+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "陷阱：标题含'转'但为真实内容（过杀模式）"
+  },
+  {
+   "item_id": "md:00fb4b4a-a44d-4eec-b940-0ef4f26329ec",
+   "title": "华为鸿蒙 HarmonyOS 7 系统公测转正，首批覆盖 Mate 80 等系列机型",
+   "published": "2026-09-28 13:09:42+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "陷阱：标题含'转'但为真实内容（过杀模式）"
+  },
+  {
+   "item_id": "md:3f863609-ca58-45a6-86ce-8c750f4e385a",
+   "title": "青萍叙事：手机上批量转矢量图：logo 放大不糊，印刷雕刻都能用",
+   "published": "2026-09-28 11:35:50+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "陷阱：标题含'转'但为真实内容（过杀模式）"
+  },
+  {
+   "item_id": "md:b6f12d09-a163-43c2-b223-3571a5911ecd",
+   "title": "MiMo V2.6 models now available on AI Gateway",
+   "published": "2026-09-21 00:00:00+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:e4dcc887-b62a-4fc2-86d2-ff4d345a01da",
+   "title": "New Attack Against RSA",
+   "published": "2026-09-28 11:02:58+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:61339f78-2d8f-47d3-9ba1-71bceb896510",
+   "title": "广汽集团：拟通过发行股份购买一汽丰田 50% 股权，股票明起复牌",
+   "published": "2026-09-28 13:03:48+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:f7ba4b61-d27b-4965-9130-a6f50ee8e8df",
+   "title": "Rendering huge pull requests in the GitHub Copilot app",
+   "published": "2026-09-23 18:29:49+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:141bc9dd-b914-4fb8-a99f-f597bc33d856",
+   "title": "腾讯元宝电脑端上线“桌宠”尝鲜版：文件、图片拖过去就能导入到应用",
+   "published": "2026-09-28 12:26:07+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:14f7a2b8-4552-4357-b87c-c2a52e917a51",
+   "title": "Enterprise managed settings in-product validator",
+   "published": "2026-09-25 23:24:57+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:ea2624cc-4e59-4db3-8206-cb8d60762325",
+   "title": "US being left behind in EV charging speeds as China goes sub-5 min to 70%",
+   "published": "2026-09-25 15:21:55+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:2660defb-c528-450b-a682-921df0dd093b",
+   "title": "拾音集：用Codex开发的「速查油价」微信小程序，正式上线啦",
+   "published": "2026-09-28 10:17:00+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:a4ddb81d-ceb5-44a5-a54c-2e3a9329e629",
+   "title": "Show HN: Withmcp – A quick, system-wide MCP toggle",
+   "published": "2026-09-26 22:35:04+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:881958cf-798c-4067-9157-bace70b144c3",
+   "title": "\n        feat(desktop): let agents resume after manual control (#159923)\n    ",
+   "published": "2026-09-28 17:16:42+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:3fff0dab-be17-442e-85d3-d6f928ae0b8c",
+   "title": "Jev introduces a new shape of LLM - System One, aka Decision Models",
+   "published": "2026-09-21 23:09:20+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:a910f2c3-eb7b-447b-8c4f-4f00a93d149a",
+   "title": "The Life of Data: From Creation to Deletion",
+   "published": "2026-09-24 15:31:06+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:fd289153-f973-4227-b480-08fa79505b43",
+   "title": "小米 18 标准版手机配置曝光：6.4 英寸 1.5K 直屏、骁龙 8E6 芯片",
+   "published": "2026-09-28 13:53:58+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:f20f18ba-72af-45eb-8fd0-8d744231fd66",
+   "title": "Microsoft goes quiet after church groups ask for 1% of data center costs",
+   "published": "2026-09-28 11:00:09+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:9ca63041-3f8f-4bd1-b08f-405cf53c1c08",
+   "title": "Ask HN: Do you think AI agents can escape human control?",
+   "published": "2026-09-28 03:36:14+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:7865e17f-4c83-4757-97c6-737938574ac0",
+   "title": "Philips’ motion-tracking smart toothbrush uses AI to make you a better brusher",
+   "published": "2026-09-28 13:00:00+00",
+   "lang": "en",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:bc15882a-bb20-4b6b-9518-b4802017ed5c",
+   "title": "中外学者确认最早半水生记录：1.25 亿年前哺乳动物就会游泳",
+   "published": "2026-09-28 12:37:58+00",
+   "lang": "zh",
+   "gold_verdict": "KEEP",
+   "gold_reason": "none",
+   "note": "真实内容（近期+扎实正文）"
+  },
+  {
+   "item_id": "md:06a74074-9c9e-4b44-aec0-8959b202234f",
+   "title": "release-publish/2e09d9e2e60a-1790478175: fix(release): publish plugins with scoped dependency forks ",
+   "published": "2026-09-27 02:58:31+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:87434e3e-7d50-4da3-bb10-b2792a518dc1",
+   "title": "Two years of OpenAI Academy",
+   "published": "2026-09-23 16:00:00+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:32223490-632e-4946-adce-2f821097b776",
+   "title": "An Antidote to Roko's Basilisk",
+   "published": "2026-09-28 07:15:29+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:13d5f39e-c60d-47e2-be39-225dcc86e781",
+   "title": "Upcoming Next.js September Security Release",
+   "published": "2026-09-23 18:00:00+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:076d1ddf-e0f8-4217-b30a-b75935bea1cc",
+   "title": "益友网站：如果你在海边遇见了她",
+   "published": "2026-09-28 07:41:29+00",
+   "lang": "zh",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:30040479-81fc-420c-93f9-270ad0e28e3e",
+   "title": "The gene-regulatory evolution of the human skeleton",
+   "published": "2026-09-23 00:00:00+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:6ac0bb9d-d54a-4ae9-95e7-b0129f60e705",
+   "title": "SB 923 is Law: CCPA deletion rights now reach third-party data",
+   "published": "2026-09-28 19:44:49+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:bd6f2790-5bde-43a9-b63f-c725c5d6f0d8",
+   "title": "AssBench is all You need to benchmark LLM Harness Intelligence /s",
+   "published": "2026-09-24 09:02:16+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:4dec75c5-ba45-41bf-a7fb-790c16389dd0",
+   "title": "The Risks of Ignoring API Security During Mobile App Security Testing",
+   "published": "2026-09-28 08:54:26+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:0d57cac0-e448-43bb-bad2-a0de736a16ce",
+   "title": "Quoting @therealcornpop",
+   "published": "2026-09-22 18:03:21+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:8dff492d-6e05-455a-b725-16ec0678e646",
+   "title": "Facebook Lost the Trust of Its Eyes",
+   "published": "2026-09-28 19:01:26+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:dd230340-ed2d-467f-8b8a-4bf39af3d4ed",
+   "title": "We built muse from scratch, but it is definitely inspired by OpenClaw",
+   "published": "2026-09-22 16:06:19+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:a92ff56b-2896-4e26-9dc0-7ced07012152",
+   "title": "PostmarketOS is rebranding as Nura",
+   "published": "2026-09-27 15:31:15+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:e46ff7d6-f0f4-4c3c-9f13-99c40796c584",
+   "title": "苹果 iPadOS 26.7.1 正式版发布",
+   "published": "2026-09-28 17:58:09+00",
+   "lang": "zh",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:b78d193e-03b4-403e-82d5-aed0c8ce349b",
+   "title": "In an $80 motel room, a discovery to shed light on the origins of life",
+   "published": "2026-09-27 14:30:55+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:03c0f9c0-8a7d-4241-b2d9-824333ace35d",
+   "title": "Cekura (YC F24) Is Hiring",
+   "published": "2026-09-18 12:00:10+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:4ba8f62b-6061-4f29-a25c-008c848966a8",
+   "title": "Show HN: Add hourly schedules to your ChatGPT Ads",
+   "published": "2026-09-28 19:59:48+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:8de69e8d-2e0a-45e6-b84e-4171265b6256",
+   "title": "SpaceX's Starship launching to orbit for first time ever today",
+   "published": "2026-09-28 09:15:04+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:a5446239-0d91-42b8-a869-00f8a33cfe5e",
+   "title": "苹果 macOS 27.0.1 正式版发布",
+   "published": "2026-09-28 17:58:09+00",
+   "lang": "zh",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  },
+  {
+   "item_id": "md:283992ba-41df-42ca-a5d2-c1c5348ddc1c",
+   "title": "Build native iOS and Android apps at once, with your own AI",
+   "published": "2026-09-28 19:36:37+00",
+   "lang": "en",
+   "gold_verdict": "REJECT",
+   "gold_reason": "off_topic",
+   "note": "G1 自评分 ≤15 的明确无关项"
+  }
+ ],
+ "deviation": "kit 原始 72 例金标不在本机（另一台机器生成，未同步）——按 kit 方法论重建 48 例；reason 9+1 类为重建口径（kit 原类目清单未随 kit 文档留存）；金标为规则+执行 agent 标定（kit 同为设计者单人标定纪律），正式冻结前建议第三人复核。",
+ "trap_counts": {
+  "date_expired": 4,
+  "thin_content": 4,
+  "zhuan_overkill": 3
+ }
+}

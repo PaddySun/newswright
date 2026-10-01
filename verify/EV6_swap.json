@@ -1,0 +1,92 @@
+[
+ {
+  "brief": "Hacker News",
+  "k": 10,
+  "config": "moark_reranker_qwen3_8b",
+  "vec_top10": [
+   "md:61026979-4cf5-4340-b154-dd19be0f3d40",
+   "md:f68e5644-7137-4877-b408-9b58d89e3984",
+   "md:e7bea2c7-2df5-4672-b323-daf0a65364db",
+   "md:8a9af648-7fb6-4875-9989-de638de1ede0",
+   "md:05c8f2b0-d1b4-4ab4-80e3-46f7942ae02c",
+   "md:7a0c6c3b-8640-4f8d-b815-0661a2a24135",
+   "md:568be96c-eade-469f-857f-98470450056a",
+   "md:e14c65f7-f061-4925-a3e9-fddc92fb9076",
+   "md:85aa3d33-c09c-49b5-ba3b-36c696561639",
+   "md:92ce3044-fbf0-4742-8b8c-b80b0a00d8fa"
+  ],
+  "rerank_top10": [
+   "md:f68e5644-7137-4877-b408-9b58d89e3984",
+   "md:7a0c6c3b-8640-4f8d-b815-0661a2a24135",
+   "md:92ce3044-fbf0-4742-8b8c-b80b0a00d8fa",
+   "md:05c8f2b0-d1b4-4ab4-80e3-46f7942ae02c",
+   "md:63517bc2-8141-42f5-9d3c-b250cf998057",
+   "md:61026979-4cf5-4340-b154-dd19be0f3d40",
+   "md:e14c65f7-f061-4925-a3e9-fddc92fb9076",
+   "md:6ca38ced-3035-4b3e-8d65-e5cb5e08270e",
+   "md:3a8532ea-cc1d-43a5-b688-621837cce8a7",
+   "md:cb80f3ce-c591-4e3a-97c6-188b80a4afb3"
+  ],
+  "swap": 4
+ },
+ {
+  "brief": "News",
+  "k": 10,
+  "config": "moark_reranker_qwen3_8b",
+  "vec_top10": [
+   "md:747a7f46-34f8-447f-ae82-2c76535e7d80",
+   "md:d140be62-09c4-4ce0-9fd0-c93bb24cfa74",
+   "md:4672b0fc-c736-4db8-9953-20f848bd389f",
+   "md:6d4c0591-0757-41a3-b735-2d23a1cbc1b2",
+   "md:44579d3d-827b-4ec3-a951-5aeab6523903",
+   "md:88315f29-249b-4356-bf66-c155652b9f0f",
+   "md:ce41a47f-390d-40bc-89c2-faf44661fe0a",
+   "md:3f4f6062-3f78-42cb-bc47-75c2a59170ad",
+   "md:c8ede009-5bea-4cec-b189-375bd5e1db18",
+   "md:c4c07859-a693-48e0-a53e-def603e38d9b"
+  ],
+  "rerank_top10": [
+   "md:747a7f46-34f8-447f-ae82-2c76535e7d80",
+   "md:d140be62-09c4-4ce0-9fd0-c93bb24cfa74",
+   "md:3f4f6062-3f78-42cb-bc47-75c2a59170ad",
+   "md:44579d3d-827b-4ec3-a951-5aeab6523903",
+   "md:88315f29-249b-4356-bf66-c155652b9f0f",
+   "md:c8ede009-5bea-4cec-b189-375bd5e1db18",
+   "md:f19bdfd8-b689-4503-885b-a84ecc4c5144",
+   "md:4672b0fc-c736-4db8-9953-20f848bd389f",
+   "md:3d8fa8c2-7014-4f0a-9361-8c085a037aef",
+   "md:6d4c0591-0757-41a3-b735-2d23a1cbc1b2"
+  ],
+  "swap": 2
+ },
+ {
+  "brief": "Blog",
+  "k": 10,
+  "config": "moark_reranker_qwen3_8b",
+  "vec_top10": [
+   "md:d1b20ef6-7547-4fa2-acb4-a628ed3cfdff",
+   "md:0e2f329b-424e-48b2-82a6-9a579acf97dd",
+   "md:96a351bc-33a3-498d-910d-e5ea8ea2c799",
+   "md:43c577f4-3ea3-4d53-aa1b-a85c75b6c396",
+   "md:10faedea-f6f0-40df-b169-cb5e5619e21c",
+   "md:b5491c78-46c7-423d-a618-455f7a0ed49f",
+   "md:8a83ab33-8cd8-496d-aa58-86d40b7c4761",
+   "md:ca533204-40fc-4f4a-980c-31e3fa6bc6cc",
+   "md:4eca1418-b8ed-4af2-ae67-9f7fdee68ddd",
+   "md:38ded048-ffa8-48ca-a75c-4eafdb427dbe"
+  ],
+  "rerank_top10": [
+   "md:4eca1418-b8ed-4af2-ae67-9f7fdee68ddd",
+   "md:96a351bc-33a3-498d-910d-e5ea8ea2c799",
+   "md:a10199cd-fd27-4d52-be18-982c9eb7e851",
+   "md:4e852687-f8eb-43e1-9011-f8e14a93e83e",
+   "md:10faedea-f6f0-40df-b169-cb5e5619e21c",
+   "md:ca533204-40fc-4f4a-980c-31e3fa6bc6cc",
+   "md:98fb8a7a-31c3-4528-8a83-be0e072a5b35",
+   "md:86772112-48f9-4ee2-b064-7fe1673b7fa4",
+   "md:74397d00-1af1-458c-ad36-d6d7eba16285",
+   "md:943bc739-c68f-404c-9dfe-7469baabb630"
+  ],
+  "swap": 6
+ }
+]

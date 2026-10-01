@@ -1,0 +1,86 @@
+[
+ {
+  "model": "bge-m3",
+  "dims": 1024,
+  "trunc": 2000,
+  "recall@5": 0.081,
+  "recall@10": 0.132,
+  "mrr": 0.075,
+  "sep_auc": 0.731,
+  "ev3_recall@5": 0.933,
+  "ev4_auc": 0.845,
+  "ev4_auc_hard": 0.747
+ },
+ {
+  "model": "jina-embeddings-v4",
+  "dims": 2048,
+  "trunc": 2000,
+  "recall@5": 0.082,
+  "recall@10": 0.155,
+  "mrr": 0.077,
+  "sep_auc": 0.762,
+  "ev3_recall@5": 0.978,
+  "ev4_auc": 0.919,
+  "ev4_auc_hard": 0.867
+ },
+ {
+  "model": "Qwen3-Embedding-0.6B",
+  "dims": 1024,
+  "trunc": 2000,
+  "recall@5": 0.103,
+  "recall@10": 0.15,
+  "mrr": 0.05,
+  "sep_auc": 0.708,
+  "ev3_recall@5": 0.8,
+  "ev4_auc": 0.831,
+  "ev4_auc_hard": 0.724
+ },
+ {
+  "model": "Qwen3-Embedding-0.6B",
+  "dims": 256,
+  "trunc": 2000,
+  "recall@5": 0.092,
+  "recall@10": 0.139,
+  "mrr": 0.049,
+  "sep_auc": 0.736,
+  "ev3_recall@5": 0.711,
+  "ev4_auc": 0.821,
+  "ev4_auc_hard": 0.707
+ },
+ {
+  "model": "Qwen3-Embedding-0.6B",
+  "dims": 512,
+  "trunc": 2000,
+  "recall@5": 0.071,
+  "recall@10": 0.147,
+  "mrr": 0.045,
+  "sep_auc": 0.719,
+  "ev3_recall@5": 0.733,
+  "ev4_auc": 0.825,
+  "ev4_auc_hard": 0.714
+ },
+ {
+  "model": "Qwen3-Embedding-4B",
+  "dims": 1024,
+  "trunc": 2000,
+  "recall@5": 0.064,
+  "recall@10": 0.142,
+  "mrr": 0.05,
+  "sep_auc": 0.619,
+  "ev3_recall@5": 0.822,
+  "ev4_auc": 0.84,
+  "ev4_auc_hard": 0.738
+ },
+ {
+  "model": "Qwen3-Embedding-8B",
+  "dims": 1024,
+  "trunc": 2000,
+  "recall@5": 0.048,
+  "recall@10": 0.102,
+  "mrr": 0.041,
+  "sep_auc": 0.583,
+  "ev3_recall@5": 0.8,
+  "ev4_auc": 0.811,
+  "ev4_auc_hard": 0.691
+ }
+]

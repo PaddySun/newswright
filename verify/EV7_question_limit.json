@@ -1,0 +1,64 @@
+{
+ "neohorse": {
+  "model": "NeoHorse-Jev-4B",
+  "probes": [
+   {
+    "n": 16,
+    "ok": true,
+    "answers": 16,
+    "billing": 0
+   },
+   {
+    "n": 17,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"Expected 1..16 questions\"}}"
+   },
+   {
+    "n": 20,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"Expected 1..16 questions\"}}"
+   },
+   {
+    "n": 24,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"Expected 1..16 questions\"}}"
+   },
+   {
+    "n": 32,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"Expected 1..16 questions\"}}"
+   }
+  ]
+ },
+ "apus9b": {
+  "model": "APUS-OpenJev-v1-9B",
+  "probes": [
+   {
+    "n": 16,
+    "ok": true,
+    "answers": 16,
+    "billing": 16
+   },
+   {
+    "n": 17,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"questions must be a nonempty map within the configured limit\"}}"
+   },
+   {
+    "n": 20,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"questions must be a nonempty map within the configured limit\"}}"
+   },
+   {
+    "n": 24,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"questions must be a nonempty map within the configured limit\"}}"
+   },
+   {
+    "n": 32,
+    "ok": false,
+    "error": "moark_jev 调用失败（重试 0 次后放弃）: 请求参数错误（422）: {\"error\":{\"code\":\"invalid_request\",\"message\":\"questions must be a nonempty map within the configured limit\"}}"
+   }
+  ]
+ }
+}

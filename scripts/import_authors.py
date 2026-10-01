@@ -1,4 +1,4 @@
-"""导入 author.json 到 DB（用法：python scripts/import_authors.py authors/luxun.json ...）。
+"""导入 author.json 到 DB（用法：python scripts/import_authors.py config/authors/luxun.json ...）。
 
 模型绑定必须显式给出（--model），或对既有作者省略（保留原绑定）——模型不进 JSON。
 """

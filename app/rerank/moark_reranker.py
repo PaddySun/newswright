@@ -1,6 +1,6 @@
 """moark（模力方舟）/v1/rerank 重排适配器（EV6 实测用，注册不接线）。
 
-协议要点（doc/API文档/模力-综合模型提供商/句子重排.txt + 2026-10-01 连通实测）：
+协议要点（项目文档（外层）API文档/模力-综合模型提供商/句子重排.txt + 2026-10-01 连通实测）：
 - POST /v1/rerank {model, query, documents: string[], top_n}；
   **top_n 必须显式设为候选数**（官方默认 3，只回 top3）。
 - 响应 results[] = {index, document{text}, relevance_score}（0-1，已按分数降序），

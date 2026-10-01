@@ -21,7 +21,7 @@ from app.models import (Article, Author, Item, PipelineTask, ScoreResult,  # noq
                         UsageLog, WriteRun)
 from sqlalchemy import func  # noqa: E402
 
-OUT_DIR = Path(__file__).resolve().parents[2] / "doc" / "草稿与过程文件" / "写作实测"
+OUT_DIR = Path(__file__).resolve().parents[1] / "data" / "exports" / "writing"
 
 
 def main() -> None:

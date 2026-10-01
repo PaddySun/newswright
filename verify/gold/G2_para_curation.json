@@ -1,0 +1,211 @@
+[
+ {
+  "a": {
+   "id": "md:9772ba2e-ad54-486a-912c-fc9edf9cbb3e",
+   "title": "Addendum to GPT-5.2 System Card: GPT-5.2-Codex"
+  },
+  "b": {
+   "id": "md:ffebc97d-7838-4abe-8a43-4baaaece107d",
+   "title": "Addendum to GPT-5 system card: GPT-5-Codex"
+  },
+  "how": "rare-toks:addendumtogpt,codex,systemcardgpt"
+ },
+ {
+  "a": {
+   "id": "md:f2ba6513-9c0b-4161-9df1-23101ebd5de6",
+   "title": "Introducing GPT-5.1 for developers"
+  },
+  "b": {
+   "id": "md:a7d3c921-bb42-496c-8781-7a2e37b5d7f9",
+   "title": "Introducing GPT-5 for developers"
+  },
+  "how": "rare-toks:introducinggpt,fordevelopers"
+ },
+ {
+  "a": {
+   "id": "md:ac66ab84-6609-42a7-9650-104d8509477c",
+   "title": "Building an autonomous financial analyst with o1 and o3-mini"
+  },
+  "b": {
+   "id": "md:d43a80ff-a94e-473a-9060-43a2ce7deabe",
+   "title": "Introducing OpenAI o3 and o4-mini"
+  },
+  "how": "rare-toks:mini,ando"
+ },
+ {
+  "a": {
+   "id": "md:15db499a-54aa-4187-971c-9c7f76762908",
+   "title": "Microsoft Plugs Nearly 1,000 Security Holes"
+  },
+  "b": {
+   "id": "md:066cfcd2-19cb-43a6-9d60-d562fef8066e",
+   "title": "Microsoft Plugs Nearly 400 Security Holes"
+  },
+  "how": "rare-toks:securityholes,microsoftplugsnearly"
+ },
+ {
+  "a": {
+   "id": "md:971834c1-0e26-4983-b2a6-4a2971e675cc",
+   "title": "全新领克 20 上市 1 小时大定突破 14663 台，限时专享价 11.88 万元起"
+  },
+  "b": {
+   "id": "md:0625c479-4ef9-4533-a3ed-6996edce2cdd",
+   "title": "全新领克 20 上市：全系标配激光雷达、800V 高压平台，限时专享价 11.88 万元起"
+  },
+  "how": "rare-toks:全新领克,万元起"
+ },
+ {
+  "a": {
+   "id": "md:b19f9b73-a263-4c46-b881-a60da8403659",
+   "title": "Trip report: Node.js collaboration summit (2026 London)"
+  },
+  "b": {
+   "id": "md:06ce1e3e-3eda-44d3-b588-c601bcb41ce1",
+   "title": "Trip report: Node.js collaboration summit (2024 London)"
+  },
+  "how": "rare-toks:tripreportnodejscollaborationsummit,london"
+ },
+ {
+  "a": {
+   "id": "md:a86b9b23-56e8-4d88-b6dd-cfc728571226",
+   "title": "Supabase Launch Week 15 Hackathon"
+  },
+  "b": {
+   "id": "md:1f880c1c-111b-4a51-8d97-497f5777ac67",
+   "title": "Supabase Launch Week 12 Hackathon"
+  },
+  "how": "rare-toks:supabaselaunchweek,hackathon"
+ },
+ {
+  "a": {
+   "id": "md:a86b9b23-56e8-4d88-b6dd-cfc728571226",
+   "title": "Supabase Launch Week 15 Hackathon"
+  },
+  "b": {
+   "id": "md:c11ee196-1779-46a9-a82e-02d50bc8f11b",
+   "title": "Supabase Launch Week 8 Hackathon"
+  },
+  "how": "rare-toks:supabaselaunchweek,hackathon"
+ },
+ {
+  "a": {
+   "id": "md:c6d8111f-9d27-4542-be39-c80ddc62ca13",
+   "title": "Supabase Launch Week 13 Hackathon Winners"
+  },
+  "b": {
+   "id": "md:980408db-65fe-43d1-a606-54c04acea6e8",
+   "title": "Supabase Launch Week 12 Hackathon Winners"
+  },
+  "how": "rare-toks:supabaselaunchweek,hackathonwinners"
+ },
+ {
+  "a": {
+   "id": "md:1f880c1c-111b-4a51-8d97-497f5777ac67",
+   "title": "Supabase Launch Week 12 Hackathon"
+  },
+  "b": {
+   "id": "md:c11ee196-1779-46a9-a82e-02d50bc8f11b",
+   "title": "Supabase Launch Week 8 Hackathon"
+  },
+  "how": "rare-toks:supabaselaunchweek,hackathon"
+ },
+ {
+  "a": {
+   "id": "md:bed6ac60-f7c8-49db-a51f-05e603465fb9",
+   "title": "Launch Week 8 Hackathon Winners"
+  },
+  "b": {
+   "id": "md:f9a28865-3883-41f4-a365-c4f4ab70becd",
+   "title": "Launch Week 7 Hackathon Winners"
+  },
+  "how": "rare-toks:launchweek,hackathonwinners"
+ },
+ {
+  "a": {
+   "id": "md:bed6ac60-f7c8-49db-a51f-05e603465fb9",
+   "title": "Launch Week 8 Hackathon Winners"
+  },
+  "b": {
+   "id": "md:cc580140-e5e1-45bc-b74a-37c60d79fac6",
+   "title": "Launch Week 6 Hackathon Winners"
+  },
+  "how": "rare-toks:launchweek,hackathonwinners"
+ },
+ {
+  "a": {
+   "id": "md:bed6ac60-f7c8-49db-a51f-05e603465fb9",
+   "title": "Launch Week 8 Hackathon Winners"
+  },
+  "b": {
+   "id": "md:6b761e39-1cb0-4b60-970b-918bda5655f5",
+   "title": "Launch Week 5 Hackathon Winners"
+  },
+  "how": "rare-toks:launchweek,hackathonwinners"
+ },
+ {
+  "a": {
+   "id": "md:f9a28865-3883-41f4-a365-c4f4ab70becd",
+   "title": "Launch Week 7 Hackathon Winners"
+  },
+  "b": {
+   "id": "md:cc580140-e5e1-45bc-b74a-37c60d79fac6",
+   "title": "Launch Week 6 Hackathon Winners"
+  },
+  "how": "rare-toks:launchweek,hackathonwinners"
+ },
+ {
+  "a": {
+   "id": "md:f9a28865-3883-41f4-a365-c4f4ab70becd",
+   "title": "Launch Week 7 Hackathon Winners"
+  },
+  "b": {
+   "id": "md:6b761e39-1cb0-4b60-970b-918bda5655f5",
+   "title": "Launch Week 5 Hackathon Winners"
+  },
+  "how": "rare-toks:launchweek,hackathonwinners"
+ },
+ {
+  "a": {
+   "id": "md:cc580140-e5e1-45bc-b74a-37c60d79fac6",
+   "title": "Launch Week 6 Hackathon Winners"
+  },
+  "b": {
+   "id": "md:6b761e39-1cb0-4b60-970b-918bda5655f5",
+   "title": "Launch Week 5 Hackathon Winners"
+  },
+  "how": "rare-toks:launchweek,hackathonwinners"
+ },
+ {
+  "a": {
+   "id": "md:b5a57c72-44b3-4fdc-b377-138951149794",
+   "title": "Launch Week 8 Community Highlights"
+  },
+  "b": {
+   "id": "md:31b64d49-04b9-41b4-9e56-5e5a24026311",
+   "title": "Launch Week 7 Community Highlights"
+  },
+  "how": "rare-toks:communityhighlights,launchweek"
+ },
+ {
+  "a": {
+   "id": "md:6414abbb-83f6-4e1f-be19-12dff60a9598",
+   "title": "Vercel Sandbox now supports up to 32 vCPU + 64 GB RAM configurations"
+  },
+  "b": {
+   "id": "md:672a4d97-6742-475e-9b89-6b2b363a3a33",
+   "title": "Vercel Sandbox now supports 1 vCPU + 2 GB RAM configurations"
+  },
+  "how": "rare-toks:vcpu,gbramconfigurations"
+ },
+ {
+  "a": {
+   "id": "md:7d5ec852-4109-43dc-80c5-f2551c05799f",
+   "title": "Moonshot AI's Kimi K2 0905 model is now supported in Vercel AI Gateway"
+  },
+  "b": {
+   "id": "md:e156903f-31c6-4eca-9c65-e2e59ed672e9",
+   "title": "Moonshot AI's Kimi K2 model is now supported in Vercel AI Gateway"
+  },
+  "how": "rare-toks:moonshotaiskimik,modelisnowsupportedinvercelaigateway"
+ }
+]
