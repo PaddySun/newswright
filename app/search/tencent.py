@@ -1,6 +1,6 @@
 """腾讯云联网搜索（wsa / SearchPro），TC3-HMAC-SHA256 签名。
 
-签名严格按官方示例（doc/API文档/腾讯-网页搜索/http请求示例代码.py）实现：
+签名严格按官方示例（项目文档（外层）API文档/腾讯-网页搜索/http请求示例代码.py）实现：
 拼接规范请求串（canonical_headers 结尾 \\n 后再加一个显式 \\n）→ 派生签名密钥
 （TC3+SecretKey → date → service → tc3_request）→ Authorization 头。
 

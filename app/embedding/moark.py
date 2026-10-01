@@ -1,6 +1,6 @@
 """moark（模力方舟）/v1/embeddings 向量生成适配器。
 
-协议要点（doc/API文档/模力-综合模型提供商/向量生成.txt）：
+协议要点（项目文档（外层）API文档/模力-综合模型提供商/向量生成.txt）：
 - OpenAI 兼容：POST /v1/embeddings {model, input: string[], encoding_format="float", dimensions?}；
   dimensions 留空用模型默认值（Qwen3-Embedding 系支持 MRL 自定义维度；
   不支持的模型传 dimensions 的报错行为在 EV1 实测记录）。

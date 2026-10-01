@@ -1,6 +1,6 @@
 """moark 平台 Jev 决策模型 /v1/systemone 协议适配器（V1 验证用）。
 
-协议要点（doc/jev-scoring-kit-20260928/jev-scoring-kit/docs/moark-systemone-protocol.md）：
+协议要点（项目文档（外层）jev-scoring-kit-20260928/jev-scoring-kit/docs/moark-systemone-protocol.md）：
 - Jev 模型不走 chat/completions（400），只暴露 POST /v1/systemone。
 - state 是唯一内容通道；questions 每个决策点一项，criteria key 即语义枚举值。
 - 响应 answers[qid] = {probabilities, confidence, choice}；usage = {input_tokens, output_tokens, billing_units}。

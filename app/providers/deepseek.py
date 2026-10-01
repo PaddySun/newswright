@@ -1,6 +1,6 @@
 """DeepSeek（OpenAI 兼容 chat/completions）provider——按官方 API 文档深度适配（2026-10 版）。
 
-官方口径要点（doc/API文档/DS-LLM官方API文档/Chat Completions API.txt）：
+官方口径要点（项目文档（外层）API文档/DS-LLM官方API文档/Chat Completions API.txt）：
 - 模型 ID 只有 deepseek-flash | deepseek-v4-pro（deepseek-chat 为兼容别名）；
   **思考模式由 `thinking`/`reasoning_effort` 参数控制，不再用模型名**（deepseek-reasoner
   为旧口径——此前"reasoner 请求实报 flash"的漂移即源于此）。

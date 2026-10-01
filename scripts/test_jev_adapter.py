@@ -1,6 +1,6 @@
 """V1 独立验证：moark /v1/systemone Jev 适配器（KEEP/REJECT + band 三问判定）。
 
-- 语料：doc/jev-scoring-kit-20260928/jev-scoring-kit/data/news-full.csv 真实 RSS 条目，
+- 语料：项目文档（外层）jev-scoring-kit-20260928/jev-scoring-kit/data/news-full.csv 真实 RSS 条目，
   按正文长度分层 + 来源去重抽样（默认 15 条，≥任务书要求的 10 条）。
 - questions 写法照 JEV 提示词文档：语义 key、规则进 instructions、正文截 1000 字。
 - 产出：verify/V1_jev_adapter_results.json + usage_log 落库（call_point=prefilter）。

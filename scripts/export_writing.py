@@ -1,4 +1,7 @@
-"""成稿与废稿导出（任务书硬要求：DB 可见 + md 导出到 doc/草稿与过程文件/写作实测/）。
+"""成稿与废稿导出（任务书硬要求：DB 可见 + md 导出）。
+
+默认导出到仓库内 data/exports/writing/（本地过程产物，gitignored；
+Demo 阶段曾导出到外层文档区，随 G0 自包含改造改为内聚）。
 
 用法：
   python scripts/export_writing.py --run 15                # 单 run
@@ -20,7 +23,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.db import SessionLocal, init_db  # noqa: E402
 from app.models import Article, Author, WriteRun  # noqa: E402
 
-DEFAULT_OUT = Path(__file__).resolve().parents[2] / "doc" / "草稿与过程文件" / "写作实测"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUT = PROJECT_ROOT / "data" / "exports" / "writing"
 
 
 def _safe(s: str) -> str:
