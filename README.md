@@ -1,5 +1,7 @@
 # newswright — 全链路最小 Demo（后端，含信息获取扩展）
 
+[![ci](https://github.com/PaddySun/newswright/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/PaddySun/newswright/actions/workflows/ci.yml)
+
 RSS 抓取 / 定点网页监测 / 搜索关键词 → 去重 → 规则初筛 → 零信任过滤预留位 → LLM 方向打分（含评分理由）→ AI 作者写作（记忆占位符 + 引用硬校验 + 热点风向段）→ 文章/不写落库。另有：APScheduler 定时调度（无人值守）、热榜聚合、博查/腾讯双家搜索底座、四后端相关性排序底座。FastAPI + SQLAlchemy 2.0 + SQLite（ORM 写法保持 PG 可迁移）。
 
 验证结论见项目文档（外层）的《全链路demo-验证报告-20260928.md》（V1-V6）与《信息获取扩展-验证报告-20260928.md》（V7-V11 + Z1，含实测数据）。
