@@ -12,7 +12,7 @@ on:
     tags: ["mutmut-*"]
 
 permissions:
-  contents: read
+  contents: write  # 失败诊断回传需要推 ci-diagnostics 分支（checkout 默认持久化 GITHUB_TOKEN 凭据）
 
 concurrency:
   group: mutation-${{ github.ref }}
@@ -43,10 +43,26 @@ jobs:
           mutmut --version
           printf '[mutmut]\npaths_to_mutate=app/ingest/fingerprint.py\ntests_dir=tests/\n' > setup.cfg
           printf '\n[tool.mutmut]\npaths_to_mutate="app/ingest/fingerprint.py"\ntests_dir="tests/"\n' >> pyproject.toml
-          mutmut run; rc=$?
-          echo "mutmut exit=$rc（非零=存在幸存/可疑类别，属正常语义，判定移交幸存者清单步骤）"
+          set +e
+          mutmut run > mutmut.log 2>&1
+          rc=$?
+          set -e
+          echo "mutmut exit=$rc（非零=存在幸存/可疑类别或失败，见 mutmut.log 与诊断回传）"
+          tail -30 mutmut.log
           ls mutants 2>/dev/null | head -5 || true
           exit 0
+      - name: 失败诊断回传（推 ci-diagnostics 分支，SSH 侧可读）
+        if: failure()
+        run: |
+          git config user.name "ci-diagnostics"
+          git config user.email "ci@newswright.invalid"
+          git fetch --unshallow 2>/dev/null || true
+          git checkout -B ci-diagnostics
+          mkdir -p ci-diagnostics
+          { echo "== run=${{ github.run_id }} job=${{ github.job }} ref=${{ github.ref }} =="; echo "-- setup.cfg --"; cat setup.cfg; echo "-- pyproject tail --"; tail -8 pyproject.toml; echo "-- mutmut.log --"; cat mutmut.log 2>/dev/null; echo "-- results --"; cat mutmut-results-smoke.txt 2>/dev/null; } > "ci-diagnostics/${{ github.run_id }}-${{ github.job }}.log"
+          git add ci-diagnostics
+          git commit -m "chore(ci): 诊断日志 ${{ github.run_id }}（自动回传）" || true
+          git push origin HEAD:ci-diagnostics
       - name: 幸存者清单（含类别判定：绿=机制跑通，红=results 为错误信息）
         if: always()
         run: |
@@ -92,10 +108,26 @@ jobs:
           mutmut --version
           printf '[mutmut]\npaths_to_mutate=%s\ntests_dir=tests/\n' "${{ matrix.paths }}" > setup.cfg
           printf '\n[tool.mutmut]\npaths_to_mutate="%s"\ntests_dir="tests/"\n' "${{ matrix.paths }}" >> pyproject.toml
-          mutmut run; rc=$?
-          echo "mutmut exit=$rc（非零=存在幸存/可疑类别，属正常语义）"
+          set +e
+          mutmut run > mutmut.log 2>&1
+          rc=$?
+          set -e
+          echo "mutmut exit=$rc（非零=存在幸存/可疑类别或失败，见 mutmut.log 与诊断回传）"
+          tail -30 mutmut.log
           ls mutants 2>/dev/null | head -5 || true
           exit 0
+      - name: 失败诊断回传（推 ci-diagnostics 分支，SSH 侧可读）
+        if: failure()
+        run: |
+          git config user.name "ci-diagnostics"
+          git config user.email "ci@newswright.invalid"
+          git fetch --unshallow 2>/dev/null || true
+          git checkout -B ci-diagnostics
+          mkdir -p ci-diagnostics
+          { echo "== run=${{ github.run_id }} job=${{ github.job }} ref=${{ github.ref }} =="; echo "-- setup.cfg --"; cat setup.cfg; echo "-- pyproject tail --"; tail -8 pyproject.toml; echo "-- mutmut.log --"; cat mutmut.log 2>/dev/null; echo "-- results --"; cat "mutmut-results-${{ matrix.shard }}.txt" 2>/dev/null; } > "ci-diagnostics/${{ github.run_id }}-${{ matrix.shard }}.log"
+          git add ci-diagnostics
+          git commit -m "chore(ci): 诊断日志 ${{ github.run_id }} ${{ matrix.shard }}（自动回传）" || true
+          git push origin HEAD:ci-diagnostics
       - name: 幸存者清单（含类别判定：绿=机制跑通，红=results 为错误信息）
         if: always()
         run: |
