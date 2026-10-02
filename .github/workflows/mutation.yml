@@ -36,11 +36,17 @@ jobs:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: pyproject.toml
-      - run: pip install -e ".[dev]"
+      - run: pip install ".[dev]"
       - name: mutmut run（fingerprint 单模块冒烟）
         run: |
-          printf '[mutmut]\npaths_to_mutate=app/ingest/fingerprint.py\ntests_dir=tests/\nrunner=python -m pytest -x -q\n' > setup.cfg
-          mutmut run
+          set -x
+          mutmut --version
+          printf '[mutmut]\npaths_to_mutate=app/ingest/fingerprint.py\ntests_dir=tests/\n' > setup.cfg
+          printf '\n[tool.mutmut]\npaths_to_mutate="app/ingest/fingerprint.py"\ntests_dir="tests/"\n' >> pyproject.toml
+          mutmut run; rc=$?
+          echo "mutmut exit=$rc"
+          ls mutants 2>/dev/null | head -5 || true
+          exit $rc
       - name: 幸存者清单
         if: always()
         run: mutmut results | tee mutmut-results-smoke.txt || true
@@ -49,6 +55,7 @@ jobs:
         with:
           name: mutmut-smoke
           path: mutmut-results-smoke.txt
+          if-no-files-found: ignore
 
   mutants:
     name: shard-${{ matrix.shard }}
@@ -74,11 +81,17 @@ jobs:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: pyproject.toml
-      - run: pip install -e ".[dev]"
+      - run: pip install ".[dev]"
       - name: mutmut run
         run: |
-          printf '[mutmut]\npaths_to_mutate=%s\ntests_dir=tests/\nrunner=python -m pytest -x -q\n' "${{ matrix.paths }}" > setup.cfg
-          mutmut run
+          set -x
+          mutmut --version
+          printf '[mutmut]\npaths_to_mutate=%s\ntests_dir=tests/\n' "${{ matrix.paths }}" > setup.cfg
+          printf '\n[tool.mutmut]\npaths_to_mutate="%s"\ntests_dir="tests/"\n' "${{ matrix.paths }}" >> pyproject.toml
+          mutmut run; rc=$?
+          echo "mutmut exit=$rc"
+          ls mutants 2>/dev/null | head -5 || true
+          exit $rc
       - name: 幸存者清单
         if: always()
         run: mutmut results | tee "mutmut-results-${{ matrix.shard }}.txt" || true
@@ -87,3 +100,4 @@ jobs:
         with:
           name: mutmut-${{ matrix.shard }}
           path: "mutmut-results-${{ matrix.shard }}.txt"
+          if-no-files-found: ignore
