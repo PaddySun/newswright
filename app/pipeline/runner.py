@@ -142,9 +142,10 @@ def fetch_round(db: Session, *, triggered_by: str = "manual") -> dict:
                     stats=_fetch_stats_dict(stats), error=stats.error)
             _update_backoff(db, src, failed=bool(stats.error))
         except Exception as e:  # noqa: BLE001
-            task.status = "FAILED"
-            task.last_error = f"{type(e).__name__}: {e}"
+            # P1-1：先回滚再落终态——异常可能源自会话损坏（rollback-only 状态），
+            # 不回滚则 _finish 的 commit 也会失败 → 任务卡 RUNNING → 只能靠 P0-1 兜底
             db.rollback()
+            _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
             _update_backoff(db, src, failed=True)
         summary["sources"].append({
             "source_id": src.id,
@@ -268,6 +269,7 @@ def process_fetch_round(db: Session, round_task: PipelineTask) -> dict:
             _update_backoff(db, src, failed=bool(stats.error))
             any_failed = any_failed or bool(stats.error)
         except Exception as e:  # noqa: BLE001
+            db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
             _finish(db, t, status="FAILED", error=f"{type(e).__name__}: {e}")
             _update_backoff(db, src, failed=True)
             any_failed = True
@@ -338,6 +340,7 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                       if failed + parse_failed > 0 else None)
             _finish(db, task, status=_status, stats=_stats, error=_error)
         except Exception as e:  # noqa: BLE001
+            db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
             _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
         summary["directions"].append({
             "direction_id": d.id, "name": d.name, "task_id": task.id, "status": task.status,
@@ -366,6 +369,7 @@ def write_task(db: Session, author_id: int, *, triggered_by: str = "manual",
                                "article_id": run.article_id},
                 error=run.error if run.status != "OK" else None)
     except Exception as e:  # noqa: BLE001
+        db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
         _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
     return {"task_id": task.id, "status": task.status, "payload": task.payload,
             "last_error": task.last_error}
