@@ -31,8 +31,11 @@ from ..pipeline.runner import (
 )
 from ..authors.memory import record_feedback
 from .. import scheduler as scheduler_mod
+from .deps import require_session
 
-router = APIRouter()
+# G1 会话守卫接管全部既有端点（AC-01.1/01.3）：路径不加 /api 前缀（统一属后续
+# 契约里程碑，技术书 §3 开头注记为凭）；/api/auth/* 豁免（独立 router）。
+router = APIRouter(dependencies=[Depends(require_session)])
 
 
 # ---------- 管线触发 ----------

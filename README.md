@@ -8,9 +8,27 @@ RSS 抓取 / 定点网页监测 / 搜索关键词 → 去重 → 规则初筛 �
 
 - Python 3.11+（实测 3.13）
 - 真实 `.env` 位于**仓库根目录**（`./.env`，可复制 `.env.example` 后填入；路径可用 `NEWSWRIGHT_ENV_FILE` 覆盖）：
-  - 必需：`DeepSeekAPIKey`、`MoarkAPIKey`
+  - 必需：`DeepSeekAPIKey`、`MoarkAPIKey`、`NEWSWRIGHT_ADMIN_PASSWORD`（初始管理员密码，D18 凭据纪律：必填无默认、缺失即拒绝启动、不进 git/文档；首登强制改密）
   - 搜索/排序（可选，缺失时对应通道降级关闭）：`bochaaiAPIKey`（博查三件套同一把 Key）、`tencentSecretId`/`tencentSecretKey`（腾讯 wsa，CAM 子账号凭据）
   - Key 任何情况下不进 git；`.env` 解析兼容 `KEY=value` 与空格分隔两种形态（config.py 容错）。
+
+## 登录与会话（G1 起）
+
+- API 全部需登录（除 `POST /api/auth/login`、`POST /api/auth/password`）；未携带/过期会话返回 401 `AUTH_REQUIRED`。
+- 首登 `must_change_password=true`：改密前一切 API 返回 403 `PASSWORD_CHANGE_REQUIRED`，须先 `POST /api/auth/password` 完成改密。
+- 登录限速：连续 5 次失败后第 6 次起 429 `AUTH_RATE_LIMITED`，冷却 15 分钟（成功登录清零；进程内计数，重启清零）。
+- 会话保持期限默认 7 天（site_config `session_duration_days` 可调）。
+
+```bash
+# 登录（cookie jar 保存会话）
+curl -c cookies.txt -X POST http://127.0.0.1:8300/api/auth/login \
+  -H "Content-Type: application/json" -d '{"username":"admin","password":"<初始密码>"}'
+# 首登改密
+curl -b cookies.txt -X POST http://127.0.0.1:8300/api/auth/password \
+  -H "Content-Type: application/json" -d '{"old_password":"<初始密码>","new_password":"<新密码>"}'
+# 之后全部 API 凭 cookie 访问
+curl -b cookies.txt http://127.0.0.1:8300/items
+```
 
 ## 依赖安装
 
@@ -41,12 +59,13 @@ python -m venv .venv
 
 ```bash
 .venv/Scripts/python -m uvicorn app.main:app --port 8300
-# 本机无鉴权，Swagger: http://127.0.0.1:8300/docs
+# API 需登录（见"登录与会话"节）；Swagger: http://127.0.0.1:8300/docs
 ```
 
 | 端点 | 说明 |
 |------|------|
-| `POST /pipeline/run` | 跑一轮 抓取→初筛→打分（幂等） |
+| `POST /api/auth/login` · `POST /api/auth/password` | 登录 / 改密（G1 新增，免守卫豁免） |
+| `POST /pipeline/run` | 跑一轮 抓取→初筛→打分（幂等；需登录，下同） |
 | `POST /pipeline/write/{author_id}` | 触发某作者写作 |
 | `POST /scheduler/run-once/{fetch\|hot}` | 手动触发某轮次（与调度器同路径） |
 | `GET /scheduler/status` | 调度器状态 + 最近轮次 |

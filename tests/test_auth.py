@@ -79,6 +79,38 @@ def test_session_expiry_short_duration(api_client):
         assert _aware(row.expires_at) <= datetime.now(timezone.utc)  # 已按配置过期
 
 
+def test_protected_401(api_client):
+    """AC-01.3：未携带会话 cookie 访问既有受保护端点 → 401 AUTH_REQUIRED。"""
+    r = api_client.get("/items")
+    assert r.status_code == 401
+    assert r.json()["code"] == "AUTH_REQUIRED"
+
+
+def test_first_login_gating_403(api_client):
+    """AC-01.1：首登未改密时除 /api/auth/* 外一切 API → 403 PASSWORD_CHANGE_REQUIRED；
+    改密后同端点放行。"""
+    assert _login(api_client).status_code == 200  # 初始 admin：must_change_password=true
+    r = api_client.get("/items")
+    assert r.status_code == 403
+    assert r.json()["code"] == "PASSWORD_CHANGE_REQUIRED"
+    # 改密端点本身放行（豁免端点），完成后门禁解除
+    r = api_client.post("/api/auth/password",
+                        json={"old_password": cfg.NEWSWRIGHT_ADMIN_PASSWORD,
+                              "new_password": "g1-new-" + secrets.token_urlsafe(8)})
+    assert r.status_code == 200
+    assert api_client.get("/items").status_code == 200
+
+
+def test_expired_session_401_on_protected(api_client):
+    """AC-01.4 收尾：过期会话访问受保护端点 → 401 AUTH_REQUIRED（期限缩短等价验证）。"""
+    with SessionLocal() as db:
+        siteconfig.set_config(db, "session_duration_days", -1)
+    assert _login(api_client).status_code == 200  # 签发即过期
+    r = api_client.get("/items")
+    assert r.status_code == 401
+    assert r.json()["code"] == "AUTH_REQUIRED"
+
+
 def test_change_password(api_client):
     """AC-01.5：改密 → 200 + must_change_password=false；旧密码立即可验证失效。"""
     assert _login(api_client).status_code == 200

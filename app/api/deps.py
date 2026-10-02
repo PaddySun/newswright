@@ -7,10 +7,13 @@ CDN/WAF 拓扑下 request.client.host 是回源 IP（共享，会造成全员误
 """
 from __future__ import annotations
 
-from fastapi import Request
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from .. import siteconfig
+from ..auth import get_valid_session
+from ..db import get_session
+from ..models import User
 
 
 def get_client_ip(request: Request, db: Session | None = None) -> str:
@@ -66,3 +69,24 @@ class LoginRateLimiter:
     def record_success(self, key: str) -> None:
         """成功登录清零该身份计数（AC-01.2）。"""
         self._store.pop(key, None)
+
+
+def require_session(request: Request, db: Session = Depends(get_session)) -> User:
+    """会话守卫（AC-01.3/01.4）：cookie → sessions 表 → 未过期 → user；否则 401 AUTH_REQUIRED。
+
+    首登改密门禁（AC-01.1）：must_change_password=true 时一切 API（除 /api/auth/login、
+    /api/auth/password 两个豁免端点）返回 403 PASSWORD_CHANGE_REQUIRED。
+    注：PASSWORD_CHANGE_REQUIRED 在产品书 AC-01.1 有、技术书 §5 错误码表漏列——
+    按 AC 执行，文档缺口已登记 G1 汇报遗留项。
+    """
+    from .auth import get_current_user
+
+    user = get_current_user(request, db)
+    if user is None:
+        raise HTTPException(status_code=401,
+                            detail={"code": "AUTH_REQUIRED", "message": "未认证"})
+    if user.must_change_password:
+        raise HTTPException(status_code=403,
+                            detail={"code": "PASSWORD_CHANGE_REQUIRED",
+                                    "message": "首次登录需先修改密码"})
+    return user
