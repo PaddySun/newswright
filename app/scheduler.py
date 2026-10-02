@@ -61,11 +61,23 @@ def _tick_hot() -> None:
         run_hot_round(db, triggered_by="scheduler")
 
 
+def _reclaim_once() -> None:
+    """P0-1 僵死回收（AC-20.2）：start() 首个 tick 前执行一次——调度器重启后
+    首次 tick 即回收跨重启残留的 RUNNING 任务，fetch 轮次不被永久阻塞。"""
+    from .pipeline.runner import reclaim_stale_tasks
+
+    with SessionLocal() as db:
+        n = reclaim_stale_tasks(db)
+        if n:
+            log.info("启动回收：%d 个僵死任务置 FAILED", n)
+
+
 def start() -> None:
     """注册 job 并启动。重复调用安全（幂等）。"""
     global _started
     if _started:
         return
+    _reclaim_once()  # P0-1：首个 tick 前回收一次
     scheduler.add_job(
         run_job_safely, args=[_tick_fetch],
         trigger=IntervalTrigger(minutes=config.SCHED_FETCH_MINUTES),
@@ -109,8 +121,13 @@ def status() -> dict:
 
 
 def run_job_safely(fn) -> None:
-    """job 包装：异常全量落日志，绝不杀调度器线程。"""
+    """job 包装：每次执行前先跑一次 P0-1 僵死回收（覆盖 run-once/score 等非调度任务）；
+    异常全量落日志，绝不杀调度器线程。"""
     try:
+        from .pipeline.runner import reclaim_stale_tasks
+
+        with SessionLocal() as db:
+            reclaim_stale_tasks(db)
         fn()
     except Exception:  # noqa: BLE001
         log.error("调度 tick 异常:\n%s", traceback.format_exc())
