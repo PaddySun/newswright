@@ -60,8 +60,8 @@ jobs:
       - name: 幸存者清单（含类别判定：绿=机制跑通，红=results 为错误信息）
         if: always()
         run: |
-          mutmut results | tee mutmut-results-full.txt || true
-          echo '--- 清单内容 ---'
+          mutmut results --all | tee mutmut-results-full.txt || true
+          echo '--- 清单内容（--all 含 killed；默认视图会隐藏 killed，勿再用）---'
           cat mutmut-results-full.txt || true
           tail -3 mutmut-results-full.txt | while IFS= read -r l; do printf '::error title=mutmutres::%s\n' "${l:0:220}"; done || true
           grep -qiE 'survived|timeout|suspicious|killed' mutmut-results-full.txt
@@ -79,7 +79,7 @@ jobs:
         if: always()
         run: |
           mkdir -p cache-out
-          find . -maxdepth 3 \( -name '.mutmut-cache' -o -name '*mutmut-stats*' \) -not -path './.git/*' -exec cp --parents {} cache-out/ \; 2>/dev/null || true
+          find . -maxdepth 4 \( -name '.mutmut-cache' -o -name '*mutmut-stats*' -o -name '*.meta' \) -not -path './.git/*' -exec cp --parents {} cache-out/ \; 2>/dev/null || true
           ls -la cache-out || true
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0 node24
         if: always()
