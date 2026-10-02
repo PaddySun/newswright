@@ -43,7 +43,7 @@ jobs:
       - run: pip install -e ".[dev]"
       - name: mutmut run（fingerprint 单模块冒烟）
         run: |
-          printf '[mutmut]\npaths_to_mutate=app/ingest/fingerprint.py\ntests_dir=tests/\n' > setup.cfg
+          printf '[mutmut]\nsource_paths=app/ingest/fingerprint.py\npytest_add_cli_args_test_selection=tests/\n' > setup.cfg
           mutmut --version || true
           set +e
           mutmut run > mutmut.log 2>&1
@@ -80,7 +80,7 @@ jobs:
           { echo "== run=${{ github.run_id }} job=${{ github.job }} ref=${{ github.ref }} =="; echo "-- setup.cfg --"; cat setup.cfg 2>&1; echo "-- mutmut.log --"; cat mutmut.log 2>/dev/null; echo "-- results --"; cat mutmut-results-smoke.txt 2>/dev/null; } > "ci-diagnostics/${{ github.run_id }}-${{ github.job }}.log"
           git add ci-diagnostics
           git commit -qm "chore(ci): 诊断日志 ${{ github.run_id }}（自动回传）"
-          git push origin HEAD:ci-diagnostics 2>&1 | tail -3
+          git push origin HEAD:ci-diagnostics/${{ github.run_id }} 2>&1 | tail -3
           echo "diag-push 尽力而为完成"
           exit 0
 
@@ -111,7 +111,7 @@ jobs:
       - run: pip install -e ".[dev]"
       - name: mutmut run
         run: |
-          printf '[mutmut]\npaths_to_mutate=%s\ntests_dir=tests/\n' "${{ matrix.paths }}" > setup.cfg
+          printf '[mutmut]\nsource_paths=%s\npytest_add_cli_args_test_selection=tests/\n' "${{ matrix.paths }}" > setup.cfg
           mutmut --version || true
           set +e
           mutmut run > mutmut.log 2>&1
@@ -147,6 +147,6 @@ jobs:
           { echo "== run=${{ github.run_id }} shard=${{ matrix.shard }} ref=${{ github.ref }} =="; echo "-- setup.cfg --"; cat setup.cfg 2>&1; echo "-- mutmut.log --"; cat mutmut.log 2>/dev/null; echo "-- results --"; cat "mutmut-results-${{ matrix.shard }}.txt" 2>/dev/null; } > "ci-diagnostics/${{ github.run_id }}-${{ matrix.shard }}.log"
           git add ci-diagnostics
           git commit -qm "chore(ci): 诊断日志 ${{ github.run_id }} ${{ matrix.shard }}（自动回传）"
-          git push origin HEAD:ci-diagnostics 2>&1 | tail -3
+          git push origin HEAD:ci-diagnostics/${{ github.run_id }}-${{ matrix.shard }} 2>&1 | tail -3
           echo "diag-push 尽力而为完成"
           exit 0
