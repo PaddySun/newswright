@@ -1,4 +1,13 @@
-"""pytest 共享 fixture：每个测试独立的临时 SQLite 库。"""
+"""pytest 共享 fixture：每个测试独立的临时 SQLite 库。
+
+G1 起测试环境注入 NEWSWRIGHT_ADMIN_PASSWORD（随机值，不进 git/日志）——必须在
+app.config 导入前设置（config.py 缺失该变量即 SystemExit，D18/AC-01.1）。
+"""
+import os
+import secrets
+
+os.environ.setdefault("NEWSWRIGHT_ADMIN_PASSWORD", secrets.token_urlsafe(24))
+
 import tempfile
 from pathlib import Path
 

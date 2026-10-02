@@ -15,6 +15,45 @@ class Base(DeclarativeBase):
     pass
 
 
+class User(Base):
+    """单管理员账号（US-01/ADR-4）。密码只存 argon2id 哈希（D2/D18）。"""
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String(100), unique=True)
+    password_hash: Mapped[str] = mapped_column(String(300))
+    # 首登强制改密（AC-01.1）：改密端点成功后置 false
+    must_change_password: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class UserSession(Base):
+    """服务端会话（ADR-4：HttpOnly cookie 只存 id，状态全在 DB）。
+
+    id = secrets.token_urlsafe(32)（≥128bit）。表名 sessions；类名避开
+    sqlalchemy.orm.Session。
+    """
+    __tablename__ = "sessions"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class SiteConfig(Base):
+    """站点级键值配置（技术书 §4.1）：key(TEXT PK) + value(JSON)。
+
+    本里程碑仅 session_duration_days / client_ip_header 两键（代码内默认值见
+    app/siteconfig.py）；表结构预留全部未来键空间（模式 A/B/C、AI 标识、robots、
+    timezone、SMTP、预算闸……），公开 REST API 属 US-19 后续，不在此实现。
+    """
+    __tablename__ = "site_config"
+
+    key: Mapped[str] = mapped_column(String(100), primary_key=True)
+    value: Mapped[dict | list | str | int | float | bool | None] = mapped_column(JSON, nullable=True)
+
+
 class Direction(Base):
     __tablename__ = "direction"
 

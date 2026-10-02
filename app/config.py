@@ -97,6 +97,10 @@ TENCENT_WSA_VERSION = _get("TENCENT_WSA_VERSION") or "2025-05-08"
 
 DATABASE_URL = _get("NEWSWRIGHT_DB") or f"sqlite:///{(PROJECT_ROOT / 'newswright.db').as_posix()}"
 
+# D18 凭据纪律（AC-01.1）：初始管理员密码必填、无默认值，缺失即拒绝启动；
+# 只进 .env（gitignored），不进 git/文档/日志；首登强制改密。
+NEWSWRIGHT_ADMIN_PASSWORD = _require("NEWSWRIGHT_ADMIN_PASSWORD")
+
 # 管线可调参数（Demo 固定默认，可被环境变量覆盖）
 SCORE_BODY_MAX_CHARS = int(_get("SCORE_BODY_MAX_CHARS") or 4000)
 WRITE_READING_SET_K = int(_get("WRITE_READING_SET_K") or 10)
