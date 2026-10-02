@@ -1,0 +1,60 @@
+# CI 快门：push（main / feat/** / chore/**）触发，先绿后并的合并门。
+# 三 job：lint（真 bug 级最小规则起步）→ test（离线全量 pytest + 覆盖率仅报告）→ gitleaks（全历史密钥扫描）。
+# 密钥纪律：Secrets 刻意为空——测试全 mock，仅注入假值满足 config._require（D18 红线延伸到 CI）。
+# actions 一律钉 commit SHA（供应链纪律）；升级时手动换 SHA。
+name: ci
+
+on:
+  push:
+    branches: [main, "feat/**", "chore/**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+      - run: pip install ruff
+      - name: ruff check（E9 语法错 + F821 未定义名）
+        run: ruff check --select E9,F821 app tests scripts
+      - name: ruff format --check（观察期非阻塞；清偿提交后转硬门）
+        run: ruff format --check app tests scripts
+        continue-on-error: true
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+      - name: pytest（全量离线；覆盖率报告起步，不设阈值）
+        env:
+          DeepSeekAPIKey: ci-dummy
+          MoarkAPIKey: ci-dummy
+        run: python -m pytest tests/ -q --cov=app --cov-report=term
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -14,7 +14,14 @@ dependencies = [
     "python-dotenv>=1.0",
     "apscheduler>=3.10,<4",
     "argon2-cffi>=25.1",
+]
+
+[project.optional-dependencies]
+dev = [
     "pytest>=8.0",
+    "pytest-cov>=6.0",
+    "ruff>=0.8",
+    "mutmut>=3.0",
 ]
 
 [build-system]

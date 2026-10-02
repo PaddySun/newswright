@@ -1,0 +1,89 @@
+# 变异测试（mutmut 3）：首轮全量 = 基线测量，幸存清单是"补断言"任务书的输入，不进合并硬门（快门在 ci.yml）。
+# 触发（零定时，纯动作）：
+#   - push tag mutmut-smoke-*    → 冒烟：仅 app/ingest/fingerprint.py 单模块
+#   - push tag mutmut-baseline-* → 全量 7 分片矩阵
+#   - workflow_dispatch          → 全量矩阵（默认分支上的手动按钮）
+# 分片路径经 setup.cfg [mutmut] 注入（仓库不提交 setup.cfg）；每 shard timeout 300min + continue-on-error。
+name: mutation
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["mutmut-*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mutation-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DeepSeekAPIKey: ci-dummy
+  MoarkAPIKey: ci-dummy
+
+jobs:
+  smoke:
+    name: smoke-fingerprint
+    if: startsWith(github.ref, 'refs/tags/mutmut-smoke-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+      - name: mutmut run（fingerprint 单模块冒烟）
+        run: |
+          printf '[mutmut]\npaths_to_mutate=app/ingest/fingerprint.py\ntests_dir=tests/\nrunner=python -m pytest -x -q\n' > setup.cfg
+          mutmut run
+      - name: 幸存者清单
+        if: always()
+        run: mutmut results | tee mutmut-results-smoke.txt || true
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: mutmut-smoke
+          path: mutmut-results-smoke.txt
+
+  mutants:
+    name: shard-${{ matrix.shard }}
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/mutmut-baseline-')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: api, paths: "app/api" }
+          - { shard: authors, paths: "app/authors" }
+          - { shard: ingest, paths: "app/ingest" }
+          - { shard: pipeline, paths: "app/pipeline app/scheduler.py app/auth.py app/main.py" }
+          - { shard: providers, paths: "app/providers app/embedding app/rerank" }
+          - { shard: search, paths: "app/search app/hot app/scoring" }
+          - { shard: core, paths: "app/config.py app/db.py app/models.py" }
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+      - name: mutmut run
+        run: |
+          printf '[mutmut]\npaths_to_mutate=%s\ntests_dir=tests/\nrunner=python -m pytest -x -q\n' "${{ matrix.paths }}" > setup.cfg
+          mutmut run
+      - name: 幸存者清单
+        if: always()
+        run: mutmut results | tee "mutmut-results-${{ matrix.shard }}.txt" || true
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: mutmut-${{ matrix.shard }}
+          path: "mutmut-results-${{ matrix.shard }}.txt"
