@@ -29,6 +29,7 @@ from sqlalchemy.orm import Session
 
 from .. import config
 from ..models import Item, Source
+from .fingerprint import find_fingerprint_origin, url_fingerprint
 from .rss import SourceFetchStats, normalize_url
 from .rules import apply_rules
 from .sanitize import SanitizeTarget, run_sanitize
@@ -248,8 +249,12 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
 
     inserted_hashes: set[str] = set()
 
-    def _ingest(payload: WebPayload) -> bool:
-        """单条落库（去重 + 规则 + sanitize）。返回是否插入。"""
+    def _ingest(payload: WebPayload, *, apply_fp: bool = True) -> bool:
+        """单条落库（去重 + 规则 + sanitize）。返回是否插入。
+
+        apply_fp=False：监测单页版本条目（guid 带 #v- 版本后缀）不参与指纹链——
+        同 URL 内容变化必须新条目（设计书 B7 全量保存语义，G1 汇报偏离记录）。
+        """
         if payload.guid in inserted_hashes:
             stats.guid_collisions += 1
             return False
@@ -257,19 +262,27 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
         if exists:
             stats.dup_blocked += 1
             return False
+        fp = url_fingerprint(payload.url) if apply_fp else None
+        origin = (find_fingerprint_origin(db, source.direction_id, fp)
+                  if fp else None)  # P1-2（D15）：方向内跨源同 URL → DUP 落行
         item = Item(
             source_id=source.id, guid=payload.guid, url=payload.url,
             title=payload.title, published_at=payload.published_at,
             content_text=payload.content_text, fetched_at=datetime.now(timezone.utc),
+            direction_id=source.direction_id, fingerprint=fp,
         )
-        rule = apply_rules(title=item.title, content_text=item.content_text,
-                           published_at=item.published_at)
-        if rule.passed:
-            item.fetch_status = "FETCHED"
+        if origin is not None:
+            item.fetch_status = "DUP"
+            item.duplicate_of = origin.id
         else:
-            item.fetch_status = "REJECTED_RULED"
-            item.rule_reject_reason = rule.reason
-            stats.rule_rejected += 1
+            rule = apply_rules(title=item.title, content_text=item.content_text,
+                               published_at=item.published_at)
+            if rule.passed:
+                item.fetch_status = "FETCHED"
+            else:
+                item.fetch_status = "REJECTED_RULED"
+                item.rule_reject_reason = rule.reason
+                stats.rule_rejected += 1
         sr = run_sanitize(SanitizeTarget(title=item.title, content_text=item.content_text,
                                          url=item.url))
         item.sanitize_status = "PASSED" if sr.passed else "REJECTED"
@@ -297,11 +310,12 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
                     ep.content_text = _enrich_entry_content(ep, page_url=source.url)
                 _ingest(ep)
     else:
-        # 单页条目：guid 带内容版本后缀（同 URL 内容变化 → 新条目，旧条目保留）
+        # 单页条目：guid 带内容版本后缀（同 URL 内容变化 → 新条目，旧条目保留）；
+        # 不参与指纹链（apply_fp=False，B7 全量保存语义）
         versioned_guid = f"{normalize_url(source.url)}#v-{new_hash[:12]}"
         _ingest(WebPayload(guid=versioned_guid, url=normalize_url(source.url),
                            title=title, published_at=None if ignore_page_date else pub,
-                           content_text=markdown))
+                           content_text=markdown), apply_fp=False)
 
     source.last_fetched_at = datetime.now(timezone.utc)
     source.content_hash = new_hash

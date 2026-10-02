@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -86,7 +86,10 @@ class Source(Base):
 
 class Item(Base):
     __tablename__ = "item"
-    __table_args__ = (UniqueConstraint("source_id", "guid", name="uq_item_source_guid"),)
+    __table_args__ = (
+        UniqueConstraint("source_id", "guid", name="uq_item_source_guid"),
+        Index("ix_item_direction_fingerprint", "direction_id", "fingerprint"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     source_id: Mapped[int] = mapped_column(ForeignKey("source.id"))
@@ -96,7 +99,13 @@ class Item(Base):
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     content_text: Mapped[str] = mapped_column(Text, default="")
     # FETCHED / REJECTED_RULED / FAILED（抓取侧语义：抓取成功但被过滤 ≠ 抓取失败）
+    # G1/W4 新增 DUP：方向内跨源同 URL 指纹命中（全文照存、不进打分，AC-05.2/D15）
     fetch_status: Mapped[str] = mapped_column(String(30), default="FETCHED")
+    # 冗余方向外键 + 方向内指纹索引（D15 比对分母=方向内）；历史行两者留空（懒回填不做）
+    direction_id: Mapped[int | None] = mapped_column(ForeignKey("direction.id"), nullable=True)
+    fingerprint: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # 同方向原 item id（语义近重复/标题兜底链后续批次复用此引用列）
+    duplicate_of: Mapped[int | None] = mapped_column(ForeignKey("item.id"), nullable=True)
     rule_reject_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
     # 零信任过滤预留位：PASSED / REJECTED / PENDING；REJECTED 条目全文照存
     sanitize_status: Mapped[str] = mapped_column(String(20), default="PENDING")
