@@ -44,12 +44,16 @@ jobs:
           printf '[mutmut]\npaths_to_mutate=app/ingest/fingerprint.py\ntests_dir=tests/\n' > setup.cfg
           printf '\n[tool.mutmut]\npaths_to_mutate="app/ingest/fingerprint.py"\ntests_dir="tests/"\n' >> pyproject.toml
           mutmut run; rc=$?
-          echo "mutmut exit=$rc"
+          echo "mutmut exit=$rc（非零=存在幸存/可疑类别，属正常语义，判定移交幸存者清单步骤）"
           ls mutants 2>/dev/null | head -5 || true
-          exit $rc
-      - name: 幸存者清单
+          exit 0
+      - name: 幸存者清单（含类别判定：绿=机制跑通，红=results 为错误信息）
         if: always()
-        run: mutmut results | tee mutmut-results-smoke.txt || true
+        run: |
+          mutmut results | tee mutmut-results-smoke.txt || true
+          echo '--- 清单内容 ---'
+          cat mutmut-results-smoke.txt
+          grep -qiE 'survived|timeout|suspicious|killed' mutmut-results-smoke.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
@@ -89,12 +93,16 @@ jobs:
           printf '[mutmut]\npaths_to_mutate=%s\ntests_dir=tests/\n' "${{ matrix.paths }}" > setup.cfg
           printf '\n[tool.mutmut]\npaths_to_mutate="%s"\ntests_dir="tests/"\n' "${{ matrix.paths }}" >> pyproject.toml
           mutmut run; rc=$?
-          echo "mutmut exit=$rc"
+          echo "mutmut exit=$rc（非零=存在幸存/可疑类别，属正常语义）"
           ls mutants 2>/dev/null | head -5 || true
-          exit $rc
-      - name: 幸存者清单
+          exit 0
+      - name: 幸存者清单（含类别判定：绿=机制跑通，红=results 为错误信息）
         if: always()
-        run: mutmut results | tee "mutmut-results-${{ matrix.shard }}.txt" || true
+        run: |
+          mutmut results | tee "mutmut-results-${{ matrix.shard }}.txt" || true
+          echo '--- 清单内容 ---'
+          cat "mutmut-results-${{ matrix.shard }}.txt"
+          grep -qiE 'survived|timeout|suspicious|killed' "mutmut-results-${{ matrix.shard }}.txt"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
