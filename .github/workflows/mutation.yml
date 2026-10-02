@@ -40,7 +40,7 @@ jobs:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: pyproject.toml
-      - run: pip install ".[dev]"
+      - run: pip install -e ".[dev]"
       - name: mutmut run（fingerprint 单模块冒烟）
         run: |
           printf '[mutmut]\npaths_to_mutate=app/ingest/fingerprint.py\ntests_dir=tests/\n' > setup.cfg
@@ -108,7 +108,7 @@ jobs:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: pyproject.toml
-      - run: pip install ".[dev]"
+      - run: pip install -e ".[dev]"
       - name: mutmut run
         run: |
           printf '[mutmut]\npaths_to_mutate=%s\ntests_dir=tests/\n' "${{ matrix.paths }}" > setup.cfg
