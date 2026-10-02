@@ -31,7 +31,7 @@ jobs:
   mutants:
     name: mutmut-full
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/mutmut-baseline-')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 300
     continue-on-error: true
     steps:
@@ -41,7 +41,10 @@ jobs:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: pyproject.toml
-      - run: pip install -e ".[dev]"
+      - run: pip install ".[dev]"
+        # 非 editable（影子化修复）：editable 安装的 PEP660 finder 绕过 sys.path 优先级，
+        # 测试始终 import 原始代码、沙箱变异体从未生效——baseline-1 全幸存(killed=0)的根因。
+        # prompts 模板已随 pyproject package-data 进包，非 editable 布局下测试不再缺文件。
       - name: mutmut run（全量 app/）
         run: |
           printf '[mutmut]\nsource_paths=app\npytest_add_cli_args_test_selection=tests/\n' > setup.cfg
@@ -62,11 +65,33 @@ jobs:
           cat mutmut-results-full.txt || true
           tail -3 mutmut-results-full.txt | while IFS= read -r l; do printf '::error title=mutmutres::%s\n' "${l:0:220}"; done || true
           grep -qiE 'survived|timeout|suspicious|killed' mutmut-results-full.txt
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0 node24
         if: always()
         with:
           name: mutmut-full
           path: mutmut-results-full.txt
+          if-no-files-found: ignore
+      - name: 生成 HTML 报告（双语/指标卡/折叠/一键复制，缓存仍在场时取 diff）
+        if: always()
+        continue-on-error: true
+        run: python scripts/mutmut_report.py --out mutmut-report.html --results-file mutmut-results-full.txt --ref "${{ github.ref_name }}" --max-diffs 800
+      - name: 收集 mutmut 缓存（供本地 mutmut show / results 复核）
+        if: always()
+        run: |
+          mkdir -p cache-out
+          find . -maxdepth 3 \( -name '.mutmut-cache' -o -name '*mutmut-stats*' \) -not -path './.git/*' -exec cp --parents {} cache-out/ \; 2>/dev/null || true
+          ls -la cache-out || true
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0 node24
+        if: always()
+        with:
+          name: mutmut-report
+          path: mutmut-report.html
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0 node24
+        if: always()
+        with:
+          name: mutmut-cache
+          path: cache-out
           if-no-files-found: ignore
       - name: 失败诊断回传（尽力而为推 ci-diagnostics 分支）
         if: failure()
