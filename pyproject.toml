@@ -13,6 +13,7 @@ dependencies = [
     "pydantic>=2.7",
     "python-dotenv>=1.0",
     "apscheduler>=3.10,<4",
+    "argon2-cffi>=25.1",
     "pytest>=8.0",
 ]
 

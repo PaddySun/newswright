@@ -3,11 +3,12 @@
 fetch round：每个启用源一个 kind=fetch 任务；score/write 随 M4/M5 扩展。
 调度（能力①，M8）：调度器只负责把轮次任务置 PENDING，执行走 process_fetch_round 的
 worker 路径——调度与执行分离；防重叠查 RUNNING 轮次任务，退避看 Source.backoff_*。
+P0-1（G1）：僵死 RUNNING 任务按 kind 分档回收；全部终态迁移 CAS 化（迟到完成写拒绝）。
 """
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import update
 from sqlalchemy.orm import Session
@@ -21,6 +22,55 @@ from ..models import Item
 log = logging.getLogger("newswright.pipeline")
 
 ROUND_KINDS = ("fetch_round", "hot_round")
+
+# P0-1 僵死回收阈值（分钟，按 kind 分档，一处定义）：技术书 §4.2 状态机注记
+# "超 30/60/120min（rescore 并入 score=60min）"。hot_round 统筹解释：hot 属采集型，
+# 按 30 分钟档（与 fetch 同类）。阈值取宽不取严：回收只兜进程中断，正常慢轮次不误伤。
+RECLAIM_STALE_MINUTES: dict[str, int] = {
+    "fetch": 30,
+    "fetch_round": 30,
+    "hot_round": 30,
+    "score": 60,
+    "rescore": 60,
+    "write": 120,
+}
+
+
+def _grouped_thresholds() -> dict[int, list[str]]:
+    """按阈值分档（同档一次批式 UPDATE）。"""
+    grouped: dict[int, list[str]] = {}
+    for kind, minutes in RECLAIM_STALE_MINUTES.items():
+        grouped.setdefault(minutes, []).append(kind)
+    return grouped
+
+
+def reclaim_stale_tasks(db: Session, *, now: datetime | None = None) -> int:
+    """P0-1 僵死任务回收（AC-20.2）：单进程设计下，跨重启仍 RUNNING 的任务必然僵死
+    （morningdeck 118 条 stuck 同款疾病的唯一调度死锁路径）。
+
+    执行形态 = 按档分组的批式 CAS：UPDATE ... WHERE status='RUNNING' AND
+    updated_at < cutoff，命中行置 FAILED + last_error=stale_reclaim + attempts+1。
+    迟到完成写被 CAS 拒绝（见 _finish）。挂载点：scheduler.start() 首个 tick 前 +
+    run_job_safely 每次执行前。返回回收数并 INFO 日志。
+    """
+    now = now or datetime.now(timezone.utc)
+    reclaimed = 0
+    for minutes, kinds in _grouped_thresholds().items():
+        cutoff = now - timedelta(minutes=minutes)
+        res = db.execute(
+            update(PipelineTask)
+            .where(PipelineTask.kind.in_(kinds), PipelineTask.status == "RUNNING",
+                   PipelineTask.updated_at < cutoff)
+            .values(status="FAILED", attempts=PipelineTask.attempts + 1,
+                    last_error=f"stale_reclaim: RUNNING 超 {minutes} 分钟（疑似进程中断）",
+                    updated_at=now)
+            .execution_options(synchronize_session=False)
+        )
+        reclaimed += res.rowcount
+    db.commit()
+    if reclaimed:
+        log.info("P0-1 僵死回收：%d 个 RUNNING 任务置 FAILED（stale_reclaim）", reclaimed)
+    return reclaimed
 
 
 def _new_task(db: Session, *, kind: str, payload: dict) -> PipelineTask:
@@ -43,14 +93,37 @@ def _claim(db: Session, task: PipelineTask) -> bool:
 
 
 def _finish(db: Session, task: PipelineTask, *, status: str, stats: dict | None = None,
-            error: str | None = None) -> None:
-    task.status = status
+            error: str | None = None, payload_extra: dict | None = None) -> None:
+    """CAS 收尾（AC-20.2/P0-1）：UPDATE ... SET status/payload/last_error
+    WHERE id=? AND status='RUNNING'。
+
+    rowcount=0 → 迟到完成（任务已被回收或被其他路径终结）：WARN 日志后静默丢弃、
+    不抛异常（技术书 §4.2 note："回收后迟到的完成写不进去"——防线程挂死场景状态穿透）。
+    内存对象同步赋值，调用方读 task.status/payload 不失真。
+    stats 并入 payload.stats（DT-5 口径）；payload_extra 为顶层键合并（write_task 用）。
+    """
+    values: dict = {"status": status, "updated_at": datetime.now(timezone.utc)}
+    if payload_extra:
+        values["payload"] = {**task.payload, **payload_extra}
     if stats:
-        task.payload = {**task.payload, "stats": stats}
+        values["payload"] = {**values.get("payload", task.payload), "stats": stats}
     if error:
-        task.last_error = error[:2000]
-    task.updated_at = datetime.now(timezone.utc)
+        values["last_error"] = error[:2000]
+    res = db.execute(
+        update(PipelineTask)
+        .where(PipelineTask.id == task.id, PipelineTask.status == "RUNNING")
+        .values(**values)
+        .execution_options(synchronize_session=False)
+    )
     db.commit()
+    task.status = status
+    if "payload" in values:
+        task.payload = values["payload"]
+    if error:
+        task.last_error = values["last_error"]
+    if res.rowcount == 0:
+        log.warning("迟到完成被拒 task=%s target=%s（已非 RUNNING，疑似被 stale_reclaim 回收）",
+                    task.id, status)
 
 
 def fetch_round(db: Session, *, triggered_by: str = "manual") -> dict:
@@ -69,9 +142,10 @@ def fetch_round(db: Session, *, triggered_by: str = "manual") -> dict:
                     stats=_fetch_stats_dict(stats), error=stats.error)
             _update_backoff(db, src, failed=bool(stats.error))
         except Exception as e:  # noqa: BLE001
-            task.status = "FAILED"
-            task.last_error = f"{type(e).__name__}: {e}"
+            # P1-1：先回滚再落终态——异常可能源自会话损坏（rollback-only 状态），
+            # 不回滚则 _finish 的 commit 也会失败 → 任务卡 RUNNING → 只能靠 P0-1 兜底
             db.rollback()
+            _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
             _update_backoff(db, src, failed=True)
         summary["sources"].append({
             "source_id": src.id,
@@ -195,6 +269,7 @@ def process_fetch_round(db: Session, round_task: PipelineTask) -> dict:
             _update_backoff(db, src, failed=bool(stats.error))
             any_failed = any_failed or bool(stats.error)
         except Exception as e:  # noqa: BLE001
+            db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
             _finish(db, t, status="FAILED", error=f"{type(e).__name__}: {e}")
             _update_backoff(db, src, failed=True)
             any_failed = True
@@ -256,18 +331,17 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                     parse_failed += 1
                 else:
                     failed += 1
-            task.payload = {**task.payload, "stats": {
+            _stats = {
                 "candidates": len(items), "scored": scored, "passed": passed,
                 "call_failed": failed, "parse_failed": parse_failed,
-            }}
-            task.status = "FAILED" if (failed + parse_failed) > 0 and scored == 0 else "DONE"
-            if failed + parse_failed > 0:
-                task.last_error = f"{failed + parse_failed} 条打分未成功（含解析失败 {parse_failed}），下轮续跑"
+            }
+            _status = "FAILED" if (failed + parse_failed) > 0 and scored == 0 else "DONE"
+            _error = (f"{failed + parse_failed} 条打分未成功（含解析失败 {parse_failed}），下轮续跑"
+                      if failed + parse_failed > 0 else None)
+            _finish(db, task, status=_status, stats=_stats, error=_error)
         except Exception as e:  # noqa: BLE001
-            task.status = "FAILED"
-            task.last_error = f"{type(e).__name__}: {e}"
-        finally:
-            db.commit()
+            db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
+            _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
         summary["directions"].append({
             "direction_id": d.id, "name": d.name, "task_id": task.id, "status": task.status,
             **(task.payload.get("stats") or {}), "error": task.last_error,
@@ -290,15 +364,12 @@ def write_task(db: Session, author_id: int, *, triggered_by: str = "manual",
     db.commit()
     try:
         run = run_write(db, author, triggered_by=triggered_by, **run_kwargs)
-        task.payload = {**task.payload, "write_run_id": run.id, "decision": run.decision,
-                        "article_id": run.article_id}
-        task.status = "DONE" if run.status == "OK" else "FAILED"
-        if run.status != "OK":
-            task.last_error = run.error
+        _finish(db, task, status="DONE" if run.status == "OK" else "FAILED",
+                payload_extra={"write_run_id": run.id, "decision": run.decision,
+                               "article_id": run.article_id},
+                error=run.error if run.status != "OK" else None)
     except Exception as e:  # noqa: BLE001
-        task.status = "FAILED"
-        task.last_error = f"{type(e).__name__}: {e}"
-    finally:
-        db.commit()
+        db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
+        _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
     return {"task_id": task.id, "status": task.status, "payload": task.payload,
             "last_error": task.last_error}

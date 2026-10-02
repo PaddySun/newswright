@@ -54,6 +54,10 @@ def _migrate_added_columns() -> None:
             "sanitize_reason": "VARCHAR(500)",
             "sanitize_detail": "JSON",
             "raw": "JSON",
+            # G1/W4 P1-2：URL 指纹去重（D15 方向内）；历史行留空，懒回填不做
+            "direction_id": "INTEGER",
+            "fingerprint": "VARCHAR(64)",
+            "duplicate_of": "INTEGER",
         },
     }
     with engine.begin() as conn:
@@ -69,6 +73,12 @@ def _migrate_added_columns() -> None:
                 if table == "item" and col == "sanitize_status":
                     backfill_sanitize = True
                 log.info("migrate: %s.%s 已补列", table, col)
+        # G1/W4：方向内指纹索引（新库由 create_all 的 __table_args__ 建立；旧库补建）
+        if insp.has_table("item"):
+            conn.execute(text(
+                "CREATE INDEX IF NOT EXISTS ix_item_direction_fingerprint "
+                "ON item (direction_id, fingerprint)"
+            ))
         # 历史行回填（仅补列当次执行）：sanitize 字段上线前入库的条目视为已通过骨架过滤
         if backfill_sanitize:
             conn.execute(text(

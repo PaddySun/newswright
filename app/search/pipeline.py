@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
 from .. import config
+from ..ingest.fingerprint import find_fingerprint_origin, url_fingerprint
 from ..ingest.rss import SourceFetchStats, normalize_url
 from ..ingest.rules import apply_rules
 from ..ingest.sanitize import SanitizeTarget, run_sanitize
@@ -83,22 +84,31 @@ def fetch_search_source(db: Session, source: Source) -> SourceFetchStats:
         if exists:
             stats.dup_blocked += 1
             continue
+        fp = url_fingerprint(r.url)
+        # P1-2（D15）：方向内跨源同 URL 指纹命中 → DUP 落行（全文照存）；
+        # "同 URL 不同关键词各一条"的记录口径保留（DUP 只标记关系不删行）
+        origin = find_fingerprint_origin(db, source.direction_id, fp) if fp else None
         body = (r.content or r.snippet or "").strip()
         item = Item(
             source_id=source.id, guid=guid[:1000], url=r.url[:2000],
             title=r.title[:2000], published_at=r.published_at,
             content_text=body, raw=r.raw or None,
             fetched_at=datetime.now(timezone.utc),
+            direction_id=source.direction_id, fingerprint=fp,
         )
-        rule = apply_rules(title=item.title, content_text=item.content_text,
-                           published_at=item.published_at,
-                           max_age_days=int(cfg_.get("max_age_days") or 365))
-        if rule.passed:
-            item.fetch_status = "FETCHED"
+        if origin is not None:
+            item.fetch_status = "DUP"
+            item.duplicate_of = origin.id
         else:
-            item.fetch_status = "REJECTED_RULED"
-            item.rule_reject_reason = rule.reason
-            stats.rule_rejected += 1
+            rule = apply_rules(title=item.title, content_text=item.content_text,
+                               published_at=item.published_at,
+                               max_age_days=int(cfg_.get("max_age_days") or 365))
+            if rule.passed:
+                item.fetch_status = "FETCHED"
+            else:
+                item.fetch_status = "REJECTED_RULED"
+                item.rule_reject_reason = rule.reason
+                stats.rule_rejected += 1
         sr = run_sanitize(SanitizeTarget(title=item.title, content_text=item.content_text,
                                          url=item.url))
         item.sanitize_status = "PASSED" if sr.passed else "REJECTED"

@@ -1,9 +1,9 @@
-"""M1 冒烟：建表 + 唯一约束 (source_id, guid) 生效。"""
+"""M1 冒烟：建表 + 唯一约束 (source_id, guid) 生效。G1 扩展：users/sessions/site_config 三表。"""
 import pytest
 from sqlalchemy.exc import IntegrityError
 
 from app.db import SessionLocal, init_db
-from app.models import Direction, Item, Source
+from app.models import Direction, Item, SiteConfig, Source, User, UserSession
 
 
 @pytest.fixture(scope="module")
@@ -45,3 +45,33 @@ def test_unique_source_guid(tables):
         with pytest.raises(IntegrityError):
             s.commit()
         s.rollback()
+
+
+def test_users_sessions_siteconfig_tables(tables):
+    """G1/W1：users(username 唯一)、sessions(字符串主键)、site_config(key TEXT PK)。"""
+    with SessionLocal() as s:
+        u = User(username="admin", password_hash="argon2id$fake", must_change_password=True)
+        s.add(u)
+        s.commit()
+        dup = User(username="admin", password_hash="x")
+        s.add(dup)
+        with pytest.raises(IntegrityError):
+            s.commit()
+        s.rollback()
+
+        from datetime import datetime, timedelta, timezone
+
+        sess = UserSession(id="tok123", user_id=u.id,
+                           expires_at=datetime.now(timezone.utc) + timedelta(days=7))
+        s.add(sess)
+        s.commit()
+        assert s.get(UserSession, "tok123").user_id == u.id
+
+        s.add(SiteConfig(key="session_duration_days", value=7))
+        s.commit()
+        assert s.get(SiteConfig, "session_duration_days").value == 7
+        # must_change_password 默认 true
+        u2 = User(username="u2", password_hash="x")
+        s.add(u2)
+        s.commit()
+        assert u2.must_change_password is True

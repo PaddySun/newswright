@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 
 from .. import config
 from ..models import Item, Source
+from .fingerprint import find_fingerprint_origin, url_fingerprint
 from .rules import apply_rules
 from .sanitize import SanitizeTarget, run_sanitize
 
@@ -167,6 +168,10 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
             if exists:
                 stats.dup_blocked += 1
                 continue
+            fp = url_fingerprint(ep.url)
+            # P1-2（D15）：方向内跨源同 URL 指纹命中 → DUP 落行（全文照存），
+            # 规则初筛跳过（不进打分）；与 (source_id,guid) 分工：后者不落行
+            origin = find_fingerprint_origin(db, source.direction_id, fp) if fp else None
             item = Item(
                 source_id=source.id,
                 guid=ep.guid,
@@ -175,20 +180,26 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
                 published_at=ep.published_at,
                 content_text=ep.content_text,
                 fetched_at=datetime.now(timezone.utc),
+                direction_id=source.direction_id,
+                fingerprint=fp,
             )
-            rule = apply_rules(
-                title=item.title,
-                content_text=item.content_text,
-                published_at=item.published_at,
-                max_age_days=max_age_days,
-                blacklist=blacklist,
-            )
-            if rule.passed:
-                item.fetch_status = "FETCHED"
+            if origin is not None:
+                item.fetch_status = "DUP"
+                item.duplicate_of = origin.id
             else:
-                item.fetch_status = "REJECTED_RULED"
-                item.rule_reject_reason = rule.reason
-                stats.rule_rejected += 1
+                rule = apply_rules(
+                    title=item.title,
+                    content_text=item.content_text,
+                    published_at=item.published_at,
+                    max_age_days=max_age_days,
+                    blacklist=blacklist,
+                )
+                if rule.passed:
+                    item.fetch_status = "FETCHED"
+                else:
+                    item.fetch_status = "REJECTED_RULED"
+                    item.rule_reject_reason = rule.reason
+                    stats.rule_rejected += 1
             # 落库前强制流经 sanitize 阶段（骨架：pass-through 或演示链）；
             # 与 fetch_status 语义分离，REJECTED 全文照存
             sr = run_sanitize(SanitizeTarget(

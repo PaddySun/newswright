@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -13,6 +13,45 @@ def utcnow() -> datetime:
 
 class Base(DeclarativeBase):
     pass
+
+
+class User(Base):
+    """单管理员账号（US-01/ADR-4）。密码只存 argon2id 哈希（D2/D18）。"""
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String(100), unique=True)
+    password_hash: Mapped[str] = mapped_column(String(300))
+    # 首登强制改密（AC-01.1）：改密端点成功后置 false
+    must_change_password: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class UserSession(Base):
+    """服务端会话（ADR-4：HttpOnly cookie 只存 id，状态全在 DB）。
+
+    id = secrets.token_urlsafe(32)（≥128bit）。表名 sessions；类名避开
+    sqlalchemy.orm.Session。
+    """
+    __tablename__ = "sessions"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class SiteConfig(Base):
+    """站点级键值配置（技术书 §4.1）：key(TEXT PK) + value(JSON)。
+
+    本里程碑仅 session_duration_days / client_ip_header 两键（代码内默认值见
+    app/siteconfig.py）；表结构预留全部未来键空间（模式 A/B/C、AI 标识、robots、
+    timezone、SMTP、预算闸……），公开 REST API 属 US-19 后续，不在此实现。
+    """
+    __tablename__ = "site_config"
+
+    key: Mapped[str] = mapped_column(String(100), primary_key=True)
+    value: Mapped[dict | list | str | int | float | bool | None] = mapped_column(JSON, nullable=True)
 
 
 class Direction(Base):
@@ -47,7 +86,10 @@ class Source(Base):
 
 class Item(Base):
     __tablename__ = "item"
-    __table_args__ = (UniqueConstraint("source_id", "guid", name="uq_item_source_guid"),)
+    __table_args__ = (
+        UniqueConstraint("source_id", "guid", name="uq_item_source_guid"),
+        Index("ix_item_direction_fingerprint", "direction_id", "fingerprint"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     source_id: Mapped[int] = mapped_column(ForeignKey("source.id"))
@@ -57,7 +99,13 @@ class Item(Base):
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     content_text: Mapped[str] = mapped_column(Text, default="")
     # FETCHED / REJECTED_RULED / FAILED（抓取侧语义：抓取成功但被过滤 ≠ 抓取失败）
+    # G1/W4 新增 DUP：方向内跨源同 URL 指纹命中（全文照存、不进打分，AC-05.2/D15）
     fetch_status: Mapped[str] = mapped_column(String(30), default="FETCHED")
+    # 冗余方向外键 + 方向内指纹索引（D15 比对分母=方向内）；历史行两者留空（懒回填不做）
+    direction_id: Mapped[int | None] = mapped_column(ForeignKey("direction.id"), nullable=True)
+    fingerprint: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # 同方向原 item id（语义近重复/标题兜底链后续批次复用此引用列）
+    duplicate_of: Mapped[int | None] = mapped_column(ForeignKey("item.id"), nullable=True)
     rule_reject_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
     # 零信任过滤预留位：PASSED / REJECTED / PENDING；REJECTED 条目全文照存
     sanitize_status: Mapped[str] = mapped_column(String(20), default="PENDING")
