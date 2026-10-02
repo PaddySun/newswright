@@ -6,7 +6,7 @@ name: ci
 
 on:
   push:
-    branches: [main, "feat/**", "chore/**"]
+    branches: [main, "feat/**", "fix/**", "ci/**", "chore/**"]
 
 permissions:
   contents: read

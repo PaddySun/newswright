@@ -1,26 +1,26 @@
 # 变异测试（mutmut）：全量基线测量，不进合并硬门（快门在 ci.yml）。
-# 触发（零定时，纯动作）：
-#   - push tag mutmut-baseline-* → 全量单 job
-#   - workflow_dispatch          → 同上（默认分支上的手动按钮）
-# 关键实现纪律（冒烟 #1-#7 的教训链）：
+# 触发（2026-10-03 新政：零 tag 流水账）——仅 workflow_dispatch 手动按钮（默认分支）。
+# 关键实现纪律（冒烟链 + 两轮基线的教训，勿回退）：
 #   1. mutmut 在模块导入期即加载配置——setup.cfg 必须先于任何 mutmut 命令存在（含 --version）；
-#   2. 本版 mutmut 配置键为 source_paths + pytest_add_cli_args_test_selection（旧键已弃用并被忽略）；
-#   3. 沙箱只装载 source_paths 内容——跨模块 import 决定了 source_paths 必须给整包 app/，
-#      按 子目录/单文件 分片会 ModuleNotFoundError，故全量单 job 不分片；
+#   2. 配置键为 source_paths + pytest_add_cli_args_test_selection（旧键已弃用并被忽略）；
+#   3. 沙箱只装载 source_paths 内容——跨模块 import 决定了 source_paths 必须整包 app/，不可分片；
 #   4. run 步骤 set +e 包裹退出码（幸存类别本就非零退出），判定权在幸存者清单步骤；
-#   5. 日志尾部以 ::error 注解外带（匿名 API 可读），失败时尽力推 ci-diagnostics 分支。
+#   5. `mutmut results` 默认视图隐藏 killed——清单必须带 --all（否则总变异体/杀死率全是假象）；
+#   6. 变异 job 用非 editable 安装（prompts 已随 package-data 进包）。
+# 展示：HTML 报告（scripts/mutmut_report.py）上传 artifact 并经 GitHub Actions 部署到 Pages
+#       （https://paddysun.github.io/newswright/ 恒为最新，README badge 直达）。
 name: mutation
 
 on:
   workflow_dispatch:
-  push:
-    tags: ["mutmut-baseline-*"]
 
 permissions:
-  contents: write  # 失败诊断回传推 ci-diagnostics 分支（checkout 默认持久化 GITHUB_TOKEN 凭据）
+  contents: read
+  pages: write      # Pages 部署（Source 已配置为 GitHub Actions）
+  id-token: write
 
 concurrency:
-  group: mutation-${{ github.ref }}
+  group: mutation-pages
   cancel-in-progress: false
 
 env:
@@ -30,7 +30,6 @@ env:
 jobs:
   mutants:
     name: mutmut-full
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/mutmut-baseline-')
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     continue-on-error: true
@@ -42,9 +41,6 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - run: pip install ".[dev]"
-        # 非 editable（影子化修复）：editable 安装的 PEP660 finder 绕过 sys.path 优先级，
-        # 测试始终 import 原始代码、沙箱变异体从未生效——baseline-1 全幸存(killed=0)的根因。
-        # prompts 模板已随 pyproject package-data 进包，非 editable 布局下测试不再缺文件。
       - name: mutmut run（全量 app/）
         run: |
           printf '[mutmut]\nsource_paths=app\npytest_add_cli_args_test_selection=tests/\n' > setup.cfg
@@ -57,15 +53,15 @@ jobs:
           tail -30 mutmut.log
           tail -8 mutmut.log | while IFS= read -r l; do printf '::error title=mutmutlog::%s\n' "${l:0:220}"; done || true
           exit 0
-      - name: 幸存者清单（含类别判定：绿=机制跑通，红=results 为错误信息）
+      - name: 全量清单（--all：默认视图隐藏 killed，勿去掉）
         if: always()
         run: |
           mutmut results --all | tee mutmut-results-full.txt || true
-          echo '--- 清单内容（--all 含 killed；默认视图会隐藏 killed，勿再用）---'
+          echo '--- 清单内容 ---'
           cat mutmut-results-full.txt || true
           tail -3 mutmut-results-full.txt | while IFS= read -r l; do printf '::error title=mutmutres::%s\n' "${l:0:220}"; done || true
           grep -qiE 'survived|timeout|suspicious|killed' mutmut-results-full.txt
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0 node24
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: always()
         with:
           name: mutmut-full
@@ -74,37 +70,37 @@ jobs:
       - name: 生成 HTML 报告（双语/指标卡/折叠/一键复制，缓存仍在场时取 diff）
         if: always()
         continue-on-error: true
-        run: python scripts/mutmut_report.py --out mutmut-report.html --results-file mutmut-results-full.txt --ref "${{ github.ref_name }}" --max-diffs 800
-      - name: 收集 mutmut 缓存（供本地 mutmut show / results 复核）
+        run: python scripts/mutmut_report.py --out mutmut-report.html --results-file mutmut-results-full.txt --ref "manual-dispatch" --max-diffs 800
+      - name: 收集 mutmut 缓存（.meta 供本地 mutmut show / results 复核）
         if: always()
         run: |
           mkdir -p cache-out
           find . -maxdepth 4 \( -name '.mutmut-cache' -o -name '*mutmut-stats*' -o -name '*.meta' \) -not -path './.git/*' -exec cp --parents {} cache-out/ \; 2>/dev/null || true
           ls -la cache-out || true
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0 node24
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: always()
         with:
           name: mutmut-report
           path: mutmut-report.html
           if-no-files-found: ignore
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0 node24
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: always()
         with:
           name: mutmut-cache
           path: cache-out
           if-no-files-found: ignore
-      - name: 失败诊断回传（尽力而为推 ci-diagnostics 分支）
-        if: failure()
+      # ---- Pages 部署（报告恒为最新，badge 直达）----
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+        if: always()
+      - name: 组装站点（报告为首页；缺失时放占位说明页）
+        if: always()
         run: |
-          set +e
-          git config user.name "ci-diagnostics"
-          git config user.email "ci@newswright.invalid"
-          git fetch --unshallow -q
-          git checkout -q -B "ci-diagnostics/${{ github.run_id }}"
-          mkdir -p ci-diagnostics
-          { echo "== run=${{ github.run_id }} ref=${{ github.ref }} =="; echo "-- setup.cfg --"; cat setup.cfg 2>&1; echo "-- mutmut.log --"; cat mutmut.log 2>/dev/null; echo "-- results --"; cat mutmut-results-full.txt 2>/dev/null; } > "ci-diagnostics/${{ github.run_id }}.log"
-          git add ci-diagnostics
-          git commit -qm "chore(ci): 诊断日志 ${{ github.run_id }}（自动回传）"
-          git push origin "HEAD:ci-diagnostics/${{ github.run_id }}" 2>&1 | tail -3
-          echo "diag-push 尽力而为完成"
-          exit 0
+          mkdir -p site
+          if [ -f mutmut-report.html ]; then cp mutmut-report.html site/index.html
+          else printf '<h1>mutmut report missing / 报告未生成（本次 run 异常）</h1>' > site/index.html; fi
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        if: always()
+        with:
+          path: site
+      - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
+        if: always()
