@@ -376,3 +376,320 @@
 | app.providers.base.xǁHTTPProviderǁ__init____mutmut_10 | A | 键 "AUTHORIZATION" 大写：同 m9（线缆统一小写） | httpx.Headers 实证 |
 | app.providers.base.xǁHTTPProviderǁ__init____mutmut_12 | A | 键 "content-type" 小写：同 m9 | httpx.Headers 实证 |
 | app.providers.base.xǁHTTPProviderǁ__init____mutmut_13 | A | 键 "CONTENT-TYPE" 大写：同 m9 | httpx.Headers 实证 |
+## 批次 6：authors.pipeline 执行器核心 PipelineRunner（2026-10-03，C1-5a）
+
+> 种子 580 条四分类：**C 273 / A 307 / B 0 / D 0**。C 类由 `tests/test_mutation_c1_5a.py`
+> 27 测试关闭（断言引 AC-11.1/11.2/11.4/12.1/12.3、DT-4、US-10 schema 契约、ADR-8、
+> §4.1 write_run、§4.4 记忆回流、搭建记录纪律）；本小节只登记 307 条 A 类。
+> D 类变异 0 条；另有两项非变异类设计观察（DT-4 空阅读集 SKIP 语义 vs 实现 FAILED、
+> R6 同因早停未实现）见 C1-5a 执行汇报 §3。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.authors.pipeline.xǁPipelineRunnerǁ__init____mutmut_7 | A | cost 初值 1：payload.cost 键未钉（§4.1 write_run payload 仅钉 trace/static_injection/rank），cost 聚合账非设计书条款面 | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ__init____mutmut_10 | A | cost 初值 1：payload.cost 键未钉（§4.1 write_run payload 仅钉 trace/static_injection/rank），cost 聚合账非设计书条款面 | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_max_tokens__mutmut_14 | A | NODE_MAX_TOKENS 覆盖全部节点名，缺省参数不可达 | 控制流等价（调用点核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁ_max_tokens__mutmut_16 | A | NODE_MAX_TOKENS 覆盖全部节点名，缺省参数不可达 | 控制流等价（调用点核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_2 | A | temperature 缺省 0.5→1.5：全部调用点显式传参，缺省不可达 | 调用点核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_24 | A | _max_tokens 第二参缺省不可达（NODE_MAX_TOKENS 覆盖全部节点） | 控制流等价 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_27 | A | _max_tokens 第二参缺省不可达（NODE_MAX_TOKENS 覆盖全部节点） | 控制流等价 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_37 | A | fallback_note trace 字段未钉（记录位置/键名无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_38 | A | fallback_note trace 字段未钉（记录位置/键名无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_39 | A | fallback_note trace 字段未钉（记录位置/键名无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_43 | A | fallback_note trace 字段未钉（记录位置/键名无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_44 | A | fallback_note trace 字段未钉（记录位置/键名无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_45 | A | fallback_note trace 字段未钉（记录位置/键名无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_48 | A | input_digest trace 字段未钉（摘要形态/截断长度无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_49 | A | input_digest trace 字段未钉（摘要形态/截断长度无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_50 | A | input_digest trace 字段未钉（摘要形态/截断长度无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_51 | A | input_digest trace 字段未钉（摘要形态/截断长度无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_52 | A | input_digest trace 字段未钉（摘要形态/截断长度无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_55 | A | input_digest trace 字段未钉（摘要形态/截断长度无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_56 | A | input_digest trace 字段未钉（摘要形态/截断长度无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_77 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_78 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_79 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_80 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_81 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_82 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_83 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_84 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_85 | A | cache_hit_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_86 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_87 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_88 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_89 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_90 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_91 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_92 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_93 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_94 | A | reasoning_tokens trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_95 | A | finish_reason trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_96 | A | finish_reason trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_97 | A | finish_reason trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_98 | A | finish_reason trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_99 | A | finish_reason trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_100 | A | latency_ms trace 字段未钉（NFR 引 usage_log.latency_ms 非 trace） | §4.1 字段范围核查 + NFR 表 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_101 | A | latency_ms trace 字段未钉（NFR 引 usage_log.latency_ms 非 trace） | §4.1 字段范围核查 + NFR 表 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_103 | A | latency_ms trace 字段未钉（NFR 引 usage_log.latency_ms 非 trace） | §4.1 字段范围核查 + NFR 表 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_104 | A | latency_ms trace 字段未钉（NFR 引 usage_log.latency_ms 非 trace） | §4.1 字段范围核查 + NFR 表 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_105 | A | latency_ms trace 字段未钉（NFR 引 usage_log.latency_ms 非 trace） | §4.1 字段范围核查 + NFR 表 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_106 | A | at trace 字段未钉（时间戳形态/tz 无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_107 | A | at trace 字段未钉（时间戳形态/tz 无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_109 | A | at trace 字段未钉（时间戳形态/tz 无条款） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_113 | A | cost 聚合账未钉（payload.cost 键不在 §4.1 钉面） | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_114 | A | cost 聚合账未钉（payload.cost 键不在 §4.1 钉面） | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_119 | A | cost 聚合账未钉（payload.cost 键不在 §4.1 钉面） | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call__mutmut_120 | A | cost 聚合账未钉（payload.cost 键不在 §4.1 钉面） | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_flush__mutmut_4 | A | payload cost 键未钉 | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_flush__mutmut_5 | A | payload cost 键未钉 | §4.1 write_run 行核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_61 | A | style_anchor 缺省参数（None/""）——键缺省时两值同为假值、gate_echo_check 早退，恰等价 | 控制流等价（gate_echo_check if not anchor 早退核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_63 | A | style_anchor 缺省参数（None/""）——键缺省时两值同为假值、gate_echo_check 早退，恰等价 | 控制流等价（gate_echo_check if not anchor 早退核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_66 | A | anchor 缺省 ""→"XXXX" 缺省形态（无锚时门禁早退域，差异无条款） | 缺省形态无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_108 | A | recent_n 缺省 5→6 数值无条款 | 数值缺省无条款（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_125 | A | threshold 缺省 0.55→1.55 数值无条款 | 数值缺省无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_144 | A | min_count 缺省 2→3 数值无条款（AC-11.2 的 2 是配置示例非缺省钉法） | 数值缺省无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_146 | A | CitationError 文案 str(None)——issues 文案未钉（靠非空性拒收仍成立） | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_147 | A | rhythm_stddev stats 字段未钉（stats 非 §4.1 钉面） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_148 | A | rhythm_stddev stats 字段未钉（stats 非 §4.1 钉面） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁrun_gates__mutmut_149 | A | rhythm_stddev stats 字段未钉（stats 非 §4.1 钉面） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_4 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_6 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_12 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_13 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_14 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_15 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_16 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_17 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_18 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_19 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_20 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_21 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_22 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_23 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_24 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_25 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_26 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_27 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁ_title__mutmut_28 | A | 标题提取规则细节（#/脚注标记清理/40 字阈值/句读截断/无题文案）无条款——§4.1 仅钉 title 列落值 | §4.1 title 列范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_4 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_5 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_6 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_7 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_10 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_11 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_12 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_13 | A | _draft_task 实参（腹稿/规划/衔接段进提示词）——提示词拼装形态未钉 | 提示词形态（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_29 | A | user_ctx+task 拼接符变形——措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_33 | A | temperature 0.9 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_36 | A | temperature 0.9 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_39 | A | temperature 0.9 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_41 | A | discarded 标记键/值形态未钉（trace 字段内部形态） | §4.1 字段范围核查（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_42 | A | discarded 标记键/值形态未钉（trace 字段内部形态） | §4.1 字段范围核查（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_43 | A | discarded 标记键/值形态未钉（trace 字段内部形态） | §4.1 字段范围核查（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_44 | A | discarded 标记键/值形态未钉（trace 字段内部形态） | §4.1 字段范围核查（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_45 | A | discarded 标记键/值形态未钉（trace 字段内部形态） | §4.1 字段范围核查（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_46 | A | discarded 标记键/值形态未钉（trace 字段内部形态） | §4.1 字段范围核查（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_47 | A | discarded 标记键/值形态未钉（trace 字段内部形态） | §4.1 字段范围核查（任务书§2） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_57 | A | note trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_58 | A | note trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_59 | A | note trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_60 | A | note trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_61 | A | note trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_62 | A | note trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_63 | A | note trace 字段未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_67 | A | 重试调用 temperature 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_70 | A | 重试调用 temperature 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_73 | A | 重试调用 temperature 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_75 | A | 空稿中止文案未钉 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_draft__mutmut_76 | A | 空稿中止文案未钉 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_1 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_2 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_3 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_8 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_9 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_10 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_11 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_12 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_13 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_14 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_15 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_20 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_21 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_22 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_23 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_24 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_25 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_26 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_27 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_28 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_29 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_30 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_31 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_36 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_37 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_38 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_39 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_40 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_41 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_43 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_44 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_45 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_46 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_48 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_49 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_50 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_51 | A | 长度提示 note 提取与拼装（正则/lo/hi 值/方向话术）——全部为提示词措辞与未钉数值 | 提示词形态 + 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_68 | A | 【要求】段措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_69 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_73 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_74 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_75 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_76 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_77 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_78 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_83 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_84 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_85 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_86 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_87 | A | 提示词内引用纪律段（min_count 进措辞/键变形）——门禁侧 min_count 已由 run_gates C 类覆盖 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_88 | A | 拼接符措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_92 | A | temperature 0.8 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_95 | A | temperature 0.8 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_revise__mutmut_98 | A | temperature 0.8 数值无条款 | 数值无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_6 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_7 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_8 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_9 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_10 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_11 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_12 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_13 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_14 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_15 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_16 | A | reading_window 参数行为无条款（技术书/产品书均未钉该批跑参数） | 无条款域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_19 | A | 空阅读集中止文案未钉（状态语义属 run_pipeline_write 层，本变异不改状态与 LLM 计数） | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_20 | A | 空阅读集中止文案未钉（状态语义属 run_pipeline_write 层，本变异不改状态与 LLM 计数） | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_23 | A | 【本期阅读集】段标题措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_70 | A | _slices_block head 调用 position 实参——head 与 else 分支输出恰等价 | 控制流等价 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_73 | A | _slices_block head 调用 position 实参——head 与 else 分支输出恰等价 | 控制流等价 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_74 | A | _slices_block head 调用 position 实参——head 与 else 分支输出恰等价 | 控制流等价 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_79 | A | u+len==1 域 slices[1:] 为空、_slices_block([]) 返回空串——恰等价 | 控制流等价 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_84 | A | tail position None→else 分支仅差尾随换行——措辞级 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_88 | A | tail 键变形仅差尾随换行——措辞级 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_89 | A | tail 键变形仅差尾随换行——措辞级 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_93 | A | tail position 形态仅差尾随换行 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_96 | A | tail position 形态仅差尾随换行 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_97 | A | tail position 形态仅差尾随换行 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_113 | A | recent_n 缺省 5→6 数值无条款 | 数值缺省无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_124 | A | 近期标题段措辞/拼接符 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_126 | A | 近期标题段措辞/拼接符 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_170 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_171 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_172 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_173 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_174 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_175 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_176 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_177 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_178 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_179 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_180 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_181 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_182 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_183 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_184 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_185 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_186 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_187 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_188 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_189 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_190 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_191 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_192 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_193 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_194 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_195 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_196 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_197 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_198 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_199 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_200 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_201 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_202 | A | rolling lo/hi 为死变量（赋值后无使用点）——等价 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_207 | A | enumerate 起始 0/2——节次编号进提示词措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_208 | A | enumerate 起始 0/2——节次编号进提示词措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_211 | A | rolling node_draft 提示词实参（规划/衔接段）——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_212 | A | rolling node_draft 提示词实参（规划/衔接段）——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_213 | A | rolling node_draft 提示词实参（规划/衔接段）——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_215 | A | rolling node_draft 提示词实参（规划/衔接段）——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_216 | A | rolling node_draft 提示词实参（规划/衔接段）——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_217 | A | rolling node_draft 提示词实参（规划/衔接段）——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_221 | A | 节间拼接符措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_231 | A | 腹稿实参——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_233 | A | 腹稿实参——提示词形态 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_235 | A | 被后继 payload 写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_236 | A | 被后继 payload 写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_237 | A | 被后继 payload 写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_238 | A | 被后继 payload 写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_244 | A | prompt_snapshot 定界符内部形态未钉（§4.1 钉列存在+阅读集/切片可核，不钉分隔符） | §4.1 prompt_snapshot 范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_245 | A | prompt_snapshot 定界符内部形态未钉（§4.1 钉列存在+阅读集/切片可核，不钉分隔符） | §4.1 prompt_snapshot 范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_246 | A | prompt_snapshot 定界符内部形态未钉（§4.1 钉列存在+阅读集/切片可核，不钉分隔符） | §4.1 prompt_snapshot 范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_247 | A | prompt_snapshot 定界符内部形态未钉（§4.1 钉列存在+阅读集/切片可核，不钉分隔符） | §4.1 prompt_snapshot 范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_258 | A | before None 被 if before 守卫——仅 stats 形态 | pass_stats 字段未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_268 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_269 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_270 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_271 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_272 | A | pass_stats 写入目标/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_273 | A | pass_stats 写入目标/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_274 | A | pass_stats 写入目标/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_275 | A | pass_stats 写入目标/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_276 | A | pass_stats 写入目标/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_277 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_278 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_279 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_280 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_281 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_282 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_283 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_284 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_286 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_287 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_288 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_289 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_290 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_291 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_292 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_293 | A | pass_stats 数值/键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_340 | A | gate_history attempt/verdict 键形态未钉（payload 内部形态） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_341 | A | gate_history attempt/verdict 键形态未钉（payload 内部形态） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_360 | A | node_revise 稿件实参 None——fake 输出下终态等价、差异仅进提示词 | 提示词形态 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_377 | A | gate_history attempt/verdict 键形态未钉（payload 内部形态） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_378 | A | gate_history attempt/verdict 键形态未钉（payload 内部形态） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_379 | A | gate_history attempt/verdict 键形态未钉（payload 内部形态） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_380 | A | gate_history attempt/verdict 键形态未钉（payload 内部形态） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_381 | A | gate_history attempt/verdict 键形态未钉（payload 内部形态） | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_383 | A | 被后续终态写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_384 | A | 被后续终态写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_385 | A | 被后续终态写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_386 | A | 被后续终态写回遮蔽——终态恰等价 | 控制流等价（终态核查） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_393 | A | payload rewrite/title 键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_394 | A | payload rewrite/title 键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_399 | A | payload rewrite/title 键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_400 | A | payload rewrite/title 键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_401 | A | payload rewrite/title 键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_402 | A | payload rewrite/title 键形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_409 | A | error 截断 [:501]——文案形态 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_413 | A | audit_note 文案未钉 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_414 | A | audit_note 文案未钉 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_425 | A | 孤儿脚注过滤域——差异域为门禁已拒稿域（zero_revision 孤儿引用形态无条款） | 差异域核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_427 | A | assemble_article_text 首参为死参数 | 控制流等价（死代码） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_444 | A | status=None 实参——Article.status 列级 default=PUBLISHED_TO_C 在 None 时兜底（实测落库 PUBLISHED_TO_C） | 模型默认值核查（实证） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_449 | A | status 实参脱落——ORM default=PUBLISHED_TO_C 恰等价 | 模型默认值核查 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_460 | A | run.error None vs 空串——空值形态未钉 | 空值形态无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_461 | A | memory 条目 content 措辞 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_462 | A | memory 条目 content 措辞 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_464 | A | memory 条目 content 措辞 | 文案无措辞条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_479 | A | source_event 值未钉枚举 | 字段形态无条款 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_480 | A | source_event 值未钉枚举 | 字段形态无条款 |
