@@ -252,3 +252,127 @@
 | app.ingest.web.x_fetch_web_source__mutmut_241 | A | apply_fp=False→None：假值，单页调用点显式传 False，豁免语义不变 | G1 先例（B7 豁免）语义不变 |
 | app.ingest.web.x_fetch_web_source__mutmut_255 | A | ignore_page_date and False：键未钉（同 m17 组）且配置缺省时恰等价 | 同 m17 |
 | app.ingest.web.x_fetch_web_source__mutmut_259 | A | 成功路径 last_fetched_at naive：同 m55 | 同 m55 |
+
+## 批次 5：ingest.rss 主带 + 小模块 + C1-1 十三条 D 转 C（2026-10-03，C1-4）
+
+> 本批种子 248 条（rss 199 + sanitize 18 + rules 10 + fingerprint 8 + providers 13
+> 〔C1-1 拍板 D 转 C〕）四分类：**C 128 / A 115 / B 0 / D 5**。C 类由
+> `tests/test_mutation_c1_4.py`（17 测试）+ 既有测试（test_url_dup /
+> test_cross_direction_independent / C1-3 sanitize 链 / M3 parse）关闭；
+> D 类 5 条不在本清单，交统筹（见 C1-4 执行汇报 §3）。以下登记 A 类 115 条。
+
+| app.ingest.fingerprint.x_canonical_url__mutmut_11 | A | fragment 分量 ""→"XXXX"：结果随即流经 normalize_url 再剥 fragment，实测恰等价 | 控制流等价 + 实证 |
+| app.ingest.fingerprint.x_find_fingerprint_origin__mutmut_7 | A | join(Source, None)：onclause=None 时 SQLAlchemy 依外键推断连接条件，恰等价 | SQLAlchemy 语义 |
+| app.ingest.fingerprint.x_find_fingerprint_origin__mutmut_9 | A | join(Source, )：同 m7（尾逗号语法变体） | SQLAlchemy 语义 |
+| app.ingest.fingerprint.x_url_fingerprint__mutmut_6 | A | encode("utf-8")→encode("UTF-8")：编解码别名，字节序列相同 | Python 编解码别名 |
+| app.ingest.rss.x__entry_published__mutmut_6 | A | updated_parsed 槽位 get(None)：updated 回退取舍无条款（C1-3 _published_date 同域先例：日期形态未钉） | C1-3 先例 |
+| app.ingest.rss.x__entry_published__mutmut_7 | A | updated 键 XX：同 m6 | 同 m6 |
+| app.ingest.rss.x__entry_published__mutmut_8 | A | updated 键大写：同 m6 | 同 m6 |
+| app.ingest.rss.x__entry_published__mutmut_10 | A | tzinfo=None（naive）：存储 tz 未钉，规则链 naive/aware 双兼容（replace 补 UTC）——C1-3 m55 先例 | D16 范围核查 + C1-3 先例 |
+| app.ingest.rss.x__entry_published__mutmut_12 | A | tzinfo 实参删除：同 m10 | 同 m10 |
+| app.ingest.rss.x__entry_published__mutmut_13 | A | *st[:7]：第 7 位=tm_wday(0-6) 落入 datetime 第 7 参 microsecond 位——偏差 ≤6µs，不可观察 | 控制流等价 |
+| app.ingest.rss.x__html_to_text__mutmut_1 | A | trafilatura.extract 置 None：抽取失败回退剥标签——正文抽取形态未钉（C1-3 明示先例：trafilatura 参数、markdown 形态未规定归 A） | C1-3 先例（形态未钉） |
+| app.ingest.rss.x__html_to_text__mutmut_2 | A | extract(None)：同 m1 | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_3 | A | include_comments=None：同 m1 | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_4 | A | include_tables=None：同 m1 | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_5 | A | extract 删 html 实参：同 m1（TypeError 被捕获回退） | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_6 | A | 删 include_comments：同 m1（缺省值语义差异属形态未钉） | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_7 | A | 删 include_tables：同 m1 | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_8 | A | include_comments=True：同 m1 | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_9 | A | include_tables=True：同 m1 | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_10 | A | and→or：text=None 时 or 短路求值 text.strip() 抛 AttributeError 被 try 捕获回退——结果等价 | 控制流等价 |
+| app.ingest.rss.x__html_to_text__mutmut_16 | A | 回退 _TAG_RE.sub("XX XX")：标签替换占位文本形态未钉（回退链尾部） | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_23 | A | 回退 \s+ 正则 XX 化：空白折叠失效——文本形态未钉 | 同 m1 |
+| app.ingest.rss.x__html_to_text__mutmut_24 | A | 回退替换串 "XX XX"：同 m16 | 同 m1 |
+| app.ingest.rss.x_extract_entry_text__mutmut_1 | A | html 初值 None：content/summary 均缺时返回 ""（html 假值）——与初值 "" 行为等价 | 控制流等价 |
+| app.ingest.rss.x_extract_entry_text__mutmut_2 | A | html 初值 "XXXX"：同 m1（content/summary 缺时返回 "XXXX"——正文空值形态无条款） | 无条款域核查 |
+| app.ingest.rss.x_extract_entry_text__mutmut_3 | A | content 置 None：回退 summary——content 优先序无条款（模块表 rss 行未钉 entry 正文抽取链） | 抽取链无条款核查 |
+| app.ingest.rss.x_extract_entry_text__mutmut_4 | A | content 键 get(None)：同 m3 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_5 | A | content 键 XX：同 m3 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_6 | A | content 键大写：同 m3 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_8 | A | and→or：content 为非 list 真值（dict）时 content[0] KeyError——差异域=畸形 entry（形态无条款），正常 feed 恰等价 | 无条款域核查 |
+| app.ingest.rss.x_extract_entry_text__mutmut_9 | A | content[0].get(None)：value 键探测 None——content[0] 无 value 键时行为差异域=畸形 entry（无条款） | 同上 |
+| app.ingest.rss.x_extract_entry_text__mutmut_10 | A | 探测 content[1]：单元素 content 时探测失败走 summary——content 多元素形态无条款 | 同上 |
+| app.ingest.rss.x_extract_entry_text__mutmut_11 | A | value 键探测 XX：同 m3 域（content→summary 回退） | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_12 | A | value 键探测大写：同 m3 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_13 | A | html=content[0]["value"] 置 None：content 存在时返回 ""——正文抽取形态无条款 | 抽取链无条款核查 |
+| app.ingest.rss.x_extract_entry_text__mutmut_14 | A | content[1]["value"]：同 m10 域（多元素形态无条款） | 同 m10 |
+| app.ingest.rss.x_extract_entry_text__mutmut_15 | A | 取值键 XX：同 m3 域（KeyError 不可达——探测已失败走 else） | 控制流等价 |
+| app.ingest.rss.x_extract_entry_text__mutmut_16 | A | 取值键大写：同 m15 | 同 m15 |
+| app.ingest.rss.x_extract_entry_text__mutmut_18 | A | summary or description and ""：差异域=summary 缺而 description 在（返回 description——原实现亦然？核：a or (b and "")——summary 缺→None or (desc and "")→"" vs 原 desc）——仅 description 独存条目正文为空，形态无条款 | 无条款域核查 |
+| app.ingest.rss.x_extract_entry_text__mutmut_19 | A | summary and description or ""：差异域=summary 缺而 description 在（变异返回 description）——同 m18 域 | 同上 |
+| app.ingest.rss.x_extract_entry_text__mutmut_20 | A | summary 键 get(None)：同 m3 域 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_21 | A | summary 键 XX：同 m3 域 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_22 | A | summary 键大写：同 m3 域 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_23 | A | description 键 get(None)：同 m3 域 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_24 | A | description 键 XX：同 m3 域 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_25 | A | description 键大写：同 m3 域 | 同 m3 |
+| app.ingest.rss.x_extract_entry_text__mutmut_26 | A | or "XXXX"：content/summary 全缺条目正文 "XXXX"——正文空值形态无条款 | 无条款域核查 |
+| app.ingest.rss.x_extract_entry_text__mutmut_28 | A | if (html) or True：html 空时 _html_to_text("") 返回 ""——恰等价 | 控制流等价 |
+| app.ingest.rss.x_extract_entry_text__mutmut_30 | A | else "XXXX"：同 m26 | 同 m26 |
+| app.ingest.rss.x_fetch_source__mutmut_7 | A | UA 键 XX：UA 内容无条款（R9 UA 策略为 site_config 预留，未钉抓取头——C1-3 m28 先例） | R9 范围核查 |
+| app.ingest.rss.x_fetch_source__mutmut_8 | A | UA 键小写：httpx 线缆统一小写恰等价 | httpx.Headers 实证 |
+| app.ingest.rss.x_fetch_source__mutmut_9 | A | UA 键大写：同 m8 | 同 m8 |
+| app.ingest.rss.x_fetch_source__mutmut_14 | A | If-Modified-Since 置 None：条件头回传未钉，etag/哈希兜底（C1-3 m35 先例） | 模块表硬约束范围核查 |
+| app.ingest.rss.x_fetch_source__mutmut_15 | A | If-Modified-Since 键 XX：同 m14 | 同 m14 |
+| app.ingest.rss.x_fetch_source__mutmut_16 | A | If-Modified-Since 键小写：同 m14（键形态未钉） | 同 m14 |
+| app.ingest.rss.x_fetch_source__mutmut_17 | A | If-Modified-Since 键大写：同 m14 | 同 m14 |
+| app.ingest.rss.x_fetch_source__mutmut_22 | A | timeout 60.0→61.0：显式超时语义不变，任意有限值满足 §4.2（C1-3 m43 先例） | 技术书 §4.2 |
+| app.ingest.rss.x_fetch_source__mutmut_88 | A | fetched_at 实参删除：ORM default=utcnow 兜底（models.py Item.fetched_at），恰等价 | 模型默认值核查 |
+| app.ingest.rss.x_fetch_source__mutmut_91 | A | fetched_at naive（now(None)）：存储 tz 未钉（C1-3 m160 先例） | D16 范围核查 |
+| app.ingest.rss.x_fetch_source__mutmut_122 | A | SanitizeTarget(url=None)：现有链（passthrough/KeywordDeny）不读 url 字段（C1-3 m187 先例） | sanitize.py 调用点核查 |
+| app.ingest.rss.x_fetch_source__mutmut_125 | A | SanitizeTarget url 实参删除：同 m122 | 同 m122 |
+| app.ingest.rss.x_fetch_source__mutmut_149 | A | log.warning(None,...)：日志文案无条款（AC-04.2 last_error 证据由 stats.error 承载） | 文案无措辞条款 |
+| app.ingest.rss.x_fetch_source__mutmut_150 | A | log 参数 source.id→None：同 m149 | 同 m149 |
+| app.ingest.rss.x_fetch_source__mutmut_151 | A | log 参数 e→None：同 m149 | 同 m149 |
+| app.ingest.rss.x_fetch_source__mutmut_152 | A | log 参数形态变化：同 m149 | 同 m149 |
+| app.ingest.rss.x_fetch_source__mutmut_153 | A | log 缺 source.id 参数：同 m149 | 同 m149 |
+| app.ingest.rss.x_fetch_source__mutmut_154 | A | log 缺 e 参数：同 m149 | 同 m149 |
+| app.ingest.rss.x_fetch_source__mutmut_155 | A | log 文案 XX 包裹：同 m149 | 同 m149 |
+| app.ingest.rss.x_fetch_source__mutmut_156 | A | log 文案大写变体：同 m149 | 同 m149 |
+| app.ingest.rss.x_fetch_source__mutmut_164 | A | resp.headers["ETAG"]：httpx.Headers 大小写不敏感，恰等价 | httpx.Headers 实证 |
+| app.ingest.rss.x_fetch_source__mutmut_165 | A | etag 截断 [:500]→[:501]：SQLite 不强制 VARCHAR 长度（C1-2/C1-3 先例） | ADR-1 + C1-3 m72 先例 |
+| app.ingest.rss.x_fetch_source__mutmut_167 | A | last-modified 存储跳过（get 键 XX）：last_modified 回传/存储未钉，etag 兜底（C1-3 m78 先例） | 模块表硬约束范围核查 |
+| app.ingest.rss.x_fetch_source__mutmut_168 | A | get("LAST-MODIFIED")：httpx 大小写不敏感恰等价 | httpx.Headers 实证 |
+| app.ingest.rss.x_fetch_source__mutmut_169 | A | last_modified 置 None：存储未钉（C1-3 m80 先例） | 同 m167 |
+| app.ingest.rss.x_fetch_source__mutmut_170 | A | 取值键 XX：同 m167 | 同 m167 |
+| app.ingest.rss.x_fetch_source__mutmut_171 | A | 取值键大写：httpx 大小写不敏感恰等价 | httpx.Headers 实证 |
+| app.ingest.rss.x_fetch_source__mutmut_172 | A | last_modified 截断 [:501]：同 m165 | 同 m165 |
+| app.ingest.rss.x_normalize_guid__mutmut_2 | A | or→and（link 与 link_alt）：差异域=仅 link_alt 无 id/link 的条目被丢弃——link_alt 回退不在 B4 设计链（归一化 link → URL 型 guid）内 | B4 链范围核查 |
+| app.ingest.rss.x_normalize_guid__mutmut_3 | A | and→or（id or (link and link_alt)）：差异域=link 与 link_alt 同在时取 link_alt——link_alt 优先序无条款（既有测试仅钉 id>link） | 同上 |
+| app.ingest.rss.x_normalize_guid__mutmut_8 | A | link 槽位 entry.get(None)：有 id 或无 link_alt 时经回退分支恰等价；差异域同 m3 | 同上 |
+| app.ingest.rss.x_normalize_guid__mutmut_9 | A | link 槽位键 XX：同 m8 | 同上 |
+| app.ingest.rss.x_normalize_guid__mutmut_10 | A | link 槽位键大写：同 m8 | 同上 |
+| app.ingest.rss.x_normalize_guid__mutmut_11 | A | link_alt 槽位 entry.get(None)：仅 link_alt-only 条目差异（无条款） | B4 链范围核查 |
+| app.ingest.rss.x_normalize_guid__mutmut_12 | A | link_alt 槽位键 XX：同 m11 | 同上 |
+| app.ingest.rss.x_normalize_guid__mutmut_13 | A | link_alt 槽位键大写：同 m11 | 同上 |
+| app.ingest.rss.x_normalize_guid__mutmut_14 | A | or "XXXX"：id/link/link_alt 全空条目由丢弃变异为收录 bogus guid——guid 缺失条目处理形态无条款 | 无条款域核查 |
+| app.ingest.rss.x_normalize_guid__mutmut_23 | A | 回退 normalize_url(None)：回退仅在 raw 为空（三者全空）时可达，此时 entry.get("link") 亦为空——normalize_url(None)→None 与 "" 同为假值，条目均被 parse 跳过，恰等价 | 控制流等价 |
+| app.ingest.rss.x_normalize_guid__mutmut_24 | A | 回退 entry.get("link") and ""：同 m23（回退域内恰等价） | 同 m23 |
+| app.ingest.rss.x_normalize_guid__mutmut_25 | A | 回退 entry.get(None) or ""：同 m23 | 同 m23 |
+| app.ingest.rss.x_normalize_guid__mutmut_26 | A | 回退键 XX：同 m23 | 同 m23 |
+| app.ingest.rss.x_normalize_guid__mutmut_27 | A | 回退键大写：同 m23 | 同 m23 |
+| app.ingest.rss.x_normalize_guid__mutmut_28 | A | 回退 or "XXXX"：同 m14（bogus guid 形态无条款） | 同 m14 |
+| app.ingest.rss.x_normalize_url__mutmut_7 | A | keep_blank_values=None（缺省 False）：空白值查询参数保留与否——归一化微差，无条款（任务书 §2「无条款的归一化微差归 A」） | 归一化条款范围核查 |
+| app.ingest.rss.x_normalize_url__mutmut_9 | A | keep_blank_values 实参删除：同 m7 | 同 m7 |
+| app.ingest.rss.x_normalize_url__mutmut_10 | A | keep_blank_values=False：同 m7 | 同 m7 |
+| app.ingest.rss.x_parse_feed_entries__mutmut_24 | A | url or "XXXX"：缺 link 条目 url "XXXX"——url 空值形态无条款（注：feedparser 对可回填 guid 会注入 link，差异域=不可回填 guid 条目） | 无条款域核查 |
+| app.ingest.rss.x_parse_feed_entries__mutmut_29 | A | title or "XXXX"：缺标题条目 title "XXXX"——标题空值形态无条款 | 无条款域核查 |
+| app.ingest.rules.x_apply_rules__mutmut_15 | A | too_short 返回 passed=None：全部调用点按真值判断（fetch_source if rule.passed / 单测 not r.passed），None≡False | 调用点核查 |
+| app.ingest.rules.x_apply_rules__mutmut_21 | A | kw and→or：差异域=blacklist 含空串（原跳过/变异全拒）——blacklist 内容形态无条款，空串 kw 处理属信息性防御 | 无条款域核查 |
+| app.ingest.rules.x_apply_rules__mutmut_23 | A | blacklist 返回 passed=None：同 m15 | 调用点核查 |
+| app.ingest.rules.x_apply_rules__mutmut_30 | A | aware 判定 and False：aware 非 UTC 时钟面替换——D16 仅钉日切口径，规则链 naive/aware 双兼容（C1-3 先例） | D16 范围核查 |
+| app.ingest.rules.x_apply_rules__mutmut_38 | A | expired 返回 passed=None：同 m15 | 调用点核查 |
+| app.ingest.sanitize.x_run_sanitize__mutmut_2 | A | last_pass 初值 None：初值仅在链为空时返回——build_chain 恒返回非空链（至少 passthrough 一项），循环体必覆写，不可达 | 控制流推理（build_chain 全分支核查） |
+| app.ingest.sanitize.x_run_sanitize__mutmut_3 | A | 同 m2（passed=None 形态） | 同 m2 |
+| app.ingest.sanitize.x_run_sanitize__mutmut_4 | A | 同 m2（reason=None 形态） | 同 m2 |
+| app.ingest.sanitize.x_run_sanitize__mutmut_6 | A | 同 m2（reason 缺省形态） | 同 m2 |
+| app.ingest.sanitize.x_run_sanitize__mutmut_7 | A | 同 m2（passed=False 形态） | 同 m2 |
+| app.ingest.sanitize.x_run_sanitize__mutmut_8 | A | 同 m2（reason XX 形态） | 同 m2 |
+| app.ingest.sanitize.x_run_sanitize__mutmut_9 | A | 同 m2（reason 大写形态） | 同 m2 |
+| app.ingest.sanitize.xǁKeywordDenySanitizerǁcheck__mutmut_3 | A | REJECT 结果 passed=None：run_sanitize 与全部调用点按真值判断（not result.passed / if sr.passed），行为等价 | 调用点核查 |
+| app.providers.base.xǁHTTPProviderǁ__init____mutmut_5 | A | base_url.lstrip("/")：合法绝对 URL 配置以 scheme 开头，域内恒等价；ADR-8 条款域=尾斜杠有无（不覆盖前导斜杠配置，httpx 亦不接受相对 base_url） | ADR-8 条款域核查 + 实证 |
+| app.providers.base.xǁHTTPProviderǁ__init____mutmut_9 | A | 键 "authorization" 小写：httpx 发送前统一小写头名（MockTransport 实测捕获），线缆形态恰等价 | httpx.Headers 实证 |
+| app.providers.base.xǁHTTPProviderǁ__init____mutmut_10 | A | 键 "AUTHORIZATION" 大写：同 m9（线缆统一小写） | httpx.Headers 实证 |
+| app.providers.base.xǁHTTPProviderǁ__init____mutmut_12 | A | 键 "content-type" 小写：同 m9 | httpx.Headers 实证 |
+| app.providers.base.xǁHTTPProviderǁ__init____mutmut_13 | A | 键 "CONTENT-TYPE" 大写：同 m9 | httpx.Headers 实证 |
