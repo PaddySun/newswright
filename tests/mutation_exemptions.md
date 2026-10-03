@@ -693,3 +693,270 @@
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_464 | A | memory 条目 content 措辞 | 文案无措辞条款 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_479 | A | source_event 值未钉枚举 | 字段形态无条款 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_480 | A | source_event 值未钉枚举 | 字段形态无条款 |
+
+## 批次 7：authors.pipeline 模块级函数（2026-10-03，C1-5b）
+
+> 本批无 B 类、无 D 类变异。C 类 171 条（新增 130 + 既有测试闭合 41）由 `tests/test_mutation_c1_5b.py` 15 测试关闭（另 19 条由既有测试闭合），不在本清单。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.authors.pipeline.x__citation_discipline__mutmut_1 | A | example 初始/sent next 缺省 None/省略——均 falsy 被 if sent 短路跳过示例构造，恰等价（2=XXXX 措辞） | 控制流等价 + 措辞 |
+| app.authors.pipeline.x__citation_discipline__mutmut_10 | A | example 初始/sent next 缺省 None/省略——均 falsy 被 if sent 短路跳过示例构造，恰等价（2=XXXX 措辞） | 控制流等价 + 措辞 |
+| app.authors.pipeline.x__citation_discipline__mutmut_16 | A | 分句正则/阈值/内容读取变体——动态示例文本形态 | 提示词形态（C1-5a：引用纪律段归 A） |
+| app.authors.pipeline.x__citation_discipline__mutmut_17 | A | 分句正则/阈值/内容读取变体——动态示例文本形态 | 提示词形态（C1-5a：引用纪律段归 A） |
+| app.authors.pipeline.x__citation_discipline__mutmut_18 | A | 分句正则/阈值/内容读取变体——动态示例文本形态 | 提示词形态（C1-5a：引用纪律段归 A） |
+| app.authors.pipeline.x__citation_discipline__mutmut_19 | A | 分句正则/阈值/内容读取变体——动态示例文本形态 | 提示词形态（C1-5a：引用纪律段归 A） |
+| app.authors.pipeline.x__citation_discipline__mutmut_2 | A | example 初始/sent next 缺省 None/省略——均 falsy 被 if sent 短路跳过示例构造，恰等价（2=XXXX 措辞） | 控制流等价 + 措辞 |
+| app.authors.pipeline.x__citation_discipline__mutmut_20 | A | 分句正则/阈值/内容读取变体——动态示例文本形态 | 提示词形态（C1-5a：引用纪律段归 A） |
+| app.authors.pipeline.x__citation_discipline__mutmut_21 | A | 分句正则/阈值/内容读取变体——动态示例文本形态 | 提示词形态（C1-5a：引用纪律段归 A） |
+| app.authors.pipeline.x__citation_discipline__mutmut_22 | A | example 文本/截断变体——提示词措辞 | 提示词形态 |
+| app.authors.pipeline.x__citation_discipline__mutmut_23 | A | example 文本/截断变体——提示词措辞 | 提示词形态 |
+| app.authors.pipeline.x__citation_discipline__mutmut_24 | A | example 文本/截断变体——提示词措辞 | 提示词形态 |
+| app.authors.pipeline.x__citation_discipline__mutmut_25 | A | example 文本/截断变体——提示词措辞 | 提示词形态 |
+| app.authors.pipeline.x__citation_discipline__mutmut_26 | A | 可用条目 ID 串构造变体——提示词措辞 | 提示词形态 |
+| app.authors.pipeline.x__citation_discipline__mutmut_28 | A | 可用条目 ID 串构造变体——提示词措辞 | 提示词形态 |
+| app.authors.pipeline.x__citation_discipline__mutmut_29 | A | 可用条目 ID 串构造变体——提示词措辞 | 提示词形态 |
+| app.authors.pipeline.x__citation_discipline__mutmut_6 | A | example 初始/sent next 缺省 None/省略——均 falsy 被 if sent 短路跳过示例构造，恰等价（2=XXXX 措辞） | 控制流等价 + 措辞 |
+| app.authors.pipeline.x__citation_discipline__mutmut_8 | A | example 初始/sent next 缺省 None/省略——均 falsy 被 if sent 短路跳过示例构造，恰等价（2=XXXX 措辞） | 控制流等价 + 措辞 |
+| app.authors.pipeline.x__draft_task__mutmut_10 | A | gates.length 读取旁路——仅影响提示词字数措辞（门禁侧已由 C1-5a 覆盖） | 提示词形态（C1-5a 先例：长度 note 归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_12 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_13 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_14 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_15 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_16 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_17 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_18 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_19 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_20 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_21 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_22 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_23 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_24 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_25 | A | length.get 变体/缺省 600/1400——输出格式段措辞 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_27 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_31 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_32 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_33 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_34 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_35 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_36 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_37 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_38 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_39 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_40 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_41 | A | citation min_count 读取/缺省变体——引用纪律段措辞（门禁侧 C1-5a 已覆盖） | 提示词形态（C1-5a 先例：引用纪律段归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_42 | A | task = 替换拼接——提示词段落组合形态 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_44 | A | task = 替换拼接——提示词段落组合形态 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_47 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_48 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_49 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_50 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_52 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_53 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_54 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_55 | A | 腹稿 json.dumps 形态/措辞变体 | 提示词形态 |
+| app.authors.pipeline.x__draft_task__mutmut_56 | A | outline or section——生产调用点 outline/section 恒成对或恒缺，异或组合不可达 | 调用点核查：node_draft/快照行 572 |
+| app.authors.pipeline.x__draft_task__mutmut_62 | A | sections[i-2]——提示词内规划内容错位，行为仍按 JSON 序列 | 提示词形态（C1-5a：rolling 节间拼接符归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_63 | A | task = 替换拼接——提示词段落组合形态 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_65 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_66 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_67 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_68 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_69 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_7 | A | gates.length 读取旁路——仅影响提示词字数措辞（门禁侧已由 C1-5a 覆盖） | 提示词形态（C1-5a 先例：长度 note 归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_70 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_71 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_72 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_73 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_74 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_75 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_76 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_77 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_78 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_79 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_8 | A | gates.length 读取旁路——仅影响提示词字数措辞（门禁侧已由 C1-5a 覆盖） | 提示词形态（C1-5a 先例：长度 note 归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_80 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_81 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_82 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_83 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_84 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_85 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_86 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_87 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_88 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_89 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_9 | A | gates.length 读取旁路——仅影响提示词字数措辞（门禁侧已由 C1-5a 覆盖） | 提示词形态（C1-5a 先例：长度 note 归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_90 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_91 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_92 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_93 | A | task = 替换拼接——提示词段落组合形态 | 提示词形态（C1-5a 先例） |
+| app.authors.pipeline.x__draft_task__mutmut_96 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__draft_task__mutmut_98 | A | title/thesis/key/brief get 变体、XX 包裹、join 分隔符——提示词措辞 | 提示词形态（任务书 §2：措辞归 A） |
+| app.authors.pipeline.x__identity_system__mutmut_14 | A | do 列表 join 分隔符/项目符变体——人格卡措辞（条目内容事实已测） | 提示词形态（措辞归 A；内容事实性归 C 组） |
+| app.authors.pipeline.x__identity_system__mutmut_16 | A | do 列表 join 分隔符/项目符变体——人格卡措辞（条目内容事实已测） | 提示词形态（措辞归 A；内容事实性归 C 组） |
+| app.authors.pipeline.x__identity_system__mutmut_18 | A | rules.get('do', 默认)——do schema 必填（_str_list required），缺省不可达 | schema._str_list 必填核查 |
+| app.authors.pipeline.x__identity_system__mutmut_20 | A | rules.get('do', 默认)——do schema 必填（_str_list required），缺省不可达 | schema._str_list 必填核查 |
+| app.authors.pipeline.x__identity_system__mutmut_23 | A | do 列表 join 分隔符/项目符变体——人格卡措辞（条目内容事实已测） | 提示词形态（措辞归 A；内容事实性归 C 组） |
+| app.authors.pipeline.x__identity_system__mutmut_27 | A | dont 列表 join/项目符变体——人格卡措辞 | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_29 | A | dont 列表 join/项目符变体——人格卡措辞 | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_31 | A | dont schema 必填，缺省不可达 | schema._str_list 必填核查 |
+| app.authors.pipeline.x__identity_system__mutmut_33 | A | dont schema 必填，缺省不可达 | schema._str_list 必填核查 |
+| app.authors.pipeline.x__identity_system__mutmut_36 | A | dont 列表 join/项目符变体——人格卡措辞 | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_37 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_38 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_40 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_41 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_42 | A | fingerprint schema 必填，缺省不可达 | schema._str_list 必填核查 |
+| app.authors.pipeline.x__identity_system__mutmut_44 | A | fingerprint schema 必填，缺省不可达 | schema._str_list 必填核查 |
+| app.authors.pipeline.x__identity_system__mutmut_45 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_46 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_47 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_48 | A | fps join/截断/键变体——人格卡措辞（门禁词表侧 C1-5a 已覆盖） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_52 | A | quotes_original join/截断变体——人格卡措辞（条目内容事实已测） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_54 | A | quotes_original join/截断变体——人格卡措辞（条目内容事实已测） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_56 | A | quotes_original schema 必填键，缺省不可达 | schema 必填键核查 |
+| app.authors.pipeline.x__identity_system__mutmut_58 | A | quotes_original schema 必填键，缺省不可达 | schema 必填键核查 |
+| app.authors.pipeline.x__identity_system__mutmut_6 | A | get('style_rules', 缺省)——style_rules schema 必填恒存在，缺省不可达 | schema 必填 + 控制流等价 |
+| app.authors.pipeline.x__identity_system__mutmut_61 | A | quotes_original join/截断变体——人格卡措辞（条目内容事实已测） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_62 | A | quotes_original join/截断变体——人格卡措辞（条目内容事实已测） | 提示词形态 |
+| app.authors.pipeline.x__identity_system__mutmut_65 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_66 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_67 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_68 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_69 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_70 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_71 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_72 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_73 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_74 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_75 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_76 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_77 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_78 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_79 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_8 | A | get('style_rules', 缺省)——style_rules schema 必填恒存在，缺省不可达 | schema 必填 + 控制流等价 |
+| app.authors.pipeline.x__identity_system__mutmut_80 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_81 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_82 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_83 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_84 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_85 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_86 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_87 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_88 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__identity_system__mutmut_89 | A | description/personality/values_stance/scenario/style_anchor 读取与（未提供）兜底变体——人格卡措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__recent_titles__mutmut_1 | A | n=0 域 limit(0) 恰等价空列表 | 控制流等价 |
+| app.authors.pipeline.x__refs_listing__mutmut_12 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_13 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_14 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_18 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_19 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_20 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_22 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_23 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_25 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_27 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_4 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__refs_listing__mutmut_9 | A | 正文兜底/相关分/来源/（无正文）兜底/分隔符——阅读集条目展示形态措辞 | 提示词形态（任务书 §2） |
+| app.authors.pipeline.x__slices_block__mutmut_10 | A | 空切片 XXXX/连接符/tail 条件变体——两分支串仅尾换行之差，注入内容形态措辞（C1-5a 同款先例：两分支同串归 A） | 提示词形态（任务书 §2：注入内容形态归 A） |
+| app.authors.pipeline.x__slices_block__mutmut_11 | A | 空切片 XXXX/连接符/tail 条件变体——两分支串仅尾换行之差，注入内容形态措辞（C1-5a 同款先例：两分支同串归 A） | 提示词形态（任务书 §2：注入内容形态归 A） |
+| app.authors.pipeline.x__slices_block__mutmut_12 | A | 空切片 XXXX/连接符/tail 条件变体——两分支串仅尾换行之差，注入内容形态措辞（C1-5a 同款先例：两分支同串归 A） | 提示词形态（任务书 §2：注入内容形态归 A） |
+| app.authors.pipeline.x__slices_block__mutmut_2 | A | 空切片 XXXX/连接符/tail 条件变体——两分支串仅尾换行之差，注入内容形态措辞（C1-5a 同款先例：两分支同串归 A） | 提示词形态（任务书 §2：注入内容形态归 A） |
+| app.authors.pipeline.x__slices_block__mutmut_5 | A | 空切片 XXXX/连接符/tail 条件变体——两分支串仅尾换行之差，注入内容形态措辞（C1-5a 同款先例：两分支同串归 A） | 提示词形态（任务书 §2：注入内容形态归 A） |
+| app.authors.pipeline.x__slices_block__mutmut_8 | A | 空切片 XXXX/连接符/tail 条件变体——两分支串仅尾换行之差，注入内容形态措辞（C1-5a 同款先例：两分支同串归 A） | 提示词形态（任务书 §2：注入内容形态归 A） |
+| app.authors.pipeline.x__slices_block__mutmut_9 | A | 空切片 XXXX/连接符/tail 条件变体——两分支串仅尾换行之差，注入内容形态措辞（C1-5a 同款先例：两分支同串归 A） | 提示词形态（任务书 §2：注入内容形态归 A） |
+| app.authors.pipeline.x__static_injection__mutmut_101 | A | 同 54/59——text 必填不可达 | schema 必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_103 | A | 同 54/59——text 必填不可达 | schema 必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_106 | A | 同 54/59——text 必填不可达 | schema 必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_111 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_112 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_113 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_114 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_115 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_116 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_117 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_118 | A | out[].id 键/值变体——out 仅被 _slices_block 消费 text，id 无消费点 | 控制流等价（死键） |
+| app.authors.pipeline.x__static_injection__mutmut_125 | A | b.get('id', 默认)——块 id schema 必填，缺省不可达 | schema 必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_127 | A | b.get('id', 默认)——块 id schema 必填，缺省不可达 | schema 必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_130 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_131 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_132 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_133 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_134 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_135 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_136 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_137 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_138 | A | source 键/值变体——source 记录字段形态未钉（§4.1 只钉 static_injection 明细存在） | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_141 | A | original_chars 记录键未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_142 | A | original_chars 记录键未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_145 | A | selection 记录键未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_146 | A | selection 记录键未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x__static_injection__mutmut_25 | A | or 501 缺省——per_block_max_chars schema 必填（lo=1），缺省不可达 | schema._validate_memory 必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_35 | A | or 缺省字面量——selection schema 必填枚举不可达；且非 recency/relevant 字面量仍落入 else=round_robin 恰等价 | schema 必填 + 控制流恰等价 |
+| app.authors.pipeline.x__static_injection__mutmut_36 | A | or 缺省字面量——selection schema 必填枚举不可达；且非 recency/relevant 字面量仍落入 else=round_robin 恰等价 | schema 必填 + 控制流恰等价 |
+| app.authors.pipeline.x__static_injection__mutmut_54 | A | b.get('text', 默认)——static_blocks 项 text 为 schema 必填 str，缺省不可达 | schema._validate_memory 项内必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_56 | A | b.get('text',) 即 get('text')——text 键 schema 必填恒存在，恰等价 | 控制流等价 |
+| app.authors.pipeline.x__static_injection__mutmut_59 | A | b.get('text', 默认)——static_blocks 项 text 为 schema 必填 str，缺省不可达 | schema._validate_memory 项内必填键核查 |
+| app.authors.pipeline.x__static_injection__mutmut_62 | A | (len>=2) or True——len<2 域两分支均得空集，恰等价 | 控制流等价 |
+| app.authors.pipeline.x__static_injection__mutmut_70 | A | max(1,·) 与 max(0,·) 在 len>=2 闸门域（len-1>=1）恒等价 | 控制流等价 |
+| app.authors.pipeline.x__static_injection__mutmut_71 | A | 多出的空串/单字 gram 元素不可能属于 2 字标题 gram 集合，交集不变 | 控制流等价 |
+| app.authors.pipeline.x__static_injection__mutmut_76 | A | 空集域 len(&) = 0 = 0.0，恰等价 | 控制流等价 |
+| app.authors.pipeline.x_assemble_article_text__mutmut_11 | A | XX&lt;XX 包裹——合法实体仍在，转义纪律满足，包裹形态未钉 | 形态无条款 |
+| app.authors.pipeline.x_assemble_article_text__mutmut_14 | A | 空白裁剪方向——形态差异 | 形态无条款 |
+| app.authors.pipeline.x_assemble_article_text__mutmut_19 | A | sub('XXXX') 残留形态——散落定义行仍被移出定义区 | 形态无条款 |
+| app.authors.pipeline.x_assemble_article_text__mutmut_24 | A | or True——空定义域尾部空行差异 | 形态无条款 |
+| app.authors.pipeline.x_assemble_article_text__mutmut_26 | A | 分隔符/else 形态——定义行格式（钉）不变 | 形态无条款（[^nK] 行格式本身已测） |
+| app.authors.pipeline.x_assemble_article_text__mutmut_28 | A | 分隔符/else 形态——定义行格式（钉）不变 | 形态无条款（[^nK] 行格式本身已测） |
+| app.authors.pipeline.x_assemble_article_text__mutmut_29 | A | 分隔符/else 形态——定义行格式（钉）不变 | 形态无条款（[^nK] 行格式本身已测） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_1 | A | 签名缺省 'manual' 变体——全部调用点（writer.run_write/API write_task）显式传参，缺省不可达 | 调用点核查：writer.py:219、routes.py:53 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_10 | A | cfg.get('route', None/)——route 为 schema 必填节恒存在，缺省形态不可达 | schema 必填 + 控制流等价 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_100 | A | overrides 镜像键名未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_103 | A | payload.batch_id 键名未钉（§4.1 钉的是列） | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_104 | A | payload.batch_id 键名未钉（§4.1 钉的是列） | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_105 | A | reading_window 镜像键名未钉 | §4.1 字段范围核查（C1-5a 同款先例） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_106 | A | reading_window 镜像键名未钉 | §4.1 字段范围核查（C1-5a 同款先例） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_107 | A | 初始值被 execute 写回遮蔽 | 控制流等价（终态写回） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_109 | A | 初始值被终态写回遮蔽 | 控制流等价（终态写回） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_110 | A | 初始值被终态写回遮蔽 | 控制流等价（终态写回） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_128 | A | _ = article→None——article 无后续消费 | 控制流等价（死代码） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_133 | A | error='None' 形态——原因留痕仍非空，文案无条款 | 文案无措辞条款 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_2 | A | 签名缺省 'manual' 变体——全部调用点（writer.run_write/API write_task）显式传参，缺省不可达 | 调用点核查：writer.py:219、routes.py:53 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_24 | A | reading_set_item_ids=None——该列内容未钉（§4.1 关键列不含） | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_25 | A | payload=None——config_error 域 payload 无断言消费点 | 字段形态未钉 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_26 | A | prompt_snapshot=None vs ''——空值形态未钉 | 空值形态无条款 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_32 | A | 构造器缺参——ORM 列级 default（dict/[]/''）恰兜底 | app/models.py WriteRun 列 default 核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_33 | A | 构造器缺参——ORM 列级 default（dict/[]/''）恰兜底 | app/models.py WriteRun 列 default 核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_34 | A | 构造器缺参——ORM 列级 default（dict/[]/''）恰兜底 | app/models.py WriteRun 列 default 核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_38 | A | config_error 键名形态——payload 内部键未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_39 | A | config_error 键名形态——payload 内部键未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_40 | A | 错误文本 'None' 形态——文案无措辞条款 | 文案无措辞条款 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_41 | A | [:1000]→[:1001]——错误文本截断界无条款 | 截断界无条款（C1-5a 先例） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_42 | A | XXXX vs ''——未写快照的占位形态未钉 | 空值形态无条款 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_46 | A | error 文案变体——无措辞条款 | 文案无措辞条款 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_47 | A | error 文案变体——无措辞条款 | 文案无措辞条款 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_57 | A | reading_set_item_ids=None——列内容未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_59 | A | 初始 prompt_snapshot None/缺参——execute 均写回终值，被遮蔽 | 控制流等价（终态写回） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_61 | A | 初始 status None/缺参——execute 终态恒写回 OK/FAILED，被遮蔽 | 控制流等价（终态写回） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_64 | A | 缺参→ORM default=list——值域未钉 | 字段未钉 + ORM default |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_66 | A | 初始 prompt_snapshot None/缺参——execute 均写回终值，被遮蔽 | 控制流等价（终态写回） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_68 | A | 初始 status None/缺参——execute 终态恒写回 OK/FAILED，被遮蔽 | 控制流等价（终态写回） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_69 | A | payload.route.outline/draft 键名——payload 内部镜像形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_70 | A | payload.route.outline/draft 键名——payload 内部镜像形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_71 | A | payload.route.outline/draft 键名——payload 内部镜像形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_72 | A | payload.route.outline/draft 键名——payload 内部镜像形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_79 | A | payload.route.outline/draft 键名——payload 内部镜像形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_8 | A | cfg.get('route', None/)——route 为 schema 必填节恒存在，缺省形态不可达 | schema 必填 + 控制流等价 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_80 | A | payload.route.outline/draft 键名——payload 内部镜像形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_87 | A | payload.route.passes 镜像读取/键名——内部形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_88 | A | payload.route.passes 镜像读取/键名——内部形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_91 | A | payload.route.passes 镜像读取/键名——内部形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_92 | A | payload.route.passes 镜像读取/键名——内部形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_94 | A | payload.route.passes 镜像读取/键名——内部形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_97 | A | payload.route.passes 镜像读取/键名——内部形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_98 | A | payload.route.passes 镜像读取/键名——内部形态未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_99 | A | overrides 镜像键名未钉 | §4.1 字段范围核查 |
+| app.authors.pipeline.x_validate_citations_pipeline__mutmut_13 | A | sub('XXXX') 残留不含 [^K]——marks 集合恰等价 | 控制流等价 |
+| app.authors.pipeline.x_validate_citations_pipeline__mutmut_3 | A | content_text None 域两形态均落拒收，恰等价 | 控制流等价（拒收域） |
+| app.authors.pipeline.x_validate_citations_pipeline__mutmut_36 | A | or True——hint 空域消息形态差异，文案无条款 | 文案无措辞条款 |
+| app.authors.pipeline.x_validate_citations_pipeline__mutmut_37 | A | 同上 | 文案无措辞条款 |
+| app.authors.pipeline.x_validate_citations_pipeline__mutmut_39 | A | quote[:81]——错误文案形态 | 文案无措辞条款 |
