@@ -960,3 +960,149 @@
 | app.authors.pipeline.x_validate_citations_pipeline__mutmut_36 | A | or True——hint 空域消息形态差异，文案无条款 | 文案无措辞条款 |
 | app.authors.pipeline.x_validate_citations_pipeline__mutmut_37 | A | 同上 | 文案无措辞条款 |
 | app.authors.pipeline.x_validate_citations_pipeline__mutmut_39 | A | quote[:81]——错误文案形态 | 文案无措辞条款 |
+
+## 批次 8a：authors.schema 五域验证器+入口/缺省（2026-10-03，C1-6 第一段）
+
+> 本批无 B 类。D 类 2 条不在本清单（`x__validate_output__mutmut_44` /
+> `x__validate_route__mutmut_256`：可选 object 字段显式 null 的归一语义设计书未钉，
+> 同一拍板问题两变异体，见 C1-6 执行汇报 §3）。C 类 352 条（新增测试闭合 349 +
+> 既有/前批测试闭合 3：gates m133 由 C1-5a min_count=0 合法性测试、
+> default m166/m167 由 C1-5a max_tokens_per_node 键存在性测试闭合）
+> 由 `tests/test_mutation_c1_6.py` 闭合，不在本清单。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.authors.schema.x__validate_gates__mutmut_109 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_gates__mutmut_110 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_115 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_116 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_125 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_130 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_142 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_143 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_148 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_149 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_152 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_153 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_162 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_167 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_170 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_190 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_gates__mutmut_191 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_196 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_197 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_36 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_37 | A | 文案/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_46 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_51 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_54 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_59 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_64 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_67 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_79 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_gates__mutmut_91 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_gates__mutmut_96 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_identity__mutmut_100 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_105 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_106 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_112 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_116 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_120 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_identity__mutmut_121 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_128 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_129 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_137 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_141 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_148 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_152 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_33 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_37 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_identity__mutmut_38 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_43 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_44 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_identity__mutmut_89 | A | get 缺省 None 落归一分支（{}），行为等价 | 控制流等价推理（归一化已存在） |
+| app.authors.schema.x__validate_identity__mutmut_91 | A | get 缺省 None 落归一分支（{}），行为等价 | 控制流等价推理（归一化已存在） |
+| app.authors.schema.x__validate_identity__mutmut_99 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_memory__mutmut_100 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_105 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_108 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_11 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_126 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_131 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_139 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_144 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_147 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_memory__mutmut_15 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_179 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_183 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_19 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_memory__mutmut_191 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_195 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_196 | A | 文案/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_20 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_25 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_26 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_33 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_memory__mutmut_34 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_39 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_memory__mutmut_40 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_output__mutmut_22 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_output__mutmut_38 | A | get 缺省 None 落归一分支（{}），行为等价 | 控制流等价推理（归一化已存在） |
+| app.authors.schema.x__validate_output__mutmut_40 | A | get 缺省 None 落归一分支（{}），行为等价 | 控制流等价推理（归一化已存在） |
+| app.authors.schema.x__validate_output__mutmut_52 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_output__mutmut_56 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_output__mutmut_57 | A | 文案/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_100 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_route__mutmut_104 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_route__mutmut_112 | A | 兼容字段缺省值变体（实际档位以 think_routing 为准） | docs 字段总表（think 兼容字段）+ 缺省值无条款 |
+| app.authors.schema.x__validate_route__mutmut_116 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_route__mutmut_117 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_122 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_123 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_131 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_135 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_139 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_route__mutmut_140 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_145 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_146 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_250 | A | get 缺省 None 落归一分支（{}），行为等价 | 控制流等价推理（归一化已存在） |
+| app.authors.schema.x__validate_route__mutmut_252 | A | get 缺省 None 落归一分支（{}），行为等价 | 控制流等价推理（归一化已存在） |
+| app.authors.schema.x__validate_route__mutmut_263 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_267 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_268 | A | 文案/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_280 | A | 文案/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_34 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_38 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_42 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__validate_route__mutmut_43 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_50 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_51 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_route__mutmut_93 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x__validate_route__mutmut_94 | A | 数值边界变体（lo/hi 移位或移除） | 数值边界无条款（C1-5a 数值缺省先例；唯一钉死边界 max_attempts(1-10) 已由边界测试闭合） |
+| app.authors.schema.x_default_author_config__mutmut_105 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_default_author_config__mutmut_127 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_128 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_137 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_default_author_config__mutmut_140 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_default_author_config__mutmut_15 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_165 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_default_author_config__mutmut_18 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_21 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_24 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_27 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_36 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_37 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_42 | A | 缺省配置 provenance 占位文案变体 | 缺省配置内容无条款（任务书§2 未钉→A） |
+| app.authors.schema.x_default_author_config__mutmut_64 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_65 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_66 | A | 缺省 think=False→True：兼容字段，实际档位以 think_routing 为准 | docs 字段总表（think 兼容字段）+ 缺省值无条款 |
+| app.authors.schema.x_default_author_config__mutmut_75 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_default_author_config__mutmut_78 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_default_author_config__mutmut_79 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_80 | A | 缺省配置可选键改名（可选字段形态，校验仍合法、下游行为不变） | 缺省配置可选键形态无条款（任务书§2） |
+| app.authors.schema.x_default_author_config__mutmut_90 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_default_author_config__mutmut_95 | A | 缺省数值变体（600/1400/min_count/recent_n/slices/per_block 等） | 数值缺省无条款（C1-5a recent_n/threshold 先例） |
+| app.authors.schema.x_load_author_config__mutmut_5 | A | 异常消息头/分隔符措辞变体：路径与全部错误保留，一次报全不变 | AC-10.1（只钉字段路径+一次报全，未钉文案措辞） |
+| app.authors.schema.x_load_author_config__mutmut_6 | A | 异常消息头/分隔符措辞变体：路径与全部错误保留，一次报全不变 | AC-10.1（只钉字段路径+一次报全，未钉文案措辞） |
+| app.authors.schema.x_load_author_config__mutmut_8 | A | 异常消息头/分隔符措辞变体：路径与全部错误保留，一次报全不变 | AC-10.1（只钉字段路径+一次报全，未钉文案措辞） |
+| app.authors.schema.x_validate_author_json__mutmut_3 | A | 顶层非 dict 错误的「实得类型」回显形态变体（(root) 路径保留） | AC-10.1（只钉字段路径+一次报全，未钉实得类型回显） |
