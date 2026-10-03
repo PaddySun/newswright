@@ -1106,3 +1106,56 @@
 | app.authors.schema.x_load_author_config__mutmut_6 | A | 异常消息头/分隔符措辞变体：路径与全部错误保留，一次报全不变 | AC-10.1（只钉字段路径+一次报全，未钉文案措辞） |
 | app.authors.schema.x_load_author_config__mutmut_8 | A | 异常消息头/分隔符措辞变体：路径与全部错误保留，一次报全不变 | AC-10.1（只钉字段路径+一次报全，未钉文案措辞） |
 | app.authors.schema.x_validate_author_json__mutmut_3 | A | 顶层非 dict 错误的「实得类型」回显形态变体（(root) 路径保留） | AC-10.1（只钉字段路径+一次报全，未钉实得类型回显） |
+
+## 批次 8b：authors.schema 原子辅助（2026-10-03，C1-6 第二段）
+
+> 本批无 B 类、无 D 类。C 类 83 条全部由批次 8a 测试（`tests/test_mutation_c1_6.py`，
+> 配置级触发面同源：max_attempts 边界/footnote_citations/threshold/topic_dedup 等）
+> 闭合，不在本清单。豁免 44 条 A 如下。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.authors.schema.x__bool_field__mutmut_11 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__bool_field__mutmut_15 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__bool_field__mutmut_16 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__bool_field__mutmut_21 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__bool_field__mutmut_22 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__bool_field__mutmut_7 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__enum_field__mutmut_11 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__enum_field__mutmut_22 | A | 枚举清单展示分隔符形态（成员判定不变） | 文案无措辞条款（枚举判定面已由枚举测试闭合） |
+| app.authors.schema.x__enum_field__mutmut_7 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__float_field__mutmut_10 | A | float 缺失分支死代码：全部调用点 required=False，分支不可达 | 调用点核查：_float_field 仅 gates.threshold 一处且 required=False |
+| app.authors.schema.x__float_field__mutmut_11 | A | float 缺失分支死代码：全部调用点 required=False，分支不可达 | 调用点核查：_float_field 仅 gates.threshold 一处且 required=False |
+| app.authors.schema.x__float_field__mutmut_16 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__float_field__mutmut_17 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__float_field__mutmut_22 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__float_field__mutmut_23 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__float_field__mutmut_5 | A | float 缺失分支死代码：全部调用点 required=False，分支不可达 | 调用点核查：_float_field 仅 gates.threshold 一处且 required=False |
+| app.authors.schema.x__float_field__mutmut_6 | A | float 缺失分支死代码：全部调用点 required=False，分支不可达 | 调用点核查：_float_field 仅 gates.threshold 一处且 required=False |
+| app.authors.schema.x__float_field__mutmut_7 | A | float 缺失分支死代码：全部调用点 required=False，分支不可达 | 调用点核查：_float_field 仅 gates.threshold 一处且 required=False |
+| app.authors.schema.x__float_field__mutmut_8 | A | float 缺失分支死代码：全部调用点 required=False，分支不可达 | 调用点核查：_float_field 仅 gates.threshold 一处且 required=False |
+| app.authors.schema.x__float_field__mutmut_9 | A | float 缺失分支死代码：全部调用点 required=False，分支不可达 | 调用点核查：_float_field 仅 gates.threshold 一处且 required=False |
+| app.authors.schema.x__int_field__mutmut_11 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__int_field__mutmut_16 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__int_field__mutmut_17 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__int_field__mutmut_22 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__int_field__mutmut_23 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__int_field__mutmut_29 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__int_field__mutmut_38 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__int_field__mutmut_7 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_dict__mutmut_10 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_dict__mutmut_14 | A | 「期望类型」措辞变体（路径保留） | AC-10.1（未钉期望类型措辞） |
+| app.authors.schema.x__require_dict__mutmut_15 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_dict__mutmut_20 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_dict__mutmut_21 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_dict__mutmut_6 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_str__mutmut_10 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_str__mutmut_16 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__require_str__mutmut_6 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__str_list__mutmut_11 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__str_list__mutmut_18 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__str_list__mutmut_22 | A | 文案 XX 包裹/大写形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__str_list__mutmut_7 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__type_err__mutmut_3 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__type_err__mutmut_7 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+| app.authors.schema.x__validate_template__mutmut_21 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
