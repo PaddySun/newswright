@@ -162,3 +162,93 @@
 | app.scheduler.x__reclaim_once__mutmut_7 | A | 日志文案 XX 包裹：同上 | 同 m3 |
 | app.scheduler.x__reclaim_once__mutmut_8 | A | 日志文案 "FAILED"→"failed"：同上 | 同 m3 |
 | app.scheduler.x__reclaim_once__mutmut_9 | A | "%d"→"%D"：格式化异常被 logging 自吞，行为不变 | 同 m3 |
+
+## 批次 4：ingest.web 定点监测带（2026-10-03，C1-3）
+
+> 本批 210 条 = A 79 / B 0 / C 131 / D 0。C 类 131 条由 `tests/test_mutation_c1_3.py`
+> 11 测试击杀（主链：304 短跳/条件头回传/条目全列/D15 指纹与 DUP/LLM 通道契约/
+> 富化成本边界/sanitize 记账），不在本清单；D 类 0 条。A 类判据主轴：抽取形态与
+> 请求头细节设计书未钉（任务书 §2 明示）、httpx 头名大小写归一化、SQLite 不强制
+> 列宽（C1-2 生产口径）、_ingest 返回值全调用点不消费、现有 sanitizer 链不读 url。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.ingest.web.x__content_hash__mutmut_4 | A | "utf-8"→"UTF-8"：Python codec 别名大小写不敏感，sha256 输出逐位一致（guid/变更检测语义不变） | AC-05.3 依赖哈希值本身——编解码别名恰等价 |
+| app.ingest.web.x__html_title__mutmut_1 | A | 标题抽取失效（恒 ""）：item.title 来源为页面 <title> 属抽取细节，设计书未钉标题抽取形态 | 任务书 §2「抽取细节设计书未规定归 A」+ §4.1 仅钉 title 列存在 |
+| app.ingest.web.x__html_title__mutmut_3 | A | if 翻转（有题返回 ""/无题 AttributeError）：同上，标题形态未钉 | 同上 |
+| app.ingest.web.x__html_title__mutmut_4 | A | 无题兜底 ""→"XXXX"：标题内容未钉 | 同上 |
+| app.ingest.web.x__html_title__mutmut_11 | A | 空白折叠正则 XX 化（折叠失效）：标题空白形态未钉 | 同上 |
+| app.ingest.web.x__html_title__mutmut_12 | A | 折叠替换串 "XX XX"：同上 | 同上 |
+| app.ingest.web.x__published_date__mutmut_3 | A | original_date=True→None（=False）：单日期页面两种取值实测一致；多日期页面的取舍未钉 | 实测探针 + 任务书 §2 抽取细节 |
+| app.ingest.web.x__published_date__mutmut_5 | A | 删 original_date 实参（=False）：同上 | 同上 |
+| app.ingest.web.x__published_date__mutmut_6 | A | original_date=False 显式化：同上 | 同上 |
+| app.ingest.web.x__published_date__mutmut_8 | A | tzinfo=timezone.utc→None（naive）：规则链对 naive/aware 双兼容（apply_rules 内补 tz），存储 tz 未钉（D16 仅钉日切口径） | D16 范围核查 + apply_rules 调用点核查 |
+| app.ingest.web.x_extract_page_markdown__mutmut_1 | A | markdown 抽取置 None：纯文本回退兜底，抽取形态（markdown vs 纯文本）设计书未钉 | 任务书 §2「trafilatura 参数、markdown 形态未规定归 A」 |
+| app.ingest.web.x_extract_page_markdown__mutmut_2 | A | extract(None)：异常被捕获走回退，正文形态未钉 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_3 | A | output_format=None：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_4 | A | include_comments=None（假值）：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_5 | A | include_tables=None（假值）：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_6 | A | 删 html 实参（TypeError→回退）：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_7 | A | 删 output_format（=txt 默认）：形态未钉 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_8 | A | 删 include_comments（=True 默认）：评论纳入与否形态未钉 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_9 | A | 删 include_tables（=True 默认）：表格纳入与否形态未钉 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_10 | A | "markdown"→"XXmarkdownXX"：非法格式异常→回退兜底 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_11 | A | "MARKDOWN" 大写变体：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_12 | A | include_comments=True：形态未钉 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_13 | A | include_tables=True：形态未钉 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_14 | A | and→or：text=None 时 AttributeError 被 try 捕获走回退，结果等价 | 控制流等价推理 |
+| app.ingest.web.x_extract_page_markdown__mutmut_15 | A | 回退路径 extract 置 None：最终返回 ""，正文形态未钉 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_16 | A | 回退 extract(None)：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_17 | A | 回退 include_comments=None：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_18 | A | 回退 include_tables=None：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_19 | A | 回退删 html 实参：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_20 | A | 回退删 include_comments：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_21 | A | 回退删 include_tables：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_22 | A | 回退 include_comments=True：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_23 | A | 回退 include_tables=True：同上 | 同上 |
+| app.ingest.web.x_extract_page_markdown__mutmut_24 | A | 回退 and→or：同 m14 | 同 m14 |
+| app.ingest.web.x_extract_page_markdown__mutmut_25 | A | 双回退 ""→"XXXX"：四字符内容必被 too_short 规则拒绝（REJECTED 落行），防呆在设计链内；空内容兜底形态未钉 | 模块表 rules（too_short）+ AC-05.1 rule_rejected 桶 |
+| app.ingest.web.x_fetch_web_source__mutmut_8 | A | extraction_prompt 置 None：键未列于 §4.1 source_config（仅列 llm_extract 等），提示词内容无条款；llm_extract 关闭时不可达 | §4.1 source_config 键清单核查 + 提示词内容无条款 |
+| app.ingest.web.x_fetch_web_source__mutmut_9 | A | cfg.get(None)：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_10 | A | 键 XX 变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_11 | A | 键大写变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_17 | A | ignore_page_date 置 None：键设计书全档无条款（grep 核查），仅影响未钉的页面日期抽取 | 设计书全文 grep 核查 |
+| app.ingest.web.x_fetch_web_source__mutmut_18 | A | bool(None)：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_19 | A | cfg.get(None)：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_20 | A | 键 XX 变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_21 | A | 键大写变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_28 | A | "XXUser-AgentXX"：UA 请求头内容无条款（R9 UA 策略为 site_config 预留，未钉抓取头） | R9 范围核查 |
+| app.ingest.web.x_fetch_web_source__mutmut_29 | A | 键 "user-agent" 小写：httpx 头名大小写归一化，线上请求恰等价 | httpx.Headers 语义 |
+| app.ingest.web.x_fetch_web_source__mutmut_30 | A | 键大写变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_35 | A | If-Modified-Since 置 None：条件头回传未钉（模块表仅钉 etag 原样回传），断裂由 etag/哈希兜底 | 模块表 ingest/web 硬约束范围核查 |
+| app.ingest.web.x_fetch_web_source__mutmut_36 | A | If-Modified-Since 键 XX 化：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_37 | A | 键小写变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_38 | A | 键大写变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_43 | A | timeout 60.0→61.0：显式超时语义不变，任意有限值满足 §4.2（同 C1-2 m1 先例） | 技术书 §4.2（只要求显式） |
+| app.ingest.web.x_fetch_web_source__mutmut_55 | A | 304 路径 last_fetched_at naive（now(None)）：存储 tz 未钉（D16 仅日切） | D16 范围核查 |
+| app.ingest.web.x_fetch_web_source__mutmut_58 | A | error 前缀 type(e)→type(None)：判据子串（状态码等）保留于 {e} 部分，AC-04.2 last_error 判据不受影响 | AC-04.2 判据为子串包含 |
+| app.ingest.web.x_fetch_web_source__mutmut_63 | A | resp.headers.get("ETAG")：httpx.Headers 大小写不敏感，恰等价 | httpx.Headers 语义 |
+| app.ingest.web.x_fetch_web_source__mutmut_66 | A | resp.headers["ETAG"]：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_72 | A | etag 截断 [:500]→[:501]：SQLite 不强制 VARCHAR 长度（C1-2 生产口径），etag 原样性不受 1 字符影响 | ADR-1（生产=SQLite）+ C1-2 先例 |
+| app.ingest.web.x_fetch_web_source__mutmut_78 | A | last-modified 存储跳过（get 键 XX）：last_modified 回传/存储未钉，变更检测由 etag/哈希兜底 | 模块表硬约束范围核查 |
+| app.ingest.web.x_fetch_web_source__mutmut_79 | A | get("LAST-MODIFIED")：httpx 大小写不敏感恰等价 | httpx.Headers 语义 |
+| app.ingest.web.x_fetch_web_source__mutmut_80 | A | last_modified 置 None：存储未钉，条件头缺失由 etag/哈希兜底 | 同 m78 |
+| app.ingest.web.x_fetch_web_source__mutmut_82 | A | ["LAST-MODIFIED"]：httpx 大小写不敏感恰等价 | httpx.Headers 语义 |
+| app.ingest.web.x_fetch_web_source__mutmut_83 | A | last_modified 截断 [:501]：同 m72 | 同 m72 |
+| app.ingest.web.x_fetch_web_source__mutmut_84 | A | change_type 初始 None→""：初始值必被重赋或先于读取返回，不可达 | 控制流推理 |
+| app.ingest.web.x_fetch_web_source__mutmut_86 | A | etag 短跳路径 last_fetched_at naive：同 m55 | 同 m55 |
+| app.ingest.web.x_fetch_web_source__mutmut_117 | A | guid 冲突分支 return False→True：_ingest 返回值所有调用点均不消费（调用点核查） | 控制流等价 |
+| app.ingest.web.x_fetch_web_source__mutmut_127 | A | dup_blocked 分支 return 翻转：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_154 | A | Item title 实参删除（ORM default ""）：标题内容未钉（同 _html_title 组） | 任务书 §2 抽取细节 |
+| app.ingest.web.x_fetch_web_source__mutmut_160 | A | Item fetched_at naive（now(None)）：存储 tz 未钉 | 同 m55 |
+| app.ingest.web.x_fetch_web_source__mutmut_167 | A | apply_rules(title=None)：网页路径调用点 blacklist 恒空（未传），title 仅进 blacklist joined → 等价 | apply_rules 调用点核查 |
+| app.ingest.web.x_fetch_web_source__mutmut_187 | A | SanitizeTarget(url=None)：现有 sanitizer 链（passthrough/KeywordDeny）不读 url 字段 | sanitize.py 调用点核查 |
+| app.ingest.web.x_fetch_web_source__mutmut_190 | A | SanitizeTarget url 实参删除：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_212 | A | _ingest 成功 return True→False：返回值不消费 | 同 m117 |
+| app.ingest.web.x_fetch_web_source__mutmut_223 | A | stats.failed +=1→=1：单次 fetch 内 llm 失败分支至多执行一次且 stats 每轮新建（初值 0），每轮记账等价 | 控制流等价 + 实测（failed 桶按轮） |
+| app.ingest.web.x_fetch_web_source__mutmut_227 | A | 抽取失败文案 XX 包裹："web_extract: LLM 抽取两次失败" 文案无条款，内容子串保留 | 失败原因如实记录——文案无措辞条款 |
+| app.ingest.web.x_fetch_web_source__mutmut_228 | A | 文案 "LLM"→"llm"：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_229 | A | 文案前缀大写变体：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_241 | A | apply_fp=False→None：假值，单页调用点显式传 False，豁免语义不变 | G1 先例（B7 豁免）语义不变 |
+| app.ingest.web.x_fetch_web_source__mutmut_255 | A | ignore_page_date and False：键未钉（同 m17 组）且配置缺省时恰等价 | 同 m17 |
+| app.ingest.web.x_fetch_web_source__mutmut_259 | A | 成功路径 last_fetched_at naive：同 m55 | 同 m55 |
