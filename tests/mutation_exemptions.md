@@ -1159,3 +1159,219 @@
 | app.authors.schema.x__type_err__mutmut_3 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
 | app.authors.schema.x__type_err__mutmut_7 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
 | app.authors.schema.x__validate_template__mutmut_21 | A | 错误文案 None/形态变体（字段路径保留） | AC-10.1（只钉路径+一次报全，未钉措辞） |
+
+## 批次 9：authors 域收官（writer/gates/memory/importer）（2026-10-04，C1-7）
+
+> 本批无 B 类；D 类 0 条。C 类 255 条由 tests/test_mutation_c1_7.py 25 测试闭合，不在本清单。A 类 222 条逐条如下（分诊依据见 C1-7 执行汇报）。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.authors.gates.x_gate_copyright__mutmut_1 | A | not blocks or ngram<2→and：or→and 仅在「blocks 非空且 ngram<2」组合下分叉——ngram<2 为非法配置（schema 2-64），合法域等价 | 调用点核查：schema:202 ngram 2-64；非法配置防御面无条款 |
+| app.authors.gates.x_gate_copyright__mutmut_13 | A | b.get('text',None) 缺省变体：schema 必填块 text（C1-6 块字段逐键报路径），缺省分支不可达 | 调用点核查：_validate_memory 块 text 必填 |
+| app.authors.gates.x_gate_copyright__mutmut_15 | A | b.get('text',) 缺省变体：同 m13 | 同 m13 |
+| app.authors.gates.x_gate_copyright__mutmut_18 | A | b.get('text','XXXX') 缺省变体：同 m13 | 同 m13 |
+| app.authors.gates.x_gate_copyright__mutmut_25 | A | range(len(src)+ngram+1)：越界切片产生短于 ngram 的片段，不可能与 ngram 长的正文 gram 相等——等价 | 切片语义推理：g=len(t[i:i+ngram]) 恒为 ngram（t 足长），短片段不命中 |
+| app.authors.gates.x_gate_copyright__mutmut_26 | A | range(len(src)-ngram+2)：仅多一个越界短片段，同 m25 等价 | 同 m25 |
+| app.authors.gates.x_gate_copyright__mutmut_29 | A | range(len(t)+ngram+1)：越界短片段惰性，同 m25 | 同 m25 |
+| app.authors.gates.x_gate_copyright__mutmut_30 | A | range(len(t)-ngram+2)：同 m26 | 同 m26 |
+| app.authors.gates.x_gate_copyright__mutmut_38 | A | stats['copyright_ngram_hits']＝None：stats 记录值无条款 | verdict 统一形态只钉顶层四键 |
+| app.authors.gates.x_gate_copyright__mutmut_39 | A | copyright_ngram_hits 键名→XX：stats 键名无条款 | 同上 |
+| app.authors.gates.x_gate_copyright__mutmut_40 | A | copyright_ngram_hits 键名→大写：同 m39 | 同上 |
+| app.authors.gates.x_gate_copyright__mutmut_46 | A | issue 文案分隔符「 | 」→XX：文案无条款 | AC-11.2/AC-11.4 只钉拒收，未钉 issue 文案 |
+| app.authors.gates.x_gate_copyright__mutmut_47 | A | issue 文案 gram 截断 [:24]→[:25]：同上 | 同上 |
+| app.authors.gates.x_gate_copyright__mutmut_48 | A | issue 文案 gram 数 [:3]→[:4]：同上 | 同上 |
+| app.authors.gates.x_gate_copyright__mutmut_49 | A | warn 文案→None：warn 不改判定，文案无条款 | verdict 统一形态：warns 不参与 passed 判定 |
+| app.authors.gates.x_gate_copyright__mutmut_51 | A | warn 文案截断 [:24]→[:25]：文案无条款 | AC-11.2/AC-11.4 文案先例 |
+| app.authors.gates.x_gate_fingerprint__mutmut_10 | A | warn 文案→None：warn 仅提示不改判定，文案无条款 | verdict 统一形态：warns 不参与 passed 判定 |
+| app.authors.gates.x_gate_fingerprint__mutmut_5 | A | stats['fingerprint_hits']＝None：stats 记录值无条款 | verdict 统一形态只钉顶层四键；stats 明细无条款 |
+| app.authors.gates.x_gate_fingerprint__mutmut_6 | A | fingerprint_hits 键名→XX：stats 键名无条款 | 同上 |
+| app.authors.gates.x_gate_fingerprint__mutmut_7 | A | fingerprint_hits 键名→大写：同 m6 | 同上 |
+| app.authors.gates.x_gate_length__mutmut_10 | A | get('min',) 缺省变体：同 m8 | 同 m8 |
+| app.authors.gates.x_gate_length__mutmut_13 | A | get('min',1) 缺省值变体：min 必填使缺省不可达；缺省常数无条款 | 调用点核查：schema min 必填 |
+| app.authors.gates.x_gate_length__mutmut_15 | A | get('max',None) 缺省变体：同 m14 | 同 m14 |
+| app.authors.gates.x_gate_length__mutmut_17 | A | get('max',) 缺省变体：同 m14 | 同 m14 |
+| app.authors.gates.x_gate_length__mutmut_20 | A | max 缺省 1e9→90：max 必填使缺省不可达；缺省常数无条款 | 调用点核查：schema max 必填 |
+| app.authors.gates.x_gate_length__mutmut_21 | A | max 缺省 1e9→11**9：同 m20 | 同 m20 |
+| app.authors.gates.x_gate_length__mutmut_22 | A | max 缺省 1e9→10**10：同 m20 | 同 m20 |
+| app.authors.gates.x_gate_length__mutmut_23 | A | n<lo→n<=lo：恰等于下限的边界语义无条款（沿 C1-5a「数值边界无条款」先例） | docs 未钉 min/max 含等性；唯一钉死边界仅 rewrite.max_attempts |
+| app.authors.gates.x_gate_length__mutmut_25 | A | n>hi→n>=hi：同 m23（上边界含等性未钉） | 同 m23 |
+| app.authors.gates.x_gate_length__mutmut_26 | A | issue 文案→None：issues 非空→不通过的判定语义不变，文案无条款 | AC-11.2 只钉拒收行为；文案措辞先例 |
+| app.authors.gates.x_gate_length__mutmut_8 | A | get('min',None) 缺省变体：schema 必填 min（_validate_gates _int_field min/max），缺省分支不可达 | 调用点核查：authors/schema.py:186 min/max 必填校验 |
+| app.authors.gates.x_gate_topic_dedup__mutmut_16 | A | sim>=threshold→>：恰等于阈值的边界含等性无条款（沿数值边界先例） | docs 未钉 threshold 含等性 |
+| app.authors.gates.x_gate_topic_dedup__mutmut_17 | A | issue 文案→None：拒收语义不变，文案无条款 | AC-20.4 文案先例 |
+| app.authors.gates.x_gate_topic_dedup__mutmut_5 | A | not t or not r→and：t/r 任一为空的继续条件在结果上等价（dice 空串→0.0 不判重；双空 continue 同原） | 真值表推理：四组合输出全部一致 |
+| app.authors.gates.x_gate_topic_dedup__mutmut_8 | A | continue→break：仅近期标题归一为空串（空白标题）时可达，生产标题恒非空（str(...) or 「（无题）」） | 调用点核查：run_write/pipeline 标题构造恒非空 |
+| app.authors.gates.x_norm__mutmut_1 | A | norm().lower()→.upper()：比较两侧（正文/块、标题/近期题）均经同一 norm 自洽折叠，匹配结果等价 | 控制流推理：norm 只用于门内两两比较，无跨系统大小写契约 |
+| app.authors.gates.xǁVerdictǁfeedback__mutmut_3 | A | 分隔符「；」→XX：违规说明仍完整到达，分隔措辞无条款 | AC-11.2 只钉「附违规摘要」行为，未钉分隔符措辞（沿全系列措辞先例） |
+| app.authors.gates.xǁVerdictǁfeedback__mutmut_5 | A | 「（无）」→XX：fallback 仅 issues+warns 全空时可达，gated 重试只在门禁失败（issues 非空）时调用 | 调用点核查：pipeline 仅 on_gate_fail 调 feedback；文案措辞无条款 |
+| app.authors.importer.x_import_author_json__mutmut_15 | A | AuthorConfigError(None)：新作者缺 model 仍拒（异常类型不变），文案无条款 | docstring「新作者必须给 model」语义不变；文案措辞先例 |
+| app.authors.importer.x_import_author_json__mutmut_18 | A | Author(model=None)：随后 if model: author.model=model 必然回填（新作者 model 已前置强制），等价 | 控制流推理：m15 guard 保证 model 真值 |
+| app.authors.importer.x_import_author_json__mutmut_20 | A | Author(name,name) 缺 model 形参：列默认 None 后同 m18 回填，等价 | 同 m18 |
+| app.authors.importer.x_import_author_json__mutmut_4 | A | deepcopy→copy：load_author_config 纯校验不改写入参（C1-6 全批验证），共享嵌套无行为差异 | 调用点核查：schema 校验器只读；输入不改写 |
+| app.authors.importer.x_render_persona_prompt__mutmut_10 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_100 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_101 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_103 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_106 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_107 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_108 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_110 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_12 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_13 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_14 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_15 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_16 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_17 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_18 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_19 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_20 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_21 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_22 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_23 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_24 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_25 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_26 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_27 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_28 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_29 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_30 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_31 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_32 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_33 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_34 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_35 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_36 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_37 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_38 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_39 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_40 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_41 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_42 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_43 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_44 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_45 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_46 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_48 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_5 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_50 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_51 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_52 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_54 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_55 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_56 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_58 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_6 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_60 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_61 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_62 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_64 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_65 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_66 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_68 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_70 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_71 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_72 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_74 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_75 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_76 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_8 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_80 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_81 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_82 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_9 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_95 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_render_persona_prompt__mutmut_97 | A | persona 卡渲染文案/取值形态变体（XX 包裹/大写/get 缺省/None 回显/分隔符），渲染文本无条款 | 技术书 §2 模块表 importer「映射[纯]」+ 模块 docstring：persona_prompt=identity 扁平渲染（后台展示兼容），格式无条款 |
+| app.authors.importer.x_roundtrip_check__mutmut_11 | A | 「DB 缺失」文案→None：同 m9 | 同 m9 |
+| app.authors.importer.x_roundtrip_check__mutmut_14 | A | 递归路径实参 None：diff 路径前缀形态变化，判定不变 | 同 m9（路径措辞） |
+| app.authors.importer.x_roundtrip_check__mutmut_19 | A | 叶子差异文案→None：同 m9 | 同 m9 |
+| app.authors.importer.x_roundtrip_check__mutmut_22 | A | walk 根路径 None：diff 路径前缀形态，同 m14 | 同 m9 |
+| app.authors.importer.x_roundtrip_check__mutmut_26 | A | (root)→XX(root)XX：同上 | 同 m9 |
+| app.authors.importer.x_roundtrip_check__mutmut_27 | A | (root)→(ROOT)：同上 | 同 m9 |
+| app.authors.importer.x_roundtrip_check__mutmut_4 | A | dict 判定 and→or：单侧非 dict 时仍产出差异（elif a!=b 分支语义在非退化输入下同样报 False），诊断文案差异无条款 | 等价推理：mismatch 必报 diffs → ok=False 保持；diff 文案无条款 |
+| app.authors.importer.x_roundtrip_check__mutmut_9 | A | 「DB 多出」文案→None：ok=False 判定不变，诊断文案无条款 | AC-10.1 钉一致性判定，未钉 diff 文案 |
+| app.authors.memory.x_module_of_placeholder__mutmut_2 | A | endswith→or True：恒剥后缀——生产 memory_config 键恒带 _memory 后缀（importer 归一+缺省配置），无后缀键不可达 | 调用点核查：import_author_json m35 归一逻辑 + default_author_config 键形态 |
+| app.authors.memory.x_render_memory__mutmut_3 | A | 条目 join 分隔符「\n」→XX：渲染文案形态无条款 | 记忆渲染文本格式无条款（占位符注入内容措辞先例） |
+| app.authors.writer.x__build_prompt__mutmut_2 | A | read_text(encoding=None)：部署环境（Ubuntu/CI，UTF-8 locale）默认编码即 UTF-8，等价 | 环境口径：模板文件恒 UTF-8；默认编码随环境，CI-0 基线在 UTF-8 环境测得等价 |
+| app.authors.writer.x__build_prompt__mutmut_57 | A | 空阅读集文案 XX 包裹：空阅读集语义属 F1 域（DT-4 随 F1 改实现），本批不钉 | 任务书 §4 边界：空阅读集语义不写断言 |
+| app.authors.writer.x__build_prompt__mutmut_7 | A | encoding 'utf-8'→'UTF-8'：Python codec 名大小写不敏感，等价 | 语言语义：编解码器别名 |
+| app.authors.writer.x__hot_brief__mutmut_10 | A | getattr 缺省 False→True：同 m4 | 同 m4 |
+| app.authors.writer.x__hot_brief__mutmut_19 | A | keywords 空判反转 or True：空关键词表时渲染空串 vs「（无）」，文案形态无条款 | 热点段文案措辞无条款 |
+| app.authors.writer.x__hot_brief__mutmut_21 | A | 关键词分隔符「、」→XX：文案措辞 | 同 m19 |
+| app.authors.writer.x__hot_brief__mutmut_22 | A | keywords[:15]→[:16]：关键词截取常数无条款 | 未钉常数 |
+| app.authors.writer.x__hot_brief__mutmut_23 | A | 「（无）」→XX 包裹：文案措辞 | 同 m19 |
+| app.authors.writer.x__hot_brief__mutmut_25 | A | 「（无）」→XX 包裹：文案措辞 | 同 m19 |
+| app.authors.writer.x__hot_brief__mutmut_4 | A | getattr 缺省 False→None：include_hot_brief 为模型列（default=False），缺省不可达 | 调用点核查：app/models.py:154 include_hot_brief 列 |
+| app.authors.writer.x__hot_brief__mutmut_7 | A | getattr 缺省形态：同 m4 | 同 m4 |
+| app.authors.writer.x__norm__mutmut_1 | A | .lower()→.upper()：quote 与正文两侧同一 _norm 自洽折叠，子串命中结果等价 | AC-11.3 钉「空白归一化+NFKC 后子串命中」，两侧一致变换下大小写折叠方向不影响命中 |
+| app.authors.writer.x__norm__mutmut_14 | A | (s or 'XXXX')：仅空正文且 quote 恰归一为 xxxx 的退化组合可观察，合法域等价 | 调用点核查：_validate_citations 前置拦截空 quote；空正文条目无有效引用面 |
+| app.authors.writer.x__parse_output__mutmut_10 | A | 缺省 'XXXX'：同 m5 | 同 m5 |
+| app.authors.writer.x__parse_output__mutmut_16 | A | JSONParseError(None)：拒绝行为不变，文案无条款 | 文案先例 |
+| app.authors.writer.x__parse_output__mutmut_5 | A | get('decision','') 缺省 None：缺 decision 时两者均落 JSONParseError（拒绝），等价 | 结果等价推理：str(None)='None' 同样非法 decision |
+| app.authors.writer.x__parse_output__mutmut_7 | A | 缺省形态：同 m5 | 同 m5 |
+| app.authors.writer.x__render_reading_set__mutmut_19 | A | 块间分隔符「\n\n」→XX：块间隔措辞无条款（各块内容断言不受影响） | W4 钉条目内容可核，未钉块间分隔形态 |
+| app.authors.writer.x__validate_citations__mutmut_13 | A | CitationError(None)：拒收行为不变（仍抛 CitationError），文案无条款 | AC-11.3 钉拒收语义，未钉文案 |
+| app.authors.writer.x__validate_citations__mutmut_14 | A | 文案 XX 包裹：同 m13 | 同 m13 |
+| app.authors.writer.x__validate_citations__mutmut_15 | A | 文案大写变体：同 m13 | 同 m13 |
+| app.authors.writer.x__validate_citations__mutmut_18 | A | bodies 缺省 or 'XXXX'：仅空正文+quote 恰为 xxxx 的退化组合可观察，合法域等价 | 退化输入推理（同 _norm m14） |
+| app.authors.writer.x__validate_citations__mutmut_21 | A | 「不是对象」文案→None：拒收不变，文案无条款 | 同 m13 |
+| app.authors.writer.x__validate_citations__mutmut_30 | A | quote 缺省 or 'XXXX'：空 quote 仍被拒（后续逐字校验不命中），仅拒收原因文案变化 | AC-11.3 拒收语义不变 |
+| app.authors.writer.x__validate_citations__mutmut_34 | A | 「quote 为空」文案→None：拒收不变，文案无条款 | 同 m13 |
+| app.authors.writer.x__validate_citations__mutmut_38 | A | 「找不到」文案→None：拒收不变，文案无条款 | 同 m13 |
+| app.authors.writer.x__validate_citations__mutmut_39 | A | quote 回显截断 [:80]→[:81]：文案截断界无条款 | 未钉常数 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_104 | A | rank_score>=threshold→>：排除阈值含等性无条款 | 未钉 rank_exclude_below 含等性 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_106 | A | fallback='all_excluded'→None：fallback 诊断标记值形态无条款（回退行为本身不变） | docstring 钉回退行为；标记文案未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_107 | A | fallback 键名→XX：同 m106 | 同 m106 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_108 | A | fallback 键名→大写：同 m106 | 同 m106 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_109 | A | 'all_excluded'→XX 包裹：同 m106 | 同 m106 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_110 | A | 'all_excluded'→大写：同 m106 | 同 m106 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_113 | A | 回退调用 k→None：k=None 落 WRITE_READING_SET_K 缺省，与原 k 同源等价 | 控制流推理：两处 k 均出自同一 k 变量或等价缺省 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_116 | A | 回退调用 k 缺省形态：同 m113 | 同 m113 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_123 | A | meta ranked 计数→None：计数字段值无条款 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_124 | A | ranked 键名→XX：同 m30 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_125 | A | ranked 键名→大写：同 m30 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_129 | A | meta excluded 计数→None：同 m123 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_130 | A | excluded 键名→XX：同 m30 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_131 | A | excluded 键名→大写：同 m30 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_132 | A | excluded=ranked-kept→+：计数值无条款 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_23 | A | 池 k=RANK_POOL_K→None：候选池 50 常数无条款（k=None 落 WRITE_READING_SET_K），小数据域等价 | 未钉常数 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_26 | A | k=RANK_POOL_K 形参缺省形态：同 m23 | 同 m23 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_30 | A | meta pool 键名→XX：rank_meta 诊断键名无条款 | §4.1 只钉 rank 明细（details 候选 id/score）与 provider/耗时；计数字段键名无条款 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_31 | A | meta pool 键名→大写：同 m30 | 同 m30 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_52 | A | direction None→break：方向行缺失为数据不一致防御面，单方向 Demo 不可达 | 调用点核查：Demo 单方向；防御分支无条款 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_70 | A | 明细缺失 continue→break：部分明细缺失的容错顺序细节无条款（全缺时两形态同走 fallback） | docstring 只钉「明细缺失回退」总语义；部分缺失逐条跳过 vs 中断未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_80 | A | rank_error 截断 [:300]→[:301]：截断界无条款 | 未钉常数（错误文本截断界先例：providers.base [:2000] 判 A） |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_85 | A | 耗时 *1000→/1000：数值缩放退化（≈0），耗时仅诊断无精度条款 | 耗时数值精度无条款（providers.base m13 缩放先例） |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_86 | A | -t0→+t0：数值失真同 m85，无精度条款 | 同 m85 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_87 | A | *1000→*1001：0.1% 缩放微差，同 m85 | 同 m85 |
+| app.authors.writer.x_assemble_reading_set__mutmut_11 | A | fetch_status=='FETCHED' 过滤删除：合法数据域（FETCHED 条目）等价，非 FETCHED 行防御面无条款 | 调用点核查：正常管线仅 FETCHED 条目有 score |
+| app.authors.writer.x_assemble_reading_set__mutmut_13 | A | join(None)：SQLAlchemy 由外键推断连接条件，等价 | ORM 语义推理：Item→ScoreResult 外键 item_id |
+| app.authors.writer.x_assemble_reading_set__mutmut_15 | A | join 缺 onclause 形态：同 m13 | 同 m13 |
+| app.authors.writer.x_assemble_reading_set__mutmut_29 | A | .limit(201)：同 m4 常数缺省变体 | 未钉常数 |
+| app.authors.writer.x_assemble_reading_set__mutmut_4 | A | .limit(None)：候选池预上限 200 常数无条款，k 截断在小数据域下结果等价 | 未钉常数（沿数值缺省先例） |
+| app.authors.writer.x_assemble_reading_set__mutmut_42 | A | or 60→or 61：阈值缺省 60 常数无条款（threshold 缺失时才可达） | 未钉缺省常数（沿数值缺省先例） |
+| app.authors.writer.x_assemble_reading_set__mutmut_43 | A | relevance>=th→>：阈值含等性边界无条款（沿数值边界先例） | docs 未钉阈值含等性 |
+| app.authors.writer.x_assemble_reading_set__mutmut_9 | A | status=='OK' 过滤行删除：passed=True 且 status≠OK 的非法数据行才可观察，合法数据域等价 | 调用点核查：score_result 合法行 status=OK ⟺ 记录有效（技术书 §4.1 score_result 行）；防御面无条款 |
+| app.authors.writer.x_run_write__mutmut_1 | A | triggered_by 缺省 'manual'→XX：唯一生产调用点（pipeline/runner.py:366）显式传参，缺省不可达 | 调用点核查：grep 全仓唯一调用点 |
+| app.authors.writer.x_run_write__mutmut_111 | A | 成功路径 last_error=None→''：该值仅 data None 分支读取（成功即 break），不可达 | 控制流推理 |
+| app.authors.writer.x_run_write__mutmut_123 | A | 「（上次输出被拒收）」文案 XX：提示词措辞无条款 | 措辞先例 |
+| app.authors.writer.x_run_write__mutmut_130 | A | 重试指令文案 XX 包裹：提示词措辞无条款 | 措辞先例 |
+| app.authors.writer.x_run_write__mutmut_131 | A | 指令文案 json 小写：同 m130 | 同 m130 |
+| app.authors.writer.x_run_write__mutmut_132 | A | 指令文案字段名大写：同 m130 | 同 m130 |
+| app.authors.writer.x_run_write__mutmut_133 | A | 引用纪律句 XX 包裹：同 m130 | 同 m130 |
+| app.authors.writer.x_run_write__mutmut_134 | A | ID→id：同 m130 | 同 m130 |
+| app.authors.writer.x_run_write__mutmut_135 | A | 引用纪律句大写：同 m130 | 同 m130 |
+| app.authors.writer.x_run_write__mutmut_174 | A | article status=None：Article.status 列缺省 default='PUBLISHED_TO_C' 在 flush 时补齐，落库值不变（已实证） | app/models.py Article.status default（T1 bootstrap_admin m9 列缺省承载同款先例） |
+| app.authors.writer.x_run_write__mutmut_179 | A | status 行删除：同 m174（列缺省承载） | 同 m174 |
+| app.authors.writer.x_run_write__mutmut_185 | A | 无题兜底 '（无题）'→XX：兜底文案无条款（正常成文路径恒有 title） | 措辞先例 |
+| app.authors.writer.x_run_write__mutmut_2 | A | 缺省 'manual'→MANUAL：同 m1 | 同 m1 |
+| app.authors.writer.x_run_write__mutmut_206 | A | 成功路径 error=None→''：error 列语义=失败留痕，None/空串均为「无错误」形态 | §4.1 error 列语义（失败留痕）；空值形态未钉 |
+| app.authors.writer.x_run_write__mutmut_27 | A | prompt_snapshot 初值 ''→None：随即被完整快照覆盖，终态等价 | 控制流推理：snapshot 两行后必被赋值 |
+| app.authors.writer.x_run_write__mutmut_34 | A | prompt_snapshot 初值行删除：同 m27（随即覆盖） | 同 m27 |
+| app.authors.writer.x_run_write__mutmut_37 | A | prompt_snapshot 初值 'XXXX'：同 m27（随即覆盖） | 同 m27 |
+| app.authors.writer.x_run_write__mutmut_51 | A | system 提示文案 XX 包裹：提示词措辞无条款 | 提示词措辞先例（ADR-8 未钉文案） |
+| app.authors.writer.x_run_write__mutmut_52 | A | system 提示文案大写：同 m51 | 同 m51 |
+| app.authors.writer.x_run_write__mutmut_71 | A | 分隔符 XX 包裹：快照分隔措辞无条款（两段内容均仍在） | W4 钉内容可核，未钉分隔形态 |
+| app.authors.writer.x_run_write__mutmut_77 | A | last_error 初值 ''→（不变语义）：仅全成功路径可达，error 落库前恒被赋值 | 控制流推理：last_error 只在 data None 分支读取 |
+| app.authors.writer.x_run_write__mutmut_86 | A | temperature=0.3→None：采样常数无条款 | 未钉采样温度（沿数值缺省先例） |
+| app.authors.writer.x_run_write__mutmut_92 | A | temperature 行删除：采样常数无条款 | 同 m86 |
+| app.authors.writer.x_run_write__mutmut_98 | A | temperature=1.3：采样常数无条款 | 同 m86 |
