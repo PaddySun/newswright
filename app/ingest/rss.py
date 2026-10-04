@@ -44,8 +44,10 @@ def normalize_url(url: str) -> str:
 def normalize_guid(entry: dict) -> str:
     raw = (entry.get("id") or entry.get("link") or entry.get("link_alt") or "").strip()
     if raw:
-        # entry.id 可能是 tag:/urn: 形式——非 URL 原样保留；URL 形式做归一化
-        return normalize_url(raw) if raw.startswith(("http://", "https://")) else raw
+        # entry.id 可能是 tag:/urn: 形式——非 URL 原样保留；URL 形式做归一化。
+        # scheme 大小写不敏感（HTTP:// 也是 URL）：前缀判定先 lower，避免大写
+        # 写法的 URL 型 guid 绕过 tracking 参数与 fragment 清洗、造成同文双指纹。
+        return normalize_url(raw) if raw.lower().startswith(("http://", "https://")) else raw
     return normalize_url(entry.get("link") or "")
 
 
@@ -140,7 +142,9 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
     if source.last_modified:
         headers["If-Modified-Since"] = source.last_modified
     try:
-        with httpx.Client(timeout=60.0, follow_redirects=True) as client:
+        # 跟随重定向但显式封顶 3 次跳转：httpx 默认上限远高于此，且不设上限的
+        # 跟随在恶意/配置错误的 feed 上会失控；不跟随则无法穿透短链与换域迁移。
+        with httpx.Client(timeout=60.0, follow_redirects=True, max_redirects=3) as client:
             resp = client.get(source.url, headers=headers)
             if resp.status_code == 304:  # 必须在 raise_for_status 之前判（httpx 对 3xx 抛异常）
                 stats.not_modified = True

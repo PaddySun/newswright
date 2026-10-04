@@ -127,8 +127,12 @@ def test_gated_retry_exhausted_fails(db_session, env):
     db, i1, i2 = env
     cfg = base_config()
     author = _author(db, cfg)
-    bad = "# 废稿标题\n\n一段没有引用的正文。"
-    fake = FakeProvider({"w_draft": [bad], "w_revise": [bad, bad]})
+    # 逐轮不同的长度问题（正文长度递增）→ 每轮门禁问题集合不同，走满重试上限
+    # 而非同因早停（同因喂同稿会提前终止，见 test_gate_retry_stops_early_on_repeated_same_issues）
+    bad1 = "# 废稿标题\n\n一段没有引用的正文。"
+    bad2 = "# 废稿标题\n\n一段没有引用的正文，这一版更长一些但依然没有任何脚注引用。"
+    bad3 = "# 废稿标题\n\n又是一版没有脚注引用的废稿，正文长度继续变化以逐轮产生不同的字数问题。"
+    fake = FakeProvider({"w_draft": [bad1], "w_revise": [bad2, bad3]})
     orig = pl.DeepSeekProvider
     pl.DeepSeekProvider = lambda _db: fake
     try:
@@ -286,3 +290,75 @@ def test_reasoner_fallback(db_session, monkeypatch):
     calls.clear()
     p.chat([{"role": "user", "content": "x"}], call_point="w_draft", model_tier="reasoner")
     assert calls == [cfgmod.DEEPSEEK_MODEL]
+
+
+def test_pipeline_empty_reading_set_lands_skip_without_llm(db_session):
+    """空阅读集：写作轮直接落 SKIP 并保留 skip_reason，不发起任何模型调用
+    （写作轮的本地短路语义：没有可写素材时跳过不是失败，且绝不烧一次调用）。"""
+    db = db_session
+    from app.models import Direction
+
+    db.add(Direction(id=1, name="空集方向", prompt="p", threshold=60))
+    db.commit()
+    cfg = base_config()
+    author = _author(db, cfg)
+    fake = FakeProvider({})  # 任何节点调用都会因无脚本而抛错 → 测试失败即暴露
+    orig = pl.DeepSeekProvider
+    pl.DeepSeekProvider = lambda _db: fake
+    try:
+        run = pl.run_pipeline_write(db, author, triggered_by="test")
+    finally:
+        pl.DeepSeekProvider = orig
+    assert run.status == "SKIP"
+    assert run.skip_reason and "阅读集" in run.skip_reason
+    assert run.article_id is None and run.decision is None
+    assert fake.calls == []
+
+
+def test_gate_retry_stops_early_on_repeated_same_issues(db_session, env):
+    """门禁重试同因早停：修订后门禁检出与上一轮完全相同的问题集合时，修订已被证明
+    无效，立即终止重试并以 FAILED 留痕，不再消耗剩余重试次数。"""
+    db, i1, i2 = env
+    cfg = base_config()
+    author = _author(db, cfg)
+    bad1 = "# 同因早停甲\n\n一段没有任何脚注引用的正文，且长度足以越过字数下限门槛线。"
+    bad2 = "# 同因早停乙\n\n修订之后仍然没有任何脚注引用的正文，长度也足以越过字数下限。"
+    fake = FakeProvider({"w_draft": [bad1], "w_revise": [bad2]})
+    orig = pl.DeepSeekProvider
+    pl.DeepSeekProvider = lambda _db: fake
+    try:
+        run = pl.run_pipeline_write(db, author, triggered_by="test")
+    finally:
+        pl.DeepSeekProvider = orig
+    assert run.status == "FAILED"
+    assert "早停" in (run.error or "")
+    assert run.payload["rewrite"]["early_stop"] is True
+    assert run.payload["rewrite"]["attempts"] == 1
+    assert [t["node"] for t in run.payload["trace"]] == ["w_draft", "w_revise"]
+    assert len(run.payload["gate_history"]) == 2
+    assert run.article_id is None
+
+
+def test_gate_retry_continues_while_issues_differ(db_session, env):
+    """门禁重试异因继续：每次修订后检出的问题与上一轮不同（说明修订在起作用）时，
+    重试按既定上限继续，直至门禁通过。"""
+    db, i1, i2 = env
+    cfg = base_config()
+    cfg["route"]["gates"]["length"] = {"min": 20, "max": 100, "unit": "chars"}
+    author = _author(db, cfg)
+    bad1 = "# 异因交错甲\n\n没有任何脚注引用的正文内容，这里凑一些长度跨过下限门槛。"
+    long2 = ("# 异因交错乙\n\n这是一段足够长的正文内容，用来触发字数上限门禁的判定逻辑。" * 3
+             + "事实一。[^1]事实二。[^2]"
+             + f"\n\n[^1]: [条目 {i1}] 事实一\n[^2]: [条目 {i2}] 事实二")
+    good = make_draft_text(i1, i2)
+    fake = FakeProvider({"w_draft": [bad1], "w_revise": [long2, good]})
+    orig = pl.DeepSeekProvider
+    pl.DeepSeekProvider = lambda _db: fake
+    try:
+        run = pl.run_pipeline_write(db, author, triggered_by="test")
+    finally:
+        pl.DeepSeekProvider = orig
+    assert run.status == "OK"
+    assert run.payload["rewrite"]["attempts"] == 2
+    assert run.payload["rewrite"].get("early_stop", False) is False
+    assert [t["node"] for t in run.payload["trace"]] == ["w_draft", "w_revise", "w_revise"]

@@ -54,6 +54,11 @@ class PipelineAbort(Exception):
     """执行中止（阅读集为空等）；run 落 FAILED/SKIP 并保留原因。"""
 
 
+class EmptyReadingSet(PipelineAbort):
+    """阅读集为空：本地短路（零模型调用）的执行中止——写作轮落 SKIP 而非 FAILED
+    （没有可写素材是"跳过"不是"失败"，与门禁耗尽、解析失败等真失败分态）。"""
+
+
 # ---------------- 提示词装配 ----------------
 
 def _identity_system(cfg: dict) -> str:
@@ -519,7 +524,7 @@ class PipelineRunner:
                 self.run.payload = {**self.run.payload, "reading_window": {"offset": off, "k": k}}
         self.pairs = pairs
         if not pairs:
-            raise PipelineAbort("阅读集为空（无可写素材），管线不落笔")
+            raise EmptyReadingSet("阅读集为空（无可写素材），管线不落笔")
 
         user_ctx = "【本期阅读集】\n" + _refs_listing(pairs)
         user_ctx += _hot_brief(self.db, self.author)
@@ -589,7 +594,16 @@ class PipelineRunner:
         defs = parse_footnote_defs(draft_text)
         verdict = self.run_gates(draft_text, defs, self.pairs, recent)
         gate_history = [{"attempt": attempts, "verdict": verdict.to_dict()}]
+        # 同因早停：修订后检出的门禁问题与上一轮完全相同时，修订已被证明对该问题
+        # 无效——继续重试只会以同样的稿子烧掉剩余次数，立即终止并以 FAILED 留痕。
+        early_stop = False
+        last_issues: list[str] | None = None
         while not verdict.passed and revise_enabled and attempts + 1 < max_attempts:
+            current_issues = sorted(verdict.issues)
+            if current_issues == last_issues:
+                early_stop = True
+                break
+            last_issues = current_issues
             attempts += 1
             self.trace[-1]["discarded"] = True  # 门禁拒绝的中间稿=废稿，trace 留痕
             draft_text = self.node_revise(draft_text, verdict.feedback())
@@ -602,15 +616,18 @@ class PipelineRunner:
                             "gate_history": gate_history,
                             "gates_final": verdict.to_dict(),
                             "rewrite": {"mode": rewrite["mode"], "attempts": attempts,
-                                        "revise_enabled": revise_enabled},
+                                        "revise_enabled": revise_enabled,
+                                        "early_stop": early_stop},
                             "title": title}
         self.db.commit()
 
         if not verdict.passed:
-            # gated 耗尽或 zero_revision 语义由调用方处理；此处 zero_revision 仍入库
+            # gated 耗尽/同因早停或 zero_revision 语义由调用方处理；此处 zero_revision 仍入库
             if revise_enabled:
                 self.run.status = "FAILED"
-                self.run.error = f"门禁重试耗尽（{attempts} 次）: " + verdict.feedback()[:500]
+                stop_note = ("门禁同因早停（修订后问题与上一轮完全相同，继续重试无效）"
+                             if early_stop else f"门禁重试耗尽（{attempts} 次）")
+                self.run.error = stop_note + ": " + verdict.feedback()[:500]
                 self.db.commit()
                 return None
             self.run.payload = {**self.run.payload,
@@ -698,6 +715,11 @@ def run_pipeline_write(
         runner.pairs = pairs
         article = runner.execute(reading_window=reading_window)
         _ = article
+    except EmptyReadingSet as e:
+        # 空阅读集是本地短路（零模型调用）：落 SKIP + skip_reason，不算失败
+        run.status = "SKIP"
+        run.skip_reason = str(e)
+        db.commit()
     except PipelineAbort as e:
         run.status = "FAILED"
         run.error = str(e)
