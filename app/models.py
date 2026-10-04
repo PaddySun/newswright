@@ -200,6 +200,8 @@ class Article(Base):
     # JSON: [{item_id, quote}]
     citations: Mapped[list] = mapped_column(JSON, default=list)
     status: Mapped[str] = mapped_column(String(30), default="PUBLISHED_TO_C")
+    # 引用违规标记：引用校验重试耗尽后仍入库的文章置 true（数据保留，展示侧据此提示"引用存疑"）
+    citation_violated: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class UsageLog(Base):

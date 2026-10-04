@@ -1498,12 +1498,6 @@
 | app.hot.service.x_run_hot_round__mutmut_225 | A | 提炼失败 log 文案(INFO 级不触发 formatting 等价) | 文案措辞无条款（C1-7 措辞先例） |
 | app.hot.service.x_run_hot_round__mutmut_226 | A | 提炼失败 log 文案(INFO 级不触发 formatting 等价) | 文案措辞无条款（C1-7 措辞先例） |
 | app.hot.service.x_run_hot_round__mutmut_227 | A | 提炼失败 log 文案(INFO 级不触发 formatting 等价) | 文案措辞无条款（C1-7 措辞先例） |
-| app.hot.service.x_run_hot_round__mutmut_233 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
-| app.hot.service.x_run_hot_round__mutmut_235 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
-| app.hot.service.x_run_hot_round__mutmut_236 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
-| app.hot.service.x_run_hot_round__mutmut_237 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
-| app.hot.service.x_run_hot_round__mutmut_245 | A | 提炼失败任务分态 DONE+degraded(R2) 未实现,现状 FAILED——拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
-| app.hot.service.x_run_hot_round__mutmut_250 | A | 提炼失败任务分态 DONE+degraded(R2) 未实现,现状 FAILED——拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
 
 ### app.rerank.base.xǁRankProviderǁ_log（1 条）
 

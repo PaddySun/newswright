@@ -393,8 +393,8 @@ def test_hot_round_all_failed_extended(db_session, monkeypatch):
 
 
 def test_hot_round_extract_failure_keeps_topics_and_records_kw_error(db_session, monkeypatch):
-    """提炼失败不丢榜单数据；kw_error 计入 stats（R2：提炼失败计入 stats）。
-    注：任务分态（R2 DONE+degraded vs 现状 FAILED）属待拍板面，此处不断言 status。"""
+    """提炼失败不丢榜单数据；kw_error 计入 stats。提炼失败已拍板为分态面：
+    任务 DONE + degraded 标记，关键词落标题分词兜底（不再为空表）。"""
     _mk_hot_fetch(monkeypatch, {"weibo": WEIBO[:3]})
     _mk_extract(monkeypatch, fail=RuntimeError("llm boom"))
 
@@ -402,10 +402,12 @@ def test_hot_round_extract_failure_keeps_topics_and_records_kw_error(db_session,
     task = db_session.get(PipelineTask, out["task_id"])
     stats = task.payload["stats"]
     assert stats["kw_error"] == "RuntimeError: llm boom"
-    assert stats["keywords"] == []
+    assert stats["degraded"] == ["hot_keywords"] and stats["kw_fallback"] == "title_tokens"
+    assert task.status == "DONE" and task.last_error is None
+    assert stats["keywords"] == ["微博", "博热", "热点"]  # 标题分词兜底（数字段剔除）
     assert db_session.query(HotTopic).count() == 3  # 榜单数据保全
     batch = db_session.query(HotBatch).one()
-    assert batch.keywords == [] and batch.summary == "" and batch.model == ""
+    assert batch.keywords == stats["keywords"] and batch.summary == "" and batch.model == ""
 
 
 # ---------- hot：_rank_filter_topics（能力⑤应用点2 默认关） ----------

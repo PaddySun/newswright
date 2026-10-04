@@ -315,6 +315,8 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                 .outerjoin(ScoreResult, (ScoreResult.item_id == Item.id) & (ScoreResult.direction_id == d.id)
                            & (ScoreResult.status == "OK"))
                 .filter(ScoreResult.id.is_(None))
+                # 突发上限：单轮至多 SCORE_ROUND_MAX_ITEMS 条，超出留给下轮幂等续跑
+                .limit(config.SCORE_ROUND_MAX_ITEMS)
                 .all()
             )
             for item in items:
