@@ -1375,3 +1375,254 @@
 | app.authors.writer.x_run_write__mutmut_86 | A | temperature=0.3→None：采样常数无条款 | 未钉采样温度（沿数值缺省先例） |
 | app.authors.writer.x_run_write__mutmut_92 | A | temperature 行删除：采样常数无条款 | 同 m86 |
 | app.authors.writer.x_run_write__mutmut_98 | A | temperature=1.3：采样常数无条款 | 同 m86 |
+
+
+## 批次 10：外部能力家族收官 hot/search/rerank/embedding（2026-10-04，C1-8）
+
+> A 类 174 条（B 0 / D 0）。C 类 404 条由 `tests/test_mutation_c1_8.py`（35 测试）闭合，
+> 核验-改判三轮：C 404/404 全杀、A 174/174 全活（判定集 6 文件，problems=0）。
+> 分诊与核验详见 doc/CI0/C1-8-执行Agent工作汇报.md。逐条理由如下。
+
+### app.embedding.base.xǁEmbeddingProviderǁ_embed_batch（12 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_3 | A | except 必先赋值 last_err,初值不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_28 | A | None→列 default 0/True 兜底(SQLAlchemy 实证) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_32 | A | None→列 default 0/True 兜底(SQLAlchemy 实证) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_40 | A | completion_tokens/ok kwarg 删除→列缺省承载 0/True | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_44 | A | completion_tokens/ok kwarg 删除→列缺省承载 0/True | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_75 | A | getattr 缺省 None 与 False 同 falsy | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_78 | A | getattr 缺省 None 与 False 同 falsy | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_81 | A | ProviderError.retryable=False 类属性兜底,getattr 缺省分支不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_114 | A | log.warning 文案/参数无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_119 | A | log.warning 文案/参数无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_121 | A | log.warning 文案/参数无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_122 | A | log.warning 文案/参数无条款 | 文案措辞无条款（C1-7 措辞先例） |
+
+### app.embedding.moark.xǁMoarkEmbeddingProviderǁ__init__（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ__init____mutmut_1 | A | timeout 120 未钉数值缺省 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ__init____mutmut_7 | A | rstrip 是字符集语义,'XX/XX'≡'X/' | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ__init____mutmut_12 | A | timeout 120 未钉数值缺省 | 数值缺省/边界无条款（沿数值缺省先例） |
+
+### app.embedding.registry.x_get_provider（7 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.embedding.registry.x_get_provider__mutmut_2 | A | none/未注册分支仍抛 EmbeddingError,消息措辞无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.registry.x_get_provider__mutmut_3 | A | none/未注册分支仍抛 EmbeddingError,消息措辞无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.registry.x_get_provider__mutmut_4 | A | none/未注册分支仍抛 EmbeddingError,消息措辞无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.registry.x_get_provider__mutmut_5 | A | none/未注册分支仍抛 EmbeddingError,消息措辞无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.registry.x_get_provider__mutmut_6 | A | none/未注册分支仍抛 EmbeddingError,消息措辞无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.registry.x_get_provider__mutmut_7 | A | none/未注册分支仍抛 EmbeddingError,消息措辞无条款 | 文案措辞无条款（C1-7 措辞先例） |
+| app.embedding.registry.x_get_provider__mutmut_11 | A | none/未注册分支仍抛 EmbeddingError,消息措辞无条款 | 文案措辞无条款（C1-7 措辞先例） |
+
+### app.hot.service.x__rank_filter_topics（19 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.hot.service.x__rank_filter_topics__mutmut_7 | A | Windows os.environ 大小写不敏感(Linux 生产域可杀,注记) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x__rank_filter_topics__mutmut_8 | A | 开关取值枚举仅钉 true,1/yes/on/大小写变体无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_10 | A | 开关取值枚举仅钉 true,1/yes/on/大小写变体无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_13 | A | 开关取值枚举仅钉 true,1/yes/on/大小写变体无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_14 | A | 开关取值枚举仅钉 true,1/yes/on/大小写变体无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_15 | A | 开关取值枚举仅钉 true,1/yes/on/大小写变体无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_16 | A | 开关取值枚举仅钉 true,1/yes/on/大小写变体无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_24 | A | Windows os.environ 大小写不敏感(Linux 生产域可杀,注记) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x__rank_filter_topics__mutmut_25 | A | 缺省 provider 字面量无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_26 | A | 缺省 provider 字面量无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_31 | A | HOT_RANK_MIN_SCORE 键名/缺省 40/含等性无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_32 | A | HOT_RANK_MIN_SCORE 键名/缺省 40/含等性无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_33 | A | HOT_RANK_MIN_SCORE 键名/缺省 40/含等性无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_44 | A | 无方向 error 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_69 | A | error 截断界 [:200] 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x__rank_filter_topics__mutmut_76 | A | fake 恒含全部 id 缺省分支不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x__rank_filter_topics__mutmut_78 | A | fake 恒命中全部 id,get 缺省分支不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x__rank_filter_topics__mutmut_79 | A | fake 恒含全部 id 缺省分支不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x__rank_filter_topics__mutmut_80 | A | >=/> 含等性无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+
+### app.hot.service.x_run_hot_round（56 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.hot.service.x_run_hot_round__mutmut_14 | A | skip reason 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_15 | A | skip reason 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_37 | A | 认领失败 reason 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_38 | A | 认领失败 reason 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_46 | A | 平台耗时 ms 计时值无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_48 | A | 平台耗时 ms 计时值无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_49 | A | 平台耗时 ms 计时值无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_50 | A | 平台耗时 ms 计时值无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_57 | A | 成功平台统计行键面诊断 | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.hot.service.x_run_hot_round__mutmut_58 | A | 成功平台统计行键面诊断 | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.hot.service.x_run_hot_round__mutmut_59 | A | 成功平台统计行键面诊断 | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.hot.service.x_run_hot_round__mutmut_60 | A | 成功平台统计行键面诊断 | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.hot.service.x_run_hot_round__mutmut_62 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_63 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_64 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_65 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_66 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_67 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_68 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_69 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_70 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_71 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_74 | A | 平台耗时 ms 计时值无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_75 | A | 平台耗时 ms 计时值无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_76 | A | 平台耗时 ms 计时值无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_89 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_90 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_94 | A | 平台 log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_96 | A | 源间礼貌间隔 0.5s 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_97 | A | 源间礼貌间隔 0.5s 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_116 | A | 全平台失败 error 文案(XX 包裹仍含既有断言子串/断言只钉前缀) | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_117 | A | 全平台失败 error 文案(XX 包裹仍含既有断言子串/断言只钉前缀) | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_128 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_129 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_131 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_133 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_134 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_136 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_138 | A | datetime.now(None)=now() | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_142 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_145 | A | HotBatch 初值随后被覆写(初始化即覆盖先例) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_178 | A | fetch_platform 已过滤空 title,兜底不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_179 | A | title/url 截断界 2000 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_186 | A | url 存在时兜底不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_187 | A | title/url 截断界 2000 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.hot.service.x_run_hot_round__mutmut_210 | A | topics 非空时 rank_meta 被函数返回值覆写 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.hot.service.x_run_hot_round__mutmut_224 | A | 提炼失败 log 文案(INFO 级不触发 formatting 等价) | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_225 | A | 提炼失败 log 文案(INFO 级不触发 formatting 等价) | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_226 | A | 提炼失败 log 文案(INFO 级不触发 formatting 等价) | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_227 | A | 提炼失败 log 文案(INFO 级不触发 formatting 等价) | 文案措辞无条款（C1-7 措辞先例） |
+| app.hot.service.x_run_hot_round__mutmut_233 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
+| app.hot.service.x_run_hot_round__mutmut_235 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
+| app.hot.service.x_run_hot_round__mutmut_236 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
+| app.hot.service.x_run_hot_round__mutmut_237 | A | task_status 行仅 kw_error 路径可达(全平台失败早退不经过);拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
+| app.hot.service.x_run_hot_round__mutmut_245 | A | 提炼失败任务分态 DONE+degraded(R2) 未实现,现状 FAILED——拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
+| app.hot.service.x_run_hot_round__mutmut_250 | A | 提炼失败任务分态 DONE+degraded(R2) 未实现,现状 FAILED——拍板前不写断言 | R2 分态（DONE+degraded）未实现——拍板前不写断言（本批观察 3） |
+
+### app.rerank.base.xǁRankProviderǁ_log（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.rerank.base.xǁRankProviderǁ_log__mutmut_19 | A | criteria_key 截断界 [:200] 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+
+### app.rerank.base.xǁRankProviderǁrank（13 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.rerank.base.xǁRankProviderǁrank__mutmut_8 | A | None→列 default 0 兜底(candidate_count/latency_ms) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_9 | A | None→列 default 0 兜底(candidate_count/latency_ms) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_26 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_27 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_28 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_29 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_30 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_31 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_32 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_41 | A | 候选文本存在时兜底不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_69 | A | error 截断界 [:500] 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_78 | A | None→列 default True/'ok' 兜底 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.rerank.base.xǁRankProviderǁrank__mutmut_79 | A | None→列 default True/'ok' 兜底 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+
+### app.rerank.jev_rank.xǁBochaJevRankProviderǁ__init__（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.rerank.jev_rank.xǁBochaJevRankProviderǁ__init____mutmut_4 | A | 缺 Key 错误文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.jev_rank.xǁBochaJevRankProviderǁ__init____mutmut_5 | A | 缺 Key 错误文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.jev_rank.xǁBochaJevRankProviderǁ__init____mutmut_6 | A | 缺 Key 错误文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.jev_rank.xǁBochaJevRankProviderǁ__init____mutmut_7 | A | 缺 Key 错误文案 | 文案措辞无条款（C1-7 措辞先例） |
+
+### app.rerank.registry.x_get_provider（7 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.rerank.registry.x_get_provider__mutmut_2 | A | none/未注册分支仍抛 RankError,消息措辞无条款(既有测试已钉类型) | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.registry.x_get_provider__mutmut_3 | A | none/未注册分支仍抛 RankError,消息措辞无条款(既有测试已钉类型) | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.registry.x_get_provider__mutmut_4 | A | none/未注册分支仍抛 RankError,消息措辞无条款(既有测试已钉类型) | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.registry.x_get_provider__mutmut_5 | A | none/未注册分支仍抛 RankError,消息措辞无条款(既有测试已钉类型) | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.registry.x_get_provider__mutmut_6 | A | none/未注册分支仍抛 RankError,消息措辞无条款(既有测试已钉类型) | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.registry.x_get_provider__mutmut_7 | A | none/未注册分支仍抛 RankError,消息措辞无条款(既有测试已钉类型) | 文案措辞无条款（C1-7 措辞先例） |
+| app.rerank.registry.x_get_provider__mutmut_11 | A | none/未注册分支仍抛 RankError,消息措辞无条款(既有测试已钉类型) | 文案措辞无条款（C1-7 措辞先例） |
+
+### app.search.pipeline.x_fetch_search_source（48 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.search.pipeline.x_fetch_search_source__mutmut_15 | A | 缺省 provider 'bocha' 字面量无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_16 | A | 缺省 provider 'bocha' 字面量无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_23 | A | 缺省 group 'default' 字面量无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_24 | A | 缺省 group 'default' 字面量无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_55 | A | None→列 default 0 兜底(result_count/latency_ms) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_56 | A | None→列 default 0 兜底(result_count/latency_ms) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_63 | A | result_count/latency kwarg 删除→列缺省承载 0 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_64 | A | result_count/latency kwarg 删除→列缺省承载 0 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_79 | A | stats.extra quota_state 诊断键面 | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_80 | A | stats.extra quota_state 诊断键面 | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_81 | A | stats.extra quota_state 诊断键面 | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_82 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_83 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_84 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_85 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_86 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_87 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_88 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_89 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_90 | A | blocked log 文案 | 文案措辞无条款（C1-7 措辞先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_109 | A | None→列 default 0 兜底(result_count/latency_ms) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_110 | A | None→列 default 0 兜底(result_count/latency_ms) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_117 | A | latency/result_count kwarg 删除→列缺省承载 0 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_118 | A | latency/result_count kwarg 删除→列缺省承载 0 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_128 | A | error 截断界 [:500] 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_136 | A | None→列 default True/'ok' 兜底 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_137 | A | None→列 default True/'ok' 兜底 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_143 | A | None→列 default True/'ok' 兜底 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_144 | A | ok kwarg 删除→列缺省承载 True | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_148 | A | stats.extra/feed_entries 诊断镜像(账本行已断言) | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_149 | A | stats.extra/feed_entries 诊断镜像(账本行已断言) | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_150 | A | stats.extra/feed_entries 诊断镜像(账本行已断言) | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_151 | A | stats.extra/feed_entries 诊断镜像(账本行已断言) | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_152 | A | stats.extra/feed_entries 诊断镜像(账本行已断言) | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_153 | A | stats.extra/feed_entries 诊断镜像(账本行已断言) | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_154 | A | stats.extra/feed_entries 诊断镜像(账本行已断言) | 诊断镜像键面（§4.1 只钉账本行本体，已由 C 测试断言） |
+| app.search.pipeline.x_fetch_search_source__mutmut_176 | A | fp 真值时同路;fp 空时 find(None) 不命中(样本集内等价) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_186 | A | content 存在时兜底不可达 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_205 | A | fetched_at 列缺省承载 utcnow | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_208 | A | guid/url/title 截断界 1000/2000 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_209 | A | guid/url/title 截断界 1000/2000 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_210 | A | guid/url/title 截断界 1000/2000 无条款 | 数值缺省/边界无条款（沿数值缺省先例） |
+| app.search.pipeline.x_fetch_search_source__mutmut_212 | A | datetime.now(None)=now() | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_219 | A | title=None 仅影响 blacklist 匹配(测试域 blacklist 空) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_233 | A | FETCHED→None→列 default 'FETCHED' 兜底 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_247 | A | SanitizeTarget 字段缺省承载/deny 词在 content 域外 url/title 无观察面 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_248 | A | SanitizeTarget 字段缺省承载/deny 词在 content 域外 url/title 无观察面 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+| app.search.pipeline.x_fetch_search_source__mutmut_250 | A | SanitizeTarget 字段缺省承载/deny 词在 content 域外 url/title 无观察面 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+
+### app.search.quota.x__count（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.search.quota.x__count__mutmut_6 | A | 分钟/日 period_key 格式永不碰撞,period 过滤冗余 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+
+### app.search.quota.x__provider_limits（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.search.quota.x__provider_limits__mutmut_2 | A | Windows os.environ 大小写不敏感(Linux 生产域可杀,注记) | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+
+### app.search.quota.x_check_and_count（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.search.quota.x_check_and_count__mutmut_43 | A | period_key 格式永不碰撞,period 过滤冗余 | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
+
+### app.search.registry.x_get_provider（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.search.registry.x_get_provider__mutmut_4 | A | 未注册错误文案 | 文案措辞无条款（C1-7 措辞先例） |
