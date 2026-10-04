@@ -634,8 +634,12 @@ def test_max_attempts_absent_default_three(db_session, env):
     cfg2 = base_config()
     cfg2["route"]["rewrite"].pop("max_attempts")
     author2 = _author(db, base_config())
-    fake2 = FakeProvider({"w_draft": [BAD_DRAFT],
-                          "w_revise": [BAD_DRAFT, BAD_DRAFT, BAD_DRAFT]})
+    # 逐轮正文长度递增 → 每轮门禁问题集合不同（不触发同因早停），走满缺省 3 次尝试
+    bad_a = "# 废稿标题\n\n一段没有引用的正文。"
+    bad_b = "# 废稿标题\n\n一段没有引用的正文，这一版更长一些但依然没有任何脚注引用。"
+    bad_c = "# 废稿标题\n\n又是一版没有脚注引用的废稿，正文长度继续变化以逐轮产生不同的字数问题。"
+    fake2 = FakeProvider({"w_draft": [bad_a],
+                          "w_revise": [bad_b, bad_c]})
     run2, article = _execute_direct(db, author2, cfg2, fake2)
     assert article is None and run2.status == "FAILED"
     assert len(fake2.calls) == 3            # 缺省 3 = 初稿+2 次重试（AC-11.2 ≤3）
