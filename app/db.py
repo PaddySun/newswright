@@ -43,6 +43,9 @@ def _migrate_added_columns() -> None:
         "write_run": {
             "payload": "JSON",
         },
+        "article": {
+            "citation_violated": "BOOLEAN NOT NULL DEFAULT 0",
+        },
         "usage_log": {
             "cache_hit_tokens": "INTEGER NOT NULL DEFAULT 0",
             "reasoning_tokens": "INTEGER NOT NULL DEFAULT 0",

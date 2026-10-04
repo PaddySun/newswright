@@ -1,8 +1,10 @@
 """AI 作者写作：阅读集装配 → 提示词装配（记忆占位符）→ 单次结构化调用 → 引用硬校验 → 落库。
 
 护栏（MiroFish 反幻觉模式）：decision=write 时每个 citation 必须绑定阅读集条目 ID 且
-quote 能在该条目正文中子串命中（空白归一化）；违规整体拒收并附违规说明重试一次，
-二次失败 write_run 落 FAILED 不入库。
+quote 能在该条目正文中子串命中（空白归一化）；违规整体拒收并附违规说明重试一次。
+重试耗尽后的去向按输出是否成功解析分态：解析从未成功（如 JSON 形态坏）→ write_run
+落 FAILED 不入库；输出已解析但引用校验始终不过 → 违规文章依旧入库，article 置
+citation_violated=True（数据保留，展示侧据此提示"引用存疑"），run.payload 记录违规详情。
 """
 from __future__ import annotations
 
@@ -243,6 +245,9 @@ def run_write(db: Session, author: Author, *, triggered_by: str = "manual", mode
 
     data: dict | None = None
     last_error: str | None = None
+    # 引用违规标记：有过 CitationError 且此后未再获得通过校验的输出 → 入库文章带标记。
+    # data 不复位：拒收后上一轮已解析的输出保留在 data 中，重试耗尽即按该输出入库。
+    citation_violated = False
     for attempt in range(2):
         try:
             content, actual_model = provider.chat_json(
@@ -258,8 +263,10 @@ def run_write(db: Session, author: Author, *, triggered_by: str = "manual", mode
             if data["decision"] == "write":
                 _validate_citations(data, pairs)  # 抛 CitationError → 拒收重试
             last_error = None
+            citation_violated = False
             break
         except (JSONParseError, CitationError) as e:
+            citation_violated = citation_violated or isinstance(e, CitationError)
             last_error = f"{type(e).__name__}: {e}"
             messages = messages + [
                 {"role": "assistant", "content": "（上次输出被拒收）"},
@@ -295,9 +302,13 @@ def run_write(db: Session, author: Author, *, triggered_by: str = "manual", mode
         body=str(article_data.get("body") or ""),
         citations=article_data.get("citations") or [],
         status="PUBLISHED_TO_C",
+        citation_violated=citation_violated,
     )
     db.add(article)
     db.commit()
+    if citation_violated:
+        run.payload = {**(run.payload or {}), "citation_violated": True,
+                       "citation_error": last_error}
     run.decision = "WRITE"
     run.article_id = article.id
     run.status = "OK"

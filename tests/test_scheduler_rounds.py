@@ -96,3 +96,60 @@ def test_process_round_claims_and_finishes(db_session, monkeypatch):
     # 已结束的轮次再 process → 幂等跳过（claim 失败）
     again = process_fetch_round(db_session, rt)
     assert again.get("skipped") is True
+
+
+def test_score_round_burst_cap_and_idempotent_carryover(db_session, monkeypatch):
+    """打分轮突发上限：单轮至多对 SCORE_ROUND_MAX_ITEMS（默认 200）条调用打分，
+    超出部分不丢失——下一轮幂等续跑（只对尚无 OK 分的条目打分）。"""
+    from app.models import Item, ScoreResult
+    from app.pipeline.runner import score_round
+    import app.scoring.service as scoring_service
+
+    d = db_session.query(Direction).filter_by(name="DS").one_or_none()
+    if d is None:
+        d = Direction(name="DS", prompt="p", threshold=60)
+        db_session.add(d)
+        db_session.commit()
+    src = Source(direction_id=d.id, url="https://ex/score-cap", type="rss")
+    db_session.add(src)
+    db_session.commit()
+    total = config.SCORE_ROUND_MAX_ITEMS + 1
+    for i in range(total):
+        db_session.add(Item(source_id=src.id, guid=f"cap-{i}", title=f"条目{i}",
+                            content_text="正文内容足够长。" * 30,
+                            fetch_status="FETCHED", sanitize_status="PASSED",
+                            direction_id=d.id))
+    db_session.commit()
+
+    calls: list[int] = []
+
+    def fake_score_item(db, item, direction):
+        calls.append(item.id)
+        sr = ScoreResult(item_id=item.id, direction_id=direction.id,
+                         quality_score=80, relevance_score=90, band="high",
+                         reason="r", prompt_version="v1", model="m",
+                         passed=True, status="OK")
+        db.add(sr)
+        db.commit()
+        return sr
+
+    monkeypatch.setattr(scoring_service, "score_item", fake_score_item)
+
+    summary = score_round(db_session, triggered_by="test")
+
+    assert len(calls) == config.SCORE_ROUND_MAX_ITEMS          # 本轮恰打上限条数
+    stats = summary["directions"][0]
+    assert stats["candidates"] == config.SCORE_ROUND_MAX_ITEMS
+    # 多出的 1 条留到下一轮，且下一轮只补这一条（已打分的绝不重复烧调用）
+    remaining = (
+        db_session.query(Item)
+        .outerjoin(ScoreResult, (ScoreResult.item_id == Item.id)
+                   & (ScoreResult.status == "OK"))
+        .filter(ScoreResult.id.is_(None))
+        .count()
+    )
+    assert remaining == 1
+    calls.clear()
+    summary2 = score_round(db_session, triggered_by="test")
+    assert len(calls) == 1
+    assert summary2["directions"][0]["scored"] == 1

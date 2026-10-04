@@ -106,6 +106,9 @@ SCORE_BODY_MAX_CHARS = int(_get("SCORE_BODY_MAX_CHARS") or 4000)
 WRITE_READING_SET_K = int(_get("WRITE_READING_SET_K") or 10)
 RULE_MIN_BODY_CHARS = int(_get("RULE_MIN_BODY_CHARS") or 200)
 RULE_MAX_AGE_DAYS = int(_get("RULE_MAX_AGE_DAYS") or 30)
+# 打分轮突发上限：单轮对单一方向至多打分的条目数；超出部分留给下一轮幂等续跑
+# （打分幂等口径：只对尚无 OK 分的条目调 LLM），防积压场景单轮烧穿预算
+SCORE_ROUND_MAX_ITEMS = int(_get("SCORE_ROUND_MAX_ITEMS") or 200)
 
 # 调度（能力①）：默认周期，可被环境变量覆盖
 SCHED_FETCH_MINUTES = int(_get("SCHED_FETCH_MINUTES") or 15)

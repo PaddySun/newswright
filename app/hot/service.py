@@ -2,12 +2,15 @@
 
 - 每平台每轮全量覆盖式记录（batch 语义），不做增量合并；轮次间自然形成时间序列。
 - 提炼一次调用（call_point=hot_keywords，JSON 输出 keywords[]+summary，解析失败重试一次）。
-- 聚合 API 不可达 → 任务 FAILED 如实呈现，不 mock 数据冒充成功。
+- 聚合 API 不可达（采集失败）→ 任务 FAILED 如实呈现，不 mock 数据冒充成功。
+- 关键词提炼失败 ≠ 采集失败：榜单数据已落库，任务照常 DONE，payload.stats 带
+  degraded=["hot_keywords"]，关键词降级为标题分词兜底（kw_fallback=title_tokens）。
 """
 from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 from datetime import datetime, timezone
 from typing import Any
@@ -91,6 +94,43 @@ def _extract_keywords(db: Session, topics: list[HotTopic]) -> tuple[list[str], s
                 {"role": "user", "content": f"上次输出不合规：{e}。请严格只输出规定 JSON 结构，重新提炼。"},
             ]
     raise JSONParseError(f"hot_keywords 两次失败: {last_err}")
+
+
+_TITLE_WORD_RE = re.compile(r"[0-9A-Za-z_]+|[\u4e00-\u9fff]{2,}")
+# 停用词表（分词兜底的清洗规则，不是兜底关键词本身）：虚词/通用平台噪声，命中即丢弃
+_TITLE_STOPWORDS = frozenset({
+    "的", "了", "和", "是", "在", "上", "中", "与", "及", "或", "等", "对", "为", "被", "把",
+    "将", "从", "到", "更", "最", "也", "都", "而", "不", "有", "就", "要", "会", "能", "可",
+    "这", "那", "你", "我", "他", "她", "它", "们", "吗", "呢", "吧", "啊", "之", "其", "以",
+    "如何", "什么", "怎么", "为何", "为什么", "关于", "通过", "进行", "出现", "成为", "视频",
+    "图片", "合集", "直播", "热搜", "榜单", "排行", "the", "and", "for", "with", "from",
+    "that", "this", "are", "was", "were", "have", "has", "will", "your", "you",
+})
+
+
+def _fallback_keywords_from_titles(topics: list[HotTopic], limit: int = 15) -> list[str]:
+    """关键词提炼失败时的标题分词兜底：ASCII 词原样小写、中文连续段切 2-gram，
+    去停用词与纯数字段，按出现频次降序取 top-15。只用真实标题统计，不含任何固定兜底词。"""
+    from collections import Counter
+
+    counts: Counter = Counter()
+    for t in topics:
+        title = (t.title or "").strip()
+        if not title:
+            continue
+        for seg in _TITLE_WORD_RE.findall(title):
+            if seg.isdigit():
+                continue
+            if seg.isascii():
+                w = seg.lower()
+                if len(w) > 1 and w not in _TITLE_STOPWORDS:
+                    counts[w] += 1
+            else:
+                for i in range(len(seg) - 1):
+                    g = seg[i:i + 2]
+                    if g not in _TITLE_STOPWORDS:
+                        counts[g] += 1
+    return [w for w, _c in counts.most_common(limit)]
 
 
 def _rank_filter_topics(db: Session, topics: list[HotTopic]) -> tuple[list[HotTopic], dict]:
@@ -187,27 +227,36 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     model = ""
     kw_error = None
     rank_meta: dict = {}
+    degraded: list[str] = []
     if topics:
         try:
             llm_input, rank_meta = _rank_filter_topics(db, topics)
             keywords, summary, model = _extract_keywords(db, llm_input)
-        except Exception as e:  # noqa: BLE001  提炼失败不丢榜单数据
+        except Exception as e:  # noqa: BLE001  提炼失败不丢榜单数据，降级标题分词兜底
             kw_error = f"{type(e).__name__}: {e}"
-            log.warning("关键词提炼失败: %s", e)
+            log.warning("关键词提炼失败，降级标题分词: %s", e)
+            keywords = _fallback_keywords_from_titles(topics)
+            degraded.append("hot_keywords")
 
     batch.keywords = keywords
     batch.summary = summary
     batch.model = model
     db.commit()
 
-    task_status = "FAILED" if (kw_error or not ok_platforms) else "DONE"
-    _finish(db, task, status=task_status, stats={
+    # 分态：只有采集（全平台拉取）失败才 FAILED；提炼失败采集成功 → DONE + degraded
+    task_status = "FAILED" if not ok_platforms else "DONE"
+    stats = {
         "platforms": platform_stats, "topics_stored": topic_count,
         "batch_id": batch_id, "keywords": keywords, "kw_error": kw_error,
         **rank_meta,
-    }, error=kw_error)
+    }
+    if degraded:
+        stats["degraded"] = degraded
+        stats["kw_fallback"] = "title_tokens"
+    _finish(db, task, status=task_status, stats=stats,
+            error=kw_error if task_status == "FAILED" else None)
     return {
         "task_id": task.id, "status": task_status, "batch_id": batch_id,
         "topics_stored": topic_count, "keywords": keywords, "summary": summary[:200],
-        "platforms": platform_stats,
+        "platforms": platform_stats, "degraded": degraded,
     }

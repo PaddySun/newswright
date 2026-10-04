@@ -268,3 +268,47 @@ def test_create_app_boots_bootstrap_and_registers_routers(db_session):
     assert "/items" in paths  # 业务路由（守卫依赖）
     assert "/" in {getattr(r, "path", "") for r in app.routes}
     assert db_session.query(User).count() == 1  # admin 已引导且唯一
+
+
+# ---------- article 增列迁移：引用违规标记（F1⑤） ----------
+
+# 旧 article：引用违规标记列上线前形态
+_OLD_ARTICLE = """
+CREATE TABLE article (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER REFERENCES author(id),
+    title VARCHAR(300),
+    body TEXT,
+    citations JSON,
+    status VARCHAR(30) DEFAULT 'PUBLISHED_TO_C'
+)"""
+
+
+@pytest.fixture()
+def article_old_db(tmp_path):
+    """F1 文章表旧库夹具：article 为历史形状（无引用违规标记列）+ 历史作者与历史行。"""
+    _bind_engine(tmp_path, "article_old.db")
+    Direction.metadata.create_all(appdb.engine, tables=[Direction.__table__])
+    with appdb.engine.begin() as conn:
+        conn.execute(text("INSERT INTO direction (name, prompt, prompt_version, threshold, enabled) VALUES ('D', 'p', 'v1', 60, 1)"))
+        for ddl in (_OLD_AUTHOR, _OLD_ARTICLE):
+            conn.execute(text(ddl))
+        conn.execute(text(
+            "INSERT INTO author (name, model, persona_prompt) VALUES ('旧作者', 'deepseek-chat', 'p')"))
+        conn.execute(text(
+            "INSERT INTO article (author_id, title, body) VALUES (1, '历史文章', '正文')"))
+    yield
+    _restore_engine()
+
+
+def test_migrate_old_article_adds_citation_violated_default_false(article_old_db):
+    """article 增列迁移：旧库补 citation_violated 列，历史行默认 false（未标记）；
+    置 true 的唯一来源是引用校验耗尽入库路径（由 writer 侧测试钉）。"""
+    from app.db import init_db
+
+    init_db()
+    assert "citation_violated" in _columns_of("article")
+    with appdb.engine.begin() as conn:
+        row = conn.execute(
+            text("SELECT citation_violated FROM article WHERE title='历史文章'")).one()
+    assert row[0] == 0

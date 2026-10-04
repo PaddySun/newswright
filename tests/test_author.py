@@ -63,3 +63,59 @@ def test_placeholder_filling(db_session, author_items):
     assert "读者点赞了《X》" in out
     assert "暂无记录" in out
     assert "{style_memory}" in out
+
+
+def test_citation_violation_exhausted_stored_with_flag(db_session, author_items, monkeypatch):
+    """引用校验重试耗尽：违规文章依旧入库但必须携带引用违规标记（citation_violated=True），
+    write_run 决策 WRITE 且在 payload 记录违规详情（标记供展示侧提示"引用存疑"消费）。"""
+    from app.authors import writer as wr
+    from app.models import Article
+
+    a, i1, i2 = author_items
+    bad_payload = {"decision": "write", "article": {
+        "title": "违规文章", "body": "正文内容。",
+        "citations": [{"item_id": i1.id, "quote": "这句话根本不在正文里"}]},
+        "reason": "r", "thinking": "t"}
+
+    class FakeOld:
+        def __init__(self, _db):
+            pass
+
+        def chat_json(self, messages, **kw):
+            return bad_payload, "m"
+
+    monkeypatch.setattr(wr, "DeepSeekProvider", FakeOld)
+    run = wr.run_write(db_session, a, triggered_by="test")
+    assert run.status == "OK" and run.decision == "WRITE"
+    article = db_session.get(Article, run.article_id)
+    assert article is not None
+    assert article.citation_violated is True
+    assert run.payload.get("citation_violated") is True
+    assert "CitationError" in (run.payload.get("citation_error") or "")
+
+
+def test_citation_normal_path_flag_false(db_session, author_items, monkeypatch):
+    """正常写作路径（引用校验一次通过）：入库文章的引用违规标记为默认 false。"""
+    from app.authors import writer as wr
+    from app.models import Article
+
+    a, i1, i2 = author_items
+    good_payload = {"decision": "write", "article": {
+        "title": "合规文章", "body": "正文内容。",
+        "citations": [{"item_id": i1.id, "quote": "DeepSeek 发布了新模型，速度提升两倍。"}]},
+        "reason": "r", "thinking": "t"}
+
+    class FakeOld:
+        def __init__(self, _db):
+            pass
+
+        def chat_json(self, messages, **kw):
+            return good_payload, "m"
+
+    monkeypatch.setattr(wr, "DeepSeekProvider", FakeOld)
+    run = wr.run_write(db_session, a, triggered_by="test")
+    assert run.status == "OK" and run.decision == "WRITE"
+    article = db_session.get(Article, run.article_id)
+    assert article is not None
+    assert article.citation_violated is False
+    assert "citation_violated" not in (run.payload or {})
