@@ -76,6 +76,9 @@
 | `footnote_citations` | bool | ✓ | 正文 `[^K]` 脚注 + 文末定义行 `[^K]: [条目 <id>] <逐字原句>`；执行器解析定义行→结构化 citations（item_id + quote 逐字校验不变）落 `article.citations` |
 | `max_tokens_per_node` | object | （可选） | 调用点→max_tokens 覆写 |
 
+> **可选 object 字段的显式 null 口径**：`max_tokens_per_node`、`think_routing.per_node` 等
+> 可选 object 字段写显式 `null` 视为"未写该键"（宽松归一，不报类型错）。
+
 ## 与任务书骨架的差异（偏离记录）
 
 1. **`memory.injection.position` 枚举为 `head|tail|u`**（任务书示例为中文描述"首部风格示范区/尾部上下文区"）——语义一致，机器可判定。

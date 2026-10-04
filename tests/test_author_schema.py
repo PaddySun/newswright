@@ -80,3 +80,12 @@ def test_import_roundtrip(db_session):
 def test_import_new_author_requires_model(db_session):
     with pytest.raises(AuthorConfigError):
         import_author_json(db_session, default_author_config("t9", "无名作者"))
+
+
+def test_optional_object_explicit_null_treated_as_absent():
+    """可选 object 字段显式 null = 未写该键（宽松归一）：output.max_tokens_per_node
+    与 route.think_routing.per_node 置 null 均不报类型错，校验零错误。"""
+    cfg = default_author_config("t1", "空值作者")
+    cfg["output"]["max_tokens_per_node"] = None
+    cfg["route"]["think_routing"]["per_node"] = None
+    assert validate_author_json(cfg) == []

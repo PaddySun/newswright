@@ -500,3 +500,30 @@ def test_fetch_fingerprint_dup_and_null_fingerprint_guard(db_session, monkeypatc
     assert e1.fingerprint == fp and e1.direction_id == d.id
     e2 = db_session.query(Item).filter_by(source_id=src_b.id, guid="tag:2026:x1").one()
     assert e2.fetch_status == "FETCHED" and e2.duplicate_of is None  # fp=NULL 不误判
+
+
+# ---------- F1⑩ 残余复核补测：计数器与账本逐条累积语义 ----------
+
+def test_fetch_second_round_db_dup_accounting(db_session, monkeypatch):
+    """同一源二次抓取全部命中库内已有 guid：dup_blocked 逐条累积（本轮 2 条 → 2）。
+    计数器必须自增而非覆盖赋值——覆盖会让多条拦截只剩最后一条的计数。"""
+    d, src = _mk_source(db_session)
+    resp = FakeResp(_feed(_item("G1", "https://ex/g1", "T1"), _item("G2", "https://ex/g2", "T2")))
+    _patch(monkeypatch, resp, resp)
+
+    s1 = fetch_source(db_session, src)
+    assert s1.inserted == 2 and s1.dup_blocked == 0
+    s2 = fetch_source(db_session, src)
+    assert s2.inserted == 0
+    assert s2.dup_blocked == 2
+
+
+def test_fetch_sanitize_passed_counts_each_entry(db_session, monkeypatch):
+    """多条目同轮通过零信任过滤：sanitize_passed 逐条累积（2 条 → 2），
+    覆盖赋值会让多条同轮计数只剩 1。"""
+    d, src = _mk_source(db_session)
+    _patch(monkeypatch, FakeResp(_feed(
+        _item("G1", "https://ex/g1", "T1"), _item("G2", "https://ex/g2", "T2"))))
+
+    s = fetch_source(db_session, src)
+    assert s.sanitize_passed == 2 and s.sanitize_rejected == 0

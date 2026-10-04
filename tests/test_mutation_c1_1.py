@@ -245,3 +245,21 @@ def test_parse_strict_json_mutant_14_17_22_29_nested_and_prose():
     assert parse_strict_json('{"a": 1}以上。') == {"a": 1}  # } 后紧跟杂文
     with pytest.raises(JSONParseError):
         parse_strict_json("完全没有花括号的输出")
+
+
+# ---------- F1⑩ 残余复核补测：计量包装对请求体的透传契约 ----------
+
+def test_call_passes_constructed_payload_to_post(db_session):
+    """_call 的重试/计量包装必须把调用方构造的请求体原样透传给 _post（HTTP body
+    一致性：包装层增删改字段都会让线上请求与计量归因失真）。"""
+    d = _Dummy(db_session)
+    seen: list = []
+
+    def post(payload):
+        seen.append(payload)
+        return {"ok": 1}, {"prompt_tokens": 1, "completion_tokens": 1, "billing_units": 0}
+
+    d._post = post  # type: ignore[method-assign]
+    payload = {"model": "m-1", "messages": [{"role": "user", "content": "hi"}]}
+    d._call(payload, call_point="ut", ref_type="item", ref_id=1)
+    assert seen == [payload]
