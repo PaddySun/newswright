@@ -1626,3 +1626,117 @@
 | 变异体 | 类 | 说明 | 依据 |
 |---|---|---|---|
 | app.search.registry.x_get_provider__mutmut_4 | A | 未注册错误文案 | 文案措辞无条款（C1-7 措辞先例） |
+
+## 批次 11：C1-9a 补扫——pipeline.runner / providers.deepseek / config（96 A + 1 B = 97 条）
+
+> 本批无 D 类；C 类 393 条由 `tests/test_mutation_c1_9a.py` 47 测试闭合（不在本清单）。
+> 核验-改判（两轮逐条施加）：R1（C 385 + A 105 逐条施加→跑新测试文件）暴露 C 存活 10 条、
+> A 被杀 11 条。归因：①6 条测试场景修正（enqueue skip url 键断言、score 异常/解析计数×2 场景、
+> error 类型名 startswith、summary task_id 断言）后 R2 定点复跑全杀；②fetch_round m26/m27
+> **C→A 改判**——_finish 内存同步 + 后续 _update_backoff 提交将 ORM 脏值回写，终态恒被修复
+> （实证：CAS 迟到写拒绝告警后 DB 终态仍 DONE）；③process m42 **C→B 改判**（CAS 认领竞争防御，
+> 单 worker 判定域不可达）；④A 被杀 11 条全部 **A→C 改判**：chat json_mode 缺省被默认路径断言
+> 击杀 1、_call max_retries 全参透传 2（C1-8 构造全参透传先例）、_finish payload_extra+stats
+> 并传合并 3（DT-5 组合契约——测试即并传场景）、score except 处理器内 log.format 破坏致
+> TypeError 中断整轮 5（违反「单条异常不中断」——比 C1-8 日志面板先例更强的处理路径面）。
+> 终态：**C 393/393 全杀、A 96/96 全活、B 1 存活（B 不杀）、problems=0**。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.config.x__get_bool__mutmut_10 | A | 开关取值枚举 YES 变体 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__get_bool__mutmut_11 | A | 开关取值枚举 on 变体 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__get_bool__mutmut_12 | A | 开关取值枚举 ON 变体 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__get_bool__mutmut_6 | A | 开关取值枚举 1 变体（仅钉 true，C1-8 数值组先例） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__get_bool__mutmut_9 | A | 开关取值枚举 yes 变体 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__require__mutmut_5 | A | SystemExit 退出码数值（1→None）无条款，类型面已由 D18 测试钉死 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__require__mutmut_6 | A | SystemExit 退出码数值（1→2）无条款 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__tolerant_env_parse__mutmut_3 | A | encoding=None 走 locale 缺省——.env 值域 ASCII 等价（encoding 无条款） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.config.x__tolerant_env_parse__mutmut_5 | A | UTF-8 为合法 codec 别名，完全等价 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__claim__mutmut_20 | A | attempts 数值无条款（同 m7） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__claim__mutmut_21 | A | attempts 数值无条款（同 m7） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__claim__mutmut_22 | A | datetime.now(None) naive——updated_at 形态无消费条款（tz 形态无断言面） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__claim__mutmut_7 | A | attempts+1 数值无条款（设计书仅列 attempts 列，未钉认领时增量） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__claim__mutmut_8 | A | updated_at 未显式赋值——列 onupdate=utcnow 兜底（C1-8 观察 4 同款：列钩子承载） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_19 | A | stats.extra 诊断镜像（C1-8 KEYSHAPE 先例：§4.1 只钉账本行/九桶字段，extra 镜像不断言） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_20 | A | getattr(None,...) 恒 {}——extra 镜像不断言（同 m19） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_22 | A | getattr 缺省 {}→None 后 or {} 兜底等价 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_26 | A | extra 键名 XX 变体——extra 镜像不断言（同 m19） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_27 | A | extra 键名大写变体（同 m19） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__finish__mutmut_24 | A | error 截断界 [:2000]→[:2001]（截断界数值无条款；last_error 为 Text 列） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__finish__mutmut_27 | A | synchronize_session=None（'auto'）——SQLA 会话同步策略为实现形态（ADR-1 禁形态断言） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__finish__mutmut_51 | A | 迟到完成 WARN 日志 task= 实参变体（日志文案组） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__finish__mutmut_52 | A | 迟到完成 WARN 日志 target= 实参变体（日志文案组） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__finish__mutmut_56 | A | 迟到完成 WARN 文案 XX 包裹（'迟到完成被拒' 子串仍命中既有断言；文案无条款） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__finish__mutmut_57 | A | 迟到完成 WARN 文案大小写变体 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__finish__mutmut_6 | A | datetime.now(None) naive——终态行退出 RUNNING 域，P0-1 比较不再触达（tz 形态无消费方） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__new_task__mutmut_3 | A | status=None → 列 default='PENDING' 兜底（C1-8 观察 4：列缺省承载） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x__new_task__mutmut_6 | A | status 缺参 → 列 default='PENDING' 兜底（同 m3） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_1 | A | triggered_by 缺省 'scheduler'（缺省值无条款——C1-8 数值缺省先例） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_2 | A | 同 m1（大写变体） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_33 | A | tz 归一 and-False 变体：UTC aware 输入下 replace(tzinfo=utc) 恒等（生产域全 UTC aware） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_34 | A | tz 归一 or-True 变体：naive 输入不可达（last_fetched_at 恒由 utcnow 写入 aware） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_35 | A | tz 归一 replace(None) 变体：同 m34（生产域全 aware） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_51 | A | fails or 1：0→1 仍 < BACKOFF_FAIL_THRESHOLD(3)，判定域等价 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_74 | A | log.info 文案变体（log 文案组） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_75 | A | 同 m74 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_76 | A | 同 m74 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_77 | A | 同 m74 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_78 | A | 同 m74 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_79 | A | 同 m74 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_80 | A | 同 m74 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_81 | A | 同 m74 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_fetch_round__mutmut_1 | A | triggered_by 缺省 'manual'（缺省值无条款） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_fetch_round__mutmut_2 | A | 同 m1 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_fetch_round__mutmut_26 | A | task.status='XXRUNNINGXX'：_finish 内存同步+后续 _update_backoff 提交将 ORM 脏值回写，终态恒被修复（实证：CAS 迟到写拒绝后 DB 终态仍 DONE） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_fetch_round__mutmut_27 | A | 同 m26（lowercase 变体，同款回写修复） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_fetch_round__mutmut_28 | A | attempts =1：首次认领恒 1（任务新建 attempts=0），控制流等价 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_fetch_round__mutmut_29 | A | attempts -=1：attempts 数值无条款（同 _claim m7） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_fetch_round__mutmut_30 | A | attempts +=2：attempts 数值无条款（同 _claim m7） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_17 | A | status 过滤移除：_claim 的 WHERE status='PENDING' CAS 复核兜底（双保险，行为面等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_35 | A | any_failed 初值 None：or 链吸收，首轮赋值即覆盖（控制流等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_61 | A | 'source 不存在' 错误文案 XX 包裹（留痕=presence 已钉，文案无条款） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_62 | A | 'source 不存在' 文案大写变体（同 m61） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_11 | A | synchronize_session=None（实现形态，同 _finish m27） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_19 | A | updated_at=now 移除——列 onupdate=utcnow 兜底（等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_3 | A | datetime.now(None) naive local：UTC 判定域（GitHub CI runner）等价——CI-0 实证存活；本地 +08 可杀属判定域外（注记） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_39 | A | P0-1 回收 INFO 日志文案变体（log 文案组；返回值为钉面） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_40 | A | 同 m39 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_41 | A | 同 m39 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_42 | A | 同 m39 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_43 | A | 同 m39 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_44 | A | 同 m39 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_reclaim_stale_tasks__mutmut_45 | A | 同 m39 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_round_busy__mutmut_5 | A | query(PipelineTask.id)→query(None)：存在性语义不变（first() 判空等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_1 | A | triggered_by 缺省 'manual'（缺省值无条款） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_137 | A | _error 文案内算式（failed-parse_failed）——错误消息数字措辞无条款（留痕 presence 已钉） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_2 | A | 同 m1 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_33 | A | attempts =1：任务新建恒 0，控制流等价 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_34 | A | attempts 数值无条款（同 _claim m7） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_35 | A | attempts 数值无条款（同 _claim m7） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_82 | A | 同 m81 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_83 | A | 同 m81 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_score_round__mutmut_87 | A | 同 m81 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁ__init____mutmut_9 | A | last_usage 初值 None——chat 首次调用即整体覆写，初值不可达（初始化即覆盖先例） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_110 | A | fallback_note 截断界 [:200]→[:201]（截断界无条款，C1-8 数值组先例） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_112 | A | log 文案变体（log 文案组） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_113 | A | 同 m112 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_114 | A | 同 m112 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_115 | A | 同 m112 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_13 | A | effective_tier None→''：tier_request 非 'reasoner' 同走 chat 档，判定域等价 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_15 | A | fallback_note 文案 XX 包裹（留因=presence 已钉，措辞无条款） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_16 | A | fallback_note 文案大写变体 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_160 | A | JSONParseError 消息文本 None（异常类型面已钉；消息措辞无条款，分账靠类型名不受影响） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_2 | A | temperature 缺省值——全部调用点显式传参（scoring 0.0/hot 0.0/pipeline 显式），缺省不可达 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_27 | A | build 的 tier!=='XXreasonerXX'：reasoner 档多加的 response_format 随即被 tier_request pop（双保险兜底，判定域等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_28 | A | 同 m27（大写变体，pop 兜底等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_4 | A | fallback_note 初值 ''→真值域与 None 同为 falsy，消费方按真值判（等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_64 | A | reasoning_effort-only payload 不可达（thinking_params 模式 thinking 恒伴随） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_65 | A | 同 m64（大写变体） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_66 | A | 同 m64（not in 变体，无 thinking 时双 False 等价） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_79 | A | fallback_note 文案 XX 包裹 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_80 | A | fallback_note 文案大写变体 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_82 | A | log.warning 文案/实参变体（log 文案组先例） | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_83 | A | 同 m82 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_84 | A | 同 m82 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_85 | A | 同 m82 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_42 | B | continue→break 位于 _claim 失败分支（CAS 认领竞争防御）：单 worker 判定域不可达（ADR-2 单机单进程，测试内 claim 恒成功）；设计书明确要求该分支存在 | 技术书 §4.2 状态机 CAS + P0-1 条款面（任务书 §2 B 类候选原案）；_claim docstring「已被其他 worker 抢走则返回 False」 |
