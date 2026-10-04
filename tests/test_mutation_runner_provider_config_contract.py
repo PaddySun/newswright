@@ -1,5 +1,7 @@
 """C1-9a 分诊批次 11（收官补扫）：pipeline.runner / providers.deepseek / config 幸存变异体闭合。
 
+> 追溯注记：本文件原名 tests/test_mutation_c1_9a.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
+
 条款依据（技术书 v1.7 / 产品书 v1.6，引用见各测试 docstring）：
 - §4.2 状态机：PENDING/RUNNING/DONE/FAILED 枚举、CAS 终态迁移（WHERE id+status，迟到写拒绝）、
   P0-1 回收 30/60/120 分档（"超"=严格大于）、任务状态一律落库（DB 即队列）。

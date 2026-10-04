@@ -1,5 +1,7 @@
 """C1-1 变异分诊批次 2 补强测试（providers.base 158 条 C 类 + T1 三条 D 转 C）。
 
+> 追溯注记：本文件原名 tests/test_mutation_c1_1.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
+
 断言全部来自设计书 v1.5 条款（ADR-8 计量/重试/脱敏纪律、AC-01.2b/01.4b/ADR-5⑤b
 整点与无对端口径、技术书 §4.1 usage_log 账本、§4.2 外部调用显式超时、R5 JSON 解析链）。
 命名 test_<function>_<mutant编号>_<断言点>；风格与 tests/test_mutation_t1.py 一致。

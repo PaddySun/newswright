@@ -1,5 +1,7 @@
 """C1-9b 收官补测（统筹亲执）：interleave_low_score 全合同测试。
 
+> 追溯注记：本文件原名 tests/test_mutation_c1_9b.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
+
 种子：doc/CI0/C1-9b-种子.jsonl（8 条幸存，app.api.routes 唯一漏扫函数）。
 条款依据：产品书 v1.6 DT-3「拍板④穿插」（rel<方向阈值且≥最低阈值、概率 p、
 真实分数原样、low_interleaved 标记）+ AC-14.1（阈值过滤限定常规条目——穿插条目
