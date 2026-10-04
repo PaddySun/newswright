@@ -1,5 +1,7 @@
 """C1-2 变异分诊批次 3 补强测试（app.db 60 + app.main 4 = 64 条 C 类）。
 
+> 追溯注记：本文件原名 tests/test_mutation_c1_2.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
+
 缺口根源：现有测试只走「新库 create_all」路径，db._migrate_added_columns 的
 旧库升级路径此前无测试（与 C1-1 providers.base 同构）；main.create_app 启动装配
 仅被 import 期顺带执行、无独立断言。断言全部来自设计书 v1.5 条款：

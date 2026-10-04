@@ -1,4 +1,6 @@
 """C1-5a 变异分诊批次 6 补强测试（authors.pipeline 执行器核心 PipelineRunner，580 条
+
+> 追溯注记：本文件原名 tests/test_mutation_c1_5a.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
 幸存变异体分诊后 276 条 C 类的关闭测试）。
 
 断言全部来自设计书条款：

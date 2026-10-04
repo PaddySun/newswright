@@ -1,5 +1,7 @@
 """C1-8 分诊批次 10：外部能力家族（hot/search/rerank/embedding）幸存变异体闭合测试。
 
+> 追溯注记：本文件原名 tests/test_mutation_c1_8.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
+
 条款依据（技术书 v1.7 / 产品书 v1.6）：
 - ADR-8 provider 统一纪律（重试 ≤2 指数退避 / 计量落账 / 报错脱敏 / 连接构造 D-A 尾斜杠、
   D-B Bearer+Content-Type / 额度闸接入位）；ADR-8 计费对账（billing_units 唯一可信源）。

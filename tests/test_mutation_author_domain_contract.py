@@ -1,4 +1,6 @@
 """C1-7 变异分诊批次 9 补强测试（authors 域收官批：writer/gates/memory/importer
+
+> 追溯注记：本文件原名 tests/test_mutation_c1_7.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
 477 条幸存变异体分诊后 255 条新增 C 类的关闭测试）。
 
 断言全部来自设计书条款：

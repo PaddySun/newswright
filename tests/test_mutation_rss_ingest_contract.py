@@ -1,4 +1,6 @@
 """C1-4 变异分诊批次 5 补强测试（ingest.rss 主带 + rules/sanitize/fingerprint 小模块
+
+> 追溯注记：本文件原名 tests/test_mutation_c1_4.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
 + C1-1 十三条 D 转 C，共 111 条新增 C 类断言；另有 18 条 C 已由既有测试关闭）。
 
 断言全部来自设计书条款：

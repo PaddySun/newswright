@@ -1,5 +1,7 @@
 """C1-6 分诊批次 8a：authors.schema 五域验证器 + 入口/缺省 C 类闭合测试。
 
+> 追溯注记：本文件原名 tests/test_mutation_c1_6.py（原批次代号见文件名），按对象重命名于 F1⑫治理批。
+
 裁决面：产品书 US-10 AC-10.1（校验失败信息**含字段路径**、**一次报全不短路**）/
 AC-10.2（模型不在 JSON）；docs/author-json-schema.md 字段总表（顶层/identity/
 route/memory/output 各键的必填✓、类型、枚举、unit:"chars"、format=markdown、
