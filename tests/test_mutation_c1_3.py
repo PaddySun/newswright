@@ -413,3 +413,33 @@ def test_sanitize_keyword_deny_rejects_and_accounts(db_session, monkeypatch):
     c1 = db_session.query(Item).filter_by(source_id=src.id, guid="c1").one()
     assert c1.sanitize_status == "PASSED"
     assert s.sanitize_rejected == 2 and s.sanitize_passed == 2
+
+
+# ---------- F1⑩ 残余复核补测：单页条目标题 / 版本条目豁免指纹链的 DUP 边界 ----------
+
+def test_web_first_fetch_item_title_from_page(db_session, monkeypatch):
+    """单页条目标题取自页面 <title> 抽取结果——标题链路任一环丢失（页 title 抽取
+    或 payload 装配）都会让条目落空标题。"""
+    src = _mk_source(db_session)
+    _patch(monkeypatch, FakeResp(HTML_A))
+
+    fetch_web_source(db_session, src)
+
+    it = db_session.query(Item).filter_by(source_id=src.id).one()
+    assert it.title == "News A"
+
+
+def test_web_content_change_creates_fetched_entry_not_dup(db_session, monkeypatch):
+    """监测页内容变化 → 新版本条目照常入库：版本条目豁免指纹链（fingerprint=None），
+    不得与库内任何 NULL 指纹行做指纹比对判 DUP——B7 全量保存语义要求新条目
+    fetch_status=FETCHED、duplicate_of 为空。"""
+    src = _mk_source(db_session)
+    _patch(monkeypatch, FakeResp(HTML_A))
+    fetch_web_source(db_session, src)
+    _patch(monkeypatch, FakeResp(HTML_B))
+    fetch_web_source(db_session, src)
+
+    items = db_session.query(Item).filter_by(source_id=src.id).order_by(Item.id).all()
+    assert len(items) == 2
+    assert items[1].fetch_status == "FETCHED"
+    assert items[1].duplicate_of is None

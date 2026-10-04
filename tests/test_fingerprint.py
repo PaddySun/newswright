@@ -9,7 +9,7 @@ import pytest
 
 import app.ingest.rss as rss_mod
 import app.scoring.service as scoring
-from app.ingest.fingerprint import canonical_url, url_fingerprint
+from app.ingest.fingerprint import canonical_url, find_fingerprint_origin, url_fingerprint
 from app.ingest.rss import fetch_source
 from app.models import Direction, Item, Source, UsageLog
 from app.pipeline.runner import score_round
@@ -144,3 +144,20 @@ def test_cross_direction_independent(db_session, two_sources, monkeypatch):
     assert row.fetch_status == "FETCHED"  # 方向 2 无指纹命中 → 正常入库
     assert row.duplicate_of is None and row.direction_id == d2.id
     assert row.fingerprint == orig.fingerprint  # 指纹相同但作用域不跨方向
+
+
+def test_find_fingerprint_origin_returns_earliest(db_session, two_sources):
+    """同方向多条同指纹命中时返回最早入库条目（min id）——duplicate_of 指向语义钉死
+    （解析见 docs/design-index.md）。"""
+    d, src_a, src_b = two_sources
+    fp = url_fingerprint("https://ex.com/same-post")
+    i1 = Item(source_id=src_a.id, guid="o1", url="https://ex.com/same-post", title="First",
+              content_text="全文", fetch_status="FETCHED", direction_id=d.id, fingerprint=fp)
+    db_session.add(i1)
+    db_session.commit()
+    i2 = Item(source_id=src_b.id, guid="o2", url="https://ex.com/same-post", title="Second",
+              content_text="全文", fetch_status="FETCHED", direction_id=d.id, fingerprint=fp)
+    db_session.add(i2)
+    db_session.commit()
+    origin = find_fingerprint_origin(db_session, d.id, fp)
+    assert origin.id == i1.id

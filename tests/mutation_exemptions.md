@@ -1734,3 +1734,74 @@
 | app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_84 | A | 同 m82 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
 | app.providers.deepseek.xǁDeepSeekProviderǁchat__mutmut_85 | A | 同 m82 | 等价/不可达或条款未钉（C1-8 观察 4 列缺省兜底、log 文案组、数值缺省组、KEYSHAPE 组先例沿用） |
 | app.pipeline.runner.x_process_fetch_round__mutmut_42 | B | continue→break 位于 _claim 失败分支（CAS 认领竞争防御）：单 worker 判定域不可达（ADR-2 单机单进程，测试内 claim 恒成功）；设计书明确要求该分支存在 | 技术书 §4.2 状态机 CAS + P0-1 条款面（任务书 §2 B 类候选原案）；_claim docstring「已被其他 worker 抢走则返回 False」 |
+
+## F1⑩ 残余对账补登（2026-10-05，26 条 = import-time 盲区 21 + interleave 死代码 4 + bootstrap 1）
+
+> C1 收官对账口径：seeds ∩ dispatch 幸存 − 豁免清单 = 62 条未登记。本节补登 26 条已归因项；
+> 2 条 null 语义（app.authors.schema.x__validate_output__mutmut_44 / x__validate_route__mutmut_256）
+> 由 F1⑧ 测试杀灭不豁免；其余 34 条逐条施加复核（结果见 F1 汇报 §4，补测者不在豁免清单）。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.api.routes.x_interleave_low_score__mutmut_10 | A | 穿插低分段的死代码行变异（行 408-409，分支构造上不可达） | 真等价（C1 收官定案：死代码行 408-409） |
+| app.api.routes.x_interleave_low_score__mutmut_14 | A | 同上（死代码行变体） | 同上 |
+| app.api.routes.x_interleave_low_score__mutmut_22 | A | 同上（死代码行变体） | 同上 |
+| app.api.routes.x_interleave_low_score__mutmut_37 | A | 同上（死代码行变体） | 同上 |
+| app.auth.x_bootstrap_admin__mutmut_6 | A | ORM 列缺省承载（must_change_password 由列 default=True 落库），删除显式赋值不改变落库值 | T1 乐观误判经 dispatch 定案（C1 收官回写区）+ 列缺省兜底判据族 |
+| app.embedding.registry.x_register__mutmut_1 | A | 注册表导入期执行：mutmut 运行时激活模型结构性不可杀导入期代码（手工施加已证可杀） | import-time 激活盲区（C1-8 手工验证先例；harness 不可杀=豁免注记） |
+| app.rerank.registry.x__fixed__mutmut_1 | A | 同上（导入期执行的固定候选集注册） | 同上 |
+| app.rerank.registry.x__fixed__mutmut_2 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed__mutmut_3 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed__mutmut_4 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_1 | A | 同上（导入期执行的 NeoHorse 候选集注册） | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_2 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_3 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_4 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_5 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_6 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_7 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_8 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_9 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_10 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_11 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_12 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_13 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_14 | A | 同上 | 同上 |
+| app.rerank.registry.x__fixed_neohorse__mutmut_15 | A | 同上 | 同上 |
+| app.search.registry.x_register__mutmut_1 | A | 同上（搜索注册表导入期执行） | 同上 |
+
+## F1⑩ 残余复核 A 类补登（2026-10-05，25 条；逐条施加→全量测试→还原定案）
+
+> 复核手法：C1 系列库级重建（0959dc6 源码 mutate_file_contents + 变更对文本施加），
+> 每条施加后跑全量 365 测试——全部存活即确认测试域内等价/不可达。数据：
+> doc/F1/F1-10-残余复核-施加结果.json（31 条）与 F1-10-C类杀灭验证.json（6 条 C 由
+> 本批新测试杀灭，不在本表）。另：rss fetch_source m19/m21/m23（follow_redirects/
+> max_redirects 行）已被 F1① 行重写吸收，新行同族变异由客户端契约测试杀灭，不豁免。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.ingest.fingerprint.x_canonical_url__mutmut_9 | A | urlparse 对 scheme 恒输出小写 → lower()/upper() 两侧同为常量变换，指纹相等关系不变 | 变换一致性推理（判定域内全部指纹经同一函数） |
+| app.ingest.fingerprint.x_find_fingerprint_origin__mutmut_1 | A | order_by(None)：SQLite 判定域内 (direction_id,fingerprint) 索引扫描序 ≡ rowid 序 ≡ min id，选择结果不变；order_by 为 min id 条款的显式化（本批已落钉死测试） | SQLite 索引序推理 + 钉死测试补强 |
+| app.ingest.rss.x__entry_published__mutmut_2 | A | or→and：feedparser 对仅 pubDate 的条目回填 updated=published → and 分支实得 published_parsed，返回值不变 | feedparser 回填判据族（C1 收官方法学；本环境实测复证） |
+| app.ingest.rss.x__entry_published__mutmut_3 | A | get(None) 恒 None → st 取 updated_parsed = feedparser 回填值，返回值不变 | 同上 |
+| app.ingest.rss.x__entry_published__mutmut_4 | A | 键名 XX 变体 miss → st 取 updated_parsed（回填） | 同上 |
+| app.ingest.rss.x__entry_published__mutmut_5 | A | 键名大写变体 miss → 同上 | 同上 |
+| app.ingest.rss.x_fetch_source__mutmut_34 | A | datetime.now(None)=本地 naive：enqueue 读侧对 naive 统一 replace(tzinfo=utc) 归一，调度判定自洽 | datetime.now(None) 判据族（C1-8 hot m138 先例）+ 读侧归一化 |
+| app.ingest.rss.x_fetch_source__mutmut_108 | A | fetch_status="FETCHED"→None：Item.fetch_status 列 default="FETCHED" 对显式 None 兜底，落库值不变 | SQLAlchemy 列缺省兜底判据族（C1-8 15 条实证先例） |
+| app.ingest.rss.x_fetch_source__mutmut_158 | A | datetime.now(None) 同 m34（主路径写点） | 同 m34 |
+| app.ingest.rss.x_fetch_source__mutmut_161 | A | httpx.Headers 大小写不敏感：get("ETAG") ≡ get("etag") | httpx.Headers 契约（线缆小写判据族邻域） |
+| app.ingest.rss.x_fetch_source__mutmut_79 | A | fetched_at=None：Item.fetched_at 列 default=utcnow 兜底 | 列缺省兜底判据族 |
+| app.ingest.web.x_fetch_web_source__mutmut_148 | A | fetched_at=None：同上 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_173 | A | fetch_status=None：Item.fetch_status 列缺省兜底 | 同上 |
+| app.ingest.web.x_fetch_web_source__mutmut_157 | A | Item(kwargs) 内关键字实参换序/换行：keyword=value 语义与顺序无关 | kwargs 顺序等价 |
+| app.search.pipeline.x_fetch_search_source__mutmut_195 | A | fetched_at=None：Item.fetched_at 列缺省兜底 | 列缺省兜底判据族 |
+| app.providers.base.x__scrub__mutmut_2 | A | if (text) or True → 恒取 replace 分支：空串 replace 自身仍为空串，两分支等价 | 恒真条件等价推理 |
+| app.providers.base.x_parse_strict_json__mutmut_22 | A | start==-2 使无 "{" 场景落入切片解析 → 仍抛 JSONParseError（消息路径不同，文案无条款） | C1-7 文案措辞先例 + 异常类型不变 |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_54 | A | prompt_tokens 缺省值不可达：_post 契约必填键（模块 docstring），deepseek/moark_jev 构造均显式含键 | _post 计量契约（base.py docstring） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_61 | A | completion_tokens 缺省不可达：同上 | 同上 |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_68 | A | billing_units 缺省不可达：同上 | 同上 |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_75 | A | cache_hit_tokens=None：UsageLog.cache_hit_tokens 列 default=0 兜底（moark_jev meter 缺键场景由列缺省承载） | 列缺省兜底判据族 |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_82 | A | reasoning_tokens=None：同上 | 同上 |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_103 | A | getattr(e,"retryable",False)→None：ProviderError 类属性 retryable=False 恒存在，缺省分支不可达，None/False 同为假 | 类属性兜底（providers/base.py:41） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_106 | A | 去掉缺省参数：类属性 retryable=False 恒存在 → getattr 两参形态同值 | 同上 |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_26 | A | ok=None：UsageLog.ok 列 default=True 兜底 | 列缺省兜底判据族 |
