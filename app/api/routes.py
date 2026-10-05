@@ -232,6 +232,9 @@ def scheduler_run_once(kind: str, db: Session = Depends(get_session)):
         summary = process_fetch_round(db, round_task)
         score = score_round(db, triggered_by="api_run_once")
         return {"fetch_round": summary, "score": score}
+    if kind == "score":
+        # 打分独立入口：单独观察 score_round（含 rescore 任务消化），不经 fetch 链
+        return {"score": score_round(db, triggered_by="api_run_once")}
     if kind == "hot":
         try:
             from ..hot.service import run_hot_round
@@ -653,17 +656,24 @@ def list_directions(db: Session = Depends(get_session)):
 @router.put("/api/directions/{direction_id}")
 def update_direction(direction_id: int, payload: DirectionUpdate,
                      db: Session = Depends(get_session)):
-    """编辑方向：仅修改 prompt 时升 prompt_version（历史打分行的版本号不变）。"""
+    """编辑方向：仅修改 prompt 时升 prompt_version（历史打分行的版本号不变）；
+    提示词升版是搜索源关键词边际降频的恢复事件之一（该方向搜索源复位）。"""
     d = _get_live_direction(db, direction_id)
+    prompt_bumped = False
     if payload.prompt is not None and payload.prompt != d.prompt:
         d.prompt = payload.prompt
         d.prompt_version = int(d.prompt_version) + 1
+        prompt_bumped = True
     if payload.name is not None and payload.name.strip() and payload.name.strip() != d.name:
         d.name = payload.name.strip()
     if payload.threshold is not None:
         d.threshold = payload.threshold
     db.commit()
     db.refresh(d)
+    if prompt_bumped:
+        from ..pipeline.skip_policy import reset_keyword_backoff
+
+        reset_keyword_backoff(db, direction_id=d.id)
     return _direction_out(d)
 
 

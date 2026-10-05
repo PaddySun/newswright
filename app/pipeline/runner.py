@@ -175,13 +175,13 @@ def fetch_round(db: Session, *, triggered_by: str = "manual") -> dict:
             status = "FAILED" if stats.error else "DONE"
             _finish(db, task, status=status,
                     stats=_fetch_stats_dict(stats), error=stats.error)
-            _update_backoff(db, src, failed=bool(stats.error))
+            _update_source_health(db, src, stats)
         except Exception as e:  # noqa: BLE001
             # P1-1：先回滚再落终态——异常可能源自会话损坏（rollback-only 状态），
             # 不回滚则 _finish 的 commit 也会失败 → 任务卡 RUNNING → 只能靠 P0-1 兜底
             db.rollback()
             _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
-            _update_backoff(db, src, failed=True)
+            _update_source_health(db, src, _error_stats(f"{type(e).__name__}: {e}"))
         summary["sources"].append({
             "source_id": src.id,
             "url": src.url,
@@ -219,13 +219,119 @@ def _fetch_stats_dict(stats) -> dict:
     }
 
 
-def _update_backoff(db: Session, src: Source, *, failed: bool) -> None:
-    """连续失败计数：成功清零；失败 +1。供调度退避判定。"""
-    if failed:
+def _error_stats(error: str):
+    """异常路径的最小抓取统计（无 stats 可用时）：按一次错误轮参与健康状态机。"""
+    from types import SimpleNamespace
+
+    return SimpleNamespace(error=error, feed_entries=0, inserted=0, not_modified=False,
+                           rate_limited=False, retry_after=None, extra={})
+
+
+def _update_source_health(db: Session, src: Source, stats) -> None:
+    """采集后源健康状态更新（单一入口，替代仅记退避的旧计数）：
+
+    - 失效三级判别：连续硬失效（404/403/410）→ hard_failed 停抓；连续 200 空内容
+      （含 200+非 XML 挑战页，走空轮侧计数）→ suspect 低频探测；304/非空轮清零；
+      源声明休息日（skipDays）期间的空轮不计入（豁免写进判据本体）。
+    - 通用退避计数：网络/其他错误仅记连续失败（不标失效），成功清零。
+    - 动态降频（D13）：429/Retry-After 命中档位+1 并记录 until（Retry-After 双形态
+      解析，失败退档位缺省间隔）；降频期满后连续 2 轮正常逐级降档恢复。
+    - 关键词边际降频（D20）：搜索源连续零新增轮计数，达阈值进入同构阶梯；
+      有新增即清零解限（恢复事件另有 hot 批次更新/手工刷新/提示词升版三个入口）。
+    """
+    now = datetime.now(timezone.utc)
+    extra = getattr(stats, "extra", {}) or {}
+    error = stats.error
+    http_status = extra.get("http_status")
+    skip_day = bool(extra.get("skip_day"))
+    not_modified = bool(stats.not_modified)
+    entries = stats.feed_entries or 0
+    inserted = stats.inserted or 0
+    non_xml = bool(error) and error.startswith("non_xml_response")
+
+    # --- 失效三级判别（RSS 空轮侧）+ 清零语义 ---
+    if not_modified or (error is None and entries > 0):
+        # 任何一轮非空或 not_modified：空轮/硬失效计数清零，suspect 探测恢复
+        src.empty_rounds = 0
+        src.hard_failures = 0
+        if src.failure_level == "suspect":
+            src.failure_level = "none"
+            src.failure_since = None
+    elif non_xml or (error is None and entries == 0 and src.type == "rss"):
+        # 200 但内容空/条目归零/挑战页：空轮侧计数；源声明休息日豁免
+        if not skip_day:
+            src.empty_rounds = (src.empty_rounds or 0) + 1
+            if (src.empty_rounds >= config.SUSPECT_EMPTY_ROUNDS
+                    and src.failure_level == "none"):
+                src.failure_level = "suspect"
+                src.failure_since = now
+
+    # --- 硬失效判别（404/403/410）---
+    if error is not None and not non_xml:
+        if http_status in (404, 403, 410):
+            src.hard_failures = (src.hard_failures or 0) + 1
+            src.last_error = error[:2000]
+            if src.hard_failures >= config.HARD_FAIL_ROUNDS and src.failure_level != "hard_failed":
+                src.failure_level = "hard_failed"
+                src.failure_since = now
+        else:
+            src.hard_failures = 0  # 非硬失效错误打断连续硬失效序列
+            src.last_error = error[:2000]
+
+    # --- 动态降频（D13）---
+    from ..ingest.rss import parse_retry_after
+    from .skip_policy import rate_limit_minutes
+
+    if getattr(stats, "rate_limited", False):
+        # 限流信号：不计成功也不计失败退避，档位+1 并记录 until
+        src.rate_level = (src.rate_level or 0) + 1
+        src.rate_ok_rounds = 0
+        seconds = parse_retry_after(getattr(stats, "retry_after", None), now=now)
+        if seconds is not None:
+            src.rate_limited_until = now + timedelta(seconds=seconds)
+        else:
+            src.rate_limited_until = now + timedelta(minutes=rate_limit_minutes(src.rate_level))
+    elif src.rate_limited_until is not None and error is None:
+        until = src.rate_limited_until if src.rate_limited_until.tzinfo else src.rate_limited_until.replace(tzinfo=timezone.utc)
+        if now >= until:
+            # 降频期满后的正常轮：连续 2 轮正常逐级降档（全 0 档解除）
+            src.rate_ok_rounds = (src.rate_ok_rounds or 0) + 1
+            if src.rate_ok_rounds >= 2:
+                src.rate_level = max(0, (src.rate_level or 0) - 1)
+                src.rate_ok_rounds = 0
+                if src.rate_level == 0:
+                    src.rate_limited_until = None
+                else:
+                    src.rate_limited_until = now + timedelta(
+                        minutes=rate_limit_minutes(src.rate_level))
+
+    # --- 通用退避计数（网络/其他错误；429 轮不参与）---
+    if error is not None and not non_xml and not getattr(stats, "rate_limited", False):
         src.backoff_failures = (src.backoff_failures or 0) + 1
-    else:
+    elif (error is None and not getattr(stats, "rate_limited", False)
+          and not (src.failure_level == "suspect" and entries == 0)):
+        # 成功清零；suspect 探测仍空的轮次不算成功（探测节奏不被重置）
         src.backoff_failures = 0
         src.backoff_skips = 0
+
+    # --- 关键词边际降频（D20，仅搜索源）---
+    if src.type == "search" and not getattr(stats, "rate_limited", False):
+        quota_blocked = bool(extra.get("quota_blocked"))
+        if not quota_blocked and error is None:
+            if inserted == 0:
+                src.keyword_zero_rounds = (src.keyword_zero_rounds or 0) + 1
+                if src.keyword_zero_rounds >= config.KEYWORD_EXHAUSTED_ROUNDS:
+                    # 第 6 轮零新增进 1 档（30 分钟），此后每多一轮零新增升 1 档
+                    src.keyword_rate_level = (src.keyword_zero_rounds
+                                              - config.KEYWORD_EXHAUSTED_ROUNDS + 1)
+                    src.keyword_limited_until = now + timedelta(
+                        minutes=rate_limit_minutes(src.keyword_rate_level))
+            else:
+                # 有新增：零收益计数清零并解除限速（事实恢复）
+                src.keyword_zero_rounds = 0
+                src.keyword_rate_level = 0
+                src.keyword_limited_until = None
+
     db.commit()
 
 
@@ -243,33 +349,47 @@ def round_busy(db: Session, kind: str) -> bool:
 
 
 def enqueue_fetch_round(db: Session, *, triggered_by: str = "scheduler") -> PipelineTask | None:
-    """把一轮抓取置为 PENDING 轮次任务 + 逐源 PENDING 任务（退避源跳过并计数）。"""
+    """把一轮抓取置为 PENDING 轮次任务 + 逐源 PENDING 任务。
+
+    跳过判定统一走 skip_reason（单一优先级表：disabled > direction_expired >
+    rate_limited > keyword_exhausted > hard_failed/suspect_probe > backoff >
+    interval_not_due），跳过原因与探测窗口计数都在此推进。
+    """
+    from .skip_policy import skip_reason
+
     if round_busy(db, "fetch_round"):
         return None
     skipped: list[dict] = []
     round_task = _new_task(db, kind="fetch_round", payload={"triggered_by": triggered_by})
     now = datetime.now(timezone.utc)
     expire_due_temp_directions(db, now=now)
+    directions = {d.id: d for d in db.query(Direction).all()}
     for src in _fetchable_sources(db):
-        # 每源轮询间隔（source_config.interval_minutes）：未到期跳过（调度入队侧判定）
-        interval = (src.source_config or {}).get("interval_minutes")
-        if interval and src.last_fetched_at:
-            last = src.last_fetched_at if src.last_fetched_at.tzinfo else src.last_fetched_at.replace(tzinfo=timezone.utc)
-            if (now - last).total_seconds() < int(interval) * 60:
-                skipped.append({"source_id": src.id, "url": src.url,
-                                "reason": f"interval_not_due:{interval}m"})
-                continue
-        fails = src.backoff_failures or 0
-        if fails >= config.BACKOFF_FAIL_THRESHOLD:
-            skips = (src.backoff_skips or 0) + 1
-            src.backoff_skips = skips
+        reason = skip_reason(src, directions.get(src.direction_id), now=now)
+        if reason == "probe":
+            # 退避/疑似失效状态的探测窗口：放行抓取并推进探测轮计数
+            src.backoff_skips = (src.backoff_skips or 0) + 1
             db.commit()
-            # 退避探测：达到阈值后每 BACKOFF_PROBE_EVERY 轮放行一次探测
-            if (skips - 1) % config.BACKOFF_PROBE_EVERY != 0:
-                skipped.append({"source_id": src.id, "url": src.url,
-                                "consecutive_failures": fails, "skips": skips})
-                continue
-            log.info("源 %s 连续失败 %d 次，本轮放行探测", src.id, fails)
+            log.info("源 %s 处于 %s 状态，本轮放行探测",
+                     src.id, src.failure_level or "backoff")
+        elif reason == "interval_not_due":
+            interval = (src.source_config or {}).get("interval_minutes")
+            skipped.append({"source_id": src.id, "url": src.url,
+                            "reason": f"interval_not_due:{interval}m"})
+            continue
+        elif reason in ("backoff", "suspect_probe"):
+            # 状态内跳过轮：推进探测轮计数（探测节奏按每 N 轮一次维持）
+            src.backoff_skips = (src.backoff_skips or 0) + 1
+            db.commit()
+            entry = {"source_id": src.id, "url": src.url, "reason": reason,
+                     "skips": src.backoff_skips}
+            if reason == "backoff":
+                entry["consecutive_failures"] = src.backoff_failures
+            skipped.append(entry)
+            continue
+        elif reason is not None:
+            skipped.append({"source_id": src.id, "url": src.url, "reason": reason})
+            continue
         _new_task(db, kind="fetch", payload={"source_id": src.id, "url": src.url,
                                              "round_task_id": round_task.id})
     round_task.payload = {**round_task.payload, "skipped_backoff": skipped}
@@ -302,12 +422,12 @@ def process_fetch_round(db: Session, round_task: PipelineTask) -> dict:
             stats = _fetch_one(db, src)
             status = "FAILED" if stats.error else "DONE"
             _finish(db, t, status=status, stats=_fetch_stats_dict(stats), error=stats.error)
-            _update_backoff(db, src, failed=bool(stats.error))
+            _update_source_health(db, src, stats)
             any_failed = any_failed or bool(stats.error)
         except Exception as e:  # noqa: BLE001
             db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
             _finish(db, t, status="FAILED", error=f"{type(e).__name__}: {e}")
-            _update_backoff(db, src, failed=True)
+            _update_source_health(db, src, _error_stats(f"{type(e).__name__}: {e}"))
             any_failed = True
         summary["sources"].append({
             "source_id": src.id, "task_id": t.id, "status": t.status,

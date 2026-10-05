@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, Boolean, DateTime, false, ForeignKey, Index, Integer, String, Text, TypeDecorator, UniqueConstraint
+from sqlalchemy import JSON, Boolean, DateTime, false, ForeignKey, Index, Integer, String, Text, TypeDecorator, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -135,6 +135,20 @@ class Source(Base):
     failure_since: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # 最近一次抓取错误摘要（DT-1 硬失效判据的展示与排查面，从抓取任务错误同步）
     last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # 连续硬失效轮数（404/403/410）与连续空轮数（200 但内容空/条目归零）——
+    # 三级判别的计数状态，成功轮或豁免轮按判据清零
+    hard_failures: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    empty_rounds: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    # 429/Retry-After 动态降频（D13）：until 期内跳过（reason=rate_limited）；
+    # rate_ok_rounds 记降频期满后的连续正常轮数（连续 2 轮正常逐级降档恢复）
+    rate_limited_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    rate_level: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    rate_ok_rounds: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    # 搜索源关键词边际降频（与 429 降频同构但独立计数）：连续零新增轮计数、
+    # 档位与 until；恢复 = hot_batch 关键词更新 / 站长手工刷新 / 方向提示词升版
+    keyword_limited_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    keyword_rate_level: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    keyword_zero_rounds: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
 
 
 class Item(Base):
@@ -166,6 +180,8 @@ class Item(Base):
     sanitize_detail: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     # 通道原始响应存档（type=search：单条结果上下文；预留其他通道）
     raw: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    # 搜索通道命中关键词（逐词新增率归因的数据面；其他通道为空）
+    source_keyword: Mapped[str | None] = mapped_column(String(200), nullable=True)
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 

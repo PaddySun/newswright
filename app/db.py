@@ -37,6 +37,15 @@ def _migrate_added_columns() -> None:
             "failure_level": "VARCHAR(20) NOT NULL DEFAULT 'none'",
             "failure_since": "DATETIME",
             "last_error": "TEXT",
+            # 三级判别计数与动态降频状态（G2 失效判别批）：历史行均为正常态
+            "hard_failures": "INTEGER NOT NULL DEFAULT 0",
+            "empty_rounds": "INTEGER NOT NULL DEFAULT 0",
+            "rate_limited_until": "DATETIME",
+            "rate_level": "INTEGER NOT NULL DEFAULT 0",
+            "rate_ok_rounds": "INTEGER NOT NULL DEFAULT 0",
+            "keyword_limited_until": "DATETIME",
+            "keyword_rate_level": "INTEGER NOT NULL DEFAULT 0",
+            "keyword_zero_rounds": "INTEGER NOT NULL DEFAULT 0",
         },
         "author": {
             "rank_provider": "VARCHAR(30) NOT NULL DEFAULT 'none'",
@@ -65,6 +74,8 @@ def _migrate_added_columns() -> None:
             "direction_id": "INTEGER",
             "fingerprint": "VARCHAR(64)",
             "duplicate_of": "INTEGER",
+            # 搜索通道命中关键词（逐词归因数据面，G2 搜索归因）；历史行留空
+            "source_keyword": "VARCHAR(200)",
         },
         "direction": {
             # 生命周期状态（G2）：历史行按旧 enabled 布尔镜像换算（停用→disabled），

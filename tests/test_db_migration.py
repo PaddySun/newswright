@@ -102,11 +102,17 @@ def _columns_of(table: str) -> set[str]:
 
 
 def test_migrate_old_db_adds_direction_lifecycle_columns(g2_old_db):
-    """旧库补方向生命周期四列；历史行状态按旧 enabled 换算——停用方向保持 disabled。"""
+    """旧库补方向生命周期四列与来源失效判别/降频计数列、条目关键词归因列；
+    历史行状态按旧 enabled 换算——停用方向保持 disabled，失效与降频状态视为正常。"""
     from app.db import init_db
 
     init_db()
     assert {"status", "temp", "expires_at", "deleted_at"} <= _columns_of("direction")
+    assert {"failure_level", "failure_since", "last_error", "hard_failures",
+            "empty_rounds", "rate_limited_until", "rate_level", "rate_ok_rounds",
+            "keyword_limited_until", "keyword_rate_level",
+            "keyword_zero_rounds"} <= _columns_of("source")
+    assert {"source_keyword"} <= _columns_of("item")
     with appdb.SessionLocal() as db:
         active = db.query(Direction).filter_by(name="启用方向").one()
         disabled = db.query(Direction).filter_by(name="停用方向").one()
