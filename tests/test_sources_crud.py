@@ -112,3 +112,42 @@ def test_update_missing_source_404(auth_client):
     r = auth_client.put("/api/sources/99999", json={"enabled": False})
     assert r.status_code == 404
     assert r.json()["code"] == "SOURCE_NOT_FOUND"
+
+
+def test_temp_direction_search_source_freshness_default(auth_client):
+    """搜索源时效参数：temp（追踪）方向默认 oneDay（防搜回旧文被过期规则拒绝、
+    搜索费白花）；非 temp 方向不注入；显式配置保留。"""
+    r_temp = auth_client.post("/api/directions", json={
+        "name": "追踪方向", "prompt": "p", "threshold": 50, "temp": True, "ttl_days": 7})
+    did_temp = r_temp.json()["id"]
+    r = auth_client.post(f"/api/directions/{did_temp}/sources",
+                         json={"type": "search", "url": "search://bocha/词",
+                               "source_config": {"keyword": "词"}})
+    assert r.status_code == 201
+    assert r.json()["interval_minutes"] is None  # source_config 未污染其他键
+    import app.ingest.fingerprint as _  # noqa: F401  (导入面显式化，避免误删)
+    from app.db import SessionLocal
+    from app.models import Source as Src
+
+    with SessionLocal() as db:
+        row = db.get(Src, r.json()["id"])
+        assert row.source_config["freshness"] == "oneDay"
+
+    # 显式配置保留
+    r2 = auth_client.post(f"/api/directions/{did_temp}/sources",
+                          json={"type": "search", "url": "search://bocha/词二",
+                                "source_config": {"keyword": "词二",
+                                                  "freshness": "oneWeek"}})
+    with SessionLocal() as db:
+        row2 = db.get(Src, r2.json()["id"])
+        assert row2.source_config["freshness"] == "oneWeek"
+
+    # 非 temp 方向不注入
+    did_plain = _mk_direction(auth_client, "常驻方向")
+    r3 = auth_client.post(f"/api/directions/{did_plain}/sources",
+                          json={"type": "search", "url": "search://bocha/词三",
+                                "source_config": {"keyword": "词三"}})
+    assert r3.status_code == 201
+    with SessionLocal() as db:
+        row3 = db.get(Src, r3.json()["id"])
+        assert (row3.source_config or {}).get("freshness") is None

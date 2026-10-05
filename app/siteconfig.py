@@ -13,6 +13,8 @@ from .models import SiteConfig
 DEFAULTS: dict[str, object] = {
     "session_duration_days": 7,
     "client_ip_header": "",
+    # 新源首导打分窗口（天）：site_config 可调；source_config.first_ingest_days 逐源覆盖
+    "first_ingest_days": 7,
 }
 
 

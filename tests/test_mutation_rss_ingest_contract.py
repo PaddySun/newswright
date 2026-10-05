@@ -380,6 +380,8 @@ def test_fetch_rules_chain_expired_blacklist_and_row_values(db_session, monkeypa
     §4.1 行落值（title/url/published_at/rule_reject_reason/fetch_status 枚举）+
     sanitize_reason 钉死值（AC-06.1）。"""
     d, src = _mk_source(db_session)
+    src.last_fetched_at = datetime.now(timezone.utc) - timedelta(hours=1)  # 非首导：过期规则正常生效
+    db_session.commit()
     pub = datetime.now(timezone.utc) - timedelta(days=10)
     _patch(monkeypatch, FakeResp(_feed(
         _item("E1", "https://ex/e1", "Old",
@@ -390,7 +392,7 @@ def test_fetch_rules_chain_expired_blacklist_and_row_values(db_session, monkeypa
 
     s = fetch_source(db_session, src, max_age_days=5, blacklist=["博彩"])
 
-    assert s.rule_rejected == 3 and s.inserted == 3 and s.failed == 0
+    assert s.rule_rejected == 3 and s.inserted == 0 and s.failed == 0  # 被拒行单列 rule_rejected，不入 inserted 桶
     e1 = db_session.query(Item).filter_by(source_id=src.id, guid="E1").one()
     e2 = db_session.query(Item).filter_by(source_id=src.id, guid="E2").one()
     e3 = db_session.query(Item).filter_by(source_id=src.id, guid="E3").one()

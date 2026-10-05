@@ -211,6 +211,7 @@ def _fetch_stats_dict(stats) -> dict:
         "dup_blocked": stats.dup_blocked,
         "rule_rejected": stats.rule_rejected,
         "failed": stats.failed,
+        "archived": getattr(stats, "archived", 0),
         "guid_collisions": stats.guid_collisions,
         "not_modified": stats.not_modified,
         "sanitize_passed": stats.sanitize_passed,
@@ -465,7 +466,14 @@ def _rescore_candidate_ids(db: Session, direction: Direction, scope: str) -> lis
             ScoreResult.status == "FAILED").scalar_subquery()
         q = q.filter(Item.id.in_(has_failed), ~Item.id.in_(has_ok))
     else:
-        q = q.filter(Item.id.in_(has_ok), ~Item.id.in_(has_current_ok))
+        # 重打=新增行（已有 OK 行但缺当前版本行）；首导窗口外归档条目（无任何 OK 行）
+        # 经重打分任务补打（全文已照存）
+        from sqlalchemy import and_, or_
+
+        q = q.filter(or_(
+            and_(Item.id.in_(has_ok), ~Item.id.in_(has_current_ok)),
+            and_(Item.fetch_status == "ARCHIVED", ~Item.id.in_(has_ok)),
+        ))
     return [row[0] for row in q.order_by(Item.id).all()]
 
 

@@ -144,6 +144,7 @@ class SourceFetchStats:
     dup_blocked: int = 0
     rule_rejected: int = 0
     failed: int = 0
+    archived: int = 0
     not_modified: bool = False
     sanitize_passed: int = 0
     sanitize_rejected: int = 0
@@ -187,6 +188,15 @@ def parse_feed_entries(content: bytes) -> list[EntryPayload]:
 def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None,
                  blacklist: list[str] | None = None) -> SourceFetchStats:
     stats = SourceFetchStats(source_id=source.id, url=source.url)
+    # 首导判定：本源此前从未成功抓取过（last_fetched_at 为空）→ 本次为首导轮，
+    # 窗口外旧条目落 ARCHIVED（全文照存、不进过期拒绝），过期规则对首导不生效
+    first_ingest = source.last_fetched_at is None
+    if first_ingest:
+        from .. import siteconfig
+
+        cfg_ = source.source_config or {}
+        window_days = int(cfg_.get("first_ingest_days")
+                          or siteconfig.get_config(db, "first_ingest_days") or 7)
     headers = {"User-Agent": _UA}
     if source.etag:
         headers["If-None-Match"] = source.etag
@@ -283,6 +293,27 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
             if origin is not None:
                 item.fetch_status = "DUP"
                 item.duplicate_of = origin.id
+            elif first_ingest:
+                # 首导判定顺序：垃圾规则（过短/黑名单）先于窗口（垃圾不占 archived
+                # 名额）→ 窗口外（按发布时间）落 ARCHIVED（全文照存，可经重打分补打）
+                # → 缺发布时间不判窗口外；过期规则对首导不生效（此处禁用日期上限）
+                rule = apply_rules(
+                    title=item.title,
+                    content_text=item.content_text,
+                    published_at=item.published_at,
+                    max_age_days=None,
+                    blacklist=blacklist,
+                    ignore_expiry=True,
+                )
+                if not rule.passed:
+                    item.fetch_status = "REJECTED_RULED"
+                    item.rule_reject_reason = rule.reason
+                elif (item.published_at is not None
+                      and (datetime.now(timezone.utc) - item.published_at).total_seconds()
+                      > window_days * 86400):
+                    item.fetch_status = "ARCHIVED"
+                else:
+                    item.fetch_status = "FETCHED"
             else:
                 rule = apply_rules(
                     title=item.title,
@@ -296,7 +327,6 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
                 else:
                     item.fetch_status = "REJECTED_RULED"
                     item.rule_reject_reason = rule.reason
-                    stats.rule_rejected += 1
             # 落库前强制流经 sanitize 阶段（骨架：pass-through 或演示链）；
             # 与 fetch_status 语义分离，REJECTED 全文照存
             sr = run_sanitize(SanitizeTarget(
@@ -311,7 +341,14 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
                 stats.sanitize_rejected += 1
             db.add(item)
             db.flush()
-            stats.inserted += 1
+            # 落库成功后才计入分桶（回滚的单条不计数）；inserted 只含 FETCHED/DUP
+            # 落行（含 DUP 行），rule_rejected / archived 落行单列，等式不重不漏
+            if item.fetch_status == "REJECTED_RULED":
+                stats.rule_rejected += 1
+            elif item.fetch_status == "ARCHIVED":
+                stats.archived += 1
+            else:
+                stats.inserted += 1
         except Exception as e:  # noqa: BLE001  单条失败不中断整源
             db.rollback()
             stats.failed += 1

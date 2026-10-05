@@ -15,6 +15,11 @@ import pytest
 import sqlalchemy
 from sqlalchemy import create_engine
 
+# 必须在任何测试对 httpx.Client 打桩之前导入：starlette 的 TestClient 类在模块
+# 首次导入时绑定 httpx.Client 为基类——若首次导入发生在打桩窗口内，TestClient
+# 会绑到桩类上、失去 get/post 等请求方法，且污染后续全部测试。
+from fastapi.testclient import TestClient as _TestClientBindFirst  # noqa: F401
+
 import app.config as cfg
 import app.db as appdb
 
