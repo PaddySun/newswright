@@ -88,6 +88,7 @@ class FakeStats:
         self.dup_blocked = kw.get("dup_blocked", 2)
         self.rule_rejected = kw.get("rule_rejected", 3)
         self.failed = kw.get("failed", 0)
+        self.archived = kw.get("archived", 0)
         self.guid_collisions = kw.get("guid_collisions", 0)
         self.not_modified = kw.get("not_modified", False)
         self.sanitize_passed = kw.get("sanitize_passed", 1)
@@ -458,11 +459,13 @@ def test_fetch_one_dispatch_by_type(db_session, monkeypatch):
 def test_fetch_stats_dict_full_keys():
     """AC-05.1 账目分桶 + DT-5 payload.stats：九字段键名与值逐项保真。"""
     d = _fetch_stats_dict(FakeStats(feed_entries=11, inserted=12, dup_blocked=13,
-                                    rule_rejected=14, failed=15, guid_collisions=16,
+                                    rule_rejected=14, failed=15, archived=19,
+                                    guid_collisions=16,
                                     not_modified=True, sanitize_passed=17,
                                     sanitize_rejected=18))
     assert d == {"feed_entries": 11, "inserted": 12, "dup_blocked": 13,
-                 "rule_rejected": 14, "failed": 15, "guid_collisions": 16,
+                 "rule_rejected": 14, "failed": 15, "archived": 19,
+                 "guid_collisions": 16,
                  "not_modified": True, "sanitize_passed": 17, "sanitize_rejected": 18}
 
 

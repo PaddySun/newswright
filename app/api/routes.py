@@ -743,8 +743,14 @@ def create_source(direction_id: int, payload: SourceCreate,
         if canonical_url(src.url) == normalized:
             raise HTTPException(409, {"code": "SOURCE_URL_EXISTS",
                                       "message": "该方向已注册同 URL 来源"})
+    source_config = dict(payload.source_config or {})
+    # 临时（追踪）方向的搜索源：未显式配置时效参数时默认 oneDay——默认不过滤会搜回
+    # 旧页面被过期规则拒绝，搜索费白花
+    d = db.get(Direction, direction_id)
+    if payload.type == "search" and d is not None and d.temp and not source_config.get("freshness"):
+        source_config["freshness"] = "oneDay"
     s = Source(direction_id=direction_id, type=payload.type, url=payload.url.strip(),
-               source_config=payload.source_config)
+               source_config=source_config or None)
     db.add(s)
     db.commit()
     db.refresh(s)

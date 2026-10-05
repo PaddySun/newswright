@@ -220,7 +220,7 @@ def test_title_fallback_dup_marks_duplicate_within_direction(db_session, two_sou
         <rss version="2.0"><channel><title>b</title>
           <item><guid>tag:ex.org,2026:{"a" if title == "First" else "b"}</guid>
           <title>{title}</title>
-          <description>正文内容足够长以通过规则初筛。同题报道。</description></item>
+          <description>正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。正文内容足够长以通过规则初筛。</description></item>
         </channel></rss>""".encode("utf-8")
 
     FakeClient.responses = [FakeResp(_title_only_feed("First"))]

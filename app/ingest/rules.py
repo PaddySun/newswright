@@ -30,7 +30,13 @@ def apply_rules(
     max_age_days: int | None = None,
     blacklist: list[str] | None = None,
     now: datetime | None = None,
+    ignore_expiry: bool = False,
 ) -> RuleResult:
+    """确定性规则初筛。
+
+    ignore_expiry=True：跳过发布时间过期判定（首导轮的日期上限由打分窗口接替，
+    过期规则对新源首导不生效）；长度与黑名单两类垃圾规则照常生效。
+    """
     min_chars = config.RULE_MIN_BODY_CHARS if min_chars is None else min_chars
     max_age_days = config.RULE_MAX_AGE_DAYS if max_age_days is None else max_age_days
     blacklist = blacklist or []
@@ -44,7 +50,7 @@ def apply_rules(
         if kw and kw in joined:
             return RuleResult(False, f"blacklist:{kw}")
 
-    if published_at is not None:
+    if published_at is not None and not ignore_expiry:
         pub = published_at if published_at.tzinfo else published_at.replace(tzinfo=timezone.utc)
         age_days = (now - pub).total_seconds() / 86400
         if age_days > max_age_days:

@@ -65,7 +65,7 @@ _HTML_CHALLENGE = b"<html><head><title>Just a moment...</title></head><body>chal
 _VALID_FEED = ("""<?xml version="1.0"?>
 <rss version="2.0"><channel><title>t</title>
   <item><guid>https://ex.com/1</guid><link>https://ex.com/1</link>
-  <title>Valid</title><description>正文足够长以通过规则初筛的字节序列。</description></item>
+  <title>Valid</title><description>正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。正文足够长以通过规则初筛。</description></item>
 </channel></rss>""").encode("utf-8")
 
 
