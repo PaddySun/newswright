@@ -1626,3 +1626,118 @@
 - ## 批次 9：authors 域收官（writer/gates/memory/importer）（2026-10-04，C1-7）：16 条（app.authors.writer 15, app.authors.gates 1）
 
 同步后清单规模：1395 条（1597 − 202）。
+## C2-1 分诊批次 1（2026-10-05，pipeline.runner 213 + skip_policy 13）：A 98 + B 2 = 100 条
+
+> 种子=统一 dispatch run 37276946376（main @ 8c5f515）未登记幸存者之 runner/skip_policy 域
+> （doc/C2/C2-1-种子.jsonl）。diff 经 mutmut 3.8.0 库级静态重建（app/ 自 8c5f515 零变化，
+> 变异体名与当前树 1:1 对名），逐条施加→跑本批判据面测试→还原定案。终态：**C 125/125 全杀**
+> （tests/test_source_health_state_machine.py 等 5 文件 39 测试，不在本清单）、**A 98/98 全活**、
+> **B 2 存活（B 不杀）**、D 1 条出问题清单（见 doc/C2/C2-1-执行Agent工作汇报.md §三，不豁免）.
+> 核验-改判 4 轮共 14 条改判（A→C 13：rescore has_failed 条件位 None/取反×4〔SQLAlchemy where/filter
+> 混入 None 即恒假，本版实证〕、scope=None 误路由×1、异常路径 WARNING 级日志格式破坏×5〔pytest 捕获句柄
+> 使格式错误可观察，C1-9a 处理路径面先例〕、has_ok 失 status 过滤与 process m6 计数域等价改判 C 后回改 A 另计；
+> C→A 1：process_rescore m6 PENDING 过滤移除经 _claim CAS 兜底）。数据：doc/C2/C2-1-重建-diff.json、
+> doc/C2/C2-1-核验结果.json、doc/C2/C2-1-核验.py（定案表）.
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x__error_stats__mutmut_11 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_12 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_13 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_14 | A | feed_entries/inserted=1：异常轮 error 非 None，entries/inserted 的全部消费分支以 error is None 为前件，不可达 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_15 | A | feed_entries/inserted=1：异常轮 error 非 None，entries/inserted 的全部消费分支以 error is None 为前件，不可达 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_2 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_3 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_4 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_5 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__error_stats__mutmut_6 | A | 异常路径最小 stats 的字段缺省变体：消费侧 or/bool/getattr 缺省全部吸收；删键被 getattr 默认兜底（C1 列缺省/兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_15 | A | getattr 缺省值变体：SourceFetchStats 数据类字段恒在（rss/web/search 共用），缺省分支不可达 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_21 | A | getattr 缺省值变体：SourceFetchStats 数据类字段恒在（rss/web/search 共用），缺省分支不可达 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__fetch_stats_dict__mutmut_33 | A | getattr 缺省值变体：SourceFetchStats 数据类字段恒在（rss/web/search 共用），缺省分支不可达 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__fetchable_sources__mutmut_6 | A | join onclause None/省略：SQLAlchemy 回退 FK 推断，连接条件不变（实现形态等价） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__fetchable_sources__mutmut_8 | A | join onclause None/省略：SQLAlchemy 回退 FK 推断，连接条件不变（实现形态等价） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_16 | A | has_ok/has_current_ok 去方向过滤：item×direction 一一对应（条目行恒带本方向），判定域内集合相同 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_28 | A | join onclause None/省略：FK 推断等价（实现形态） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_30 | A | join onclause None/省略：FK 推断等价（实现形态） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_40 | A | has_failed 方向过滤移除：item×direction 一一对应，跨方向条目 id 不相交，判定域等价 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_41 | A | has_failed status 过滤去/丢：全行 ∩ 无 OK 行 = FAILED-only 行，与原判定等价（status 域仅 OK/FAILED） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_5 | A | has_ok/has_current_ok 去方向过滤：item×direction 一一对应（条目行恒带本方向），判定域内集合相同 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_51 | A | 单连言删除后剩余条件与原判定同集（in(failed) ≡ in(failed)∩~in(ok)，FAILED-only 行无 OK 行） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__rescore_candidate_ids__mutmut_78 | A | order_by(None)：SQLite 判定域内索引序 ≡ rowid 序 ≡ min id，批次切分序不变（F1⑩ fingerprint 先例判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_103 | A | last_error 截断界 [:2000]→[:2001]：截断界数值无条款（C1 _finish m24 判据族；Text 列） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_106 | A | getattr 缺省/形态变体：SourceFetchStats 数据类属性恒在，缺省分支不可达（判据族：dataclass 全字段缺省） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_112 | A | getattr 缺省/形态变体：SourceFetchStats 数据类属性恒在，缺省分支不可达（判据族：dataclass 全字段缺省） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_129 | A | getattr 缺省/形态变体：SourceFetchStats 数据类属性恒在，缺省分支不可达（判据族：dataclass 全字段缺省） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_144 | A | 恒 replace(tzinfo=utc)：判定域 datetime 恒 utc-aware 或 naive，两侧同值（_aware m1 同款判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_163 | A | or 1：level≥1 时同值，level=0 时两侧 max(0,·-1)=0 同值 | 判定域全等价 |
+| app.pipeline.runner.x__update_source_health__mutmut_179 | A | 退避段 getattr 变体：本段以 error is not None 为前件，判定域内 error 轮 rate_limited 恒 False（429 早返回 error=None），子句恒真等价 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_181 | A | 退避段 getattr 变体：本段以 error is not None 为前件，判定域内 error 轮 rate_limited 恒 False（429 早返回 error=None），子句恒真等价 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_185 | A | 退避段 getattr 变体：本段以 error is not None 为前件，判定域内 error 轮 rate_limited 恒 False（429 早返回 error=None），子句恒真等价 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_186 | A | 退避段 getattr 变体：本段以 error is not None 为前件，判定域内 error 轮 rate_limited 恒 False（429 早返回 error=None），子句恒真等价 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_199 | A | getattr 缺省/形态变体：SourceFetchStats 数据类属性恒在，缺省分支不可达（判据族：dataclass 全字段缺省） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_224 | A | getattr 缺省/形态变体：SourceFetchStats 数据类属性恒在，缺省分支不可达（判据族：dataclass 全字段缺省） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_227 | A | getattr 缺省/形态变体：SourceFetchStats 数据类属性恒在，缺省分支不可达（判据族：dataclass 全字段缺省） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_230 | A | getattr 缺省/形态变体：SourceFetchStats 数据类属性恒在，缺省分支不可达（判据族：dataclass 全字段缺省） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_7 | A | getattr 缺省 None 被 or {} 吸收（缺省兜底判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_76 | A | failure_since 时间戳赋 None：时间戳值无条款（仅 failure_level 有钉面），无断言面 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_90 | A | last_error 截断界 [:2000]→[:2001]：截断界数值无条款（C1 _finish m24 判据族；Text 列） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_94 | A | 守卫字面量变体：终态仍 hard_failed，仅 failure_since 重复刷新（时间戳无条款，同 m76 判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_95 | A | 守卫字面量变体：终态仍 hard_failed，仅 failure_since 重复刷新（时间戳无条款，同 m76 判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_24 | A | expire_due_temp_directions now=None：函数内兜底 fresh now，与调用侧 now 仅微秒差，TTL 天级判定域等价（datetime 判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_26 | A | expire_due_temp_directions now=None：函数内兜底 fresh now，与调用侧 now 仅微秒差，TTL 天级判定域等价（datetime 判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_32 | A | directions.get 变体：_fetchable_sources 已滤定 direction 恒 active，skip_reason 方向分支判定域不可达（方向上下文等价） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_37 | A | directions.get 变体：_fetchable_sources 已滤定 direction 恒 active，skip_reason 方向分支判定域不可达（方向上下文等价） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_46 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_47 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_48 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_49 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_50 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_52 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_53 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_54 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_55 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_enqueue_fetch_round__mutmut_56 | A | 探测放行 INFO 日志文案/实参变体：logger 缺省 WARNING 级不格式化 INFO 记录，判定域不可达（log 文案组判据；m97 对比：WARNING 级格式破坏已被实证杀灭归 C） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_expire_due_temp_directions__mutmut_11 | A | expires_at 非空过滤移除：SQL 三值逻辑 NULL <= now 恒假，行不会被匹配 | 等价 |
+| app.pipeline.runner.x_expire_due_temp_directions__mutmut_17 | A | <= → < 等号边界：AC-03.4「TTL 到期后停用」未钉等号瞬间，无断言面（断言两档纪律禁造等号断言） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_expire_due_temp_directions__mutmut_3 | A | datetime.now(None) naive local：UTC 判定域（CI runner）等价 | C1 reclaim m3 判据族（CI-0 实证存活先例） |
+| app.pipeline.runner.x_expire_due_temp_directions__mutmut_9 | A | temp 过滤移除：expires_at 仅 temp 方向可写（routes 恒 temp→expires_at 否则 None），非 temp 恒 NULL 被下一条件滤除 | 不可达 |
+| app.pipeline.runner.x_fetch_round__mutmut_25 | A | task.status 字面量变体：_finish 内存同步 + 后续健康提交将 ORM 脏值回写修复，终态恒 DONE/FAILED | 批次11 fetch_round m26/27 同语句判据族（C1-9a 实证） |
+| app.pipeline.runner.x_fetch_round__mutmut_77 | A | 异常消息 type 名变体：错误消息措辞无条款（文案组判据——批次11 m61/62 同款） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_116 | A | 同 fetch_round m77 判据（异常消息文案组） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_103 | A | 单条异常 WARN 文案/实参变体：格式化不破坏（log 文案组，C1 判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_136 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_137 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_138 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_139 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_140 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_141 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_142 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_143 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_144 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_35 | A | 缺省字面量 XXallXX/ALL：走 else 分支与 all 同值（等价） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_36 | A | 缺省字面量 XXallXX/ALL：走 else 分支与 all 同值（等价） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_50 | A | error 文案变体：presence 已钉（m43 测试），措辞无条款（文案组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_51 | A | error 文案变体：presence 已钉（m43 测试），措辞无条款（文案组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_52 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_53 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_54 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_55 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_56 | A | out.append 结果字典键/形态变体：返回值唯一调用方 score_round 不接收（无消费方，无断言面） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_6 | A | PENDING 过滤移除：非 PENDING 任务被 _claim 的 WHERE status='PENDING' CAS 复核拒绝（双保险，行为面等价） | 批次11 process_fetch_round m17 同款判据 |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_98 | A | 单条异常 WARN 文案/实参变体：格式化不破坏（log 文案组，C1 判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_99 | A | 单条异常 WARN 文案/实参变体：格式化不破坏（log 文案组，C1 判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_139 | A | error 消息计数算术变体：错误消息措辞无条款（文案组） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_36 | A | attempts +1→+2：attempts 数值无条款（批次11 _claim m7 判据族） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_84 | A | score_item 异常 WARN 文案/实参变体：log 文案组 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_85 | A | score_item 异常 WARN 文案/实参变体：log 文案组 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_89 | A | score_item 异常 WARN 文案/实参变体：log 文案组 | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x__aware__mutmut_1 | A | 恒走 replace(tzinfo=utc) 分支：判定域内 datetime 恒 utc-aware 或 naive，aware 非 UTC 输入不存在（与 else 分支同值） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x_reset_keyword_backoff__mutmut_12 | A | 返回计数 n 的初值/条件/步进变体：返回值无消费方（routes/hot 均不接收），计数无条款（C1 数值缺省组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x_reset_keyword_backoff__mutmut_13 | A | 返回计数 n 的初值/条件/步进变体：返回值无消费方（routes/hot 均不接收），计数无条款（C1 数值缺省组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x_reset_keyword_backoff__mutmut_14 | A | 返回计数 n 的初值/条件/步进变体：返回值无消费方（routes/hot 均不接收），计数无条款（C1 数值缺省组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x_reset_keyword_backoff__mutmut_15 | A | 返回计数 n 的初值/条件/步进变体：返回值无消费方（routes/hot 均不接收），计数无条款（C1 数值缺省组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x_reset_keyword_backoff__mutmut_16 | A | 返回计数 n 的初值/条件/步进变体：返回值无消费方（routes/hot 均不接收），计数无条款（C1 数值缺省组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x_reset_keyword_backoff__mutmut_17 | A | 返回计数 n 的初值/条件/步进变体：返回值无消费方（routes/hot 均不接收），计数无条款（C1 数值缺省组判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.skip_policy.x_skip_reason__mutmut_39 | A | or 0→1：falsy 时 0/1 均 < BACKOFF_FAIL_THRESHOLD(3)，判定域等价（批次11 enqueue m51 同款判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_19 | B | claim 失败 continue → break：CAS 认领竞争防御分支，单 worker 判定域不可达（ADR-2 单机单进程，测试内认领恒成功） | 批次11 process m42 B 判据族 |
+| app.pipeline.runner.x_process_rescore_tasks__mutmut_74 | B | 候选条目缺失 continue → break：同批内 db.get 与候选查询同会话，单进程判定域不可达（防御分支，设计要求存在） | 批次11 m42 同款判据 |

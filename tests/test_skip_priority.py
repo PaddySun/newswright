@@ -99,3 +99,25 @@ def test_score_runonce_entry(auth_client):
     r = auth_client.post("/scheduler/run-once/score")
     assert r.status_code == 200
     assert "score" in r.json()
+
+
+def test_rate_limited_boundary_inclusive_expiry():
+    """限流期限到点即解：until 恰等于当前时刻时不再按 rate_limited 跳过
+    （限流期语义是 now < until）。"""
+    src = _src(rate_limited_until=NOW)
+    assert skip_reason(src, _dir(), now=NOW) is None
+
+
+def test_keyword_limited_boundary_inclusive_expiry():
+    """关键词限速期限到点即解：until 恰等于当前时刻时不再按
+    keyword_exhausted 跳过（与限流期同一 until 期间语义）。"""
+    src = _src(keyword_limited_until=NOW)
+    assert skip_reason(src, _dir(), now=NOW) is None
+
+
+def test_naive_rate_limited_until_compared_as_utc():
+    """库里取回的 naive 限流期限（SQLite 去 tz）按 UTC 归一参与比较：
+    未到期的 naive until 照常判 rate_limited，不因时区形态崩溃。"""
+    naive_future = (NOW + timedelta(minutes=30)).replace(tzinfo=None)
+    src = _src(rate_limited_until=naive_future)
+    assert skip_reason(src, _dir(), now=NOW) == "rate_limited"
