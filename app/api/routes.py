@@ -4,15 +4,18 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException, Response
+from pydantic import BaseModel, Field
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ..db import get_session
+from ..ingest.fingerprint import canonical_url
 from ..models import (
     Article,
     Author,
+    Direction,
     Item,
     MemoryEntry,
     PipelineTask,
@@ -24,6 +27,7 @@ from ..models import (
 )
 from ..pipeline.runner import (
     enqueue_fetch_round,
+    expire_due_temp_directions,
     fetch_round,
     process_fetch_round,
     score_round,
@@ -58,8 +62,17 @@ def pipeline_write(author_id: int, db: Session = Depends(get_session)):
 # ---------- 条目与打分 ----------
 
 @router.get("/items")
+@router.get("/api/items")
 def list_items(direction_id: int | None = None, status: str | None = None,
                limit: int = 100, db: Session = Depends(get_session)):
+    if direction_id is not None:
+        direction = db.get(Direction, direction_id)
+        if direction is None:
+            raise HTTPException(404, {"code": "DIRECTION_NOT_FOUND",
+                                      "message": "方向不存在"})
+        if direction.status == Direction.STATUS_DELETED:
+            raise HTTPException(404, {"code": "DIRECTION_DELETED",
+                                      "message": "方向已删除（数据保留，可经后台日志查询）"})
     q = (
         db.query(Item, ScoreResult, Source)
         .join(Source, Item.source_id == Source.id)
@@ -551,3 +564,204 @@ def stats_overview(days: int = 7, db: Session = Depends(get_session)):
             "write": round(write_ok / write_total, 4) if write_total else None,
         },
     }
+
+
+# ---------- 方向管理（G2/W1） ----------
+
+_DIRECTION_TYPES_ACTIVE = (Direction.STATUS_ACTIVE,)
+_SOURCE_TYPES = ("rss", "web", "search")
+_DEFAULT_TEMP_TTL_DAYS = 7  # 热点一键转临时方向的默认 TTL 档
+
+
+class DirectionCreate(BaseModel):
+    name: str
+    prompt: str
+    threshold: int = Field(ge=0, le=100)
+    temp: bool = False
+    ttl_days: int | None = Field(default=None, ge=1)
+
+
+class DirectionUpdate(BaseModel):
+    name: str | None = None
+    prompt: str | None = None
+    threshold: int | None = Field(default=None, ge=0, le=100)
+
+
+class RescoreIn(BaseModel):
+    scope: str = "all"
+
+
+def _direction_out(d: Direction) -> dict:
+    """方向序列化：enabled 为派生只读字段（仅 active 为真），status 是唯一真值。"""
+    return {
+        "id": d.id, "name": d.name, "prompt": d.prompt,
+        "prompt_version": d.prompt_version, "threshold": d.threshold,
+        "enabled": d.status == Direction.STATUS_ACTIVE,
+        "temp": d.temp, "expires_at": d.expires_at, "status": d.status,
+    }
+
+
+def _temp_expires_at(ttl_days: int) -> datetime:
+    """TTL 到期时刻 = 到期日零点（UTC）。
+
+    时区口径注记：产品书决策表要求到期零点取 site_config timezone（时区键未实装，
+    默认 Asia/Shanghai 待该键落地后接线），当前按 UTC 零点等价实现，见 G2 汇报遗留项。
+    """
+    day = (datetime.now(timezone.utc) + timedelta(days=ttl_days)).date()
+    return datetime(day.year, day.month, day.day, tzinfo=timezone.utc)
+
+
+def _get_live_direction(db: Session, direction_id: int) -> Direction:
+    """取可操作方向：不存在 → DIRECTION_NOT_FOUND；已软删除 → DIRECTION_DELETED。"""
+    d = db.get(Direction, direction_id)
+    if d is None:
+        raise HTTPException(404, {"code": "DIRECTION_NOT_FOUND", "message": "方向不存在"})
+    if d.status == Direction.STATUS_DELETED:
+        raise HTTPException(404, {"code": "DIRECTION_DELETED", "message": "方向已删除"})
+    return d
+
+
+@router.post("/api/directions", status_code=201)
+def create_direction(payload: DirectionCreate, db: Session = Depends(get_session)):
+    """创建方向：prompt_version 从 1 起；temp 方向按 ttl_days 算到期时刻。"""
+    expires_at = None
+    if payload.temp:
+        expires_at = _temp_expires_at(payload.ttl_days or _DEFAULT_TEMP_TTL_DAYS)
+    d = Direction(name=payload.name.strip(), prompt=payload.prompt,
+                  prompt_version=1, threshold=payload.threshold,
+                  temp=payload.temp, expires_at=expires_at)
+    db.add(d)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(400, {"code": "VALIDATION_ERROR", "message": "name 已存在"})
+    db.refresh(d)
+    return _direction_out(d)
+
+
+@router.get("/api/directions")
+def list_directions(db: Session = Depends(get_session)):
+    """方向列表（不含 deleted）；读取前先做 temp TTL 到期扫描（懒翻 expired）。"""
+    expire_due_temp_directions(db)
+    rows = (db.query(Direction)
+            .filter(Direction.status != Direction.STATUS_DELETED)
+            .order_by(Direction.id).all())
+    return [_direction_out(d) for d in rows]
+
+
+@router.put("/api/directions/{direction_id}")
+def update_direction(direction_id: int, payload: DirectionUpdate,
+                     db: Session = Depends(get_session)):
+    """编辑方向：仅修改 prompt 时升 prompt_version（历史打分行的版本号不变）。"""
+    d = _get_live_direction(db, direction_id)
+    if payload.prompt is not None and payload.prompt != d.prompt:
+        d.prompt = payload.prompt
+        d.prompt_version = int(d.prompt_version) + 1
+    if payload.name is not None and payload.name.strip() and payload.name.strip() != d.name:
+        d.name = payload.name.strip()
+    if payload.threshold is not None:
+        d.threshold = payload.threshold
+    db.commit()
+    db.refresh(d)
+    return _direction_out(d)
+
+
+@router.delete("/api/directions/{direction_id}", status_code=204)
+def delete_direction(direction_id: int, db: Session = Depends(get_session)):
+    """软删除：status=deleted + deleted_at 落库；条目与打分全保留、不再进调度。"""
+    d = _get_live_direction(db, direction_id)
+    d.apply_status(Direction.STATUS_DELETED)
+    db.commit()
+    return Response(status_code=204)
+
+
+@router.post("/api/directions/{direction_id}/rescore", status_code=202)
+def rescore_direction(direction_id: int, payload: RescoreIn,
+                      db: Session = Depends(get_session)):
+    """方向重打分入口：建 kind=rescore 任务异步分批消化（响应 202 + 任务 id）。"""
+    if payload.scope not in ("all", "failed"):
+        raise HTTPException(400, {"code": "VALIDATION_ERROR",
+                                  "message": "scope 必须是 all|failed"})
+    d = _get_live_direction(db, direction_id)
+    task = PipelineTask(kind="rescore", status="PENDING",
+                        payload={"direction_id": d.id, "scope": payload.scope,
+                                 "prompt_version": d.prompt_version})
+    db.add(task)
+    db.commit()
+    return {"task_id": task.id, "scope": payload.scope}
+
+
+# ---------- 来源管理（G2/W1） ----------
+
+
+class SourceCreate(BaseModel):
+    type: str
+    url: str
+    source_config: dict | None = None
+
+
+class SourceUpdate(BaseModel):
+    enabled: bool | None = None
+    interval_minutes: int | None = Field(default=None, ge=1)
+
+
+def _source_out(s: Source) -> dict:
+    cfg = s.source_config or {}
+    return {
+        "id": s.id, "direction_id": s.direction_id, "type": s.type, "url": s.url,
+        "enabled": s.enabled, "interval_minutes": cfg.get("interval_minutes"),
+        "failure_level": s.failure_level, "failure_since": s.failure_since,
+        "backoff_failures": s.backoff_failures, "backoff_skips": s.backoff_skips,
+        "last_error": s.last_error,
+    }
+
+
+@router.post("/api/directions/{direction_id}/sources", status_code=201)
+def create_source(direction_id: int, payload: SourceCreate,
+                  db: Session = Depends(get_session)):
+    """新增来源：type 限 rss|web|search；同方向重复注册同 URL → 409 SOURCE_URL_EXISTS
+    （URL 比对在归一化后进行，tracking 参数/大小写变体视为同源）。"""
+    _get_live_direction(db, direction_id)
+    if payload.type not in _SOURCE_TYPES:
+        raise HTTPException(400, {"code": "VALIDATION_ERROR",
+                                  "message": "type 必须是 rss|web|search"})
+    if not payload.url.strip():
+        raise HTTPException(400, {"code": "VALIDATION_ERROR", "message": "url 不能为空"})
+    normalized = canonical_url(payload.url)
+    for src in db.query(Source).filter_by(direction_id=direction_id).all():
+        if canonical_url(src.url) == normalized:
+            raise HTTPException(409, {"code": "SOURCE_URL_EXISTS",
+                                      "message": "该方向已注册同 URL 来源"})
+    s = Source(direction_id=direction_id, type=payload.type, url=payload.url.strip(),
+               source_config=payload.source_config)
+    db.add(s)
+    db.commit()
+    db.refresh(s)
+    return _source_out(s)
+
+
+@router.get("/api/directions/{direction_id}/sources")
+def list_sources(direction_id: int, db: Session = Depends(get_session)):
+    """来源列表（含失效级别与退避状态字段，供采集面体检消费）。"""
+    _get_live_direction(db, direction_id)
+    rows = (db.query(Source).filter_by(direction_id=direction_id)
+            .order_by(Source.id).all())
+    return [_source_out(s) for s in rows]
+
+
+@router.put("/api/sources/{source_id}")
+def update_source(source_id: int, payload: SourceUpdate,
+                  db: Session = Depends(get_session)):
+    """更新来源（启停/源级间隔）：停用后调度跳过该源，已抓数据与失效状态不动。"""
+    s = db.get(Source, source_id)
+    if s is None:
+        raise HTTPException(404, {"code": "SOURCE_NOT_FOUND", "message": "来源不存在"})
+    if payload.enabled is not None:
+        s.enabled = payload.enabled
+    if payload.interval_minutes is not None:
+        s.source_config = {**(s.source_config or {}),
+                           "interval_minutes": payload.interval_minutes}
+    db.commit()
+    db.refresh(s)
+    return _source_out(s)

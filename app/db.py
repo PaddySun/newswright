@@ -33,6 +33,10 @@ def _migrate_added_columns() -> None:
             "backoff_skips": "INTEGER NOT NULL DEFAULT 0",
             "source_config": "JSON",
             "content_hash": "VARCHAR(64)",
+            # 失效判别与错误展示列（G2）：历史行视为正常（none / 无错误）
+            "failure_level": "VARCHAR(20) NOT NULL DEFAULT 'none'",
+            "failure_since": "DATETIME",
+            "last_error": "TEXT",
         },
         "author": {
             "rank_provider": "VARCHAR(30) NOT NULL DEFAULT 'none'",
@@ -57,14 +61,23 @@ def _migrate_added_columns() -> None:
             "sanitize_reason": "VARCHAR(500)",
             "sanitize_detail": "JSON",
             "raw": "JSON",
-            # G1/W4 P1-2：URL 指纹去重（D15 方向内）；历史行留空，懒回填不做
+            # G1/W4：URL 指纹去重（D15 方向内）；历史行留空，懒回填不做
             "direction_id": "INTEGER",
             "fingerprint": "VARCHAR(64)",
             "duplicate_of": "INTEGER",
         },
+        "direction": {
+            # 生命周期状态（G2）：历史行按旧 enabled 布尔镜像换算（停用→disabled），
+            # 其余新列均可空或带默认，无需额外回填
+            "status": "VARCHAR(20) NOT NULL DEFAULT 'active'",
+            "temp": "BOOLEAN NOT NULL DEFAULT 0",
+            "expires_at": "DATETIME",
+            "deleted_at": "DATETIME",
+        },
     }
     with engine.begin() as conn:
         backfill_sanitize = False
+        backfill_direction_status = False
         for table, cols in additions.items():
             if not insp.has_table(table):
                 continue
@@ -75,6 +88,8 @@ def _migrate_added_columns() -> None:
                 conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {col} {ddl}"))
                 if table == "item" and col == "sanitize_status":
                     backfill_sanitize = True
+                if table == "direction" and col == "status":
+                    backfill_direction_status = True
                 log.info("migrate: %s.%s 已补列", table, col)
         # G1/W4：方向内指纹索引（新库由 create_all 的 __table_args__ 建立；旧库补建）
         if insp.has_table("item"):
@@ -82,6 +97,26 @@ def _migrate_added_columns() -> None:
                 "CREATE INDEX IF NOT EXISTS ix_item_direction_fingerprint "
                 "ON item (direction_id, fingerprint)"
             ))
+        # G2：direction 生命周期状态历史行换算——status 列随本次补列新增时，
+        # 旧 enabled 布尔列是唯一状态痕迹（停用方向必须保持停用，不得复活为 active）
+        if backfill_direction_status:
+            conn.execute(text(
+                "UPDATE direction SET status = "
+                "CASE WHEN enabled = 1 THEN 'active' ELSE 'disabled' END "
+                "WHERE status = 'active'"
+            ))
+        # G2：提示词版本存量行归一（D19 统一 integer）：'v1' 形态文本 → 整数。
+        # ORM 读写路径由 PromptVersion 类型双向归一兜底，此处做一次性数据归一，
+        # 让库内不再保留 'v' 前缀文本形态。
+        for tbl in ("direction", "score_result"):
+            if not insp.has_table(tbl):
+                continue
+            cols = {c["name"] for c in insp.get_columns(tbl)}
+            if "prompt_version" in cols:
+                conn.execute(text(
+                    f"UPDATE {tbl} SET prompt_version = CAST(SUBSTR(prompt_version, 2) AS INTEGER) "
+                    "WHERE typeof(prompt_version) = 'text' AND prompt_version LIKE 'v%'"
+                ))
         # 历史行回填（仅补列当次执行）：sanitize 字段上线前入库的条目视为已通过骨架过滤
         if backfill_sanitize:
             conn.execute(text(

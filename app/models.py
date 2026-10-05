@@ -3,12 +3,38 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
+from sqlalchemy import JSON, Boolean, DateTime, false, ForeignKey, Index, Integer, String, Text, TypeDecorator, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 def utcnow() -> datetime:
     return datetime.now(timezone.utc)
+
+
+class PromptVersion(TypeDecorator):
+    """提示词版本号，统一 integer 存储（设计依据见 docs/design-index.md「D19」）。
+
+    旧库存量行以 'v1' 形态文本存储（SQLite 文本亲和列连整数也回读为文本）：
+    写入端把 'v1'/'1'/1 归一为 int，读取端把文本回读值归一为 int，两类存量
+    形态都在 ORM 读写路径上无感归一。None 原样放行（列不可空，由默认值兜底）。
+    """
+    impl = Integer
+    cache_ok = True
+
+    @staticmethod
+    def _to_int(value) -> int:
+        if isinstance(value, int):
+            return value
+        text = str(value).strip().lower()
+        if text.startswith("v"):
+            text = text[1:]
+        return int(text)
+
+    def process_bind_param(self, value, dialect):
+        return None if value is None else self._to_int(value)
+
+    def process_result_value(self, value, dialect):
+        return None if value is None else self._to_int(value)
 
 
 class Base(DeclarativeBase):
@@ -57,12 +83,32 @@ class SiteConfig(Base):
 class Direction(Base):
     __tablename__ = "direction"
 
+    # 生命周期状态（设计依据见 docs/design-index.md「AC-03.3」「AC-03.4」）：
+    # status 为唯一真值；enabled 是历史布尔列，仅作 active 镜像维持旧读路径兼容，
+    # 新代码一律以 status 为准。
+    STATUS_ACTIVE = "active"
+    STATUS_DISABLED = "disabled"
+    STATUS_EXPIRED = "expired"
+    STATUS_DELETED = "deleted"
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(200), unique=True)
     prompt: Mapped[str] = mapped_column(Text)
-    prompt_version: Mapped[str] = mapped_column(String(20), default="v1")
+    prompt_version: Mapped[int] = mapped_column(PromptVersion, default=1)
     threshold: Mapped[int] = mapped_column(Integer, default=60)
     enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    status: Mapped[str] = mapped_column(String(20), default=STATUS_ACTIVE, server_default=STATUS_ACTIVE)
+    # 临时方向 TTL（temp=true 时有效）；到期由调度侧懒扫描翻 status=expired
+    temp: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    def apply_status(self, new_status: str) -> None:
+        """切换生命周期状态并同步 enabled 镜像列（仅 active 为真）。"""
+        self.status = new_status
+        self.enabled = new_status == self.STATUS_ACTIVE
+        if new_status == self.STATUS_DELETED:
+            self.deleted_at = utcnow()
 
 
 class Source(Base):
@@ -82,6 +128,13 @@ class Source(Base):
     # type=web 扩展（M9）：监测配置与内容哈希（etag/Last-Modified 缺失时的变更检测兜底）
     source_config: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     content_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # 失效三级判别状态（设计依据见 docs/design-index.md「DT-1」）：none/suspect/hard_failed；
+    # failure_since 记录进入当前失效态的时间（正常轮清零回 none 时一并清空）。
+    # 采集调度与判别状态机在 G2 失效判别批次接线。
+    failure_level: Mapped[str] = mapped_column(String(20), default="none", server_default="none")
+    failure_since: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # 最近一次抓取错误摘要（DT-1 硬失效判据的展示与排查面，从抓取任务错误同步）
+    last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class Item(Base):
@@ -126,7 +179,7 @@ class ScoreResult(Base):
     relevance_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
     band: Mapped[str | None] = mapped_column(String(10), nullable=True)
     reason: Mapped[str] = mapped_column(Text, default="")
-    prompt_version: Mapped[str] = mapped_column(String(20), default="v1")
+    prompt_version: Mapped[int] = mapped_column(PromptVersion, default=1)
     model: Mapped[str] = mapped_column(String(100))
     passed: Mapped[bool] = mapped_column(Boolean, default=False)
     # OK / FAILED（解析失败或调用耗尽重试后落 FAILED + error）
