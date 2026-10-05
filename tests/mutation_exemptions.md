@@ -1741,3 +1741,164 @@
 | app.pipeline.skip_policy.x_skip_reason__mutmut_39 | A | or 0→1：falsy 时 0/1 均 < BACKOFF_FAIL_THRESHOLD(3)，判定域等价（批次11 enqueue m51 同款判据） | 等价/不可达或条款未钉（C1 判据族沿用） |
 | app.pipeline.runner.x_process_rescore_tasks__mutmut_19 | B | claim 失败 continue → break：CAS 认领竞争防御分支，单 worker 判定域不可达（ADR-2 单机单进程，测试内认领恒成功） | 批次11 process m42 B 判据族 |
 | app.pipeline.runner.x_process_rescore_tasks__mutmut_74 | B | 候选条目缺失 continue → break：同批内 db.get 与候选查询同会话，单进程判定域不可达（防御分支，设计要求存在） | 批次11 m42 同款判据 |
+
+## C2-2 分诊批次 2（2026-10-05，authors.pipeline 176 + authors.gates 43）：A 143 条
+
+> 种子=统一 dispatch run 37276946376（main @ 8c5f515）未登记幸存者之 authors 域
+> （doc/C2/C2-2-种子.jsonl）。diff 经 mutmut 3.8.0 库级静态重建（app/ 自 8c5f515 零变化，
+> 变异体名与当前树 1:1 对名；PipelineRunner 类方法变异体在类体内同缩进对位拼接、
+> def 行还原原名），逐条施加→跑本批判据面测试→还原定案。终态：**C 76/76 全杀**
+> （tests/test_author_gates_echo_dice.py 6 + tests/test_pipeline_json_node_retry.py 3 +
+> tests/test_pipeline_revision_passes.py 4 = 13 测试，C 类不在本清单）、**A 143/143 全活**、
+> **B 0 / D 0**。核验-改判 1 轮共 3 条改判（C→A 3：gate_echo_check m9/m11/m15
+> find_longest_match 实参 None/缺参经实测为 Python 3.9+ 缺省形参恰等价——首轮误判 C，
+> CPython 文档 Changed in version 3.9 定案）。判据族复用：批次 6/7/9 同函数旧条目
+> （文案组/数值无条款/截断界/schema 必填缺省不可达/ORM 列缺省兜底/死参数/stats 键形态/
+> hint 文案面）；新实证 2 项见 C2-2 执行汇报 §四。数据：doc/C2/C2-2-重建-diff.json、
+> doc/C2/C2-2-核验结果.json、doc/C2/C2-2-核验.py（定案表）.
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.authors.gates.x__bigram_dice__mutmut_1 | A | or→and：单侧 len<2 时原式 a≠b→0.0、变体侧 gram 集为空→0.0，双短串同名域被调用方 t==r 先行返回拦截——判定域真值表全等价 | 等价/不可达或条款未钉（调用点核查 + AC-20.4 阈值字面未入设计书；batch9 topic_dedup m16 判据族） |
+| app.authors.gates.x__bigram_dice__mutmut_25 | A | 守卫 (ga and gb) or True：该点 len(a),len(b)≥2 已由前置守卫保证，ga/gb 恒非空，原守卫恒真——恰等价 | 等价/不可达或条款未钉（调用点核查 + AC-20.4 阈值字面未入设计书；batch9 topic_dedup m16 判据族） |
+| app.authors.gates.x__bigram_dice__mutmut_30 | A | and→or：同 m25，ga/gb 恒非空使两形态同值——恰等价 | 等价/不可达或条款未钉（调用点核查 + AC-20.4 阈值字面未入设计书；batch9 topic_dedup m16 判据族） |
+| app.authors.gates.x__bigram_dice__mutmut_31 | A | else 0.0→1.0：else 域需 ga 或 gb 为空，前置 len≥2 守卫下不可达——死域 | 等价/不可达或条款未钉（调用点核查 + AC-20.4 阈值字面未入设计书；batch9 topic_dedup m16 判据族） |
+| app.authors.gates.x__bigram_dice__mutmut_6 | A | a==b 分支值变体：唯一调用方 gate_topic_dedup 先判 t==r 直接判重返回，a==b 到达本函数为死域（调用点核查） | 等价/不可达或条款未钉（调用点核查 + AC-20.4 阈值字面未入设计书；batch9 topic_dedup m16 判据族） |
+| app.authors.gates.x__bigram_dice__mutmut_8 | A | a==b 分支值变体：唯一调用方 gate_topic_dedup 先判 t==r 直接判重返回，a==b 到达本函数为死域（调用点核查） | 等价/不可达或条款未钉（调用点核查 + AC-20.4 阈值字面未入设计书；batch9 topic_dedup m16 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_11 | A | find_longest_match 实参 None/缺参：Python 3.9+ 该方法 ahi/bhi 缺省形参即 None→len(seq)，三种形态与显式传参恰等价——语言语义判据（CPython 文档 Changed in 3.9；实测同值） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_15 | A | find_longest_match 实参 None/缺参：Python 3.9+ 该方法 ahi/bhi 缺省形参即 None→len(seq)，三种形态与显式传参恰等价——语言语义判据（CPython 文档 Changed in 3.9；实测同值） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_18 | A | autojunk=None：None 假值与 False 同 truthiness，SequenceMatcher 行为相同——语言语义恰等价 | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_24 | A | find_longest_match 起点跳 1：判定面仅「匹配起点恰在串首且长度恰等于 20 字符」的界面域——20 阈值字面未入设计书（任务书§2 阈值字面判据；batch9 m16/m23 数值边界先例） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_25 | A | find_longest_match 起点跳 1：判定面仅「匹配起点恰在串首且长度恰等于 20 字符」的界面域——20 阈值字面未入设计书（任务书§2 阈值字面判据；batch9 m16/m23 数值边界先例） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_26 | A | stats['echo_max_chars']=None：stats 记录值无条款（verdict 统一形态只钉顶层四键；batch9 gate_fingerprint m5 先例） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_27 | A | stats 键名变体：stats 键名无条款（batch9 m6/m7 先例） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_28 | A | stats 键名变体：stats 键名无条款（batch9 m6/m7 先例） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_29 | A | ≥→>：恰等于 20 字符的边界含等性无条款——echo 阈值字面未入设计书（batch9 topic_dedup m16 数值边界先例；断言两档纪律禁造等号断言） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_31 | A | issue 文案内 clean 切片 +size→-size：拒收语义不变（issues 仍非空），回显摘录文案形态无条款（batch9 issue 文案先例） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_32 | A | issue 文案截断 [:40]→[:41]：文案截断界无条款（batch9 m47 先例） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.gates.x_gate_echo_check__mutmut_9 | A | find_longest_match 实参 None/缺参：Python 3.9+ 该方法 ahi/bhi 缺省形参即 None→len(seq)，三种形态与显式传参恰等价——语言语义判据（CPython 文档 Changed in 3.9；实测同值） | 等价/不可达或条款未钉（语言语义/CPython 3.9+ 缺省形参实测；20 阈值字面与 stats/文案未钉，batch9 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_10 | A | 候选句长阈值 ≥12→>12/≥13：hint 候选集边界无条款（batch7 hint 判据族；文案面） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_11 | A | 候选句长阈值 ≥12→>12/≥13：hint 候选集边界无条款（batch7 hint 判据族；文案面） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_14 | A | quote 截断 [:80]→[:81]：截断界无条款（batch7 m39 先例） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_16 | A | best 初值 "XXXX"：返回受 best_ratio>0.5 守卫，初值仅死域——控制流等价 | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_25 | A | 候选句截断 [:120]→[:121]：相似度计算内截断界无条款（文案/度量细节判据） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_26 | A | >→>=：并列时取末句而非首句，hint 文案面无条款（batch7 hint 先例） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_29 | A | 守卫 or True：低相似时仍回 hint——hint 空域消息形态差异，文案无条款（batch7 m36 同款先例） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_30 | A | >0.5→>=0.5：相似度回退边界含等性无条款（数值边界判据族） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_32 | A | else ""→"XXXX"：hint 占位文案形态（batch7 m36/37 先例） | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_7 | A | 分句正则 XX 包裹/空正文兜底 XXXX：hint 仅进引用失败提示文案（batch7 validate_citations m36/37 hint 文案先例）；XXXX 兜底 len<12 被过滤恰等价 | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x__closest_sentence__mutmut_9 | A | 分句正则 XX 包裹/空正文兜底 XXXX：hint 仅进引用失败提示文案（batch7 validate_citations m36/37 hint 文案先例）；XXXX 兜底 len<12 被过滤恰等价 | 等价/不可达或条款未钉（hint 文案面无条款；batch7 validate_citations m36/37 判据族） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_138 | A | PipelineAbort 轮 error=str(None)：错误落库存在性与 FAILED 状态不变，内嵌文案变「None」——文案无措辞条款（batch7 m40 同款先例） | 等价/不可达或条款未钉（文案组判据族；batch7 m40 同款先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call_json__mutmut_1 | A | last_err 初值 None→""：到达 raise 前恒被 except 赋值为异常对象，初值为死域——控制流等价 | 等价/不可达或条款未钉（文案组 + temperature 数值判据族沿用；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call_json__mutmut_12 | A | temperature 实参删除落缺省 0.5：temperature 数值无条款（batch6 m33 判据族） | 等价/不可达或条款未钉（文案组 + temperature 数值判据族沿用；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call_json__mutmut_15 | A | last_err=None：最终中止消息内嵌诊断串变「None」，FAILED 状态与错误落库存在性不变——文案无措辞条款（batch6 空稿文案/batch7 m40 先例） | 等价/不可达或条款未钉（文案组 + temperature 数值判据族沿用；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call_json__mutmut_30 | A | PipelineAbort(None)：同 m15——中止文案无条款，状态面不变 | 等价/不可达或条款未钉（文案组 + temperature 数值判据族沿用；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁ_call_json__mutmut_8 | A | temperature=None：调用参数值形态无条款（batch6 temperature 数值先例；FakeProvider 域无断言面） | 等价/不可达或条款未钉（文案组 + temperature 数值判据族沿用；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_317 | A | max_attempts 读取键/缺省变体：rewrite.max_attempts 为 schema 必填（_int_field required，缺省分支不可达）——schema 必填判据（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_321 | A | max_attempts 读取键/缺省变体：rewrite.max_attempts 为 schema 必填（_int_field required，缺省分支不可达）——schema 必填判据（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_322 | A | max_attempts 读取键/缺省变体：rewrite.max_attempts 为 schema 必填（_int_field required，缺省分支不可达）——schema 必填判据（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_323 | A | max_attempts 读取键/缺省变体：rewrite.max_attempts 为 schema 必填（_int_field required，缺省分支不可达）——schema 必填判据（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_346 | A | last_issues 初值 None→""：初值仅参与首轮比较，list=="" 与 list==None 同为 False——恰等价（同因早停首轮不触发面） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_387 | A | gate_history.append(None)：gate_history 非 §4.1 钉面，条目形态无条款（batch6 m340 键形态先例；既有断言仅涉 len 与首条） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_388 | A | gate_history 条目键名变体：payload 内部形态未钉（batch6 m340/341 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_389 | A | gate_history 条目键名变体：payload 内部形态未钉（batch6 m340/341 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_390 | A | gate_history 条目键名变体：payload 内部形态未钉（batch6 m340/341 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_391 | A | gate_history 条目键名变体：payload 内部形态未钉（batch6 m340/341 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_395 | A | payload cost 键变体：cost 聚合账非 §4.1 钉面（batch6 m113-120 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_396 | A | payload cost 键变体：cost 聚合账非 §4.1 钉面（batch6 m113-120 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_403 | A | payload rewrite.mode/revise_enabled 键名变体：payload 内部镜像形态未钉（batch6 m393/394 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_404 | A | payload rewrite.mode/revise_enabled 键名变体：payload 内部镜像形态未钉（batch6 m393/394 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_410 | A | payload rewrite.mode/revise_enabled 键名变体：payload 内部镜像形态未钉（batch6 m393/394 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_422 | A | 早停 stop_note XX 包裹：失败原因文案无措辞条款（batch6 空稿文案先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_426 | A | error 拼接符变体：同上（文案形态） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_431 | A | audit_note 文案变体：审计注记文案无条款（batch6 m413/414 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_432 | A | audit_note 文案变体：审计注记文案无条款（batch6 m413/414 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_443 | A | 定义行剥离 sub('XXXX')：残留不含 [^K] 标记形态，marks 集合恰等价（batch7 validate_citations m13 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_445 | A | assemble_article_text 首参 None：首参为死参数（函数内不消费 title）——控制流等价（batch6 m427 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_467 | A | Article status 实参删除：ORM 列 default='PUBLISHED_TO_C' 恰兜底——ORM 列缺省判据族（batch7 m32-34 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_478 | A | 成功轮 error=None→""：空值形态无条款（batch7 run_pipeline_write m26 prompt_snapshot 先例；两形态均 falsy） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_497 | A | 记忆回流 source_event 值变体：source_event 值未钉枚举（batch6 m479/480 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_498 | A | 记忆回流 source_event 值变体：source_event 值未钉枚举（batch6 m479/480 先例） | 等价/不可达或条款未钉（schema 必填 + payload 内部形态 + ORM 列缺省 + 文案组判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_incubate__mutmut_14 | A | 腹稿输出格式指令 XX 包裹/字段名大写变体：格式指令措辞——提示词形态（batch7 字段名先例） | 等价/不可达或条款未钉（提示词形态 + 数值判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_incubate__mutmut_15 | A | 腹稿输出格式指令 XX 包裹/字段名大写变体：格式指令措辞——提示词形态（batch7 字段名先例） | 等价/不可达或条款未钉（提示词形态 + 数值判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_incubate__mutmut_16 | A | 腹稿输出格式指令 XX 包裹/字段名大写变体：格式指令措辞——提示词形态（batch7 字段名先例） | 等价/不可达或条款未钉（提示词形态 + 数值判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_incubate__mutmut_17 | A | 腹稿输出格式指令 XX 包裹/字段名大写变体：格式指令措辞——提示词形态（batch7 字段名先例） | 等价/不可达或条款未钉（提示词形态 + 数值判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_incubate__mutmut_18 | A | 腹稿输出格式指令 XX 包裹/字段名大写变体：格式指令措辞——提示词形态（batch7 字段名先例） | 等价/不可达或条款未钉（提示词形态 + 数值判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_incubate__mutmut_21 | A | temperature 0.9→None/1.9：数值无条款（batch6 判据族） | 等价/不可达或条款未钉（提示词形态 + 数值判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_incubate__mutmut_27 | A | temperature 0.9→None/1.9：数值无条款（batch6 判据族） | 等价/不可达或条款未钉（提示词形态 + 数值判据族；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_1 | A | template 读取/hint 取值变体：hint 仅进提示词措辞（结构提示语缺省空串）——提示词形态判据（batch6/7） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_10 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_11 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_12 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_13 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_14 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_15 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_16 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_17 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_18 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_19 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_20 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_21 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_22 | A | template 读取/hint 取值变体：hint 仅进提示词措辞（结构提示语缺省空串）——提示词形态判据（batch6/7） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_23 | A | template 读取/hint 取值变体：hint 仅进提示词措辞（结构提示语缺省空串）——提示词形态判据（batch6/7） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_24 | A | hints.get 缺省形态：outline.template 为 schema 枚举且 none 模板不进本函数（execute 守卫），四键恒命中缺省不可达——schema 枚举 + 调用点守卫（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_25 | A | hints.get 缺省形态：outline.template 为 schema 枚举且 none 模板不进本函数（execute 守卫），四键恒命中缺省不可达——schema 枚举 + 调用点守卫（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_26 | A | hints.get 缺省形态：outline.template 为 schema 枚举且 none 模板不进本函数（execute 守卫），四键恒命中缺省不可达——schema 枚举 + 调用点守卫（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_27 | A | hints.get 缺省形态：outline.template 为 schema 枚举且 none 模板不进本函数（execute 守卫），四键恒命中缺省不可达——schema 枚举 + 调用点守卫（batch9 gate_length m8 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_41 | A | 输出 JSON 指令段 XX 包裹/大小写/字段名变体：格式指令措辞（下游按 get 消费、模型遵从概率面）——提示词形态（batch7 draft_task 字段名先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_42 | A | 输出 JSON 指令段 XX 包裹/大小写/字段名变体：格式指令措辞（下游按 get 消费、模型遵从概率面）——提示词形态（batch7 draft_task 字段名先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_43 | A | 输出 JSON 指令段 XX 包裹/大小写/字段名变体：格式指令措辞（下游按 get 消费、模型遵从概率面）——提示词形态（batch7 draft_task 字段名先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_44 | A | 输出 JSON 指令段 XX 包裹/大小写/字段名变体：格式指令措辞（下游按 get 消费、模型遵从概率面）——提示词形态（batch7 draft_task 字段名先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_45 | A | 输出 JSON 指令段 XX 包裹/大小写/字段名变体：格式指令措辞（下游按 get 消费、模型遵从概率面）——提示词形态（batch7 draft_task 字段名先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_49 | A | temperature 0.7→None/1.7：数值无条款（batch6 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_55 | A | temperature 0.7→None/1.7：数值无条款（batch6 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_61 | A | sections 数边界 <2→≤2/<3：大纲最低节数与含等性未入设计书（数值边界判据族；rolling 消费 :3 与 prompt 恰好 3 个均为措辞面）——batch9 m16/m23 先例 | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_62 | A | sections 数边界 <2→≤2/<3：大纲最低节数与含等性未入设计书（数值边界判据族；rolling 消费 :3 与 prompt 恰好 3 个均为措辞面）——batch9 m16/m23 先例 | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_63 | A | PipelineAbort(None)：中止文案无条款，FAILED 状态面不变（missing_sections 测试只断言状态） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_64 | A | 中止消息 o.get 键变体：中止文案形态无条款（同 m63 判据） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_65 | A | 中止消息 o.get 键变体：中止文案形态无条款（同 m63 判据） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_66 | A | 中止消息 o.get 键变体：中止文案形态无条款（同 m63 判据） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_outline__mutmut_9 | A | hints 键名/文本 XX 包裹/大写变体：结构提示语措辞——提示词形态（batch6 node_draft m29 措辞先例） | 等价/不可达或条款未钉（提示词形态 + schema 枚举必填 + 数值边界判据族；batch6/7/9 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_10 | A | or→and：lo 退缺省 600 仅改指令字数措辞（门禁侧真值由 run_gates 承担）——提示词形态（batch7 m10 判据） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_100 | A | 占位遍 trace 记录键名变体：trace 条目存在且为 dict（pass_stats 可挂），内部键形态未钉——§4.1 trace 钉面之外的字段形态（batch6 discarded/note 键先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_11 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_16 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_17 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_18 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_19 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_20 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_21 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_22 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_23 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_24 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_25 | A | or→and（hi 侧）：同 m10 判据 | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_26 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_31 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_32 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_33 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_34 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_35 | A | prune 默认指令 hi 读取键/缺省变体：同 lo 判据（hi 仅进指令措辞、max schema 必填） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_36 | A | 自定义 instruction 读取变体：params 指令覆盖进提示词措辞——提示词形态（batch6 execute m268-271 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_37 | A | 自定义 instruction 读取变体：params 指令覆盖进提示词措辞——提示词形态（batch6 execute m268-271 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_38 | A | 自定义 instruction 读取变体：params 指令覆盖进提示词措辞——提示词形态（batch6 execute m268-271 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_39 | A | 自定义 instruction 读取变体：params 指令覆盖进提示词措辞——提示词形态（batch6 execute m268-271 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_40 | A | 自定义 instruction 读取变体：params 指令覆盖进提示词措辞——提示词形态（batch6 execute m268-271 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_45 | A | 默认删节指令文本/占位符替换变体：删节指令措辞与当前字数回显形态——提示词形态（batch6 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_46 | A | 默认删节指令文本/占位符替换变体：删节指令措辞与当前字数回显形态——提示词形态（batch6 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_47 | A | 默认删节指令文本/占位符替换变体：删节指令措辞与当前字数回显形态——提示词形态（batch6 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_48 | A | 默认删节指令文本/占位符替换变体：删节指令措辞与当前字数回显形态——提示词形态（batch6 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_6 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_65 | A | prune/rhythm temperature 0.6/0.8 变体：数值无条款（batch6 node_draft m33 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_68 | A | prune/rhythm temperature 0.6/0.8 变体：数值无条款（batch6 node_draft m33 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_69 | A | prune/rhythm temperature 0.6/0.8 变体：数值无条款（batch6 node_draft m33 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_7 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_8 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_86 | A | 节奏重构指令文本 XX 包裹：指令措辞——提示词形态 | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_87 | A | 节奏重构指令文本 XX 包裹：指令措辞——提示词形态 | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_9 | A | prune 默认指令 lo 读取键/缺省变体：lo 仅进删节指令措辞且 gates.length min 为 schema 必填（缺省分支不可达）——提示词形态 + schema 必填判据（batch7 draft_task m10 先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_91 | A | prune/rhythm temperature 0.6/0.8 变体：数值无条款（batch6 node_draft m33 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_94 | A | prune/rhythm temperature 0.6/0.8 变体：数值无条款（batch6 node_draft m33 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_95 | A | prune/rhythm temperature 0.6/0.8 变体：数值无条款（batch6 node_draft m33 判据族） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_97 | A | 占位遍 trace 记录键名变体：trace 条目存在且为 dict（pass_stats 可挂），内部键形态未钉——§4.1 trace 钉面之外的字段形态（batch6 discarded/note 键先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_98 | A | 占位遍 trace 记录键名变体：trace 条目存在且为 dict（pass_stats 可挂），内部键形态未钉——§4.1 trace 钉面之外的字段形态（batch6 discarded/note 键先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+| app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_99 | A | 占位遍 trace 记录键名变体：trace 条目存在且为 dict（pass_stats 可挂），内部键形态未钉——§4.1 trace 钉面之外的字段形态（batch6 discarded/note 键先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
