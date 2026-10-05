@@ -243,6 +243,12 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     batch.model = model
     db.commit()
 
+    # 热点关键词更新 = 搜索源关键词边际降频的恢复事件之一：复位零收益计数
+    if keywords:
+        from ..pipeline.skip_policy import reset_keyword_backoff
+
+        reset_keyword_backoff(db)
+
     # 分态：只有采集（全平台拉取）失败才 FAILED；提炼失败采集成功 → DONE + degraded
     task_status = "FAILED" if not ok_platforms else "DONE"
     stats = {

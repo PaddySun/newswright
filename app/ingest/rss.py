@@ -46,6 +46,39 @@ def _looks_like_xml(content: bytes, content_type: str) -> bool:
     return "xml" in (content_type or "").lower()
 
 
+# RSS 声明的休息日（feedparser 不解析 skipDays，需自行读取）
+_SKIPDAYS_RE = re.compile(rb"<skipdays>(.*?)</skipdays>", re.IGNORECASE | re.DOTALL)
+_SKIPDAY_ITEM_RE = re.compile(rb"<day>\s*([A-Za-z]+)\s*</day>", re.IGNORECASE)
+
+
+def channel_skip_days(content: bytes) -> list[str]:
+    """读取 feed 声明的 skipDays 星期名（小写；未声明返回空）。"""
+    m = _SKIPDAYS_RE.search(content[:65536])
+    if not m:
+        return []
+    return [dm.group(1).decode("ascii", "ignore").strip().lower()
+            for dm in _SKIPDAY_ITEM_RE.finditer(m.group(1))]
+
+
+def parse_retry_after(value: str | None, *, now: datetime) -> float | None:
+    """Retry-After 双形态解析：delta-seconds 秒数与 HTTP-date 两种形态；
+    解析失败返回 None（调用方退回降频档位对应缺省间隔）。负值钳为 0。"""
+    if not value or not value.strip():
+        return None
+    text = value.strip()
+    if text.isdigit():
+        return float(text)
+    try:
+        from email.utils import parsedate_to_datetime
+
+        dt = parsedate_to_datetime(text)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return max(0.0, (dt - now).total_seconds())
+    except (TypeError, ValueError):
+        return None
+
+
 def normalize_url(url: str) -> str:
     if not url:
         return url
@@ -116,6 +149,9 @@ class SourceFetchStats:
     sanitize_rejected: int = 0
     error: str | None = None
     guid_collisions: int = 0  # feed 内部重复 guid
+    # 429/Retry-After 限流信号（动态降频识别面）：命中时任务不算失败、不记退避
+    rate_limited: bool = False
+    retry_after: str | None = None
     # 通道附加信息（web 变更类型/监测词命中等），并入任务 payload.stats
     extra: dict = field(default_factory=dict)
 
@@ -166,8 +202,19 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
                 source.last_fetched_at = datetime.now(timezone.utc)
                 db.commit()
                 return stats
+            # 429/Retry-After 在 raise_for_status 之前拦截（4xx 会抛异常走错误路径，
+            # 但限流不是抓取失败——交给动态降频状态机，不计失败退避）
+            if resp.status_code == 429 or "retry-after" in resp.headers:
+                stats.rate_limited = True
+                stats.retry_after = resp.headers.get("retry-after")
+                return stats
             resp.raise_for_status()
             body = resp.content
+    except httpx.HTTPStatusError as e:
+        stats.error = f"{type(e).__name__}: {e}"
+        if getattr(e, "response", None) is not None:
+            stats.extra["http_status"] = e.response.status_code
+        return stats
     except httpx.HTTPError as e:
         stats.error = f"{type(e).__name__}: {e}"
         return stats
@@ -180,6 +227,12 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
 
     entries = parse_feed_entries(body)
     stats.feed_entries = len(entries)
+    _skip_days = set(channel_skip_days(body))
+    if _skip_days:
+        # 源声明休息日：今日命中时暴露为失效判据豁免信号（空轮不计入）
+        _weekday = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+        stats.extra["skip_days"] = sorted(_skip_days)
+        stats.extra["skip_day"] = _weekday[datetime.now(timezone.utc).weekday()] in _skip_days
     seen_guids: set[str] = set()
 
     # 摘要富化预采（开关默认关）：对会因过短被规则拒绝且带真实 URL 的新条目，

@@ -95,6 +95,7 @@ def fetch_search_source(db: Session, source: Source) -> SourceFetchStats:
             content_text=body, raw=r.raw or None,
             fetched_at=datetime.now(timezone.utc),
             direction_id=source.direction_id, fingerprint=fp,
+            source_keyword=keyword,
         )
         if origin is not None:
             item.fetch_status = "DUP"

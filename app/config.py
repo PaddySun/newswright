@@ -117,6 +117,16 @@ SCHED_HOT_MINUTES = int(_get("SCHED_HOT_MINUTES") or 60)
 BACKOFF_FAIL_THRESHOLD = int(_get("BACKOFF_FAIL_THRESHOLD") or 3)
 BACKOFF_PROBE_EVERY = int(_get("BACKOFF_PROBE_EVERY") or 4)
 
+# 失效三级判别与动态降频（采集加固）：阈值与缺省间隔档
+# 连续 ≥3 轮 404/403/410 → 硬失效；连续 ≥3 轮 200 空内容 → 疑似失效
+HARD_FAIL_ROUNDS = int(_get("HARD_FAIL_ROUNDS") or 3)
+SUSPECT_EMPTY_ROUNDS = int(_get("SUSPECT_EMPTY_ROUNDS") or 3)
+# 搜索源关键词连续 ≥6 轮零新增 → 边际降频（与 429 降频同构但独立计数）
+KEYWORD_EXHAUSTED_ROUNDS = int(_get("KEYWORD_EXHAUSTED_ROUNDS") or 6)
+# 降频缺省间隔档：15×2^档位 分钟，上限 240（429 限流与关键词零收益共用阶梯）
+RATE_LIMIT_BASE_MINUTES = int(_get("RATE_LIMIT_BASE_MINUTES") or 15)
+RATE_LIMIT_MAX_MINUTES = int(_get("RATE_LIMIT_MAX_MINUTES") or 240)
+
 # 零信任过滤（能力预留位，本阶段只做骨架+统计）：默认关=pass-through
 SANITIZE_ENABLED = _get_bool("SANITIZE_ENABLED", False)
 # 启用时生效的关键词黑名单（逗号分隔；KeywordDenySanitizer 命中即拒）

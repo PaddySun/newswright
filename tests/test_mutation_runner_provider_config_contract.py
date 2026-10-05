@@ -31,7 +31,7 @@ from app.pipeline.runner import (
     _fetch_one,
     _fetch_stats_dict,
     _finish,
-    _update_backoff,
+    _update_source_health,
     enqueue_fetch_round,
     fetch_round,
     process_fetch_round,
@@ -497,17 +497,32 @@ def test_finish_payload_extra_and_stats_merge(db_session):
     assert t.payload["stats"] == {"candidates": 3}  # 内存同步（调用方读 task 不失真）
 
 
+def _health_stats(*, failed: bool):
+    """构造源健康更新所需的最小抓取统计（failed=True 模拟错误轮，False 模拟成功轮）。"""
+    from types import SimpleNamespace
+
+    return SimpleNamespace(
+        error="HTTPStatusError: boom" if failed else None,
+        feed_entries=0 if failed else 3,
+        inserted=0 if failed else 3,
+        not_modified=False,
+        rate_limited=False,
+        retry_after=None,
+        extra={},
+    )
+
+
 def test_update_backoff_counts(db_session):
     """AC-20.3 退避计数：失败 +1（含从 0 起计）；成功清零（failures/skips）。"""
     d = _mk_direction(db_session)
     hot = _mk_source(db_session, d, "https://ex/hot", backoff_failures=2)
     fresh = _mk_source(db_session, d, "https://ex/fresh")
-    _update_backoff(db_session, hot, failed=True)
-    _update_backoff(db_session, fresh, failed=True)
+    _update_source_health(db_session, hot, _health_stats(failed=True))
+    _update_source_health(db_session, fresh, _health_stats(failed=True))
     db_session.expire_all()
     assert db_session.get(Source, hot.id).backoff_failures == 3
     assert db_session.get(Source, fresh.id).backoff_failures == 1
-    _update_backoff(db_session, hot, failed=False)
+    _update_source_health(db_session, hot, _health_stats(failed=False))
     db_session.expire_all()
     assert db_session.get(Source, hot.id).backoff_failures == 0
     assert db_session.get(Source, hot.id).backoff_skips == 0
