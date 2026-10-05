@@ -120,3 +120,28 @@ def test_extract_page_markdown_real():
     html = "<html><head><title>T</title></head><body><article>" + "<p>这是一段足够长的正文。</p>" * 40 + "</article></body></html>"
     md = web.extract_page_markdown(html)
     assert "足够长" in md
+
+
+def test_versioned_guid_uses_configured_url_not_redirect_target(db_session, web_source, monkeypatch):
+    """监测 guid 的 URL 分量 = 配置 URL 归一化（非重定向最终 URL）——源站改跳转
+    策略不得产生双 guid 条目。响应对象携带与配置不同的最终 URL 时，guid 仍以
+    配置 URL 构造（响应的 url 属性只出现于真实 httpx 重定向后的对象上）。"""
+    class RedirectedResp(FakeResp):
+        url = "https://cdn.example/other-path"  # 模拟 follow_redirects 后的最终 URL
+
+    _patch(monkeypatch, RedirectedResp(HTML_A))
+    s = fetch_web_source(db_session, web_source)
+    assert s.inserted == 1
+    it = db_session.query(Item).filter_by(source_id=web_source.id).one()
+    assert it.guid.startswith("https://ex/page#v-")
+    assert "cdn.example" not in it.guid
+
+
+def test_rss_style_etag_500_char_not_truncated(db_session, web_source, monkeypatch):
+    """etag 列宽 ≥500：接近列宽上限的原样 etag（含引号与 W/ 前缀）完整存取。"""
+    long_etag = 'W/"' + "e" * 494 + '"'  # 500 字符整
+    _patch(monkeypatch, FakeResp(HTML_A, headers={"ETag": long_etag}))
+    s = fetch_web_source(db_session, db_session.merge(web_source))
+    assert s.inserted == 1
+    src = db_session.merge(web_source)
+    assert src.etag == long_etag  # 逐字符保留，未截断/未去引号

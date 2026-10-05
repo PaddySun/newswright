@@ -363,17 +363,17 @@ def test_enrich_boundary_only_for_rule_rejected_length(db_session, monkeypatch):
     _mock_llm(monkeypatch, entries)
     enrich_calls = []
 
-    def fake_enrich(entry, *, page_url):
-        enrich_calls.append({"entry": entry, "page_url": page_url})
+    def fake_enrich(url, current_text, *, page_url):
+        enrich_calls.append({"url": url, "page_url": page_url})
         return "富化后的全文" + _long_text(300)
 
-    monkeypatch.setattr(web, "_enrich_entry_content", fake_enrich)
+    monkeypatch.setattr(web, "enrich_entry_text", fake_enrich)
     _patch(monkeypatch, FakeResp(HTML_A))
 
     s = fetch_web_source(db_session, src)
 
     assert len(enrich_calls) == 1
-    assert enrich_calls[0]["entry"] is entries[1]
+    assert enrich_calls[0]["url"] == entries[1].url  # 富化作用于被拒条目的 URL
     assert enrich_calls[0]["page_url"] == "https://ex/page"
     ok_item = db_session.query(Item).filter_by(source_id=src.id, guid="ok").one()
     short_item = db_session.query(Item).filter_by(source_id=src.id, guid="short").one()
