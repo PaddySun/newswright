@@ -163,27 +163,30 @@ def llm_extract_entries(db: Session, *, page_url: str, content_text: str,
     return out
 
 
-def _enrich_entry_content(entry: WebPayload, *, page_url: str) -> str:
-    """列表条目正文富化：摘要过短且有真实 URL 时抓原文全文（httpx+trafilatura，无 LLM）。
+def enrich_entry_text(url: str, current_text: str, *, page_url: str) -> str:
+    """抓原文补全正文（httpx+trafilatura，无 LLM）：全文比现文本更长才采用。
 
-    安装备注（0 信任二期依据）：entry.url 来自不可信页面/LLM 抽取——与 morningdeck
+    供监测列表条目与 RSS 摘要富化开关共用（复用同一抽取路径）。
+    护栏：条目 URL 与页面 URL 相同时不富化（LLM 常把索引页自身当条目 URL，
+    抓回同一内容无增量）；失败保留原文不致命。
+
+    安装备注（0 信任二期依据）：条目 URL 来自不可信页面/LLM 抽取——与 morningdeck
     抓取侧相同的教训，正式系统需 SSRF 复检（私网地址/重定向白名单），Demo 不做。
-    条目 URL 与监测页相同时不富化（LLM 常把索引页自身当条目 URL，抓回同一内容无增量）。
     """
-    if not entry.url.startswith(("http://", "https://")):
-        return entry.content_text
-    if normalize_url(entry.url) == normalize_url(page_url):
-        return entry.content_text
+    if not url.startswith(("http://", "https://")):
+        return current_text
+    if normalize_url(url) == normalize_url(page_url):
+        return current_text
     try:
         with httpx.Client(timeout=30.0, follow_redirects=True) as client:
-            resp = client.get(entry.url, headers={"User-Agent": _UA})
+            resp = client.get(url, headers={"User-Agent": _UA})
             resp.raise_for_status()
         text = extract_page_markdown(resp.text)
-        if len(text.strip()) > len(entry.content_text.strip()):
+        if len(text.strip()) > len(current_text.strip()):
             return text
     except Exception as e:  # noqa: BLE001  富化失败保留摘要，不致命
-        log.info("条目富化失败 url=%s: %s", entry.url[:120], e)
-    return entry.content_text
+        log.info("条目富化失败 url=%s: %s", url[:120], e)
+    return current_text
 
 
 def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
@@ -307,7 +310,8 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
         else:
             for ep in entries:
                 if len(ep.content_text.strip()) < config.RULE_MIN_BODY_CHARS:
-                    ep.content_text = _enrich_entry_content(ep, page_url=source.url)
+                    ep.content_text = enrich_entry_text(ep.url, ep.content_text,
+                                                        page_url=source.url)
                 _ingest(ep)
     else:
         # 单页条目：guid 带内容版本后缀（同 URL 内容变化 → 新条目，旧条目保留）；

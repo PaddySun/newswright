@@ -18,7 +18,7 @@ from sqlalchemy.orm import Session
 
 from .. import config
 from ..models import Item, Source
-from .fingerprint import find_fingerprint_origin, url_fingerprint
+from .fingerprint import entry_fingerprint, find_fingerprint_origin
 from .rules import apply_rules
 from .sanitize import SanitizeTarget, run_sanitize
 
@@ -29,6 +29,21 @@ TRACKING_PARAMS = {
     "fbclid", "gclid", "igshid", "mc_cid", "mc_eid", "spm", "ref", "ref_src",
 }
 _UA = "Mozilla/5.0 (compatible; newswright-demo/0.1; +https://localhost)"
+
+# 内容嗅探：HTTP 200 但响应体不是 XML（WAF 挑战页/HTML 伪装空 feed）→ 判
+# non_xml_response 走失败列，不喂 feedparser（空 feed 解析会伪装成"源没更新"）。
+_XML_HEAD_RE = re.compile(rb"<\?xml|<rss|<feed", re.IGNORECASE)
+
+
+def _looks_like_xml(content: bytes, content_type: str) -> bool:
+    """内容级 + 头部级双重嗅探：正文起始是 XML 标记，或 Content-Type 声明 xml，
+    任一命中即视为 XML（两侧都不过才判非 XML——挑战页两者皆不中）。"""
+    head = content[:512]
+    if head.startswith(b"\xef\xbb\xbf"):  # UTF-8 BOM
+        head = head[3:]
+    if _XML_HEAD_RE.match(head.lstrip()):
+        return True
+    return "xml" in (content_type or "").lower()
 
 
 def normalize_url(url: str) -> str:
@@ -157,9 +172,34 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
         stats.error = f"{type(e).__name__}: {e}"
         return stats
 
+    # 内容嗅探先于解析：挑战页/HTML 不喂 feedparser，也不回写协商缓存头
+    #（挑战页的 etag 会污染后续 304 判定）
+    if not _looks_like_xml(resp.content, resp.headers.get("content-type", "")):
+        stats.error = "non_xml_response: HTTP 200 但响应非 XML（疑似挑战页或 HTML）"
+        return stats
+
     entries = parse_feed_entries(body)
     stats.feed_entries = len(entries)
     seen_guids: set[str] = set()
+
+    # 摘要富化预采（开关默认关）：对会因过短被规则拒绝且带真实 URL 的新条目，
+    # 先抓原文补全再进写库循环——富化网络调用不携带 DB 事务（外部调用出事务纪律）。
+    # 失败保持原摘要文本：后续规则判定自然落 too_short 拒绝，短文本照存。
+    if bool((source.source_config or {}).get("enrich_full_text")):
+        from .web import enrich_entry_text
+
+        for ep in entries:
+            if ep.guid in seen_guids or not ep.url.startswith(("http://", "https://")):
+                continue
+            if len(ep.content_text.strip()) >= config.RULE_MIN_BODY_CHARS:
+                continue
+            if normalize_url(ep.url) == normalize_url(source.url):
+                continue  # 条目 URL=页面 URL 不富化（抓回同一内容无增量）
+            exists = db.query(Item.id).filter_by(source_id=source.id, guid=ep.guid).one_or_none()
+            if exists:
+                continue  # 已入库条目不富化（成本只花在会新落库的被拒条目上）
+            db.commit()  # 结束只读检查事务
+            ep.content_text = enrich_entry_text(ep.url, ep.content_text, page_url=source.url)
 
     for ep in entries:
         try:
@@ -172,7 +212,7 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
             if exists:
                 stats.dup_blocked += 1
                 continue
-            fp = url_fingerprint(ep.url)
+            fp, _low_confidence = entry_fingerprint(ep.url, ep.guid, ep.title)
             # P1-2（D15）：方向内跨源同 URL 指纹命中 → DUP 落行（全文照存），
             # 规则初筛跳过（不进打分）；与 (source_id,guid) 分工：后者不落行
             origin = find_fingerprint_origin(db, source.direction_id, fp) if fp else None
