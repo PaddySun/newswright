@@ -1902,3 +1902,83 @@
 | app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_97 | A | 占位遍 trace 记录键名变体：trace 条目存在且为 dict（pass_stats 可挂），内部键形态未钉——§4.1 trace 钉面之外的字段形态（batch6 discarded/note 键先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
 | app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_98 | A | 占位遍 trace 记录键名变体：trace 条目存在且为 dict（pass_stats 可挂），内部键形态未钉——§4.1 trace 钉面之外的字段形态（batch6 discarded/note 键先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
 | app.authors.pipeline.xǁPipelineRunnerǁnode_pass__mutmut_99 | A | 占位遍 trace 记录键名变体：trace 条目存在且为 dict（pass_stats 可挂），内部键形态未钉——§4.1 trace 钉面之外的字段形态（batch6 discarded/note 键先例） | 等价/不可达或条款未钉（提示词形态 + schema 必填 + trace 字段形态未钉；batch6/7 先例） |
+
+## C2-3 分诊批次 3（2026-10-05，ingest 域收尾：rss 94 + fingerprint 5 + rules 2 + web 4）：A 61 条
+
+> 种子=统一 dispatch run 37276946376（main @ 8c5f515）未登记幸存者之 ingest 域
+> （doc/C2/C2-3-种子.jsonl）。diff 经 mutmut 3.8.0 库级静态重建（app/ 自 8c5f515 零变化，
+> 变异体名与当前树 1:1 对名），逐条施加→跑本批判据面测试→还原定案。终态：**C 44/44 全杀**
+> （tests/test_ingest_xml_sniff.py 等 7 文件 29 测试，不在本清单）、**A 61/61 全活**、
+> **B 0 / D 0**。核验-改判 2 轮共 3 条改判（C→A 1：首导窗口缺省 or 7 经 siteconfig.DEFAULTS
+> 兜底为死域〔施加实测纠偏〕；A→C 2：首导 apply_rules blacklist 传值破坏×2〔既有契约测试
+> 家族已把 fetch_source 直传 blacklist 钉为合法面，首轮误判 or [] 兜底等价〕）。数据：
+> doc/C2/C2-3-重建-diff.json、doc/C2/C2-3-核验结果.json、doc/C2/C2-3-核验.py（定案表）。
+> 判据实测入册（定案前置，venv 离线）：①SQLAlchemy 显式 None 赋值触发列 default 兜底；
+> ②httpx.Headers 赋 None 值在请求构造时抛 AttributeError；③bytes.decode 错误处理器惰性
+> 查找 + 字节正则 [A-Za-z]+ 不匹配非 ASCII（decode errors 参数死域）；④siteconfig.get_config
+> 代码内 DEFAULTS 兜底使调用点尾字面量缺省成死域；⑤feedparser 对 isPermaLink=false 的
+> URL 型 guid 不回填 link。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.ingest.fingerprint.x__normalize_title__mutmut_13 | A | join 分隔符 " "→"XX XX"：归一化函数值变但相等语义保持——split 无空白 token 上两种 join 均单射，判定域（指纹相等性）逐对全等价；ttl 指纹字面值无断言面（B4 钉的是 unescape→NFKC+空白折叠的相等保持语义，既有 unescape/NFKC 测试域不涉分隔符字面） | 等价/不可达或条款未钉（归一化相等语义保持 + ttl 指纹字面值无断言面；batch5 编解码/无条款判据族） |
+| app.ingest.fingerprint.x_entry_fingerprint__mutmut_14 | A | 三级皆不可得返回 (None,False)→(None,True)：唯一调用点 fetch_source 以 _low_confidence 丢弃第二返回值（调用点核查），低置信标志无任何消费方——死返回值判据 | 等价/不可达或条款未钉（死返回值/调用点核查判据族） |
+| app.ingest.fingerprint.x_title_fingerprint__mutmut_8 | A | encode("utf-8")→("UTF-8")：Python 编解码别名，字节序列相同（batch5 url_fingerprint m6 先例） | 等价/不可达或条款未钉（编解码别名判据；batch5 m6 先例） |
+| app.ingest.rss.x__looks_like_xml__mutmut_16 | A | content_type 假值兜底 or ""→or "XXXX"：两形态 "xml" in 均为 False，判定域真值表全等价 | 等价/不可达或条款未钉（bytes 转义语义 + 窗口界面域数值边界判据族 + 假值兜底真值等价；C2-2 m24/25 先例） |
+| app.ingest.rss.x__looks_like_xml__mutmut_2 | A | 嗅探窗口 [:512]→[:513]：差异域=起始标记恰在 512 字节界（测量零界面域），窗口数值未入设计书（数值边界判据族；C2-2 gate_echo m24/25 先例） | 等价/不可达或条款未钉（bytes 转义语义 + 窗口界面域数值边界判据族 + 假值兜底真值等价；C2-2 m24/25 先例） |
+| app.ingest.rss.x__looks_like_xml__mutmut_5 | A | BOM 字节转义 \xef→\xEF：Python bytes 转义大小写不敏感，字节串逐位一致——恰等价 | 等价/不可达或条款未钉（bytes 转义语义 + 窗口界面域数值边界判据族 + 假值兜底真值等价；C2-2 m24/25 先例） |
+| app.ingest.rss.x_channel_skip_days__mutmut_13 | A | decode codec "ascii"→"ASCII"：编解码别名恰等价（batch5 编解码别名判据） | 等价/不可达或条款未钉（窗口界面域数值边界 + 字节正则 ASCII 域致 decode errors 死域〔实测〕+ 编解码别名判据） |
+| app.ingest.rss.x_channel_skip_days__mutmut_14 | A | decode errors 处理器名破坏：输入域恒纯 ASCII（同 m9），处理器仅报错时惰性查找（实测）——死域 | 等价/不可达或条款未钉（窗口界面域数值边界 + 字节正则 ASCII 域致 decode errors 死域〔实测〕+ 编解码别名判据） |
+| app.ingest.rss.x_channel_skip_days__mutmut_15 | A | decode errors 处理器名破坏：输入域恒纯 ASCII（同 m9），处理器仅报错时惰性查找（实测）——死域 | 等价/不可达或条款未钉（窗口界面域数值边界 + 字节正则 ASCII 域致 decode errors 死域〔实测〕+ 编解码别名判据） |
+| app.ingest.rss.x_channel_skip_days__mutmut_3 | A | 扫描窗口 [:65536]→[:65537]：差异域=skipDays 块恰在 64KB 界（测量零界面域），窗口数值未入设计书（数值边界判据族） | 等价/不可达或条款未钉（窗口界面域数值边界 + 字节正则 ASCII 域致 decode errors 死域〔实测〕+ 编解码别名判据） |
+| app.ingest.rss.x_channel_skip_days__mutmut_9 | A | decode errors "ignore"→strict：捕获组 [A-Za-z]+ 恒纯 ASCII（字节正则实测不匹配非 ASCII），decode 永不报错——errors 处理器死域（防御缺省不可达判据） | 等价/不可达或条款未钉（窗口界面域数值边界 + 字节正则 ASCII 域致 decode errors 死域〔实测〕+ 编解码别名判据） |
+| app.ingest.rss.x_fetch_source__mutmut_121 | A | extra["skip_days"] 列表置 None：唯一消费方 runner 只读 skip_day 布尔（runner.py:247），列表为payload 内部形态未钉（batch6 §4.1 钉面之外判据族） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_123 | A | extra["skip_days"] 键名变体：同 m121（无消费方，payload 内部形态未钉） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_128 | A | skip_day 判定 now(None) naive：星期口径 tz 未钉（D16 仅钉日切口径，skipDays 判定域两形态均非site_config 口径），CI（UTC）判定域恰等价（batch4 m55 tz 未钉判据族） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_207 | A | fetched_at 实参 None：ORM 列 default=utcnow 恰兜底（实测显式 None 触发 default；ORM 列缺省判据族） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_216 | A | fetched_at kwarg 删除：ORM 列 default=utcnow 恰兜底（batch6 Article status 先例同族） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_219 | A | fetched_at now(None) naive：存储 tz 未钉（batch4 m160 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_228 | A | 首导 apply_rules published_at=None：ignore_expiry=True 域内 published_at 为死输入（过期分支被前件短路）——死参数判据 | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_23 | A | 首导窗口缺省 or 7→or 8：siteconfig.get_config 对 first_ingest_days 键恒返 DEFAULTS["first_ingest_days"]=7（代码内缺省兜底，实测该键永不 None）——尾字面量 or 7 为死域，改判恰等价（DEFAULTS 兜底判据族，SQLAlchemy 列 default 兜底同族；首轮误判 C 经施加实测 7.5 天条目仍 ARCHIVED 纠偏） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_234 | A | 首导 apply_rules max_age_days=None kwarg 删除：同 m228（ignore_expiry 域死输入） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_247 | A | 窗口比较 >→>=：恰等于 window_days*86400 的界面域（数值边界判据族；C2-2 node_pass m29 同族先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_249 | A | 窗口秒数 86400→86401：1 秒界面域，窗口数值细部未入设计书（数值边界判据族） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_25 | A | UA 请求头名 XX 变体：UA 头内容无条款（R9 UA 策略为 site_config 预留，未钉抓取头；batch4 m28 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_253 | A | 首导 FETCHED 赋值 None：ORM 列 default="FETCHED" 恰兜底（实测显式 None 触发 default；ORM 列缺省判据族，batch6 m467 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_26 | A | UA 头名大小写变体：httpx 头名大小写归一化恰等价（batch4 m29/30 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_267 | A | 常规轮 FETCHED 赋值 None：同 m253（ORM 列缺省兜底） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_27 | A | UA 头名大小写变体：httpx 头名大小写归一化恰等价（batch4 m29/30 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_278 | A | SanitizeTarget url=None：现有链（passthrough/KeywordDeny）不读 url 字段（batch5 m122 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_281 | A | SanitizeTarget url kwarg 删除：同 m278（sanitize.py 调用点核查） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_318 | A | log.warning source 实参 None：格式串占位完整（%s×2），渲染值变 None——log 文案/实参无条款（batch5 m150 先例；C2-1 WARNING 判 C 面是占位数与实参数失配的格式破坏，非同域） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_319 | A | log.warning e 实参 None：同 m318（占位完整，渲染值变 None） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_323 | A | log.warning 模板 XX 包裹：占位符 %s×2 保留无格式错误，文案无措辞条款（batch5 m149 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_326 | A | 收尾 last_fetched_at naive（now(None)）：存储 tz 未钉（batch4 m55 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_329 | A | etag get 头名大写：httpx 大小写不敏感恰等价（batch4 m63 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_33 | A | If-Modified-Since 头名 XX 变体：条件头回传未钉（模块表仅钉 etag 原样回传），断裂由 etag 兜底（batch4 m35 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_332 | A | etag 存取头名大写：同 m329（batch4 m66 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_333 | A | etag 截断 [:500]→[:501]：SQLite 不强制 VARCHAR 长度，原样性不受 1 字符影响（batch4 m72 判据；硬约束⑤ 钉原样存取语义非截断界数值） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_335 | A | last-modified get 头名 XX 变体：last_modified 回写未钉，条件头断裂由 etag/304 兜底（batch4 m78 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_336 | A | last-modified get 头名大写：httpx 大小写不敏感恰等价（batch4 m79 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_337 | A | last_modified 存储置 None：存储未钉（batch4 m80 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_338 | A | last-modified 存取头名 XX 变体：同 m335（batch4 m78 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_339 | A | last-modified 存取头名大写：httpx 大小写不敏感恰等价（batch4 m82 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_340 | A | last_modified 截断 [:500]→[:501]：同 m333 判据（batch4 m83 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_35 | A | If-Modified-Since 头名大写：httpx 头名归一化恰等价（batch4 m37 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_42 | A | timeout 60.0→61.0：显式超时语义不变，任意有限值满足（batch4 m43 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_55 | A | 304 路径 last_fetched_at naive（now(None)）：存储 tz 未钉（batch4 m55 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_60 | A | 限流探测头名大写：httpx contains 大小写不敏感恰等价（batch4 m63 同族） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_67 | A | retry_after 取值头名大写：httpx get 大小写不敏感恰等价（batch4 m63 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_70 | A | error 前缀 type(e)→type(None)：判据子串（状态码等）保留于 {e} 部分，AC-04.2 last_error 判据不受影响（batch4 m58 先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_75 | A | getattr(e,"response") 缺省参删除：HTTPStatusError.response 恒在（构造必带），缺省分支不可达（防御缺省不可达判据） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_90 | A | content-type get 缺省 ""→None：缺失头域 (None or "") 与 ("" or "") 同值——恰等价 | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_92 | A | content-type get 单参形态：缺头域返回 None 经 or "" 吸收——恰等价（同 m90 判据） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_94 | A | content-type 头名大写：httpx 大小写不敏感恰等价（batch4 m63 判据族） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_95 | A | content-type get 缺省 ""→"XXXX"：缺失头域 "xml" in 两形态均 False——恰等价 | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_fetch_source__mutmut_98 | A | non_xml 文案 HTTP/XML/HTML 大小写变体：前缀 non_xml_response 保留（runner 判据子串），文案无措辞条款（batch4 m227-229 文案先例） | 等价/不可达或条款未钉（ORM 列缺省兜底〔实测〕+ httpx 头名归一化 + 条件头/UA/last-modified 回写未钉 + tz 存储未钉 + payload 内部形态未钉 + 文案组 + 数值边界判据族；batch4/5 + C2-1 先例） |
+| app.ingest.rss.x_parse_retry_after__mutmut_15 | A | 负值钳 max(0.0)→max(1.0)：差异域=过去时刻 HTTP-date，钳值差 1 秒只进 rate_limited_until 时间戳（时间戳值无条款，C2-1 update_source_health m76 先例），轮次间隔分钟级使 1 秒差不可达判定域 | 等价/不可达或条款未钉（钳值 1 秒差只进时间戳值——时间戳无条款，C2-1 m76 判据族） |
+| app.ingest.rules.x_apply_rules__mutmut_24 | A | RuleResult passed=False→None：全部调用点按真值判断（not rule.passed / if rule.passed），行为等价（batch5 sanitize m3 调用点真值判据） | 等价/不可达或条款未钉（调用点真值判断 + 判定域恒 UTC-aware/naive 判据；batch5 m3 + C2-1 m144 先例） |
+| app.ingest.rules.x_apply_rules__mutmut_33 | A | tzinfo 守卫恒 replace(tzinfo=utc)：生产判定域 published_at 恒 UTC-aware（rss/web 三通道构造即utc）或 naive（naive 域两形态同为补 tz）——C2-1 update_source_health m144 判据 | 等价/不可达或条款未钉（调用点真值判断 + 判定域恒 UTC-aware/naive 判据；batch5 m3 + C2-1 m144 先例） |
+| app.ingest.web.x_fetch_web_source__mutmut_243 | A | apply_fp=False→None：None 与 False 同 falsy，版本条目豁免指纹链语义不变（C2-1 m18 None/False 同falsy 判据） | 等价/不可达或条款未钉（None/False 同 falsy + ignore_page_date 键全档无条款〔batch4 m17-21 先例〕+ tz 存储未钉） |
+| app.ingest.web.x_fetch_web_source__mutmut_257 | A | ignore_page_date 条件恒 else：键设计书全档无条款（batch4 m17-21 grep 核查先例，仅影响未钉的页面日期抽取） | 等价/不可达或条款未钉（None/False 同 falsy + ignore_page_date 键全档无条款〔batch4 m17-21 先例〕+ tz 存储未钉） |
+| app.ingest.web.x_fetch_web_source__mutmut_261 | A | last_fetched_at naive（now(None)）：存储 tz 未钉（batch4 m86 先例） | 等价/不可达或条款未钉（None/False 同 falsy + ignore_page_date 键全档无条款〔batch4 m17-21 先例〕+ tz 存储未钉） |

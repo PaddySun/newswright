@@ -531,3 +531,112 @@ def test_fetch_sanitize_passed_counts_each_entry(db_session, monkeypatch):
 
     s = fetch_source(db_session, src)
     assert s.sanitize_passed == 2 and s.sanitize_rejected == 0
+
+
+# ---------- C2-3 分诊批次 3 补强（fetch_source 抓取契约面） ----------
+
+
+def test_fetch_with_last_modified_completes_request_normally(db_session, monkeypatch):
+    """带 last_modified 的源再抓取：条件请求照常构造完成、整源正常解析入库
+    （真实 httpx 请求构造路径，条件头缺省值不得使请求构造失败）。"""
+    d, src = _mk_source(db_session)
+    src.last_modified = "Wed, 30 Sep 2026 10:00:00 GMT"
+    db_session.commit()
+    feed = _feed(_item("u1", "https://x/1", "标题一"))
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, content=feed, headers={"Content-Type": "application/xml"})
+
+    monkeypatch.setattr(rss_mod.httpx, "Client",
+                        lambda **kw: _REAL_HTTPX_CLIENT(
+                            transport=httpx.MockTransport(handler), **kw))
+    stats = fetch_source(db_session, db_session.merge(src))
+    assert stats.error is None and stats.feed_entries == 1 and stats.inserted == 1
+
+
+def test_retry_after_without_429_flags_rate_limit(db_session, monkeypatch):
+    """限流信号双通道（AC-05.5：收到 429「或响应含 Retry-After」）：非 429 响应
+    携带 Retry-After 头同样命中降频信号、不进解析（交给动态降频状态机）。"""
+    d, src = _mk_source(db_session)
+    feed = _feed(_item("u1", "https://x/1", "标题一"))
+    _patch(monkeypatch, FakeResp(feed, headers={"Retry-After": "120"}))
+    stats = fetch_source(db_session, db_session.merge(src))
+    assert stats.rate_limited is True
+    assert stats.retry_after == "120"
+    assert stats.feed_entries == 0 and stats.inserted == 0
+
+
+def test_content_type_leg_accepts_feed_body_with_offmarker_head(db_session, monkeypatch):
+    """从宽口径（硬约束③）：正文起始 512 字节被前导空白占据但 Content-Type 声明
+    xml 的真源放行解析——头部嗅探腿独立成立。"""
+    d, src = _mk_source(db_session)
+    body = b"\n" * 600 + _feed(_item("u1", "https://x/1", "标题一"))
+    _patch(monkeypatch, FakeResp(body, headers={"Content-Type": "application/xml"}))
+    stats = fetch_source(db_session, db_session.merge(src))
+    assert stats.error is None and stats.feed_entries == 1
+
+
+def test_url_guid_fingerprint_used_when_link_missing(db_session, monkeypatch):
+    """指纹退化链第二级（B4）：link 缺失（guid isPermaLink=false 不回填 link）且
+    guid 为 URL 型 → 取 guid 的 URL 指纹，不跌落标题兜底（跨源同 guid-URL 异题的
+    近重复判定依赖它）。"""
+    d = Direction(name="DURL", prompt="p", threshold=60)
+    db_session.add(d)
+    db_session.commit()
+    src_a = Source(direction_id=d.id, url="https://feeds.example/fa.xml", type="rss")
+    src_b = Source(direction_id=d.id, url="https://feeds.example/fb.xml", type="rss")
+    db_session.add_all([src_a, src_b])
+    db_session.commit()
+    feed = ('<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>'
+            '<item><guid isPermaLink="false">https://shared.ex.com/post/1</guid>'
+            '<title>来源甲的标题</title>'
+            f'<description>{_LONG}</description></item></channel></rss>').encode()
+
+    _patch(monkeypatch, FakeResp(feed))
+    fetch_source(db_session, db_session.merge(src_a))
+    _patch(monkeypatch, FakeResp(feed.replace("来源甲的标题".encode(), "来源乙的标题".encode())))
+    stats_b = fetch_source(db_session, db_session.merge(src_b))
+
+    first = db_session.query(Item).filter_by(source_id=src_a.id).one()
+    assert first.fingerprint == url_fingerprint("https://shared.ex.com/post/1")
+    second = db_session.query(Item).filter_by(source_id=src_b.id).one()
+    assert second.fetch_status == "DUP" and second.duplicate_of == first.id
+    assert stats_b.dup_blocked == 0 and stats_b.inserted == 1  # DUP 行计入 inserted
+
+
+def test_null_fingerprint_item_not_matched_by_null_origin_query(db_session, monkeypatch):
+    """无指纹条目（三级皆不可得）不做指纹比对：不得按 NULL 指纹误配为 DUP，
+    照常走规则初筛落状态。"""
+    d, src = _mk_source(db_session)
+    src.last_fetched_at = datetime.now(timezone.utc)  # 非首导轮
+    db_session.commit()
+    # 同方向预置一条 fingerprint 为空的落库条目（NULL 指纹域）
+    other = Source(direction_id=d.id, url="https://feeds.example/other.xml", type="rss")
+    db_session.add(other)
+    db_session.commit()
+    db_session.add(Item(source_id=other.id, guid="pre-1", url="https://x/pre",
+                        title="预置", content_text=_LONG, fetched_at=datetime.now(timezone.utc)))
+    db_session.commit()
+
+    feed = ('<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>'
+            '<item><guid>tag:ex.org,2026:nofp</guid>'
+            f'<description>{_LONG}</description></item></channel></rss>').encode()
+    _patch(monkeypatch, FakeResp(feed))
+    stats = fetch_source(db_session, db_session.merge(src))
+
+    row = db_session.query(Item).filter_by(source_id=src.id).one()
+    assert row.fingerprint is None
+    assert row.fetch_status == "FETCHED" and row.duplicate_of is None
+    assert stats.inserted == 1
+
+
+def test_fetched_status_written_with_exact_enum_value(db_session, monkeypatch):
+    """fetch_status 落值必须为精确枚举 FETCHED（打分链按枚举取件，变体即失联）。"""
+    d, src = _mk_source(db_session)
+    feed = _feed(_item("u1", "https://x/1", "标题一"))
+    _patch(monkeypatch, FakeResp(feed))
+    stats = fetch_source(db_session, db_session.merge(src))
+    rows = db_session.query(Item).filter_by(source_id=src.id).all()
+    assert len(rows) == 1
+    assert rows[0].fetch_status == "FETCHED"
+    assert stats.inserted == 1

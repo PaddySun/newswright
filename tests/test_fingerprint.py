@@ -235,3 +235,16 @@ def test_title_fallback_dup_marks_duplicate_within_direction(db_session, two_sou
     assert s2.inserted == 1
     second = db_session.query(Item).filter_by(source_id=src_b.id).one()
     assert second.fetch_status == "DUP" and second.duplicate_of == first.id
+
+
+def test_http_link_fingerprint_via_url_domain_not_title_fallback():
+    """链一/链二的 URL 型判定含 http://（B4 退化链：http 链接进 URL 指纹域，
+    不得因 scheme 只认 https 而跌落标题兜底——同 URL 异题的近重复判定依赖它）。"""
+    from app.ingest.fingerprint import entry_fingerprint
+
+    fp, low = entry_fingerprint("http://ex.com/post", "", "标题甲")
+    assert fp == url_fingerprint("http://ex.com/post")
+    assert low is False
+    fp2, low2 = entry_fingerprint("", "http://guid.ex.com/p/1", "标题乙")
+    assert fp2 == url_fingerprint("http://guid.ex.com/p/1")
+    assert low2 is False

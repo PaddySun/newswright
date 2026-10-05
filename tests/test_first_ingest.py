@@ -83,10 +83,10 @@ def fresh_source(db_session):
     return src
 
 
-def _fetch(db_session, monkeypatch, src, feed: bytes):
+def _fetch(db_session, monkeypatch, src, feed: bytes, blacklist: list[str] | None = None):
     FakeClient.responses = [FakeResp(feed)]
     monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
-    return rss_mod.fetch_source(db_session, src)
+    return rss_mod.fetch_source(db_session, src, blacklist=blacklist)
 
 
 def test_first_ingest_window_archives_old_entries(db_session, fresh_source, monkeypatch):
@@ -240,3 +240,39 @@ def test_first_ingest_days_overrides(db_session, fresh_source, monkeypatch):
     db_session.commit()
     stats3 = _fetch(db_session, monkeypatch, src3, _feed(_item("w1", "三十天前三", days_old=30)))
     assert stats3.archived == 1
+
+
+def test_first_ingest_window_default_seven_days(db_session, fresh_source, monkeypatch):
+    """窗口天数缺省=7（无 source_config/site_config 覆盖时）：7 天半前的条目在窗外
+    落 ARCHIVED，不产生打分成本（窗口成本上界的缺省口径）。"""
+    stats = _fetch(db_session, monkeypatch, fresh_source,
+                   _feed(_item("d75", "七天半前", days_old=7.5)))
+    row = db_session.query(Item).filter_by(source_id=fresh_source.id).one()
+    assert row.fetch_status == "ARCHIVED"
+    assert stats.archived == 1 and stats.inserted == 0
+
+
+def test_first_ingest_blacklist_rule_applies_before_window(db_session, fresh_source,
+                                                          monkeypatch):
+    """首导轮垃圾规则先行：黑名单命中标题即拒绝（不落 archived 名额、不进打分）。"""
+    feed = _feed(_item("bl-hit", "标题含禁词的旧闻", days_old=400,
+                       body=_LONG + "正文附加以通过长度规则。"))
+    stats = _fetch(db_session, monkeypatch, fresh_source, feed,
+                   blacklist=["禁词"])
+    row = db_session.query(Item).filter_by(source_id=fresh_source.id).one()
+    assert row.fetch_status == "REJECTED_RULED"
+    assert row.rule_reject_reason.startswith("blacklist:")
+    assert stats.rule_rejected == 1 and stats.archived == 0
+
+
+def test_first_ingest_archived_bucket_counts_every_archived_row(db_session,
+                                                                fresh_source,
+                                                                monkeypatch):
+    """账目等式（AC-05.1）：多条窗外条目逐一计入 archived，等式分桶不缺位。"""
+    feed = _feed(_item("old-a", "旧闻甲", days_old=400),
+                 _item("old-b", "旧闻乙", days_old=300))
+    stats = _fetch(db_session, monkeypatch, fresh_source, feed)
+    assert stats.archived == 2
+    assert stats.feed_entries == (stats.inserted + stats.dup_blocked
+                                  + stats.rule_rejected + stats.failed
+                                  + stats.archived)
