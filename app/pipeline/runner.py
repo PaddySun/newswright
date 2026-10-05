@@ -14,7 +14,7 @@ from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from .. import config
-from ..models import PipelineTask, Source
+from ..models import Direction, PipelineTask, Source
 from ..ingest.rss import fetch_source
 from ..ingest.web import fetch_web_source
 from ..models import Item
@@ -126,9 +126,44 @@ def _finish(db: Session, task: PipelineTask, *, status: str, stats: dict | None 
                     task.id, status)
 
 
+def _fetchable_sources(db: Session) -> list[Source]:
+    """本轮可抓取的源：源自身启用，且所属方向处于 active 生命周期。
+
+    非 active 方向（disabled/expired/deleted）的源不再进入采集调度——方向级
+    开关是源的上级闸门（数据全保留，只是不再抓取）。
+    """
+    return (
+        db.query(Source)
+        .join(Direction, Source.direction_id == Direction.id)
+        .filter(Source.enabled.is_(True), Direction.status == Direction.STATUS_ACTIVE)
+        .all()
+    )
+
+
+def expire_due_temp_directions(db: Session, *, now: datetime | None = None) -> int:
+    """临时方向 TTL 到期扫描：expires_at 已过且仍为 active 的 temp 方向翻为 expired。
+
+    懒扫描形态：每次采集入队与方向列表读取前执行一次，无需独立定时器。
+    历史数据全保留（设计依据见 docs/design-index.md「AC-03.4」）。返回翻转数。
+    """
+    now = now or datetime.now(timezone.utc)
+    rows = (
+        db.query(Direction)
+        .filter(Direction.temp.is_(True), Direction.status == Direction.STATUS_ACTIVE,
+                Direction.expires_at.isnot(None), Direction.expires_at <= now)
+        .all()
+    )
+    for d in rows:
+        d.apply_status(Direction.STATUS_EXPIRED)
+    if rows:
+        db.commit()
+    return len(rows)
+
+
 def fetch_round(db: Session, *, triggered_by: str = "manual") -> dict:
     """抓一轮全部启用源。返回逐源统计；任何源失败不中断其他源。"""
-    sources = db.query(Source).filter_by(enabled=True).all()
+    expire_due_temp_directions(db)
+    sources = _fetchable_sources(db)
     summary: dict[str, object] = {"triggered_by": triggered_by, "sources": []}
     for src in sources:
         task = _new_task(db, kind="fetch", payload={"source_id": src.id, "url": src.url})
@@ -214,7 +249,8 @@ def enqueue_fetch_round(db: Session, *, triggered_by: str = "scheduler") -> Pipe
     skipped: list[dict] = []
     round_task = _new_task(db, kind="fetch_round", payload={"triggered_by": triggered_by})
     now = datetime.now(timezone.utc)
-    for src in db.query(Source).filter_by(enabled=True).all():
+    expire_due_temp_directions(db, now=now)
+    for src in _fetchable_sources(db):
         # 每源轮询间隔（source_config.interval_minutes）：未到期跳过（调度入队侧判定）
         interval = (src.source_config or {}).get("interval_minutes")
         if interval and src.last_fetched_at:
@@ -282,16 +318,96 @@ def process_fetch_round(db: Session, round_task: PipelineTask) -> dict:
     return summary
 
 
+def _rescore_candidate_ids(db: Session, direction: Direction, scope: str) -> list[int]:
+    """重打分候选条目 id（升序，批次切分稳定）。
+
+    scope=all：已有 OK 打分行、但尚无「当前 prompt_version 的 OK 行」的条目——
+    重打=新增行，旧分归档；已补齐当前版本的条目不再重复重打（分批续任务幂等）。
+    scope=failed：仅落过 FAILED 行、尚无 OK 行的条目（失败补打）。
+    无 OK 分的新条目不在此列——它们由常规 score_round 幂等补打。
+    """
+    from sqlalchemy import select
+
+    from ..models import ScoreResult
+
+    direction_id = direction.id
+    has_ok = select(ScoreResult.item_id).where(
+        ScoreResult.direction_id == direction_id, ScoreResult.status == "OK").scalar_subquery()
+    has_current_ok = select(ScoreResult.item_id).where(
+        ScoreResult.direction_id == direction_id, ScoreResult.status == "OK",
+        ScoreResult.prompt_version == direction.prompt_version).scalar_subquery()
+    # 经 Source 关联定位方向成员（item.direction_id 冗余列在 G1 前的历史行为空）
+    q = db.query(Item.id).join(Source, Item.source_id == Source.id).filter(
+        Source.direction_id == direction_id)
+    if scope == "failed":
+        has_failed = select(ScoreResult.item_id).where(
+            ScoreResult.direction_id == direction_id,
+            ScoreResult.status == "FAILED").scalar_subquery()
+        q = q.filter(Item.id.in_(has_failed), ~Item.id.in_(has_ok))
+    else:
+        q = q.filter(Item.id.in_(has_ok), ~Item.id.in_(has_current_ok))
+    return [row[0] for row in q.order_by(Item.id).all()]
+
+
+def process_rescore_tasks(db: Session) -> list[dict]:
+    """消化全部 PENDING 的 rescore 任务（方向重打分，ADR-9 分批形态）。
+
+    每任务单轮至多处理 SCORE_ROUND_MAX_ITEMS 条（复用打分突发上限），超出部分
+    派生一个同 payload 的后续 PENDING 任务继续消化（fetch/score 轮次链自动带动，
+    60 分钟僵死回收档与 score 同档）。重打分=新增 score_result 行，旧分归档不覆盖。
+    """
+    from ..scoring.service import score_item
+
+    out: list[dict] = []
+    tasks = db.query(PipelineTask).filter(PipelineTask.kind == "rescore",
+                                          PipelineTask.status == "PENDING").all()
+    for task in tasks:
+        if not _claim(db, task):
+            continue
+        payload = task.payload or {}
+        direction = db.get(Direction, payload.get("direction_id"))
+        scope = payload.get("scope") or "all"
+        if direction is None or direction.status == Direction.STATUS_DELETED:
+            _finish(db, task, status="FAILED", error="rescore 方向不存在或已删除")
+            out.append({"task_id": task.id, "status": task.status})
+            continue
+        candidate_ids = _rescore_candidate_ids(db, direction, scope)
+        batch = candidate_ids[:config.SCORE_ROUND_MAX_ITEMS]
+        scored = failed = 0
+        for item_id in batch:
+            item = db.get(Item, item_id)
+            if item is None:
+                continue
+            try:
+                sr = score_item(db, item, direction)
+                scored += int(sr.status == "OK")
+                failed += int(sr.status != "OK")
+            except Exception as e:  # noqa: BLE001  单条异常不中断整批
+                failed += 1
+                log.warning("rescore 单条异常 item=%s: %s", item_id, e)
+        remaining = len(candidate_ids) - len(batch)
+        if remaining > 0:
+            _new_task(db, kind="rescore", payload=dict(payload))
+        _finish(db, task, status="DONE",
+                stats={"rescored": scored, "call_failed": failed,
+                       "remaining": remaining, "scope": scope})
+        out.append({"task_id": task.id, "status": task.status,
+                    "rescored": scored, "remaining": remaining})
+    return out
+
+
 def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int | None = None) -> dict:
     """对全部启用方向打一轮分。
 
     幂等：只对 fetch_status=FETCHED 且尚无 OK 打分（status=OK）的条目调用 LLM——
     FAILED 的下轮自动续跑，OK 的绝不重复打分（每条内容只烧一次打分 LLM）。
+    入口先消化 PENDING 的 rescore 任务（重打分与常规打分共用轮次链与突发上限）。
     """
-    from ..models import Direction, ScoreResult
+    from ..models import ScoreResult
     from ..scoring.service import score_item
 
-    q = db.query(Direction).filter_by(enabled=True)
+    process_rescore_tasks(db)
+    q = db.query(Direction).filter(Direction.status == Direction.STATUS_ACTIVE)
     if direction_id is not None:
         q = q.filter(Direction.id == direction_id)
     directions = q.all()

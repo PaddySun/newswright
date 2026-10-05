@@ -24,8 +24,13 @@ PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
 _BAND_RE = re.compile(r"^(high|mid|low)$")
 
 
-def load_prompt_template(version: str) -> str:
-    path = PROMPTS_DIR / f"score_{version}.md"
+def load_prompt_template(version: int | str) -> str:
+    """按版本号加载模板文件；版本号统一为 integer（模板文件名保留 v 前缀仅是
+    命名形态，1 → score_v1.md）。兼容历史 'v1' 形态入参。"""
+    text = str(version).strip().lower()
+    if not text.startswith("v"):
+        text = f"v{text}"
+    path = PROMPTS_DIR / f"score_{text}.md"
     return path.read_text(encoding="utf-8")
 
 

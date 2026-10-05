@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .api.auth import router as auth_router
@@ -29,6 +30,17 @@ def create_app() -> FastAPI:
                 headers=getattr(exc, "headers", None),
             )
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_error_handler(request, exc: RequestValidationError):
+        """请求体校验失败 → 400 VALIDATION_ERROR（message 含字段路径）。
+        FastAPI 默认 422 与契约错误码表不符（400），统一在此归一。"""
+        parts = [
+            f"{'.'.join(str(loc) for loc in err['loc'])}: {err['msg']}"
+            for err in exc.errors()
+        ]
+        return JSONResponse(status_code=400,
+                            content={"code": "VALIDATION_ERROR", "message": "; ".join(parts)})
 
     @app.get("/")
     def root():
