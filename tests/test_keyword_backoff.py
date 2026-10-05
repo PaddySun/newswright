@@ -126,3 +126,84 @@ def test_d13_and_d20_counters_independent(db_session, search_source, monkeypatch
     _update_source_health(db_session, src, stats)
     src = db_session.merge(src)
     assert src.rate_level == 1 and src.keyword_zero_rounds == 0
+
+
+def test_manual_reset_scoped_to_direction(db_session, search_source, monkeypatch):
+    """按方向复位只作用于该方向的搜索源：其他方向的关键词限速状态
+    不受波及（方向提示词升版恢复是方向域事件）。"""
+    from types import SimpleNamespace
+
+    d2 = Direction(name="关键词方向二", prompt="p", threshold=60)
+    db_session.add(d2)
+    db_session.flush()
+    src_b = Source(direction_id=d2.id, url="search://fakeprov/别的词", type="search",
+                   source_config={"keyword": "别的词", "provider": "fakeprov"})
+    db_session.add(src_b)
+    db_session.commit()
+    limited = SimpleNamespace(error=None, feed_entries=0, inserted=0, not_modified=False,
+                              rate_limited=False, retry_after=None, extra={})
+    for s in (search_source, src_b):
+        for _ in range(6):
+            _update_source_health(db_session, s, limited)
+    db_session.expire_all()
+    a = db_session.get(Source, search_source.id)
+    b = db_session.get(Source, src_b.id)
+    assert a.keyword_limited_until is not None and b.keyword_limited_until is not None
+
+    reset_keyword_backoff(db_session, direction_id=a.direction_id)
+    db_session.expire_all()
+    a = db_session.get(Source, search_source.id)
+    b = db_session.get(Source, src_b.id)
+    assert a.keyword_zero_rounds == 0 and a.keyword_limited_until is None
+    assert b.keyword_zero_rounds == 6 and b.keyword_limited_until is not None
+
+
+def test_quota_blocked_round_not_counted_as_zero_yield(db_session, search_source):
+    """额度闸拦截轮不计入零收益轮：该轮调用未发出，不构成零新增证据。"""
+    from types import SimpleNamespace
+
+    src = db_session.merge(search_source)
+    src.keyword_zero_rounds = 3
+    db_session.commit()
+    blocked = SimpleNamespace(error=None, feed_entries=0, inserted=0, not_modified=False,
+                              rate_limited=False, retry_after=None,
+                              extra={"quota_blocked": True})
+    _update_source_health(db_session, src, blocked)
+    src = db_session.merge(src)
+    assert src.keyword_zero_rounds == 3 and src.keyword_limited_until is None
+
+
+def test_error_round_not_counted_as_zero_yield(db_session, search_source):
+    """搜索错误轮不计入零收益轮：零新增指真实执行轮的结果。"""
+    from types import SimpleNamespace
+
+    src = db_session.merge(search_source)
+    src.keyword_zero_rounds = 3
+    db_session.commit()
+    errored = SimpleNamespace(error="ReadTimeout: boom", feed_entries=0, inserted=0,
+                              not_modified=False, rate_limited=False, retry_after=None,
+                              extra={})
+    _update_source_health(db_session, src, errored)
+    src = db_session.merge(src)
+    assert src.keyword_zero_rounds == 3
+
+
+def test_keyword_limit_interval_at_first_level(db_session, search_source):
+    """第 6 轮零新增进 1 档：限速期限按 1 档取 30 分钟（阶梯基准 15 分钟
+    逐档倍增）。"""
+    from types import SimpleNamespace
+
+    src = db_session.merge(search_source)
+    src.keyword_zero_rounds = 5
+    db_session.commit()
+    before = datetime.now(timezone.utc)
+    zero = SimpleNamespace(error=None, feed_entries=0, inserted=0, not_modified=False,
+                           rate_limited=False, retry_after=None, extra={})
+    _update_source_health(db_session, src, zero)
+    src = db_session.merge(src)
+    assert src.keyword_zero_rounds == 6 and src.keyword_rate_level == 1
+    until = src.keyword_limited_until
+    assert until is not None
+    until = until if until.tzinfo else until.replace(tzinfo=timezone.utc)
+    delta = until - before
+    assert timedelta(minutes=29) <= delta <= timedelta(minutes=31)
