@@ -163,3 +163,133 @@ def test_enrich_skips_already_ingested_entries(db_session, monkeypatch):
     db_session.commit()
     fetch_source(db_session, db_session.merge(src))
     assert {c["url"] for c in calls} == {"https://ex.com/short-2"}
+
+
+# ---------- 富化预采循环与调用契约补强（护栏逐条与逐循环钉面） ----------
+
+
+def _enrich_feed(*items: str) -> bytes:
+    return f"""<?xml version="1.0"?>
+    <rss version="2.0"><channel><title>t</title>{''.join(items)}
+    </channel></rss>""".encode("utf-8")
+
+
+def _enrich_item(guid: str, link: str | None, body: str) -> str:
+    link_tag = f"<link>{link}</link>" if link is not None else ""
+    return (f"<item><guid>{guid}</guid>{link_tag}<title>条目{guid}</title>"
+            f"<description>{body}</description></item>")
+
+
+def test_enrich_loop_continues_past_no_url_entries(db_session, monkeypatch):
+    """逐条预采：无 URL 条目被跳过后，循环继续——后续合格条目照常富化。"""
+    feed = _enrich_feed(
+        _enrich_item("tag:ex.org,2026:nolink", None, "太短了。"),
+        _enrich_item("with-url", "https://ex.com/short-2", "也太短。"),
+    )
+    src, calls = _setup(db_session, monkeypatch,
+                        source_config={"enrich_full_text": True}, feed=feed)
+    fetch_source(db_session, db_session.merge(src))
+    assert [c["url"] for c in calls] == ["https://ex.com/short-2"]
+
+
+def test_enrich_loop_continues_past_long_entries(db_session, monkeypatch):
+    """逐条预采：足长条目被跳过后，循环继续——后续合格条目照常富化。"""
+    feed = _enrich_feed(
+        _enrich_item("long-one", "https://ex.com/long", _FULL_TEXT),
+        _enrich_item("short-two", "https://ex.com/short-2", "也太短。"),
+    )
+    src, calls = _setup(db_session, monkeypatch,
+                        source_config={"enrich_full_text": True}, feed=feed)
+    fetch_source(db_session, db_session.merge(src))
+    assert [c["url"] for c in calls] == ["https://ex.com/short-2"]
+
+
+def test_enrich_applies_to_plain_http_urls(db_session, monkeypatch):
+    """富化预采的「真实 URL」判定含 http://——http 摘要条目同样获得自救。"""
+    feed = _enrich_feed(_enrich_item("http-one", "http://ex.com/short-1", "太短了。"))
+    src, calls = _setup(db_session, monkeypatch,
+                        source_config={"enrich_full_text": True}, feed=feed)
+    fetch_source(db_session, db_session.merge(src))
+    assert [c["url"] for c in calls] == ["http://ex.com/short-1"]
+
+
+def test_enrich_boundary_exact_min_chars_not_enriched(db_session, monkeypatch):
+    """成本边界：正文恰等于规则最小字数（能过初筛、非被拒条目）不富化——
+    成本只花在被拒条目上，含等性归「不富化」侧。"""
+    body = "字" * 200  # 恰等于 RULE_MIN_BODY_CHARS：规则初筛通过（非 too_short）
+    feed = _enrich_feed(_enrich_item("exact-200", "https://ex.com/exact", body))
+    src, calls = _setup(db_session, monkeypatch,
+                        source_config={"enrich_full_text": True}, feed=feed)
+    fetch_source(db_session, db_session.merge(src))
+    assert calls == []  # 非被拒条目零富化成本
+    row = db_session.query(Item).filter_by(source_id=src.id).one()
+    assert row.content_text == body and row.fetch_status == "FETCHED"
+
+
+def test_enrich_receives_current_summary_text(db_session, monkeypatch):
+    """调用契约：富化调用携带条目当前摘要文本（原文无增量时按摘要兜底的基础）。"""
+    recorded: list[str] = []
+
+    def echo_enrich(url, current_text, *, page_url):
+        recorded.append(current_text)
+        return current_text + "（富化全文）"
+
+    feed = _enrich_feed(_enrich_item("echo-1", "https://ex.com/short-1", "太短了。"))
+    src, _ = _setup(db_session, monkeypatch,
+                    source_config={"enrich_full_text": True}, feed=feed)
+    monkeypatch.setattr(web_mod, "enrich_entry_text", echo_enrich)
+    fetch_source(db_session, db_session.merge(src))
+    assert recorded == ["太短了。"]
+    row = db_session.query(Item).filter_by(source_id=src.id).one()
+    assert row.content_text == "太短了。（富化全文）"
+
+
+def test_web_list_enrich_receives_current_summary_text(db_session, monkeypatch):
+    """web 列表通道同契约：富化调用携带条目当前摘要（复用同一抽取路径）。"""
+    import app.ingest.web as web_mod2
+
+    recorded: list[str] = []
+
+    def echo_enrich(url, current_text, *, page_url):
+        recorded.append(current_text)
+        return current_text + "（富化全文）"
+
+    monkeypatch.setattr(web_mod2, "llm_extract_entries", lambda db, **kw: [
+        web_mod2.WebPayload(guid="https://ex.com/l1", url="https://ex.com/l1",
+                            title="条目一", published_at=None, content_text="太短了。")])
+    monkeypatch.setattr(web_mod2, "enrich_entry_text", echo_enrich)
+    d = Direction(name="web富化方向", prompt="p", threshold=60)
+    db_session.add(d)
+    db_session.commit()
+    src = Source(direction_id=d.id, url="https://page.example/list", type="web",
+                 source_config={"llm_extract": True})
+    db_session.add(src)
+    db_session.commit()
+
+    class FakeResp:
+        text = "<html><title>页</title></html>"
+        status_code = 200
+        headers = httpx.Headers({})
+
+        def raise_for_status(self):
+            return None
+
+    class FakeClient:
+        def __init__(self, *a, **kw):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def get(self, url, headers=None):
+            return FakeResp()
+
+    monkeypatch.setattr(web_mod2.httpx, "Client", FakeClient)
+    stats = web_mod2.fetch_web_source(db_session, db_session.merge(src))
+    assert recorded == ["太短了。"]
+    assert stats.inserted == 1
+    row = db_session.query(Item).filter_by(source_id=src.id).one()
+    assert row.content_text == "太短了。（富化全文）"
