@@ -15,6 +15,11 @@ DEFAULTS: dict[str, object] = {
     "client_ip_header": "",
     # 新源首导打分窗口（天）：site_config 可调；source_config.first_ingest_days 逐源覆盖
     "first_ingest_days": 7,
+    # 语义近重复判定阈值：0.92 为示例值（qwen06 标定结果），按金标分模型标定；
+    # 换嵌入模型（model_version 变更）时必须重新标定
+    "semantic_dedup_threshold": 0.92,
+    # 方向路由每轮命中桶容量：检索相似度 top-K 优先打分的条目数
+    "retrieval_top_k": 5,
 }
 
 
