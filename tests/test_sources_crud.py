@@ -151,3 +151,12 @@ def test_temp_direction_search_source_freshness_default(auth_client):
     with SessionLocal() as db:
         row3 = db.get(Src, r3.json()["id"])
         assert (row3.source_config or {}).get("freshness") is None
+
+
+def test_create_source_response_url_field(auth_client):
+    """来源序列化含 url 字段（OpenAPI sources 响应 schema，值原样透传）。"""
+    did = _mk_direction(auth_client, name="来源序列化方向")
+    r = auth_client.post(f"/api/directions/{did}/sources",
+                         json={"type": "rss", "url": "https://serial.example/feed.xml"})
+    assert r.status_code == 201
+    assert r.json()["url"] == "https://serial.example/feed.xml"

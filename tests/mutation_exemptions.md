@@ -2104,3 +2104,146 @@
 |---|---|---|---|
 | xǁPromptVersionǁprocess_bind_param__mutmut_1 | A | bind None 分支恒假化：写入端 None 由列 default=1 先行兜底（C2-3 实证：显式 None 触发列 default；default 替换先于类型 bind），None 不可达——防御缺省不可达 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
 | xǁPromptVersionǁprocess_result_value__mutmut_1 | A | result None 分支恒假化：列 NOT NULL（Mapped[int] 非可选），回读恒非 None——防御缺省不可达（列约束核查） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+
+## C2-4 分诊批次 4B（2026-10-06，收官批段B：schema 23 + hot 21 + writer 19 + providers 23 + api.routes 16 + rerank/search 34 = 129 条）：A 77 条
+
+> 段B 同上（同批种子、同款重建与核验）。终态：**C 52/52 全杀**（
+> tests/test_author_schema_pass_entries.py 4 + tests/test_hot_fallback_keywords.py 5 +
+> tests/test_provider_post_json_contract.py 5 + tests/test_rerank_provider_construction.py
+> 5 + tests/test_author.py 既有违规标记测试 +1 断言 + tests/test_directions.py +3 +
+> tests/test_sources_crud.py +1）、**A 77/77 全活**、B/D 0。C 类判据主轴：
+> schema passes 条目校验路径（AC-10.1）/ 热榜分词兜底统计纪律（docstring 钉）/
+> _post_json 协议请求体与官方错误码语义映射 + chat_json json_mode 缺省 /
+> rerank 装配契约（D-A 尾斜杠 + D-B Bearer 头 + §4.2 有限超时）/ routes 序列化
+> 字段（OpenAPI name/prompt/url）。本段关键等价发现：run_hot_round 全平台失败
+> 提前 return 使 task_status 计算与 error 条件成死条件域（8 条）；错误体结构契约
+> 由 main.coded_error_handler 重组承载（routes 侧 detail 键名变异被吸收）。
+
+（其余全域） A 类 77 条
+
+### app.authors.schema.x__validate_pass_entry（10 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| x__validate_pass_entry__mutmut_11 | A | entry 非 dict 错误的实得值/期望类型措辞变体（路径保留）：AC-10.1 未钉措辞——批次 8a 文案判据族 | 历史判据族复用（详见说明列） |
+| x__validate_pass_entry__mutmut_12 | A | entry 非 dict 错误的实得值/期望类型措辞变体（路径保留）：AC-10.1 未钉措辞——批次 8a 文案判据族 | 历史判据族复用（详见说明列） |
+| x__validate_pass_entry__mutmut_27 | A | params get 缺省 None/单参：params 键存在时返回值不变，键缺失时 None/{} 两形态均跳过校验（is not None / isinstance({},dict)）——缺省变体控制流等价 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__validate_pass_entry__mutmut_29 | A | params get 缺省 None/单参：params 键存在时返回值不变，键缺失时 None/{} 两形态均跳过校验（is not None / isinstance({},dict)）——缺省变体控制流等价 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__validate_pass_entry__mutmut_37 | A | params 类型错误的实得值/期望类型措辞变体（路径保留）：同上判据族 | 历史判据族复用（详见说明列） |
+| x__validate_pass_entry__mutmut_38 | A | params 类型错误的实得值/期望类型措辞变体（路径保留）：同上判据族 | 历史判据族复用（详见说明列） |
+| x__validate_pass_entry__mutmut_43 | A | params 类型错误的实得值/期望类型措辞变体（路径保留）：同上判据族 | 历史判据族复用（详见说明列） |
+| x__validate_pass_entry__mutmut_44 | A | params 类型错误的实得值/期望类型措辞变体（路径保留）：同上判据族 | 历史判据族复用（详见说明列） |
+| x__validate_pass_entry__mutmut_5 | A | entry 非 dict 错误的实得值/期望类型措辞变体（路径保留）：AC-10.1 未钉措辞——批次 8a 文案判据族 | 历史判据族复用（详见说明列） |
+| x__validate_pass_entry__mutmut_6 | A | entry 非 dict 错误的实得值/期望类型措辞变体（路径保留）：AC-10.1 未钉措辞——批次 8a 文案判据族 | 历史判据族复用（详见说明列） |
+
+### app.hot.service（_fallback_keywords_from_titles / run_hot_round）（16 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| x__fallback_keywords_from_titles__mutmut_12 | A | len(w)>1 与 or/>=：差异域=长度 1 的 ASCII 词计入——docstring 只钉「去停用词与纯数字段」，单字母过滤未钉——分词细节无条款（数值边界族） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__fallback_keywords_from_titles__mutmut_13 | A | len(w)>1 与 or/>=：差异域=长度 1 的 ASCII 词计入——docstring 只钉「去停用词与纯数字段」，单字母过滤未钉——分词细节无条款（数值边界族） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__fallback_keywords_from_titles__mutmut_28 | A | 2-gram 计数 +=2：全部计数同比放大，most_common 排序不变、返回只取 w 序——计数值无消费方（返回值死计数判据；C2-3 EF m14 同族） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_204 | A | keywords 初值 None：仅空 topics 轮不被覆写（batch.keywords 落 NULL vs []），if keywords 守卫 None/[] 同 falsy 不触发 reset——空轮形态未钉（批次 10 m128 初值覆写先例族） | 历史判据族复用（详见说明列） |
+| x_run_hot_round__mutmut_213 | A | _rank_filter_topics db 实参 None：HOT_RANK_FILTER 默认关（模块 docstring）→ 首分支 return 不触 db——缺省分支 db 死参（生产开关默认关核查） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_228 | A | 降级 log.warning 文案 XX：日志措辞无条款——批次 10 m225-227 先例 | 历史判据族复用（详见说明列） |
+| x_run_hot_round__mutmut_240 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_242 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_243 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_270 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_275 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_276 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_279 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_280 | A | task_status 计算与 error 条件死域（8 条）：全平台失败在行 194-198 提前 return FAILED，行 253 not ok_platforms 恒 False（task_status 恒 DONE、"FAILED" 值恒不取）、行 262 条件恒 False（error 恒 None）——控制流不可达（提前 return 域核查；kw_error 实际经 stats.kw_error 呈现） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_hot_round__mutmut_296 | A | 返回 dict "degraded" 键 XX/大写：返回值镜像键面（消费方仅 scheduler 丢弃 + run-once API 泛化响应），降级标记本体 stats["degraded"]（DT-5 钉面）未变异、既有 e2e 测试断言 stats 域——诊断镜像键面判据（批次 10 m79-81 先例） | 历史判据族复用（详见说明列） |
+| x_run_hot_round__mutmut_297 | A | 返回 dict "degraded" 键 XX/大写：返回值镜像键面（消费方仅 scheduler 丢弃 + run-once API 泛化响应），降级标记本体 stats["degraded"]（DT-5 钉面）未变异、既有 e2e 测试断言 stats 域——诊断镜像键面判据（批次 10 m79-81 先例） | 历史判据族复用（详见说明列） |
+
+### app.authors.writer.x_run_write（18 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| x_run_write__mutmut_100 | A | temperature None/缺参/1.3：写作温度数值无条款（批次 10 数值缺省族；调用形态语义不变） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_113 | A | 成功路径 last_error None→""：读取点仅 FAILED 分支（该处必为失败消息），成功路径后不读——初值/成功复位不可达（批次 9 m77 先例） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_114 | A | citation_violated False→None（初值/成功复位）：落 Article 时列 default=False 兜底（C2-3 实证显式 None 触发列 default）——ORM 列缺省族 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_129 | A | 拒收重试提示词文案/大小写：提示词措辞无条款——批次 9 m51/m52 先例（语义指令保留于 W4 条款面非措辞面） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_136 | A | 拒收重试提示词文案/大小写：提示词措辞无条款——批次 9 m51/m52 先例（语义指令保留于 W4 条款面非措辞面） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_137 | A | 拒收重试提示词文案/大小写：提示词措辞无条款——批次 9 m51/m52 先例（语义指令保留于 W4 条款面非措辞面） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_138 | A | 拒收重试提示词文案/大小写：提示词措辞无条款——批次 9 m51/m52 先例（语义指令保留于 W4 条款面非措辞面） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_139 | A | 拒收重试提示词文案/大小写：提示词措辞无条款——批次 9 m51/m52 先例（语义指令保留于 W4 条款面非措辞面） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_140 | A | 拒收重试提示词文案/大小写：提示词措辞无条款——批次 9 m51/m52 先例（语义指令保留于 W4 条款面非措辞面） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_141 | A | 拒收重试提示词文案/大小写：提示词措辞无条款——批次 9 m51/m52 先例（语义指令保留于 W4 条款面非措辞面） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_180 | A | Article status None/行删除：列 default="PUBLISHED_TO_C" 兜底（models.py:271）——ORM 列缺省族（C2-3 实证） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_186 | A | Article status None/行删除：列 default="PUBLISHED_TO_C" 兜底（models.py:271）——ORM 列缺省族（C2-3 实证） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_193 | A | 无题兜底 "XX（无题）XX"：无题文案无条款（batch4 m4 html_title 先例） | 历史判据族复用（详见说明列） |
+| x_run_write__mutmut_221 | A | 收尾 run.error None→""：成功收尾 error 清空形态（None vs 空串）无条款——批次 9 m77 同族 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_78 | A | citation_violated False→None（初值/成功复位）：落 Article 时列 default=False 兜底（C2-3 实证显式 None 触发列 default）——ORM 列缺省族 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_79 | A | citation_violated 初值 True：全路径等价——成功 break 必经行 266 复位 False、except 路径经 or-累积（True or X 与 False or X 在 isinstance 域同值）、两次全败路径不落 article（FAILED return 不读取）——控制流全路径枚举核查（既有 test_citation_normal_path_flag_false 断言 False 与 dispatch 幸存自洽的旁证；初判 C 经路径枚举复核改判） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_88 | A | temperature None/缺参/1.3：写作温度数值无条款（批次 10 数值缺省族；调用形态语义不变） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_run_write__mutmut_94 | A | temperature None/缺参/1.3：写作温度数值无条款（批次 10 数值缺省族；调用形态语义不变） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+
+### app.providers.base.xǁHTTPProviderǁ_post_json（7 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| xǁHTTPProviderǁ_post_json__mutmut_11 | A | retryable 分支 e=ProviderError(None)/_scrub(None)/[:301] 与 FATAL 分支预览丢失/截断界：消息文案细节无条款——batch2 m24/m25/m42 先例（错误语义=类型+重试性已由 C 断言承载） | 历史判据族复用（详见说明列） |
+| xǁHTTPProviderǁ_post_json__mutmut_12 | A | retryable 分支 e=ProviderError(None)/_scrub(None)/[:301] 与 FATAL 分支预览丢失/截断界：消息文案细节无条款——batch2 m24/m25/m42 先例（错误语义=类型+重试性已由 C 断言承载） | 历史判据族复用（详见说明列） |
+| xǁHTTPProviderǁ_post_json__mutmut_13 | A | retryable 分支 e=ProviderError(None)/_scrub(None)/[:301] 与 FATAL 分支预览丢失/截断界：消息文案细节无条款——batch2 m24/m25/m42 先例（错误语义=类型+重试性已由 C 断言承载） | 历史判据族复用（详见说明列） |
+| xǁHTTPProviderǁ_post_json__mutmut_20 | A | msg 缺省 None/空：差异域=非映射表内 4xx（403/404 等未知态）的兜底文案（"HTTP 403" vs None:），官方语义只钉 400/401/402/422 四态——未知态兜底文案无条款 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁHTTPProviderǁ_post_json__mutmut_22 | A | msg 缺省 None/空：差异域=非映射表内 4xx（403/404 等未知态）的兜底文案（"HTTP 403" vs None:），官方语义只钉 400/401/402/422 四态——未知态兜底文案无条款 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁHTTPProviderǁ_post_json__mutmut_24 | A | retryable 分支 e=ProviderError(None)/_scrub(None)/[:301] 与 FATAL 分支预览丢失/截断界：消息文案细节无条款——batch2 m24/m25/m42 先例（错误语义=类型+重试性已由 C 断言承载） | 历史判据族复用（详见说明列） |
+| xǁHTTPProviderǁ_post_json__mutmut_25 | A | retryable 分支 e=ProviderError(None)/_scrub(None)/[:301] 与 FATAL 分支预览丢失/截断界：消息文案细节无条款——batch2 m24/m25/m42 先例（错误语义=类型+重试性已由 C 断言承载） | 历史判据族复用（详见说明列） |
+
+### app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ__init__（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| xǁMoarkRerankerProviderǁ__init____mutmut_1 | A | timeout 缺省 121.0：任意有限值满足 §4.2——数值缺省族（批次 10 embedding __init__ m1 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkRerankerProviderǁ__init____mutmut_13 | A | _query_max_chars=None：构造缺省即 None（签名 int|None=None），显式实验路径外的缺省恒等——缺省恒等判据 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkRerankerProviderǁ__init____mutmut_7 | A | rstrip("XX/XX")：字符集语义 {X,/}，URL 尾部无 X——恰等价（批次 10 m7 先例） | 历史判据族复用（详见说明列） |
+
+### app.rerank.base.xǁHTTPRankProviderǁ__init__（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| xǁHTTPRankProviderǁ__init____mutmut_5 | A | rstrip("XX/XX")：字符集语义恰等价——批次 10 m7 先例 | 历史判据族复用（详见说明列） |
+
+### app.search.base.xǁHTTPSearchProviderǁ__init__（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| xǁHTTPSearchProviderǁ__init____mutmut_1 | A | timeout 缺省 31.0：任意有限值满足 §4.2——数值缺省族 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+
+### app.search.bocha.xǁBochaSearchProviderǁ__init__（5 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| xǁBochaSearchProviderǁ__init____mutmut_1 | A | timeout 缺省 31.0：数值缺省族（§4.2 有限值语义不变） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁBochaSearchProviderǁ__init____mutmut_6 | A | 缺 Key 错误文案变体：文案措辞无条款——批次 10 BochaJevRankProvider m5 先例 | 历史判据族复用（详见说明列） |
+| xǁBochaSearchProviderǁ__init____mutmut_7 | A | 缺 Key 错误文案变体：文案措辞无条款——批次 10 BochaJevRankProvider m5 先例 | 历史判据族复用（详见说明列） |
+| xǁBochaSearchProviderǁ__init____mutmut_8 | A | 缺 Key 错误文案变体：文案措辞无条款——批次 10 BochaJevRankProvider m5 先例 | 历史判据族复用（详见说明列） |
+| xǁBochaSearchProviderǁ__init____mutmut_9 | A | 缺 Key 错误文案变体：文案措辞无条款——批次 10 BochaJevRankProvider m5 先例 | 历史判据族复用（详见说明列） |
+
+### app.search.pipeline.x_fetch_search_source（7 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| x_fetch_search_source__mutmut_206 | A | fetched_at 行删除：Item.fetched_at 列 default=utcnow 兜底——ORM 列缺省族（批次 10 m195/F1⑩ 先例） | 历史判据族复用（详见说明列） |
+| x_fetch_search_source__mutmut_211 | A | url[:2001]：截断界数值无条款（SQLite 不强制列宽）——批次 10 m210 先例 | 历史判据族复用（详见说明列） |
+| x_fetch_search_source__mutmut_214 | A | datetime.now(None) naive：存储 tz 未钉——批次 10 m212/datetime.now(None) 族 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_fetch_search_source__mutmut_221 | A | apply_rules(title=None)：搜索通道调用点 blacklist 恒空（未传），title 仅进 blacklist joined——batch4 m167 先例（web 通道同构造） | 历史判据族复用（详见说明列） |
+| x_fetch_search_source__mutmut_235 | A | fetch_status=None：列 default="FETCHED" 兜底（C2-3 实证显式 None 触发 default）——ORM 列缺省族 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x_fetch_search_source__mutmut_249 | A | SanitizeTarget url=None/实参删除：现有 sanitizer 链不读 url——batch5 m122/批次 10 m250 先例 | 历史判据族复用（详见说明列） |
+| x_fetch_search_source__mutmut_252 | A | SanitizeTarget url=None/实参删除：现有 sanitizer 链不读 url——batch5 m122/批次 10 m250 先例 | 历史判据族复用（详见说明列） |
+
+### app.api.routes（序列化/错误体/TTL 辅助函数）（9 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| x__get_live_direction__mutmut_16 | A | 404 detail "message" 键 XX/大写：错误体结构契约由 main.coded_error_handler 承载（main.py:29 自行重组 {code, message=detail.get("message", "")}），routes 侧 detail 键名变异被 handler.get 缺省吸收，可观察面只剩 message 值（"方向不存在"→""）——值措辞无条款（初判 C 经 C 轮施加实测纠偏改判；OpenAPI required 只钉响应字段存在，handler 重组后恒在） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__get_live_direction__mutmut_17 | A | 404 detail "message" 键 XX/大写：错误体结构契约由 main.coded_error_handler 承载（main.py:29 自行重组 {code, message=detail.get("message", "")}），routes 侧 detail 键名变异被 handler.get 缺省吸收，可观察面只剩 message 值（"方向不存在"→""）——值措辞无条款（初判 C 经 C 轮施加实测纠偏改判；OpenAPI required 只钉响应字段存在，handler 重组后恒在） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__get_live_direction__mutmut_18 | A | message 值 XX 包裹：措辞值无条款（required 只钉字段存在）——batch2 异常消息族；与 m16 族同一 handler 重组承载面 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__get_live_direction__mutmut_29 | A | 404 detail "message" 键 XX/大写：错误体结构契约由 main.coded_error_handler 承载（main.py:29 自行重组 {code, message=detail.get("message", "")}），routes 侧 detail 键名变异被 handler.get 缺省吸收，可观察面只剩 message 值（"方向不存在"→""）——值措辞无条款（初判 C 经 C 轮施加实测纠偏改判；OpenAPI required 只钉响应字段存在，handler 重组后恒在） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__get_live_direction__mutmut_30 | A | 404 detail "message" 键 XX/大写：错误体结构契约由 main.coded_error_handler 承载（main.py:29 自行重组 {code, message=detail.get("message", "")}），routes 侧 detail 键名变异被 handler.get 缺省吸收，可观察面只剩 message 值（"方向不存在"→""）——值措辞无条款（初判 C 经 C 轮施加实测纠偏改判；OpenAPI required 只钉响应字段存在，handler 重组后恒在） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__get_live_direction__mutmut_31 | A | message 值 XX 包裹：措辞值无条款（required 只钉字段存在）——batch2 异常消息族；与 m16 族同一 handler 重组承载面 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__temp_expires_at__mutmut_12 | A | now(None) naive/返回 tzinfo=None/缺参：SQLite DateTime 方言存储丢 tz、date() 域不变，落库/回读两形态等价——datetime.now(None) 族（总纲判据族）+ SQLite dialect 存储形态（C2-1 m9 先例） | 历史判据族复用（详见说明列） |
+| x__temp_expires_at__mutmut_3 | A | now(None) naive/返回 tzinfo=None/缺参：SQLite DateTime 方言存储丢 tz、date() 域不变，落库/回读两形态等价——datetime.now(None) 族（总纲判据族）+ SQLite dialect 存储形态（C2-1 m9 先例） | 历史判据族复用（详见说明列） |
+| x__temp_expires_at__mutmut_8 | A | now(None) naive/返回 tzinfo=None/缺参：SQLite DateTime 方言存储丢 tz、date() 域不变，落库/回读两形态等价——datetime.now(None) 族（总纲判据族）+ SQLite dialect 存储形态（C2-1 m9 先例） | 历史判据族复用（详见说明列） |

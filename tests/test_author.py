@@ -90,6 +90,8 @@ def test_citation_violation_exhausted_stored_with_flag(db_session, author_items,
     article = db_session.get(Article, run.article_id)
     assert article is not None
     assert article.citation_violated is True
+    # 违规标记为追加：原 rank_meta 归因（rank_provider 键恒在——W5 归因先例）保留
+    assert run.payload.get("rank_provider") == "none"
     assert run.payload.get("citation_violated") is True
     assert "CitationError" in (run.payload.get("citation_error") or "")
 
