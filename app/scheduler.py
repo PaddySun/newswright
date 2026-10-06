@@ -5,7 +5,9 @@
   （enqueue_*），再走 process_* worker 路径执行——任务状态一律经 pipeline_task 落库。
 - 防重叠：同一 kind 上一轮 RUNNING/PENDING 未清空时不置新轮（查库判定，不引入分布式锁）。
 - 退避：连续失败 ≥3 次的源跳过并计数，每 4 轮放行一次探测（runner.enqueue_fetch_round）。
-- score 紧跟 fetch（同一 job 链）；hot 独立周期。写作不进调度（另一台机器实验中）。
+- score 双形态并存：fetch 完成后的联锁触发（新内容低延迟）+ 独立定时 job
+  （SCHED_SCORE_MINUTES，无新内容时按节奏兜底）；hot 独立周期；write 任务由
+  API 即时提交增值池消化 + 每分钟兜底 tick（异步写作消费）。
 """
 from __future__ import annotations
 
@@ -31,25 +33,41 @@ _started = False
 value_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="newswright-value")
 
 
+def _run_score_round() -> None:
+    """增值池打分工作体：自带会话；入口 round_busy 防重叠（与池内串行构成
+    双保险——同 kind 至多一个执行中）。"""
+
+    from .pipeline.runner import round_busy, score_round
+
+    try:
+        with SessionLocal() as db:
+            if round_busy(db, "score"):
+                log.info("上一轮 score 未结束，异步打分跳过（防重叠）")
+                return
+            score = score_round(db, triggered_by="scheduler")
+            for d in score.get("directions") or []:
+                log.info("score 方向[%s] %s 打分=%s",
+                         d.get("name"), d.get("status"), d.get("scored"))
+    except Exception:  # noqa: BLE001  增值层异常绝不冒泡伤及采集线程
+        log.error("异步打分轮异常:\n%s", traceback.format_exc())
+
+
 def _submit_score_async() -> None:
-    """把打分轮提交增值线程池（自带会话；防重叠在提交前后双重检查）。"""
+    """把打分轮提交增值线程池（fetch 完成后的联锁触发与独立 score 定时 job
+    共用本入口）。"""
+    value_pool.submit(_run_score_round)
 
-    def _run() -> None:
-        from .pipeline.runner import round_busy, score_round
 
-        try:
-            with SessionLocal() as db:
-                if round_busy(db, "score"):
-                    log.info("上一轮 score 未结束，异步打分跳过（防重叠）")
-                    return
-                score = score_round(db, triggered_by="scheduler")
-                for d in score.get("directions") or []:
-                    log.info("score 方向[%s] %s 打分=%s",
-                             d.get("name"), d.get("status"), d.get("scored"))
-        except Exception:  # noqa: BLE001  增值层异常绝不冒泡伤及采集线程
-            log.error("异步打分轮异常:\n%s", traceback.format_exc())
+def _tick_score() -> None:
+    """独立打分节奏 tick（IntervalTrigger=SCHED_SCORE_MINUTES）：预检防重叠后
+    提交增值池——无新内容时也按固定节奏补打（FAILED 幂等续跑、rescore 消化）。"""
+    from .pipeline.runner import round_busy
 
-    value_pool.submit(_run)
+    with SessionLocal() as db:
+        if round_busy(db, "score"):
+            log.info("上一轮 score 未结束，本轮打分跳过（防重叠）")
+            return
+    _submit_score_async()
 
 
 def submit_write_tasks_async() -> None:
@@ -142,17 +160,19 @@ def _reclaim_once() -> None:
             log.info("启动回收：%d 个僵死任务置 FAILED", n)
 
 
-def start() -> None:
-    """注册 job 并启动。重复调用安全（幂等）。"""
-    global _started
-    if _started:
-        return
-    _reclaim_once()  # P0-1：首个 tick 前回收一次
+def _register_jobs() -> None:
+    """job 注册（独立函数便于单测：未 start 的 scheduler 上 add_job 仅登记，
+    不触发任何执行）。"""
     scheduler.add_job(
         run_job_safely, args=[_tick_fetch],
         trigger=IntervalTrigger(minutes=config.SCHED_FETCH_MINUTES),
         id="fetch_score_round", max_instances=1, coalesce=True,
         next_run_time=datetime.now(timezone.utc),  # 启动即跑第一轮
+    )
+    scheduler.add_job(
+        run_job_safely, args=[_tick_score],
+        trigger=IntervalTrigger(minutes=config.SCHED_SCORE_MINUTES),
+        id="score_round_tick", max_instances=1, coalesce=True,
     )
     scheduler.add_job(
         run_job_safely, args=[_tick_hot],
@@ -169,10 +189,20 @@ def start() -> None:
         trigger=IntervalTrigger(minutes=1),
         id="write_consume", max_instances=1, coalesce=True,
     )
+
+
+def start() -> None:
+    """注册 job 并启动。重复调用安全（幂等）。"""
+    global _started
+    if _started:
+        return
+    _reclaim_once()  # P0-1：首个 tick 前回收一次
+    _register_jobs()
     scheduler.start()
     _started = True
-    log.info("调度器已启动：fetch+%dmin（含 score 链）、hot+%dmin",
-             config.SCHED_FETCH_MINUTES, config.SCHED_HOT_MINUTES)
+    log.info("调度器已启动：fetch+%dmin（含 score 联锁）、score+%dmin、hot+%dmin",
+             config.SCHED_FETCH_MINUTES, config.SCHED_SCORE_MINUTES,
+             config.SCHED_HOT_MINUTES)
 
 
 def shutdown() -> None:

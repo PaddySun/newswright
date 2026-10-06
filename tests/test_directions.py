@@ -208,11 +208,11 @@ def test_direction_error_body_contains_message_field(auth_client):
 
 
 def test_temp_expires_at_future_midnight_utc(monkeypatch):
-    """临时方向 TTL 到期时刻 = 冻结时刻 + ttl_days 当日的零点（UTC 口径按
-    到期日零点等价实现；时区键落地前 UTC 与本地零点由 SQLite 存储丢 tz 归一等价，
-    断言面取日历分量）。设计依据见 docs/design-index.md「AC-03.4」。"""
-    from datetime import datetime as _dt
+    """临时方向 TTL 到期时刻 = 冻结时刻 + ttl_days 当日的该时区零点（F2 起
+    零点口径取站点时区，UTC 时区为其特例；SQLite 存储丢 tz 归一，断言面取
+    日历分量）。设计依据见 docs/design-index.md「AC-03.4」「D16」。"""
     from datetime import date, datetime, timezone
+    from zoneinfo import ZoneInfo
 
     import app.api.routes as routes_mod
 
@@ -221,7 +221,9 @@ def test_temp_expires_at_future_midnight_utc(monkeypatch):
         def now(cls, tz=None):
             return datetime(2026, 10, 6, 15, 30, 45, tzinfo=timezone.utc)
 
-    monkeypatch.setattr(routes_mod, "datetime", _Frozen)
-    exp = routes_mod._temp_expires_at(7)
+    import app.timeline as timeline_mod
+
+    monkeypatch.setattr(timeline_mod, "datetime", _Frozen)
+    exp = routes_mod._temp_expires_at(7, ZoneInfo("UTC"))
     assert exp.date() == date(2026, 10, 13)
     assert exp.hour == 0 and exp.minute == 0 and exp.second == 0

@@ -335,6 +335,8 @@ def hot_to_direction(payload: HotToDirectionIn, db: Session = Depends(get_sessio
     keyword = payload.keyword.strip()
     if not keyword:
         raise HTTPException(400, {"code": "VALIDATION_ERROR", "message": "keyword 不能为空"})
+    from ..timeline import site_zone
+
     name_exists = db.query(Direction.id).filter(Direction.name == keyword).first()
     if name_exists is not None:
         raise HTTPException(409, {"code": "DIRECTION_NAME_EXISTS",
@@ -342,7 +344,7 @@ def hot_to_direction(payload: HotToDirectionIn, db: Session = Depends(get_sessio
     d = Direction(name=keyword,
                   prompt=_HOT_TRACK_PROMPT_TEMPLATE.format(keyword=keyword),
                   prompt_version=1, threshold=60, temp=True,
-                  expires_at=_temp_expires_at(_DEFAULT_TEMP_TTL_DAYS))
+                  expires_at=_temp_expires_at(_DEFAULT_TEMP_TTL_DAYS, site_zone(db)))
     db.add(d)
     db.flush()
     s = Source(direction_id=d.id, type="search", url=keyword,
@@ -818,14 +820,12 @@ def _direction_out(d: Direction) -> dict:
     }
 
 
-def _temp_expires_at(ttl_days: int) -> datetime:
-    """TTL 到期时刻 = 到期日零点（UTC）。
+def _temp_expires_at(ttl_days: int, zone) -> datetime:
+    """TTL 到期时刻 = 到期日零点（站点时区口径——site_config timezone 的当日
+    零点，解析统一经 app/timeline.py）。"""
+    from ..timeline import local_day_start_after
 
-    时区口径注记：产品书决策表要求到期零点取 site_config timezone（时区键未实装，
-    默认 Asia/Shanghai 待该键落地后接线），当前按 UTC 零点等价实现，见 G2 汇报遗留项。
-    """
-    day = (datetime.now(timezone.utc) + timedelta(days=ttl_days)).date()
-    return datetime(day.year, day.month, day.day, tzinfo=timezone.utc)
+    return local_day_start_after(zone, ttl_days)
 
 
 def _get_live_direction(db: Session, direction_id: int) -> Direction:
@@ -840,10 +840,14 @@ def _get_live_direction(db: Session, direction_id: int) -> Direction:
 
 @router.post("/api/directions", status_code=201)
 def create_direction(payload: DirectionCreate, db: Session = Depends(get_session)):
-    """创建方向：prompt_version 从 1 起；temp 方向按 ttl_days 算到期时刻。"""
+    """创建方向：prompt_version 从 1 起；temp 方向按 ttl_days 算到期时刻
+    （站点时区零点口径）。"""
+    from ..timeline import site_zone
+
     expires_at = None
     if payload.temp:
-        expires_at = _temp_expires_at(payload.ttl_days or _DEFAULT_TEMP_TTL_DAYS)
+        expires_at = _temp_expires_at(payload.ttl_days or _DEFAULT_TEMP_TTL_DAYS,
+                                      site_zone(db))
     d = Direction(name=payload.name.strip(), prompt=payload.prompt,
                   prompt_version=1, threshold=payload.threshold,
                   temp=payload.temp, expires_at=expires_at)

@@ -13,6 +13,9 @@ from .models import SiteConfig
 DEFAULTS: dict[str, object] = {
     "session_duration_days": 7,
     "client_ip_header": "",
+    # 站点时区（全部日切口径取该键：预算日/通知自然日/TTL 零点；默认 Asia/Shanghai，
+    # 非法值回退 UTC 并 WARN——解析见 app/timeline.py）
+    "timezone": "Asia/Shanghai",
     # 新源首导打分窗口（天）：site_config 可调；source_config.first_ingest_days 逐源覆盖
     "first_ingest_days": 7,
     # 语义近重复判定阈值：0.92 为示例值（qwen06 标定结果），按金标分模型标定；

@@ -1,27 +1,25 @@
 """Token 日预算闸（轮次粒度拦截）：增值轮入口按当日用量汇总判定降级，不逐调用。
 
-判定口径：usage_log 当日（UTC 日切）prompt+completion token 汇总 ≥ site_config
-daily_token_budget（默认 0 = 不设限）即视为预算触发。触发后按"低优先级先停"
-四档秩序降级：探索层暂停 → 嵌入暂停（路由自动回退全量慢速）→ 打分转慢速
-（轮上限降为 score_slow_round_max_items，继续低速不绝停）→ 写作需站长确认。
-采集与呈现永不参与降级。
+判定口径：usage_log 当日（日切起点 = site_config timezone 的今日零点）prompt+
+completion token 汇总 ≥ site_config daily_token_budget（默认 0 = 不设限）即视为
+预算触发。触发后按"低优先级先停"四档秩序降级：探索层暂停 → 嵌入暂停（路由
+自动回退全量慢速）→ 打分转慢速（轮上限降为 score_slow_round_max_items，
+继续低速不绝停）→ 写作需站长确认。采集与呈现永不参与降级。
 设计依据见 docs/design-index.md「AC-21.2」。
 """
 from __future__ import annotations
-
-from datetime import datetime, timezone
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..models import UsageLog
 from ..siteconfig import get_config
+from ..timeline import local_day_start, site_zone
 
 
 def tokens_used_today(db: Session) -> int:
-    """当日（UTC 日切起点起算）全部外部调用的 token 消耗汇总。"""
-    day_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0,
-                                                   microsecond=0)
+    """当日（站点时区今日零点起算）全部外部调用的 token 消耗汇总。"""
+    day_start = local_day_start(site_zone(db))
     used = (
         db.query(func.sum(func.coalesce(UsageLog.prompt_tokens, 0)
                           + func.coalesce(UsageLog.completion_tokens, 0)))
