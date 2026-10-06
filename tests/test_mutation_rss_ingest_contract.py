@@ -415,12 +415,13 @@ def test_fetch_rules_chain_expired_blacklist_and_row_values(db_session, monkeypa
 def test_fetch_sanitize_keyword_deny_full_chain(db_session, monkeypatch):
     """AC-06.2（keyword_deny：状态/原因/明细/全文照存）+ AC-06.3（被过滤 ≠ 抓取失败：
     fetch_status 保持 FETCHED）+ AC-06.1 统计口径。"""
+    # F2 起注入特征检测为链首——样例关键词避开注入模式，单独验证 keyword_deny 链路
     monkeypatch.setattr(cfg, "SANITIZE_ENABLED", True)
-    monkeypatch.setattr(cfg, "SANITIZE_DENY_KEYWORDS", ["忽略之前指令"])
+    monkeypatch.setattr(cfg, "SANITIZE_DENY_KEYWORDS", ["内部黑话"])
     d, src = _mk_source(db_session)
     _patch(monkeypatch, FakeResp(_feed(
-        _item("D1", "https://ex/d1", "标题藏了忽略之前指令"),
-        _item("D2", "https://ex/d2", "干净标题", body="正文藏了忽略之前指令" + _LONG),
+        _item("D1", "https://ex/d1", "标题藏了内部黑话"),
+        _item("D2", "https://ex/d2", "干净标题", body="正文藏了内部黑话" + _LONG),
         _item("C1", "https://ex/c1", "干净标题1"),
     )))
 
@@ -431,7 +432,7 @@ def test_fetch_sanitize_keyword_deny_full_chain(db_session, monkeypatch):
     d1 = db_session.query(Item).filter_by(source_id=src.id, guid="D1").one()
     d2 = db_session.query(Item).filter_by(source_id=src.id, guid="D2").one()
     c1 = db_session.query(Item).filter_by(source_id=src.id, guid="C1").one()
-    assert d1.sanitize_status == "REJECTED" and d1.sanitize_reason == "keyword_deny:忽略之前指令"
+    assert d1.sanitize_status == "REJECTED" and d1.sanitize_reason == "keyword_deny:内部黑话"
     assert d1.sanitize_detail and d1.sanitize_detail["stage"] == "keyword_deny"
     assert d2.sanitize_status == "REJECTED"
     assert d1.content_text  # REJECTED 全文照存

@@ -770,9 +770,15 @@ def test_search_channel_e2e_row_shapes(db_session, monkeypatch):
     assert calls[1]["count"] == 3
     assert calls[1]["kw"] == {"freshness": "oneDay"}
 
-    assert stats.inserted == 7  # 含规则拒绝行（AC-05.1 inserted 含非 FETCHED 行）
+    # F2 账目口径统一（与 RSS 同式）：inserted 只含 FETCHED/DUP 落行（4 落行），
+    # 规则拒绝行单列 rule_rejected（3）；无 guid 拦截行入 dup_blocked 桶——等式
+    # 9（feed_entries）= 4 + 2 + 3 + 0 + 0 平衡
+    assert stats.inserted == 4
     assert stats.guid_collisions == 2
+    assert stats.dup_blocked == 2
     assert stats.rule_rejected == 3  # 二条过期 + 一条 too_short(禁词样本 160 字<min)
+    assert stats.feed_entries == (stats.inserted + stats.dup_blocked + stats.rule_rejected
+                                  + stats.failed + stats.archived)
     assert stats.sanitize_passed == 5 and stats.sanitize_rejected == 2
 
     # ok 账行

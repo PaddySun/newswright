@@ -33,7 +33,7 @@ from ..providers.deepseek import DeepSeekProvider
 from . import gates as G
 from .memory import fill_placeholders
 from .schema import AuthorConfigError, load_author_config
-from .writer import CitationError, _hot_brief, _norm, assemble_ranked_reading_set
+from .writer import CitationError, WRITING_DOCUMENT_DELARATION, _hot_brief, _norm, assemble_ranked_reading_set
 
 log = logging.getLogger("newswright.pipeline")
 
@@ -168,13 +168,19 @@ def _recent_titles(db: Session, author: Author, n: int) -> list[str]:
 
 
 def _refs_listing(pairs: list) -> str:
+    """阅读集渲染（管线侧）：每条目包裹 <document id> 定界符（搜索摘要来源
+    条目同规则——包裹发生在装配层，与条目来源通道无关）。"""
     lines = []
     for item, sr in pairs:
         body = (item.content_text or "").strip()[:READING_BODY_MAX_CHARS]
         pub = item.published_at.strftime("%Y-%m-%d") if item.published_at else "未知"
         rel = getattr(sr, "relevance_score", None)
         lines.append(
-            f"【条目 {item.id}】{item.title}\n来源: {item.url or '未知'} | 发布: {pub} | 相关分: {rel}\n正文: {body or '（无正文）'}"
+            f'<document id="{item.id}">\n'
+            f"【条目 {item.id}】{item.title}\n"
+            f"来源: {item.url or '未知'} | 发布: {pub} | 相关分: {rel}\n"
+            f"正文: {body or '（无正文）'}\n"
+            f"</document>"
         )
     return "\n\n".join(lines)
 
@@ -513,7 +519,8 @@ class PipelineRunner:
 
     def execute(self, *, reading_window: tuple[int, int] | None = None) -> Article | None:
         cfg = self.cfg
-        self._system = _identity_system(cfg)
+        # 定界声明为身份系统段首行（快照可核——第三方内容定界双防线的声明半边）
+        self._system = WRITING_DOCUMENT_DELARATION + "\n\n" + _identity_system(cfg)
 
         pairs = list(self.pairs)
         if reading_window:

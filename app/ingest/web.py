@@ -258,9 +258,15 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
 
         apply_fp=False：监测单页版本条目（guid 带 #v- 版本后缀）不参与指纹链——
         同 URL 内容变化必须新条目（设计书 B7 全量保存语义，G1 汇报偏离记录）。
+
+        账目口径（与 RSS 通道同式）：inserted 只含 FETCHED/DUP 落行；
+        rule_rejected 落行单列；同 feed 内重复 guid 与已存在 guid 一并计入
+        dup_blocked（不落行）——等式 feed_entries = inserted + dup_blocked +
+        rule_rejected + failed + archived 不重不漏。
         """
         if payload.guid in inserted_hashes:
             stats.guid_collisions += 1
+            stats.dup_blocked += 1
             return False
         exists = db.query(Item.id).filter_by(source_id=source.id, guid=payload.guid).one_or_none()
         if exists:
@@ -286,7 +292,6 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
             else:
                 item.fetch_status = "REJECTED_RULED"
                 item.rule_reject_reason = rule.reason
-                stats.rule_rejected += 1
         sr = run_sanitize(SanitizeTarget(title=item.title, content_text=item.content_text,
                                          url=item.url))
         item.sanitize_status = "PASSED" if sr.passed else "REJECTED"
@@ -299,16 +304,23 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
         db.add(item)
         db.flush()
         inserted_hashes.add(payload.guid)
-        stats.inserted += 1
+        if item.fetch_status == "REJECTED_RULED":
+            stats.rule_rejected += 1
+        else:
+            stats.inserted += 1
         return True
 
     if llm_extract:
         entries = llm_extract_entries(db, page_url=source.url, content_text=markdown,
                                       extraction_prompt=extraction_prompt)
         if entries is None:
+            # 列表页抽取失败：监测页本身算一个条目位（拉回 1 页、0 落行、1 失败），
+            # 等式平衡且如实呈现失败
+            stats.feed_entries = 1
             stats.failed += 1
             stats.error = "web_extract: LLM 抽取两次失败"
         else:
+            stats.feed_entries = len(entries)
             for ep in entries:
                 if len(ep.content_text.strip()) < config.RULE_MIN_BODY_CHARS:
                     ep.content_text = enrich_entry_text(ep.url, ep.content_text,
@@ -316,7 +328,8 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
                 _ingest(ep)
     else:
         # 单页条目：guid 带内容版本后缀（同 URL 内容变化 → 新条目，旧条目保留）；
-        # 不参与指纹链（apply_fp=False，B7 全量保存语义）
+        # 不参与指纹链（apply_fp=False，B7 全量保存语义）；监测页即一个条目位
+        stats.feed_entries = 1
         versioned_guid = f"{normalize_url(source.url)}#v-{new_hash[:12]}"
         _ingest(WebPayload(guid=versioned_guid, url=normalize_url(source.url),
                            title=title, published_at=None if ignore_page_date else pub,
