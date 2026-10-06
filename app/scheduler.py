@@ -88,6 +88,23 @@ def _tick_hot() -> None:
         run_hot_round(db, triggered_by="scheduler")
 
 
+def _tick_backup() -> None:
+    """每日备份：本地目录插件执行一次 SQLite 在线备份（失败 WARN 不阻断任何轮）。"""
+    try:
+        from .backup import default_backup_target
+
+        with SessionLocal() as db:
+            target = default_backup_target(db)
+            if target is None:
+                log.info("无已注册备份目标，本轮跳过")
+                return
+            path = target.run_backup()
+            log.info("每日备份完成: %s", path)
+    except Exception:  # noqa: BLE001  备份失败 WARN + 任务可恢复
+        log.warning("每日备份异常（下轮重试，不阻断其他轮次）:\n%s",
+                    traceback.format_exc())
+
+
 def _reclaim_once() -> None:
     """P0-1 僵死回收（AC-20.2）：start() 首个 tick 前执行一次——调度器重启后
     首次 tick 即回收跨重启残留的 RUNNING 任务，fetch 轮次不被永久阻塞。"""
@@ -115,6 +132,11 @@ def start() -> None:
         run_job_safely, args=[_tick_hot],
         trigger=IntervalTrigger(minutes=config.SCHED_HOT_MINUTES),
         id="hot_round", max_instances=1, coalesce=True,
+    )
+    scheduler.add_job(
+        run_job_safely, args=[_tick_backup],
+        trigger=IntervalTrigger(hours=24),
+        id="daily_backup", max_instances=1, coalesce=True,
     )
     scheduler.start()
     _started = True

@@ -831,6 +831,92 @@ def rescore_direction(direction_id: int, payload: RescoreIn,
     return {"task_id": task.id, "scope": payload.scope}
 
 
+# ---------- 通知设置（US-19） ----------
+
+_NOTIFY_SWITCH_KEYS = ("notify_on_source_failure", "notify_on_token_budget",
+                       "notify_on_collective", "notify_on_disk")
+
+
+class NotifySettingsIn(BaseModel):
+    """SMTP 参数（凭据 writeOnly：只写不读回）与触发条件开关。"""
+    smtp_host: str | None = None
+    smtp_port: int | None = Field(default=None, ge=1, le=65535)
+    smtp_user: str | None = None
+    smtp_pass: str | None = None
+    from_addr: str | None = None
+    to_addrs: list[str] | None = None
+    notify_on_source_failure: bool | None = None
+    notify_on_token_budget: bool | None = None
+    notify_on_collective: bool | None = None
+    notify_on_disk: bool | None = None
+
+
+def _smtp_configured(db: Session) -> bool:
+    from ..notify import get_notifier
+
+    notifier = get_notifier("smtp", db)
+    return bool(notifier and notifier.configured())
+
+
+@router.put("/api/settings/notify")
+def put_notify_settings(payload: NotifySettingsIn,
+                        db: Session = Depends(get_session)):
+    """保存通知设置：SMTP 参数落 site_config（凭据只写不回显）+ 触发开关；
+    每次保存落一行审计日志（actor/config_key——site_config 变更审计纪律）。"""
+    import logging as _logging
+
+    from ..siteconfig import set_config
+
+    changes = []
+    field_map = {"smtp_host": payload.smtp_host, "smtp_port": payload.smtp_port,
+                 "smtp_user": payload.smtp_user, "smtp_pass": payload.smtp_pass,
+                 "smtp_from": payload.from_addr, "smtp_to": payload.to_addrs}
+    for key, value in field_map.items():
+        if value is not None:
+            set_config(db, key, value)
+            changes.append(key)  # 审计日志只记键名，绝不记值（凭据不落日志）
+    for key in _NOTIFY_SWITCH_KEYS:
+        value = getattr(payload, key)
+        if value is not None:
+            set_config(db, key, value)
+            changes.append(key)
+    if changes:
+        _logging.getLogger("newswright.config").info(
+            "通知设置已保存: %s", ",".join(changes),
+            extra={"config_key": ",".join(changes)})
+    return {"saved": True, "changed_keys": changes,
+            "smtp_configured": _smtp_configured(db)}
+
+
+@router.get("/api/settings/notify")
+def get_notify_settings(db: Session = Depends(get_session)):
+    """读取通知设置：凭据只出布尔位（smtp_configured），绝不回显任何配置值。"""
+    from ..siteconfig import get_config
+
+    return {
+        "smtp_configured": _smtp_configured(db),
+        **{key: bool(get_config(db, key)) for key in _NOTIFY_SWITCH_KEYS},
+    }
+
+
+@router.post("/api/settings/notify/test")
+def test_notify_settings(db: Session = Depends(get_session)):
+    """测试邮件：200 = 已发出；502 SMTP_UNREACHABLE = 不可达或未配置。"""
+    from ..notify import get_notifier
+
+    notifier = get_notifier("smtp", db)
+    if notifier is None or not notifier.configured():
+        raise HTTPException(502, {"code": "SMTP_UNREACHABLE",
+                                  "message": "SMTP 未配置"})
+    try:
+        notifier._deliver("[newswright] 测试邮件",
+                          "这是一封测试邮件（通知通道验证）。")
+    except Exception as e:  # noqa: BLE001  报错脱敏：不携带配置值
+        raise HTTPException(502, {"code": "SMTP_UNREACHABLE",
+                                  "message": f"{type(e).__name__}: {e}"})
+    return {"sent": True}
+
+
 # ---------- 来源管理（G2/W1） ----------
 
 
