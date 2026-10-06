@@ -185,7 +185,8 @@ def enrich_entry_text(url: str, current_text: str, *, page_url: str) -> str:
         if len(text.strip()) > len(current_text.strip()):
             return text
     except Exception as e:  # noqa: BLE001  富化失败保留摘要，不致命
-        log.info("条目富化失败 url=%s: %s", url[:120], e)
+        # 级别纪律：富化失败属自愈类（保留摘要继续走管线）→ WARN 而非 INFO
+        log.warning("条目富化失败 url=%s: %s", url[:120], e)
     return current_text
 
 
