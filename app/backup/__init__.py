@@ -49,10 +49,13 @@ class BackupTarget(ABC):
 
 def rotate_backups(directory: Path, prefix: str,
                    *, keep: int = BACKUP_KEEP_COUNT) -> list[Path]:
-    """备份轮转：保留最新 keep 份，挤出更旧的。返回被删除的文件列表。"""
+    """备份轮转：保留最新 keep 份，挤出更旧的。返回被删除的文件列表。
+
+    按文件修改时间排序（同秒内纳秒尾缀会回绕，名字典序不可靠）。
+    """
     files = sorted(
         (p for p in directory.glob(f"{prefix}*") if p.is_file()),
-        key=lambda p: p.name,
+        key=lambda p: (p.stat().st_mtime_ns, p.name),
     )
     removed = []
     for old in files[:-keep] if len(files) > keep else []:

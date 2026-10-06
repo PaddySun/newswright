@@ -49,4 +49,5 @@ def test_backup_rotation_keeps_seven(db_session, backup_dir):
         path = target.run_backup()
     files = sorted(backup_dir.glob(f"{FILE_PREFIX}*"))
     assert len(files) == BACKUP_KEEP_COUNT
-    assert path == files[-1]  # 最新一份在场
+    newest = max(files, key=lambda p: p.stat().st_mtime_ns)
+    assert path == newest  # 最新一份在场（按修改时间判定）
