@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -24,14 +25,42 @@ log = logging.getLogger("newswright.scheduler")
 scheduler = BackgroundScheduler(timezone="UTC")
 _started = False
 
+# 增值功能线程池（与采集线程隔离）：fetch 轮完成后把 score 链提交到此池异步执行，
+# fetch 线程立即返回——打分 LLM 长阻塞不占用抓取并发。max_workers=1 串行化增值
+# 轮次，与 round_busy 防重叠构成双保险。采集与呈现不在此池，永不因增值层排队降级。
+value_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="newswright-value")
+
+
+def _submit_score_async() -> None:
+    """把打分轮提交增值线程池（自带会话；防重叠在提交前后双重检查）。"""
+
+    def _run() -> None:
+        from .pipeline.runner import round_busy, score_round
+
+        try:
+            with SessionLocal() as db:
+                if round_busy(db, "score"):
+                    log.info("上一轮 score 未结束，异步打分跳过（防重叠）")
+                    return
+                score = score_round(db, triggered_by="scheduler")
+                for d in score.get("directions") or []:
+                    log.info("score 方向[%s] %s 打分=%s",
+                             d.get("name"), d.get("status"), d.get("scored"))
+        except Exception:  # noqa: BLE001  增值层异常绝不冒泡伤及采集线程
+            log.error("异步打分轮异常:\n%s", traceback.format_exc())
+
+    value_pool.submit(_run)
+
 
 def _tick_fetch() -> None:
-    """fetch 轮：入队 → 执行 → 紧跟 score 轮。单实例 max_instances=1 + 轮次防重叠双保险。"""
+    """fetch 轮：入队 → 执行 → score 链提交增值线程池异步执行（fetch 线程立即返回）。
+
+    单实例 max_instances=1 + 轮次防重叠双保险；提交前 round_busy 预检避免无效排队。
+    """
     from .pipeline.runner import (
         enqueue_fetch_round,
         process_fetch_round,
         round_busy,
-        score_round,
     )
 
     with SessionLocal() as db:
@@ -45,9 +74,7 @@ def _tick_fetch() -> None:
         if round_busy(db, "score"):
             log.info("上一轮 score 未结束，本轮打分跳过（防重叠）")
             return
-        score = score_round(db, triggered_by="scheduler")
-        for d in score.get("directions") or []:
-            log.info("score 方向[%s] %s 打分=%s", d.get("name"), d.get("status"), d.get("scored"))
+    _submit_score_async()
 
 
 def _tick_hot() -> None:

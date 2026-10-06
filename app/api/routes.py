@@ -479,19 +479,61 @@ def stream_b(direction_id: int | None = None, limit: int = 50,
                                         enabled=enabled)
     out_items = merged[:limit]
     explore_meta = {"enabled": False, "inserted": 0}
+    unscored = _unscored_entries(db, direction_id)
     if direction_id is not None and sort == "score":
         explore_meta = _inject_explore_items(db, direction_id, out_items, limit)
-    return {"items": out_items, "interleave": meta, "explore": explore_meta}
+    return {"items": out_items, "interleave": meta, "explore": explore_meta,
+            "unscored": unscored}
+
+
+def _unscored_entries(db: Session, direction_id: int | None) -> list[dict]:
+    """未评分条目标注列表：近期打分轮存在失败（LLM 故障的合法降级稳态）时，
+    B 流附带未评分 FETCHED 条目并带"暂未评分"标注字段（真实低分/无分不伪装，
+    条目照常可读）——故障隔离的呈现侧语义。近期无打分失败时不附带（正常轮
+    未评分条目只是排队中）。"""
+    from datetime import timedelta
+
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+    recent_score_failed = (
+        db.query(PipelineTask.id)
+        .filter(PipelineTask.kind == "score", PipelineTask.status == "FAILED",
+                PipelineTask.updated_at >= cutoff)
+        .first()
+        is not None
+    )
+    if not recent_score_failed:
+        return []
+    q = (
+        db.query(Item)
+        .filter(
+            Item.fetch_status == "FETCHED",
+            Item.sanitize_status == "PASSED",
+            Item.duplicate_of.is_(None),
+        )
+        .outerjoin(ScoreResult, (ScoreResult.item_id == Item.id)
+                   & (ScoreResult.status == "OK"))
+        .filter(ScoreResult.id.is_(None))
+    )
+    if direction_id is not None:
+        q = q.filter(Item.source_id.in_(
+            db.query(Source.id).filter_by(direction_id=direction_id, enabled=True)))
+    return [
+        {"id": i.id, "title": i.title, "url": i.url, "flag": "unscored",
+         "note": "暂未评分"}
+        for i in q.order_by(Item.id.desc()).limit(10).all()
+    ]
 
 
 def _inject_explore_items(db: Session, direction_id: int, out_items: list[dict],
                           limit: int) -> dict:
     """B 流探索条目注入：探索层选样（质量地板×距离分位×MMR）后追加到常规结果之后。
 
-    总开关关（site_config 或方向级覆盖为关）、方向查询向量未就绪或嵌入禁用时
+    总开关关（site_config 或方向级覆盖为关）、方向查询向量未就绪、嵌入禁用或
+    Token 日预算触发（探索层为降级秩序第一档：选样返回空 + WARN 日志）时
     零注入；注入条目带 flag="explore" 与真实低相关分。每页配额 ≤ quota。
     """
     from .. import config
+    from ..pipeline.budget import budget_exceeded
     from ..retrieval.embedder import blob_to_vec, embed_enabled
     from ..retrieval.explore import explore_params, explore_pick
     from ..siteconfig import get_config as site_get_config
@@ -502,6 +544,13 @@ def _inject_explore_items(db: Session, direction_id: int, out_items: list[dict],
         return meta
     params = explore_params(db, d, get_config=site_get_config)
     meta["enabled"] = params["enabled"]
+    if budget_exceeded(db):
+        import logging as _logging
+
+        _logging.getLogger("newswright.retrieval").warning(
+            "Token 日预算已触发，探索层本轮暂停（降级秩序第一档）")
+        meta["budget_paused"] = True
+        return meta
     model_version = config.MOARK_EMBED_MODEL
     if (not params["enabled"] or not embed_enabled()
             or not model_version or model_version == "none"
