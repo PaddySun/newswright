@@ -52,12 +52,19 @@ def _migrate_added_columns() -> None:
             "rank_exclude_below": "INTEGER NOT NULL DEFAULT 30",
             "include_hot_brief": "BOOLEAN NOT NULL DEFAULT 0",
             "author_json": "JSON",
+            # 呈现层两列（F2）：历史作者 bio 为空、未公开
+            "bio": "TEXT NOT NULL DEFAULT ''",
+            "public_visible": "BOOLEAN NOT NULL DEFAULT 0",
         },
         "write_run": {
             "payload": "JSON",
         },
         "article": {
             "citation_violated": "BOOLEAN NOT NULL DEFAULT 0",
+            # 呈现层三列（F2）：历史文章未书签、不公开、AI 标识默认开
+            "bookmarked": "BOOLEAN NOT NULL DEFAULT 0",
+            "public": "BOOLEAN NOT NULL DEFAULT 0",
+            "ai_label": "BOOLEAN NOT NULL DEFAULT 1",
         },
         "usage_log": {
             "cache_hit_tokens": "INTEGER NOT NULL DEFAULT 0",

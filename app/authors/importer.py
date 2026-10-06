@@ -70,6 +70,11 @@ def import_author_json(
     if dm:
         author.memory_config = {f"{k}_memory" if not k.endswith("_memory") else k: v
                                 for k, v in dm.items()}
+    # 呈现层可选键：bio/public_visible 携带时覆盖 DB 列，缺省保持原值（旧文档兼容）
+    if "bio" in cfg and cfg["bio"] is not None:
+        author.bio = str(cfg["bio"])
+    if "public_visible" in cfg and cfg["public_visible"] is not None:
+        author.public_visible = bool(cfg["public_visible"])
     author.persona_prompt = render_persona_prompt(cfg)
     author.author_json = cfg
     db.commit()
@@ -82,9 +87,14 @@ def import_author_json_file(db: Session, path: str | Path, **kwargs) -> Author:
 
 
 def export_author_json(author: Author) -> dict:
+    """导出 author.JSON：身份资产全量 + 呈现层两列（bio/public_visible）随文档
+    一起走——导出文档再导入即恢复同一作者的完整呈现配置（round-trip 一致）。"""
     if not author.author_json:
         raise ValueError(f"作者 {author.name!r} 没有 author.json 配置")
-    return copy.deepcopy(author.author_json)
+    out = copy.deepcopy(author.author_json)
+    out["bio"] = author.bio or ""
+    out["public_visible"] = bool(author.public_visible)
+    return out
 
 
 def roundtrip_check(author: Author, original: dict) -> tuple[bool, list[str]]:

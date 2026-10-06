@@ -249,6 +249,10 @@ class Author(Base):
     rank_exclude_below: Mapped[int] = mapped_column(Integer, default=30)  # 归一化 0-100
     # 热点风向段注入写作提示词（能力③→作者侧，M13）
     include_hot_brief: Mapped[bool] = mapped_column(Boolean, default=False)
+    # 呈现层两列（F2）：bio=公开页作者简介文案；public_visible=作者是否勾选公开
+    # （未勾选作者的文章不进模式 C 公开页——呈现过滤的作者级开关）
+    bio: Mapped[str] = mapped_column(Text, default="", server_default="")
+    public_visible: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
     # 可配置写作管线（M14）：author.json 全量配置（身份/管线/记忆层）；模型绑定不在此，
     # 仍由本表 model 列（后台/DB 绑定）。NULL=未配置 JSON，走现行 single 路线，行为不变。
     author_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
@@ -299,6 +303,12 @@ class Article(Base):
     status: Mapped[str] = mapped_column(String(30), default="PUBLISHED_TO_C")
     # 引用违规标记：引用校验重试耗尽后仍入库的文章置 true（数据保留，展示侧据此提示"引用存疑"）
     citation_violated: Mapped[bool] = mapped_column(Boolean, default=False)
+    # 呈现层三列（F2）：bookmarked=登录态书签位（POST /bookmark 幂等置位，无独立书签行）；
+    # public=是否可进公开页（模式 C 呈现过滤位，本批只落列不接呈现）；
+    # ai_label=AI 生成标识开关（默认开——AI 生成内容显著标识，后台可关）
+    bookmarked: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
+    public: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
+    ai_label: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("1"))
 
 
 class UsageLog(Base):
