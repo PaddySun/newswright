@@ -56,7 +56,7 @@ def fetch_search_source(db: Session, source: Source) -> SourceFetchStats:
         return stats
 
     try:
-        provider = registry.get_provider(provider_name)
+        provider = registry.get_provider(provider_name, db)
         t0 = time.monotonic()
         results = provider.search(keyword, count=count, **opts)
         latency_ms = int((time.monotonic() - t0) * 1000)

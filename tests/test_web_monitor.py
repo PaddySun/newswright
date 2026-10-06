@@ -56,7 +56,7 @@ def web_source(db_session):
 
 def _patch(monkeypatch, *responses):
     FakeClient.responses = list(responses)
-    monkeypatch.setattr(web.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
 
 
 def test_first_fetch_and_hash_unchanged_skip(db_session, web_source, monkeypatch):
@@ -110,7 +110,7 @@ def test_http_error_recorded(db_session, web_source, monkeypatch):
         def get(self, url, headers=None):
             raise httpx.HTTPStatusError("500", request=None, response=None)  # type: ignore
 
-    monkeypatch.setattr(web.httpx, "Client", ErrClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", ErrClient)
     s = fetch_web_source(db_session, db_session.merge(web_source))
     assert s.error and s.inserted == 0
 

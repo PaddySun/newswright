@@ -85,7 +85,7 @@ def fresh_source(db_session):
 
 def _fetch(db_session, monkeypatch, src, feed: bytes, blacklist: list[str] | None = None):
     FakeClient.responses = [FakeResp(feed)]
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
     return rss_mod.fetch_source(db_session, src, blacklist=blacklist)
 
 

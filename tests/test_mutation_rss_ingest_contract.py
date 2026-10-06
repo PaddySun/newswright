@@ -77,7 +77,7 @@ def _patch(monkeypatch, *responses):
     RecordingClient.responses = list(responses)
     RecordingClient.calls = []
     RecordingClient.init_kwargs = {}
-    monkeypatch.setattr(rss_mod.httpx, "Client", RecordingClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", RecordingClient)
 
 
 def _feed(*items: str) -> bytes:
@@ -292,7 +292,7 @@ def test_fetch_http_error_records_error_evidence(db_session, monkeypatch):
     ErrClient.responses = []
     ErrClient.calls = []
     ErrClient.init_kwargs = {}
-    monkeypatch.setattr(rss_mod.httpx, "Client", ErrClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", ErrClient)
 
     s = fetch_source(db_session, src)
     assert s.error == "ConnectError: boom"
@@ -548,7 +548,7 @@ def test_fetch_with_last_modified_completes_request_normally(db_session, monkeyp
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, content=feed, headers={"Content-Type": "application/xml"})
 
-    monkeypatch.setattr(rss_mod.httpx, "Client",
+    monkeypatch.setattr("app.ingest.http.httpx.Client",
                         lambda **kw: _REAL_HTTPX_CLIENT(
                             transport=httpx.MockTransport(handler), **kw))
     stats = fetch_source(db_session, db_session.merge(src))

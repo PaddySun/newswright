@@ -74,7 +74,7 @@ def _fake_results(n=3):
 
 def test_search_channel_end_to_end(db_session, monkeypatch):
     src = _mk_search_source(db_session)
-    monkeypatch.setattr(registry, "get_provider", lambda name: type("P", (), {
+    monkeypatch.setattr(registry, "get_provider", lambda name, db=None: type("P", (), {
         "name": name,
         "search": lambda self, q, count=10, **kw: _fake_results(),
     })())
@@ -109,7 +109,7 @@ def test_search_channel_quota_blocked_skipped(db_session, monkeypatch):
             called["n"] += 1
             return _fake_results()
 
-    monkeypatch.setattr(registry, "get_provider", lambda name: P())
+    monkeypatch.setattr(registry, "get_provider", lambda name, db=None: P())
     stats = search_pipeline.fetch_search_source(db_session, src)
     # 调用未发出（SKIPPED_QUOTA 语义）
     assert called["n"] == 0
@@ -133,7 +133,7 @@ def test_search_channel_provider_error_recorded(db_session, monkeypatch):
 
             raise SearchError("boom")
 
-    monkeypatch.setattr(registry, "get_provider", lambda name: P())
+    monkeypatch.setattr(registry, "get_provider", lambda name, db=None: P())
     stats = search_pipeline.fetch_search_source(db_session, src)
     assert stats.error and "boom" in stats.error
     logs = db_session.query(SearchCallLog).all()

@@ -6,6 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .api.auth import router as auth_router
+from .api.feedback import router as feedback_router
 from .api.routes import router
 from .auth import bootstrap_admin
 from .db import SessionLocal, init_db
@@ -17,6 +18,7 @@ def create_app() -> FastAPI:
     with SessionLocal() as db:
         bootstrap_admin(db)  # AC-01.1：users 空表时创建 admin（已有用户不覆盖）
     app.include_router(auth_router)  # /api/auth：守卫豁免路由（先注册）
+    app.include_router(feedback_router)  # /feedback：匿名反馈（守卫豁免，独立 router）
     app.include_router(router)
 
     @app.exception_handler(HTTPException)
@@ -45,6 +47,21 @@ def create_app() -> FastAPI:
     from .logging_setup import reset_log_context, set_log_context, setup_logging
 
     setup_logging()
+
+    @app.middleware("http")
+    async def visitor_cookie_middleware(request, call_next):
+        """匿名访客身份签发：首次访问（无 nw_visitor cookie）即签发 HttpOnly
+        随机 id——匿名反馈去重的主链（缺失时 IP+UA 哈希兜底，见 deps.visitor_hash）。
+        已带 cookie 不重签（身份稳定，跨请求可去重）。"""
+        import secrets as _secrets
+
+        from .api.deps import VISITOR_COOKIE_NAME
+
+        response = await call_next(request)
+        if VISITOR_COOKIE_NAME not in request.cookies:
+            response.set_cookie(VISITOR_COOKIE_NAME, _secrets.token_urlsafe(24),
+                                httponly=True, samesite="lax", path="/")
+        return response
 
     @app.middleware("http")
     async def log_context_middleware(request, call_next):

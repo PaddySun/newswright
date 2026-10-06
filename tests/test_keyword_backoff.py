@@ -33,7 +33,7 @@ def _patch_provider(monkeypatch, n_results: int):
                      raw={})
         for i in range(n_results)
     ]
-    monkeypatch.setattr(registry, "get_provider", lambda name: type("P", (), {
+    monkeypatch.setattr(registry, "get_provider", lambda name, db=None: type("P", (), {
         "name": name,
         "search": lambda self, q, count=10, **kw: results,
     })())

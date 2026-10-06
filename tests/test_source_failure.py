@@ -51,7 +51,7 @@ class FakeClient:
 
 def _patch(monkeypatch, responses):
     FakeClient.responses = list(responses)
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
 
 
 _EMPTY_FEED = ("""<?xml version="1.0"?>

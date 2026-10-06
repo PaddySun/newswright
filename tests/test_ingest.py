@@ -96,7 +96,7 @@ def test_fetch_source_client_redirect_contract(db_session, monkeypatch):
         def get(self, url, headers=None):
             return types.SimpleNamespace(status_code=304, headers={})
 
-    monkeypatch.setattr(rss_mod.httpx, "Client", RedirectProbeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", RedirectProbeClient)
     d = Direction(name="重定向契约方向", prompt="p", threshold=60)
     db_session.add(d)
     db_session.commit()

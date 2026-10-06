@@ -74,7 +74,7 @@ def test_skip_day_flag_true_on_declared_rest_day(db_session, monkeypatch, day_of
         def get(self, url, headers=None):
             return FakeResp()
 
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
 
     stats = fetch_source(db_session, db_session.merge(src))
     assert stats.extra.get("skip_day") is True

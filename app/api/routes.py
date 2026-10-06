@@ -33,7 +33,6 @@ from ..pipeline.runner import (
     process_fetch_round,
     score_round,
 )
-from ..authors.memory import record_feedback
 from .. import scheduler as scheduler_mod
 from .deps import require_session
 
@@ -197,25 +196,6 @@ def get_write_run(run_id: int, db: Session = Depends(get_session)):
         "model": r.model, "status": r.status, "error": r.error,
         "created_at": r.created_at,
     }
-
-
-# ---------- 反馈 ----------
-
-class FeedbackIn(BaseModel):
-    article_id: int
-    verdict: str  # like | dislike
-    comment: str | None = None
-
-
-@router.post("/feedback")
-def feedback(payload: FeedbackIn, db: Session = Depends(get_session)):
-    article = db.get(Article, payload.article_id)
-    if article is None:
-        raise HTTPException(404, "article not found")
-    if payload.verdict not in ("like", "dislike"):
-        raise HTTPException(422, "verdict must be like|dislike")
-    entry = record_feedback(db, article, verdict=payload.verdict, comment=payload.comment)
-    return {"memory_entry_id": entry.id, "module": entry.module, "content": entry.content}
 
 
 # ---------- 用量 ----------
@@ -1004,6 +984,84 @@ def test_notify_settings(db: Session = Depends(get_session)):
         raise HTTPException(502, {"code": "SMTP_UNREACHABLE",
                                   "message": f"{type(e).__name__}: {e}"})
     return {"sent": True}
+
+
+# ---------- 站长端点：关键词降频复位 / 月度计费对账 ----------
+
+@router.post("/api/directions/{direction_id}/refresh-keyword")
+def refresh_keyword(direction_id: int, db: Session = Depends(get_session)):
+    """搜索关键词边际降频的手工恢复入口：清零该方向全部搜索源的零收益计数
+    与降频档（复位了状态的源数即返回值；无搜索源或本就无降频时 reset=0）。"""
+    from ..pipeline.skip_policy import reset_keyword_backoff
+
+    _get_live_direction(db, direction_id)
+    reset = reset_keyword_backoff(db, direction_id=direction_id)
+    return {"reset": reset}
+
+
+class UsageReconcileIn(BaseModel):
+    month: str  # YYYY-MM
+    platform_billed_units: int = Field(ge=0)
+
+
+def _month_range(month: str) -> tuple[datetime, datetime] | None:
+    """YYYY-MM → [当月起, 次月起) UTC 区间；格式非法返回 None。"""
+    try:
+        year, mon = month.split("-")
+        start = datetime(int(year), int(mon), 1, tzinfo=timezone.utc)
+    except (ValueError, AttributeError):
+        return None
+    if not (1 <= int(mon) <= 12) or len(mon) != 2 or len(year) != 4:
+        return None
+    end_year, end_mon = (year + 1, 1) if int(mon) == 12 else (year, f"{int(mon) + 1:02d}")
+    return start, datetime(int(end_year), int(end_mon), 1, tzinfo=timezone.utc)
+
+
+@router.post("/api/settings/usage/reconcile")
+def usage_reconcile(payload: UsageReconcileIn, db: Session = Depends(get_session)):
+    """月度计费对账：平台账单计费量 vs 账本（usage_log 当月 billing_units 汇总）。
+
+    偏差 >10% → 通知（category=reconcile，24h 去重）+ 结构化 ERROR 日志行
+    （账本是唯一可信源——平台计费口径漂移过一次，对账是发现通道）。
+    同月重复提交=覆盖对账记录（幂等语义；承载形态=site_config 键
+    usage_reconcile_<month> 的 JSON 快照，upsert 覆盖，无独立对账表）。
+    """
+    import logging as _logging
+
+    from ..models import UsageLog
+    from ..notify.triggers import notify_usage_reconcile_deviation
+    from ..siteconfig import set_config
+
+    rng = _month_range(payload.month)
+    if rng is None:
+        raise HTTPException(400, {"code": "VALIDATION_ERROR",
+                                  "message": "month 必须是 YYYY-MM 形态"})
+    start, end = rng
+    ledger_units = int(db.query(func.sum(func.coalesce(UsageLog.billing_units, 0)))
+                       .filter(UsageLog.created_at >= start, UsageLog.created_at < end)
+                       .scalar() or 0)
+    platform_units = int(payload.platform_billed_units)
+    if ledger_units > 0:
+        deviation_pct = round(abs(platform_units - ledger_units) / ledger_units * 100, 2)
+    else:
+        deviation_pct = 0.0 if platform_units == 0 else 100.0
+    alerted = False
+    if deviation_pct > 10:
+        _logging.getLogger("newswright.reconcile").error(
+            "计费对账偏差超阈: month=%s ledger=%d platform=%d deviation=%.2f%%",
+            payload.month, ledger_units, platform_units, deviation_pct,
+            extra={"error_code": "RECONCILE_DEVIATION", "month": payload.month})
+        out = notify_usage_reconcile_deviation(
+            db, month=payload.month, ledger_units=ledger_units,
+            platform_units=platform_units, deviation_pct=deviation_pct)
+        alerted = bool(out.get("sent"))
+    set_config(db, f"usage_reconcile_{payload.month}", {
+        "month": payload.month, "ledger_units": ledger_units,
+        "platform_units": platform_units, "deviation_pct": deviation_pct,
+        "alerted": alerted, "at": datetime.now(timezone.utc).isoformat()})
+    return {"month": payload.month, "ledger_units": ledger_units,
+            "platform_units": platform_units, "deviation_pct": deviation_pct,
+            "alerted": alerted}
 
 
 # ---------- 来源管理（G2/W1） ----------

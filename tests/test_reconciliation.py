@@ -81,7 +81,7 @@ def source(db_session):
 
 def _fetch(db_session, monkeypatch, src, feed: bytes):
     FakeClient.responses = [FakeResp(feed)]
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
     return fetch_source(db_session, src)
 
 
@@ -159,7 +159,7 @@ def test_fetch_error_round_balances_trivially(db_session, source, monkeypatch):
         def get(self, url, headers=None):
             raise httpx.ConnectError("connection refused")
 
-    monkeypatch.setattr(rss_mod.httpx, "Client", ErrClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", ErrClient)
     stats = fetch_source(db_session, source)
     assert stats.error is not None and stats.feed_entries == 0
     _assert_balanced(stats)
@@ -178,7 +178,7 @@ def test_search_channel_attribution_ledger(db_session, source, monkeypatch):
     results = [SearchResult(title=f"r{i}", url=f"https://ex.com/kw/{i}",
                             snippet="摘要" * 150, content="全文" * 200,
                             published_at=None, raw={}) for i in range(2)]
-    monkeypatch.setattr(registry, "get_provider", lambda name: type("P", (), {
+    monkeypatch.setattr(registry, "get_provider", lambda name, db=None: type("P", (), {
         "name": name, "search": lambda self, q, count=10, **kw: results})())
     stats = search_pipeline.fetch_search_source(db_session, d_kw)
     assert stats.inserted == 2
@@ -197,7 +197,7 @@ def _fetch_web(db_session, monkeypatch, src, html: str):
     import app.ingest.web as web_mod
 
     FakeClient.responses = [FakeResp(html.encode())]
-    monkeypatch.setattr(web_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
     return web_mod.fetch_web_source(db_session, src)
 
 
@@ -293,7 +293,7 @@ def test_search_channel_equation(db_session, monkeypatch, source):
         SearchResult(title="新2", url="https://ex.com/eq/4",
                      snippet=_LONG, content=_LONG, published_at=None, raw={}),
     ]
-    monkeypatch.setattr(registry, "get_provider", lambda name: type("P", (), {
+    monkeypatch.setattr(registry, "get_provider", lambda name, db=None: type("P", (), {
         "name": name, "search": lambda self, q, count=10, **kw: results})())
     stats = search_pipeline.fetch_search_source(db_session, d_kw)
     assert stats.feed_entries == 5

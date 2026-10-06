@@ -94,11 +94,14 @@ class SearchProvider(ABC):
 class HTTPSearchProvider(SearchProvider):
     """带鉴权头的 HTTP 搜索 provider 公共部分。"""
 
-    def __init__(self, *, timeout: float = 30.0) -> None:
+    def __init__(self, *, timeout: float = 30.0, db=None) -> None:
         self._timeout = timeout
+        self._db = db  # 出网统一出口的 UA 策略读取面（可为 None=honest 无邮箱形态）
 
     def _post_json(self, url: str, payload: dict[str, Any], headers: dict[str, str]) -> dict[str, Any]:
-        with httpx.Client(timeout=self._timeout) as client:
+        from ..ingest.http import http_client
+
+        with http_client(self._db, timeout=self._timeout) as client:
             resp = client.post(url, json=payload, headers=headers)
         if resp.status_code in RETRYABLE_STATUS:
             e = SearchError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")

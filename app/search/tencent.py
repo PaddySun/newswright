@@ -68,13 +68,14 @@ class TencentSearchProvider(SearchProvider):
     name = "tencent"
 
     def __init__(self, *, secret_id: str | None = None, secret_key: str | None = None,
-                 timeout: float = 30.0) -> None:
+                 timeout: float = 30.0, db=None) -> None:
         self._secret_id = secret_id or config.TENCENT_SECRET_ID
         self._secret_key = secret_key or config.TENCENT_SECRET_KEY
         self._host = config.TENCENT_WSA_HOST
         self._action = config.TENCENT_WSA_ACTION
         self._version = config.TENCENT_WSA_VERSION
         self._timeout = timeout
+        self._db = db
         if not (self._secret_id and self._secret_key):
             raise SearchError("tencent provider 缺少凭据（.env tencentSecretId/tencentSecretKey）")
 
@@ -87,7 +88,9 @@ class TencentSearchProvider(SearchProvider):
         payload = json.dumps(body_obj, ensure_ascii=False, separators=(",", ":"))
         headers = _tc3_headers(self._secret_id, self._secret_key, "wsa", self._host,
                                self._action, self._version, payload)
-        with httpx.Client(timeout=self._timeout) as client:
+        from ..ingest.http import http_client
+
+        with http_client(self._db, timeout=self._timeout) as client:
             resp = client.post(f"https://{self._host}", headers=headers,
                                content=payload.encode("utf-8"))
         if resp.status_code >= 500:

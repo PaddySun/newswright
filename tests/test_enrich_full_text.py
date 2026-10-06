@@ -68,11 +68,11 @@ def _setup(db_session, monkeypatch, *, source_config, feed=None, enrich_result=N
     db_session.commit()
 
     FakeClient.responses = [FakeResp(feed or _short_feed())]
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
 
     calls: list[dict] = []
 
-    def fake_enrich(url, current_text, *, page_url):
+    def fake_enrich(url, current_text, *, page_url, db=None):
         calls.append({"url": url, "current_text": current_text, "page_url": page_url})
         if enrich_result is None:
             return _FULL_TEXT
@@ -230,7 +230,7 @@ def test_enrich_receives_current_summary_text(db_session, monkeypatch):
     """调用契约：富化调用携带条目当前摘要文本（原文无增量时按摘要兜底的基础）。"""
     recorded: list[str] = []
 
-    def echo_enrich(url, current_text, *, page_url):
+    def echo_enrich(url, current_text, *, page_url, db=None):
         recorded.append(current_text)
         return current_text + "（富化全文）"
 
@@ -250,7 +250,7 @@ def test_web_list_enrich_receives_current_summary_text(db_session, monkeypatch):
 
     recorded: list[str] = []
 
-    def echo_enrich(url, current_text, *, page_url):
+    def echo_enrich(url, current_text, *, page_url, db=None):
         recorded.append(current_text)
         return current_text + "（富化全文）"
 

@@ -303,3 +303,27 @@ def test_migrate_old_db_adds_author_presentation_columns(f2_presentation_old_db)
         row = conn.execute(text(
             "SELECT bio, public_visible FROM author WHERE id = 1")).one()
     assert row == ("", 0)
+
+
+def test_article_reaction_table_created_with_unique_constraint(db_session):
+    """匿名反馈计数新表由 create_all 补建（新库路径）：唯一约束
+    (article_id, visitor_hash) 是去重幂等的持久承载——同访客同文章至多一行。"""
+    from app.models import Article, ArticleReaction, Author
+
+    author = Author(name="反应作者", model="m")
+    db_session.add(author)
+    db_session.commit()
+    article = Article(author_id=author.id, title="t", body="b", citations=[])
+    db_session.add(article)
+    db_session.commit()
+    db_session.add(ArticleReaction(article_id=article.id, visitor_hash="cookie:v1",
+                                   verdict="like"))
+    db_session.commit()
+    db_session.add(ArticleReaction(article_id=article.id, visitor_hash="cookie:v1",
+                                   verdict="like"))
+    # 第二行同 (article_id, visitor_hash) 违反唯一约束——去重幂等的持久承载
+    with pytest.raises(Exception):
+        db_session.commit()
+    db_session.rollback()
+    assert db_session.query(ArticleReaction).filter_by(
+        article_id=article.id).count() == 1
