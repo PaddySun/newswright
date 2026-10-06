@@ -184,3 +184,44 @@ def test_list_directions_excludes_deleted_only(auth_client):
     listed = auth_client.get("/api/directions").json()
     ids = {row["id"] for row in listed}
     assert d1["id"] in ids and d2["id"] not in ids
+
+
+# ---------- 序列化与错误体字段（C2-4 分诊补强：OpenAPI 响应契约） ----------
+
+
+def test_create_direction_response_schema_fields(auth_client):
+    """方向序列化含 name/prompt 字段（OpenAPI directions 响应 schema，值原样透传）。"""
+    body = _create(auth_client).json()
+    assert body["name"] == "AI 与软件工程"
+    assert body["prompt"] == "关注 AI 工程实践：模型发布、推理优化、测试与工具链。"
+
+
+def test_direction_error_body_contains_message_field(auth_client):
+    """404 错误体结构含 message 字段（OpenAPI Error schema required [code, message]）。"""
+    d = _create(auth_client).json()
+    auth_client.delete(f"/api/directions/{d['id']}")
+    for path in (f"/api/directions/{d['id']}", "/api/directions/99999"):
+        r = auth_client.put(path, json={"threshold": 50})
+        assert r.status_code == 404
+        body = r.json()
+        assert "code" in body and "message" in body
+
+
+def test_temp_expires_at_future_midnight_utc(monkeypatch):
+    """临时方向 TTL 到期时刻 = 冻结时刻 + ttl_days 当日的零点（UTC 口径按
+    到期日零点等价实现；时区键落地前 UTC 与本地零点由 SQLite 存储丢 tz 归一等价，
+    断言面取日历分量）。设计依据见 docs/design-index.md「AC-03.4」。"""
+    from datetime import datetime as _dt
+    from datetime import date, datetime, timezone
+
+    import app.api.routes as routes_mod
+
+    class _Frozen(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2026, 10, 6, 15, 30, 45, tzinfo=timezone.utc)
+
+    monkeypatch.setattr(routes_mod, "datetime", _Frozen)
+    exp = routes_mod._temp_expires_at(7)
+    assert exp.date() == date(2026, 10, 13)
+    assert exp.hour == 0 and exp.minute == 0 and exp.second == 0
