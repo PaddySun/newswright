@@ -84,6 +84,9 @@ def _migrate_added_columns() -> None:
             "temp": "BOOLEAN NOT NULL DEFAULT 0",
             "expires_at": "DATETIME",
             "deleted_at": "DATETIME",
+            # 方向查询向量缓存（检索层）：历史行为空 = 未生成，路由时按未命中处理
+            "query_vec": "BLOB",
+            "query_vec_version": "INTEGER",
         },
     }
     with engine.begin() as conn:

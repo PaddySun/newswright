@@ -524,12 +524,53 @@ def process_rescore_tasks(db: Session) -> list[dict]:
     return out
 
 
+def _route_candidates(db: Session, direction: Direction,
+                      candidates: list[Item]) -> tuple[list[Item], dict]:
+    """检索路由接线（路由器不是过滤器）：只改顺序不改候选集合。
+
+    顺序即管线：向量补齐（失败容错，内部吞异常）→ 查询向量就绪检查 → 语义
+    近重复标记（判重者剔除出打分候选）→ 命中/未命中分桶排序。嵌入整链任何
+    异常=全量慢速（stats 落 embed_fallback），零静默丢弃。
+    """
+    from ..retrieval.embedder import ensure_item_vectors
+    from ..retrieval.query import direction_query_vector, ensure_direction_query_vec
+    from ..retrieval.router import mark_semantic_duplicates, partition_items
+
+    try:
+        ensure_item_vectors(db, candidates)
+        if not candidates:
+            return candidates, {"routed_hits": 0, "routed_misses": 0,
+                                "embed_disabled": True}
+        query_ready = ensure_direction_query_vec(db, direction)
+        model_version = config.MOARK_EMBED_MODEL
+        if not query_ready or not model_version or model_version == "none":
+            return candidates, {"routed_hits": 0, "routed_misses": len(candidates),
+                                "embed_disabled": True}
+        marked = mark_semantic_duplicates(db, direction, candidates,
+                                          model_version=model_version)
+        if marked:
+            marked_ids = {i.id for i in marked}
+            candidates = [i for i in candidates if i.id not in marked_ids]
+        ordered, stats = partition_items(
+            db, direction, candidates, query_vec=direction_query_vector(direction),
+            model_version=model_version,
+        )
+        return ordered, stats
+    except Exception as e:  # noqa: BLE001  检索层故障永不丢内容：回退全量慢速
+        db.rollback()
+        log.warning("检索路由异常，本轮回退全量慢速打分: %s", e)
+        return candidates, {"routed_hits": 0, "routed_misses": len(candidates),
+                            "embed_fallback": True}
+
+
 def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int | None = None) -> dict:
     """对全部启用方向打一轮分。
 
     幂等：只对 fetch_status=FETCHED 且尚无 OK 打分（status=OK）的条目调用 LLM——
     FAILED 的下轮自动续跑，OK 的绝不重复打分（每条内容只烧一次打分 LLM）。
     入口先消化 PENDING 的 rescore 任务（重打分与常规打分共用轮次链与突发上限）。
+    打分前经检索路由排序：命中方向查询的条目本轮优先，未命中条目仍全量打分
+    （仅顺序后移）；语义/URL 判重条目不进打分（duplicate_of 已指向 origin）。
     """
     from ..models import ScoreResult
     from ..scoring.service import score_item
@@ -548,21 +589,24 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
         db.commit()
         scored = failed = passed = parse_failed = 0
         try:
-            items = (
+            candidates = (
                 db.query(Item)
                 .filter(
                     Item.source_id.in_(db.query(Source.id).filter_by(direction_id=d.id, enabled=True)),
                     Item.fetch_status == "FETCHED",
                     # 零信任过滤 REJECTED 的条目不进打分（全文仍留库可查）
                     Item.sanitize_status == "PASSED",
+                    # 判重条目不进打分（URL 指纹/语义近重复，duplicate_of 指向 origin）
+                    Item.duplicate_of.is_(None),
                 )
                 .outerjoin(ScoreResult, (ScoreResult.item_id == Item.id) & (ScoreResult.direction_id == d.id)
                            & (ScoreResult.status == "OK"))
                 .filter(ScoreResult.id.is_(None))
-                # 突发上限：单轮至多 SCORE_ROUND_MAX_ITEMS 条，超出留给下轮幂等续跑
-                .limit(config.SCORE_ROUND_MAX_ITEMS)
                 .all()
             )
+            ordered, route_stats = _route_candidates(db, d, candidates)
+            # 突发上限：单轮至多 SCORE_ROUND_MAX_ITEMS 条，超出留给下轮幂等续跑
+            items = ordered[: config.SCORE_ROUND_MAX_ITEMS]
             for item in items:
                 try:
                     sr = score_item(db, item, d)
@@ -578,7 +622,11 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                 else:
                     failed += 1
             _stats = {
-                "candidates": len(items), "scored": scored, "passed": passed,
+                **route_stats,
+                # candidates=本轮实际进入打分的条数（突发上限截断后）；
+                # candidates_total=路由前的全量候选数（含超出上限留待下轮的部分）
+                "candidates": len(items), "candidates_total": len(candidates),
+                "scored": scored, "passed": passed,
                 "call_failed": failed, "parse_failed": parse_failed,
             }
             _status = "FAILED" if (failed + parse_failed) > 0 and scored == 0 else "DONE"

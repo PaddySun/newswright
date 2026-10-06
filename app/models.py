@@ -102,6 +102,10 @@ class Direction(Base):
     temp: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # 方向查询向量缓存（检索路由）：生成文本 = 方向提示词提炼的 rubric 摘要式查询，
+    # query_vec_version 记录生成时的 prompt_version——提示词升版即缓存失效重生成
+    query_vec: Mapped[bytes | None] = mapped_column(LargeBinary, nullable=True)
+    query_vec_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     def apply_status(self, new_status: str) -> None:
         """切换生命周期状态并同步 enabled 镜像列（仅 active 为真）。"""
