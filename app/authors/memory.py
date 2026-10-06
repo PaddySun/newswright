@@ -54,6 +54,9 @@ def record_feedback(db: Session, article: Article, *, verdict: str, comment: str
         text = f"读者点赞了《{article.title}》，说明这类选题与写法受到认可。"
     elif verdict == "dislike":
         text = f"读者点了踩《{article.title}》，说明这类选题或写法需要改进。"
+    elif verdict == "comment":
+        # 文字评价（登录态提交）：正文即评语本身，回流语义由评语原文承载
+        text = f"读者留言评价了《{article.title}》。"
     else:
         raise ValueError(f"verdict 非法: {verdict}")
     if comment:

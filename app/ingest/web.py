@@ -36,7 +36,7 @@ from .sanitize import SanitizeTarget, run_sanitize
 
 log = logging.getLogger("newswright.ingest.web")
 
-_UA = "Mozilla/5.0 (compatible; newswright-demo/0.1; +https://localhost)"
+from .http import http_client  # 出网统一出口（UA 策略 + proxy 参数位）
 _TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.IGNORECASE | re.DOTALL)
 _WEB_BODY_MAX_CHARS = 100_000  # morningdeck 口径：抽取后正文截 100KB
 
@@ -163,7 +163,8 @@ def llm_extract_entries(db: Session, *, page_url: str, content_text: str,
     return out
 
 
-def enrich_entry_text(url: str, current_text: str, *, page_url: str) -> str:
+def enrich_entry_text(url: str, current_text: str, *, page_url: str,
+                      db=None) -> str:
     """抓原文补全正文（httpx+trafilatura，无 LLM）：全文比现文本更长才采用。
 
     供监测列表条目与 RSS 摘要富化开关共用（复用同一抽取路径）。
@@ -178,8 +179,8 @@ def enrich_entry_text(url: str, current_text: str, *, page_url: str) -> str:
     if normalize_url(url) == normalize_url(page_url):
         return current_text
     try:
-        with httpx.Client(timeout=30.0, follow_redirects=True) as client:
-            resp = client.get(url, headers={"User-Agent": _UA})
+        with http_client(db, timeout=30.0, follow_redirects=True) as client:
+            resp = client.get(url)
             resp.raise_for_status()
         text = extract_page_markdown(resp.text)
         if len(text.strip()) > len(current_text.strip()):
@@ -201,14 +202,14 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
     ignore_page_date = bool(cfg_.get("ignore_page_date"))
 
     stats = SourceFetchStats(source_id=source.id, url=source.url)
-    headers = {"User-Agent": _UA}
+    headers = {}
     if source.etag:
         headers["If-None-Match"] = source.etag
     if source.last_modified:
         headers["If-Modified-Since"] = source.last_modified
 
     try:
-        with httpx.Client(timeout=60.0, follow_redirects=True) as client:
+        with http_client(db, timeout=60.0, follow_redirects=True) as client:
             resp = client.get(source.url, headers=headers)
             if resp.status_code == 304:  # raise_for_status 之前判（3xx 抛异常，既有坑）
                 stats.not_modified = True
@@ -324,7 +325,7 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
             for ep in entries:
                 if len(ep.content_text.strip()) < config.RULE_MIN_BODY_CHARS:
                     ep.content_text = enrich_entry_text(ep.url, ep.content_text,
-                                                        page_url=source.url)
+                                                        page_url=source.url, db=db)
                 _ingest(ep)
     else:
         # 单页条目：guid 带内容版本后缀（同 URL 内容变化 → 新条目，旧条目保留）；

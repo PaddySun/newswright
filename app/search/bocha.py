@@ -19,8 +19,9 @@ ENDPOINT = "https://api.bocha.cn/v1/web-search"
 class BochaSearchProvider(HTTPSearchProvider):
     name = "bocha"
 
-    def __init__(self, *, api_key: str | None = None, timeout: float = 30.0) -> None:
-        super().__init__(timeout=timeout)
+    def __init__(self, *, api_key: str | None = None, timeout: float = 30.0,
+                 db=None) -> None:
+        super().__init__(timeout=timeout, db=db)
         self._api_key = api_key or config.BOCHA_API_KEY
         if not self._api_key:
             raise SearchError("bocha provider 缺少 API Key（.env bochaaiAPIKey）")

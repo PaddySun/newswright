@@ -311,6 +311,26 @@ class Article(Base):
     ai_label: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("1"))
 
 
+class ArticleReaction(Base):
+    """匿名反馈计数行（like/dislike 的去重承载）。
+
+    唯一约束 (article_id, visitor_hash)：同一访客对同一文章至多一行——计数
+    幂等去重的持久承载（重复点赞不再计数）。visitor_hash 主备双链形态见
+    app/api/deps.py visitor_hash（cookie 主、IP+UA 兜底）。
+    """
+    __tablename__ = "article_reaction"
+    __table_args__ = (
+        UniqueConstraint("article_id", "visitor_hash", name="uq_article_reaction_visitor"),
+        Index("ix_article_reaction_article", "article_id"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
+    visitor_hash: Mapped[str] = mapped_column(String(200))
+    verdict: Mapped[str] = mapped_column(String(10))  # like / dislike
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 class UsageLog(Base):
     __tablename__ = "usage_log"
 

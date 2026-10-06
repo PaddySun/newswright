@@ -94,7 +94,7 @@ def test_url_dup(db_session, two_sources, monkeypatch):
     orig = _seed_origin(db_session, src_a)
 
     FakeClient.responses = [FakeResp(_feed_xml("https://EX.com/post?utm_source=rss#frag"))]
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
     stats = fetch_source(db_session, src_b)
 
     # 分桶口径（AC-05.1）：inserted 含 DUP 行
@@ -136,7 +136,7 @@ def test_cross_direction_independent(db_session, two_sources, monkeypatch):
     db_session.commit()
 
     FakeClient.responses = [FakeResp(_feed_xml("https://ex.com/post"))]
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
     stats = fetch_source(db_session, src_c)
 
     assert stats.inserted == 1
@@ -224,7 +224,7 @@ def test_title_fallback_dup_marks_duplicate_within_direction(db_session, two_sou
         </channel></rss>""".encode("utf-8")
 
     FakeClient.responses = [FakeResp(_title_only_feed("First"))]
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
     s1 = fetch_source(db_session, src_a)
     assert s1.inserted == 1
     first = db_session.query(Item).filter_by(source_id=src_a.id).one()

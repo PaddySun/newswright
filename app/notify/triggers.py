@@ -66,6 +66,20 @@ def notify_budget_exceeded(db: Session, *, used_tokens: int, budget: int) -> dic
              f"降级秩序：探索层暂停 → 嵌入暂停 → 打分慢速 → 写作需站长确认。")
 
 
+def notify_usage_reconcile_deviation(db: Session, *, month: str, ledger_units: int,
+                                     platform_units: int,
+                                     deviation_pct: float) -> dict:
+    """月度计费对账偏差告警（>10% 触发时由对账端点调用）：同月 24h 去重。"""
+    return _dispatch(
+        db, switch_key="notify_on_reconcile", category="reconcile",
+        dedupe_key=f"reconcile-{month}",
+        subject=f"[newswright] 计费对账偏差超阈（{month}：{deviation_pct}%）",
+        body=f"{month} 平台账单 {platform_units} units vs 账本汇总 {ledger_units} units，"
+             f"偏差 {deviation_pct}%（阈值 10%）。\n账本是唯一可信源，请核对平台"
+             f"计费口径（Key 有效性/计费单位定义）。\n"
+             f"时间: {datetime.now(timezone.utc).isoformat()}")
+
+
 def check_collective_sentinel(db: Session, *, threshold_ratio: float = 0.5,
                               sustained_rounds: int = 2) -> dict:
     """采集面聚合哨兵（fetch 轮末检查）：超过一半启用源处于 suspect/hard_failed

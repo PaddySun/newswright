@@ -49,8 +49,15 @@ DEFAULTS: dict[str, object] = {
     "notify_on_token_budget": True,
     "notify_on_collective": True,
     "notify_on_disk": True,
+    # 月度计费对账偏差告警开关（对账端点触发 >10% 偏差时通知）
+    "notify_on_reconcile": True,
     # 磁盘用量告警阈值（百分比）
     "disk_usage_warn_percent": 80,
+    # 出网礼貌性策略（采集公共纪律）：honest=诚实 UA（产品名+联系邮箱位）；
+    # custom=自配 UA 串（ua_custom，空串回退 honest）
+    "ua_strategy": "honest",
+    "ua_custom": "",
+    "contact_email": "",
 }
 
 

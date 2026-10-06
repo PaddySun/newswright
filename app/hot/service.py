@@ -15,7 +15,6 @@ import time
 from datetime import datetime, timezone
 from typing import Any
 
-import httpx
 from sqlalchemy.orm import Session
 
 from .. import config
@@ -24,20 +23,17 @@ from ..pipeline.runner import _claim, _finish, _new_task, round_busy
 
 log = logging.getLogger("newswright.hot")
 
-_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
-
-
-def fetch_platform(platform: str, *, timeout: float = 20.0) -> list[dict[str, Any]]:
+def fetch_platform(platform: str, *, timeout: float = 20.0,
+                   db=None) -> list[dict[str, Any]]:
     """拉取一个平台热榜（newsnow 类聚合 API），返回原始条目列表（全量，不裁剪）。
 
     响应形如 {"status": "success|cache", "items": [{"title", "url", "extra"}]}。
+    客户端经统一出网工厂构造（UA 策略 + proxy 参数位）。
     """
-    r = httpx.get(
-        f"{config.HOT_AGG_BASE}?id={platform}&latest",
-        headers={"User-Agent": _UA},
-        timeout=timeout,
-        follow_redirects=True,
-    )
+    from ..ingest.http import http_client
+
+    with http_client(db, timeout=timeout, follow_redirects=True) as client:
+        r = client.get(f"{config.HOT_AGG_BASE}?id={platform}&latest")
     r.raise_for_status()
     body = r.json()
     items = body.get("items")
@@ -180,7 +176,7 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     for p in platforms:
         t0 = time.monotonic()
         try:
-            items = fetch_platform(p)
+            items = fetch_platform(p, db=db)
             dt = int((time.monotonic() - t0) * 1000)
             platform_stats.append({"platform": p, "ok": True, "items": len(items), "ms": dt})
             raw_by_platform[p] = items

@@ -1,11 +1,13 @@
-"""请求侧依赖（G1/W1）：客户端身份提取与会话守卫。
+"""请求侧依赖：客户端身份提取与会话守卫。
 
 ADR-5⑤ 单一实现纪律：get_client_ip 是请求侧真实 IP 的唯一提取口——登录限速
-（本里程碑）与 D7 匿名反馈兜底哈希（未来）必须共用本函数，禁两处口径漂移。
-CDN/WAF 拓扑下 request.client.host 是回源 IP（共享，会造成全员误锁），
-由 site_config.client_ip_header 配置提取头（如 CF-Connecting-IP）。
+与匿名访客兜底哈希共用本函数，禁两处口径漂移。CDN/WAF 拓扑下
+request.client.host 是回源 IP（共享，会造成全员误锁），由 site_config.
+client_ip_header 配置提取头（如 CF-Connecting-IP）。
 """
 from __future__ import annotations
+
+import hashlib
 
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
@@ -14,6 +16,8 @@ from .. import siteconfig
 from ..auth import get_valid_session
 from ..db import get_session
 from ..models import User
+
+VISITOR_COOKIE_NAME = "nw_visitor"
 
 
 def get_client_ip(request: Request, db: Session | None = None) -> str:
@@ -27,6 +31,24 @@ def get_client_ip(request: Request, db: Session | None = None) -> str:
     if request.client and request.client.host:
         return request.client.host
     return "unknown"
+
+
+def visitor_hash(request: Request, db: Session | None = None) -> str:
+    """匿名访客去重身份（主备双链）：
+
+    主链=服务端签发的 HttpOnly cookie id（nw_visitor）；备链=cookie 缺失时
+    sha256(client_ip + UA)。只用 IP 不行：NAT/公司出口下所有访客共享同源 IP，
+    只按 IP 去重会把全体访客误并为一个身份（一人点赞=全员不能再点赞）；
+    拼 UA 后同 IP 的不同浏览器/客户端仍可区分。IP 提取复用 get_client_ip
+    单一实现（与登录限速同口径）。返回值带链路前缀（cookie:/anon:）防两条
+    链的值空间意外相撞。"""
+    cookie = request.cookies.get(VISITOR_COOKIE_NAME)
+    if cookie and cookie.strip():
+        return f"cookie:{cookie.strip()}"
+    ip = get_client_ip(request, db)
+    ua = request.headers.get("user-agent", "")
+    digest = hashlib.sha256(f"{ip}\n{ua}".encode("utf-8")).hexdigest()
+    return f"anon:{digest}"
 
 
 class LoginRateLimiter:

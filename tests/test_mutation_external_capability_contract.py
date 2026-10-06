@@ -700,7 +700,7 @@ def _patch_search_provider(monkeypatch, search_fn):
             return search_fn(q, count, kw)
 
     monkeypatch.setattr(search_registry, "get_provider",
-                        lambda name: calls.append({"name": name}) or P())
+                        lambda name, db=None: calls.append({"name": name}) or P())
     return calls
 
 
@@ -841,7 +841,7 @@ def test_search_channel_provider_error_row(db_session, monkeypatch):
         def search(self, q, count=10, **kw):
             raise SearchError("search boom")
 
-    monkeypatch.setattr(search_registry, "get_provider", lambda name: P())
+    monkeypatch.setattr(search_registry, "get_provider", lambda name, db=None: P())
     stats = search_pipeline.fetch_search_source(db_session, src)
     assert "search boom" in stats.error
     log = db_session.query(SearchCallLog).one()

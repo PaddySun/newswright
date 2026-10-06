@@ -28,7 +28,7 @@ TRACKING_PARAMS = {
     "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
     "fbclid", "gclid", "igshid", "mc_cid", "mc_eid", "spm", "ref", "ref_src",
 }
-_UA = "Mozilla/5.0 (compatible; newswright-demo/0.1; +https://localhost)"
+from .http import http_client  # 出网统一出口（UA 策略 + proxy 参数位）
 
 # 内容嗅探：HTTP 200 但响应体不是 XML（WAF 挑战页/HTML 伪装空 feed）→ 判
 # non_xml_response 走失败列，不喂 feedparser（空 feed 解析会伪装成"源没更新"）。
@@ -197,7 +197,7 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
         cfg_ = source.source_config or {}
         window_days = int(cfg_.get("first_ingest_days")
                           or siteconfig.get_config(db, "first_ingest_days") or 7)
-    headers = {"User-Agent": _UA}
+    headers = {}
     if source.etag:
         headers["If-None-Match"] = source.etag
     if source.last_modified:
@@ -205,7 +205,8 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
     try:
         # 跟随重定向但显式封顶 3 次跳转：httpx 默认上限远高于此，且不设上限的
         # 跟随在恶意/配置错误的 feed 上会失控；不跟随则无法穿透短链与换域迁移。
-        with httpx.Client(timeout=60.0, follow_redirects=True, max_redirects=3) as client:
+        # 客户端经统一工厂构造（默认 UA 已含在客户端头，此处只补协商缓存头）
+        with http_client(db, timeout=60.0, follow_redirects=True, max_redirects=3) as client:
             resp = client.get(source.url, headers=headers)
             if resp.status_code == 304:  # 必须在 raise_for_status 之前判（httpx 对 3xx 抛异常）
                 stats.not_modified = True
@@ -262,7 +263,8 @@ def fetch_source(db: Session, source: Source, *, max_age_days: int | None = None
             if exists:
                 continue  # 已入库条目不富化（成本只花在会新落库的被拒条目上）
             db.commit()  # 结束只读检查事务
-            ep.content_text = enrich_entry_text(ep.url, ep.content_text, page_url=source.url)
+            ep.content_text = enrich_entry_text(ep.url, ep.content_text,
+                                                page_url=source.url, db=db)
 
     for ep in entries:
         try:

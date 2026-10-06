@@ -81,7 +81,7 @@ def _patch(monkeypatch, *responses):
     RecordingClient.responses = list(responses)
     RecordingClient.calls = []
     RecordingClient.init_kwargs = {}
-    monkeypatch.setattr(web.httpx, "Client", RecordingClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", RecordingClient)
 
 
 def _mk_source(db_session, **config):
@@ -367,7 +367,7 @@ def test_enrich_boundary_only_for_rule_rejected_length(db_session, monkeypatch):
     _mock_llm(monkeypatch, entries)
     enrich_calls = []
 
-    def fake_enrich(url, current_text, *, page_url):
+    def fake_enrich(url, current_text, *, page_url, db=None):
         enrich_calls.append({"url": url, "page_url": page_url})
         return "富化后的全文" + _long_text(300)
 

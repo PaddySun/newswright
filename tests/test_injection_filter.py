@@ -108,7 +108,7 @@ def test_search_channel_rejected_keeps_fetch_status_and_fulltext(
                      snippet="正常摘要" * 150, content="正常全文" * 200,
                      published_at=None, raw={}),
     ]
-    monkeypatch.setattr(registry, "get_provider", lambda name: type("P", (), {
+    monkeypatch.setattr(registry, "get_provider", lambda name, db=None: type("P", (), {
         "name": name, "search": lambda self, q, count=10, **kw: results})())
     stats = search_pipeline.fetch_search_source(db_session, src)
 

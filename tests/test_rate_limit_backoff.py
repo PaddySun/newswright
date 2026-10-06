@@ -66,7 +66,7 @@ def rss_source(db_session):
 
 def _run_round(db_session, monkeypatch, responses):
     FakeClient.responses = list(responses)
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
     rt = enqueue_fetch_round(db_session, triggered_by="test")
     if rt is None:
         return None

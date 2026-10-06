@@ -57,7 +57,7 @@ def rss_direction(db_session):
 def _patch(monkeypatch, *responses):
     FakeClient.responses = list(responses)
     FakeClient.sent_headers = []
-    monkeypatch.setattr(rss_mod.httpx, "Client", FakeClient)
+    monkeypatch.setattr("app.ingest.http.httpx.Client", FakeClient)
 
 
 _HTML_CHALLENGE = b"<html><head><title>Just a moment...</title></head><body>challenge</body></html>"
