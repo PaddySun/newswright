@@ -47,6 +47,27 @@ def test_unique_source_guid(tables):
         s.rollback()
 
 
+def test_apply_status_mirrors_enabled(tables):
+    """方向生命周期切换同步 enabled 镜像列（仅 active 为真）——status 是唯一
+    真值，enabled 是旧读路径镜像。设计依据见 docs/design-index.md「AC-03.3」。"""
+    with SessionLocal() as s:
+        d = Direction(name="镜像方向", prompt="p", threshold=60)
+        s.add(d)
+        s.commit()
+
+        d.apply_status(Direction.STATUS_DISABLED)
+        assert d.status == "disabled" and d.enabled is False
+        s.commit()
+
+        d.apply_status(Direction.STATUS_ACTIVE)
+        assert d.status == "active" and d.enabled is True
+
+        d.apply_status(Direction.STATUS_DELETED)
+        assert d.status == "deleted" and d.enabled is False
+        assert d.deleted_at is not None
+        s.commit()
+
+
 def test_users_sessions_siteconfig_tables(tables):
     """G1/W1：users(username 唯一)、sessions(字符串主键)、site_config(key TEXT PK)。"""
     with SessionLocal() as s:

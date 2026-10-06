@@ -1982,3 +1982,125 @@
 | app.ingest.web.x_fetch_web_source__mutmut_243 | A | apply_fp=False→None：None 与 False 同 falsy，版本条目豁免指纹链语义不变（C2-1 m18 None/False 同falsy 判据） | 等价/不可达或条款未钉（None/False 同 falsy + ignore_page_date 键全档无条款〔batch4 m17-21 先例〕+ tz 存储未钉） |
 | app.ingest.web.x_fetch_web_source__mutmut_257 | A | ignore_page_date 条件恒 else：键设计书全档无条款（batch4 m17-21 grep 核查先例，仅影响未钉的页面日期抽取） | 等价/不可达或条款未钉（None/False 同 falsy + ignore_page_date 键全档无条款〔batch4 m17-21 先例〕+ tz 存储未钉） |
 | app.ingest.web.x_fetch_web_source__mutmut_261 | A | last_fetched_at naive（now(None)）：存储 tz 未钉（batch4 m86 先例） | 等价/不可达或条款未钉（None/False 同 falsy + ignore_page_date 键全档无条款〔batch4 m17-21 先例〕+ tz 存储未钉） |
+
+## C2-4 分诊批次 4A（2026-10-06，收官批段A：embedding.moark 87 + db 76 + models 3 = 166 条）：A 92 条
+
+> 种子=统一 dispatch run 37276946376 未登记幸存者之余量段（doc/C2/C2-4-种子.jsonl；
+> C2 收官分诊批两段仪式之一）。diff 经 mutmut 3.8.0 库级静态重建（app/ 自 8c5f515
+> 零变化 1:1 对名，orig 体一致性校验 166/166）。终态：**C 74/74 全杀**（
+> tests/test_embedding_moark_request.py 7 测试 + tests/test_db_migration.py +3 测试
+> 〔g2_older_item_db 四表旧库夹具〕+ tests/test_models_smoke.py +1 测试）、
+> **A 92/92 全活**、B/D 0。定案表与施加核验记录见 doc/C2/C2-4-核验.py /
+> C2-4-核验结果.json（summary verified=295 ok=295 unexpected=0 之段A 部分）。
+> C 类判据主轴：moark 嵌入协议契约（请求体字段/鉴权头/响应 index 还原/usage 计量/
+> 429 retryable）经真实 httpx MockTransport 路径补测——既有 M18 测试对该函数全部
+> 打桩替身，真实路径零覆盖为本段 87 条幸存主因；db G2 新列枚举精确性/source_keyword
+> 补列/D19 库内归一（raw SQL 读——ORM 读被 PromptVersion 双向归一兜底遮蔽，系
+> 既有测试未杀的根因）。
+
+### app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request（23 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_23 | A | Authorization 键小写/大写：HTTP 头名大小写不敏感（RFC 7230），服务端解析等价——httpx 头名归一化判据族（batch4 m29/30 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_24 | A | Authorization 键小写/大写：HTTP 头名大小写不敏感（RFC 7230），服务端解析等价——httpx 头名归一化判据族（batch4 m29/30 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_25 | A | Content-Type 键 XX：httpx 对 json= 参数自动携带 Content-Type: application/json，显式键名变异被自动头兜底、结果头不变——恰等价（本批 A 轮实测新判例：C 轮施加 16 判据面测试仍全绿，键 XX 化后 httpx 自动补正主头） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_26 | A | Content-Type 键小写/大写：HTTP 头名大小写不敏感——同 m23 判据族 | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_27 | A | Content-Type 键小写/大写：HTTP 头名大小写不敏感——同 m23 判据族 | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_32 | A | EmbeddingError(None)：异常消息文案——消息措辞无条款（batch2 m24-35 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_33 | A | _scrub(None)：消息中响应体预览丢失——消息内容细节无条款（batch2 m42 同族） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_34 | A | 响应体截断 [:300]→[:301]：截断界数值无条款（batch2 m42、批次10 m69 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_37 | A | >=400 → >400/>=401：差异域=恰 400 状态码响应，两形态均以 EmbeddingError 终态（400 响应体必无 data 数组→「缺少 data」错误），仅消息细节异——状态码界面域 + 终态同型（C2-3 m247 数值边界族；消息无条款） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_38 | A | >=400 → >400/>=401：差异域=恰 400 状态码响应，两形态均以 EmbeddingError 终态（400 响应体必无 data 数组→「缺少 data」错误），仅消息细节异——状态码界面域 + 终态同型（C2-3 m247 数值边界族；消息无条款） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_39 | A | 400 分支消息 None/预览丢失/截断界：消息文案细节——同 m32-34 判据 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_40 | A | 400 分支消息 None/预览丢失/截断界：消息文案细节——同 m32-34 判据 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_41 | A | 400 分支消息 None/预览丢失/截断界：消息文案细节——同 m32-34 判据 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_50 | A | 「缺少 data」消息 None：消息文案（batch2 m24 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_58 | A | index 缺省 None：差异域=缺 index 键的违约响应（协议恒含 index〔EV1 实测〕），缺省分支域=违约形态——防御缺省不可达判据族（C2-3 m75 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_60 | A | get("index",) 单参：缺省 None——同 m58 判据（违约响应域缺省不可达） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_63 | A | index 缺省 0→1：差异域=缺 index 键的违约响应——同 m58 判据 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_72 | A | 「空/非法向量」消息 None/XX/大写：消息文案（batch2 m24 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_73 | A | 「空/非法向量」消息 None/XX/大写：消息文案（batch2 m24 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_74 | A | 「空/非法向量」消息 None/XX/大写：消息文案（batch2 m24 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_88 | A | or 0→or 1：差异域=缺 prompt_tokens 键的违约响应（正常响应恒含〔EV1 实测〕），兜底数值无条款——防御缺省不可达 + 数值缺省族（C2-3 m75/m15 先例） | 历史判据族复用（详见说明列） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_89 | A | meter "item_count" 键 XX/大写：死返回值——base 层 item_count=len(inputs) 落账（embedding/base.py:119 调用点核查），meter 键无消费方（C2-3 EF m14 死返回值判据） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_90 | A | meter "item_count" 键 XX/大写：死返回值——base 层 item_count=len(inputs) 落账（embedding/base.py:119 调用点核查），meter 键无消费方（C2-3 EF m14 死返回值判据） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+
+### app.db.x__migrate_added_columns（67 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| x__migrate_added_columns__mutmut_103 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_107 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_111 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_114 | A | "item_count": "integer" 小写：类型名大小写不敏感——批次 3 m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_115 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_125 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_128 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_129 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_132 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_133 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_136 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_137 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_141 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_144 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_145 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_149 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_155 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_160 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_163 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_164 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_167 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_168 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_169 | A | backfill 旗标 False→None：None/False 同 falsy，if 真值判定等价（C2-1 m18 判据） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__migrate_added_columns__mutmut_171 | A | backfill 旗标 False→None：None/False 同 falsy，if 真值判定等价（C2-1 m18 判据） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__migrate_added_columns__mutmut_172 | A | backfill_direction_status 恒 True：换算 UPDATE 只触 status='active' 行且按镜像不变式（apply_status 维护 active⟺enabled=1）重算恒同值——幂等等价（镜像不变式；UPDATE WHERE status='active' 域核查） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__migrate_added_columns__mutmut_175 | A | 缺表 continue→break：init_db 中 create_all 先行保证 additions 七表恒存在，not has_table 恒假不可达——批次 3 m99 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_193 | A | and→or：旧库四生命周期列齐缺时 temp 列补列同样置 backfill、换算照跑，差异域=仅 status 缺而 temp 已在的部分升级中间态库（G2 一次性迁移，生产不可达）——不可达域（g2_old_db 夹具四列齐缺形态核查） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__migrate_added_columns__mutmut_197 | A | col != "status"：同 m193——四列齐缺旧库由 temp/expires_at/deleted_at 触发backfill，换算照跑等价（部分升级中间态不可达） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__migrate_added_columns__mutmut_202 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_203 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_204 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_205 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_206 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_207 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_208 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_209 | A | migrate log.info 文案/实参变体：日志措辞无条款、格式化异常被 logging 自吞——批次 3 m3-m9 先例 | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_212 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_216 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_219 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_220 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_224 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_225 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_227 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_230 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_233 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_235 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_238 | A | 表缺失分支 continue→break：触发条件=表缺失（direction/score_result 恒存在），不可达——m175 同族 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| x__migrate_added_columns__mutmut_249 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_25 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_255 | A | SQL 关键字/表名/列名大小写变体（含元组表名 DIRECTION/SCORE_RESULT 经 has_table 不敏感命中）：SQLite 大小写不敏感——批次 3 m5 判据族（'active'/'text' 等值形态未变，m230/m249 值核查） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_29 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_30 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_33 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_34 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_38 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_50 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_54 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_57 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_58 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_62 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_66 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_68 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_72 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_84 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_87 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_91 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+| x__migrate_added_columns__mutmut_97 | A | SQLite 关键字/类型名/表键大小写与 XX 类型名变体：标识符与关键字大小写不敏感、任意类型名按亲和子串归一（XXDATETIMEXX/XXTEXTXX/XXINTEGERXX 同亲和）——批次 3 m5/m9/m16/m63 先例族（venv 实测） | 历史判据族复用（详见说明列） |
+
+### app.models（Direction.apply_status / PromptVersion 双向归一）（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| xǁPromptVersionǁprocess_bind_param__mutmut_1 | A | bind None 分支恒假化：写入端 None 由列 default=1 先行兜底（C2-3 实证：显式 None 触发列 default；default 替换先于类型 bind），None 不可达——防御缺省不可达 | 等价/不可达（控制流推理、列缺省承载、平台语义） |
+| xǁPromptVersionǁprocess_result_value__mutmut_1 | A | result None 分支恒假化：列 NOT NULL（Mapped[int] 非可选），回读恒非 None——防御缺省不可达（列约束核查） | 等价/不可达（控制流推理、列缺省承载、平台语义） |
