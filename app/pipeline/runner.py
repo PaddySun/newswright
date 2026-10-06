@@ -535,7 +535,12 @@ def _route_candidates(db: Session, direction: Direction,
     from ..retrieval.embedder import ensure_item_vectors
     from ..retrieval.query import direction_query_vector, ensure_direction_query_vec
     from ..retrieval.router import mark_semantic_duplicates, partition_items
+    from .budget import budget_exceeded
 
+    # 预算闸②嵌入暂停：预算触发即跳过整条嵌入链，路由自动回退全量慢速
+    if budget_exceeded(db):
+        return candidates, {"routed_hits": 0, "routed_misses": len(candidates),
+                            "embed_disabled": True, "budget_embed_paused": True}
     try:
         ensure_item_vectors(db, candidates)
         if not candidates:
@@ -571,9 +576,12 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
     入口先消化 PENDING 的 rescore 任务（重打分与常规打分共用轮次链与突发上限）。
     打分前经检索路由排序：命中方向查询的条目本轮优先，未命中条目仍全量打分
     （仅顺序后移）；语义/URL 判重条目不进打分（duplicate_of 已指向 origin）。
+    预算闸③打分转慢速：Token 日预算触发时轮上限降为 score_slow_round_max_items
+    （继续低速不绝停，超出部分下轮幂等续跑）。
     """
     from ..models import ScoreResult
     from ..scoring.service import score_item
+    from .budget import budget_exceeded, score_slow_cap
 
     process_rescore_tasks(db)
     q = db.query(Direction).filter(Direction.status == Direction.STATUS_ACTIVE)
@@ -581,6 +589,7 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
         q = q.filter(Direction.id == direction_id)
     directions = q.all()
     summary: dict[str, object] = {"triggered_by": triggered_by, "directions": []}
+    budget_slow = budget_exceeded(db)
 
     for d in directions:
         task = _new_task(db, kind="score", payload={"direction_id": d.id, "prompt_version": d.prompt_version})
@@ -605,8 +614,9 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                 .all()
             )
             ordered, route_stats = _route_candidates(db, d, candidates)
-            # 突发上限：单轮至多 SCORE_ROUND_MAX_ITEMS 条，超出留给下轮幂等续跑
-            items = ordered[: config.SCORE_ROUND_MAX_ITEMS]
+            # 突发上限：单轮至多 SCORE_ROUND_MAX_ITEMS 条；预算触发时降为慢速上限
+            round_cap = score_slow_cap(db) if budget_slow else config.SCORE_ROUND_MAX_ITEMS
+            items = ordered[:round_cap]
             for item in items:
                 try:
                     sr = score_item(db, item, d)
@@ -623,9 +633,10 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                     failed += 1
             _stats = {
                 **route_stats,
-                # candidates=本轮实际进入打分的条数（突发上限截断后）；
+                # candidates=本轮实际进入打分的条数（上限截断后）；
                 # candidates_total=路由前的全量候选数（含超出上限留待下轮的部分）
                 "candidates": len(items), "candidates_total": len(candidates),
+                "budget_slow": budget_slow,
                 "scored": scored, "passed": passed,
                 "call_failed": failed, "parse_failed": parse_failed,
             }
@@ -644,14 +655,31 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
 
 
 def write_task(db: Session, author_id: int, *, triggered_by: str = "manual",
-               **run_kwargs) -> dict:
-    """触发一次作者写作，状态经 pipeline_task 落库（run_kwargs 透传 batch_id 等）。"""
+               budget_confirmed: bool = False, **run_kwargs) -> dict:
+    """触发一次作者写作，状态经 pipeline_task 落库（run_kwargs 透传 batch_id 等）。
+
+    预算闸④写作确认：Token 日预算触发且未携带站长确认标记时拒绝自动执行
+    （任务落 DONE + budget_confirmation_required 标记，不产生任何 LLM 调用），
+    携带 budget_confirmed=True 的手动触发照常执行。
+    """
     from ..models import Author
     from ..authors.writer import run_write
+    from .budget import budget_exceeded
 
     author = db.get(Author, author_id)
     if author is None:
         raise ValueError(f"author {author_id} 不存在")
+    if budget_exceeded(db) and not budget_confirmed:
+        task = _new_task(db, kind="write",
+                         payload={"author_id": author_id, **run_kwargs})
+        task.status = "RUNNING"
+        task.attempts += 1
+        db.commit()
+        _finish(db, task, status="DONE",
+                payload_extra={"executed": False, "budget_confirmation_required": True,
+                               "note": "Token 日预算已触发，写作需站长确认后执行"})
+        return {"task_id": task.id, "status": task.status,
+                "budget_confirmation_required": True, "executed": False}
     task = _new_task(db, kind="write", payload={"author_id": author_id, **run_kwargs})
     task.status = "RUNNING"
     task.attempts += 1

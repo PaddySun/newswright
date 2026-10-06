@@ -27,6 +27,11 @@ DEFAULTS: dict[str, object] = {
     "explore_quality_floor": 50,
     "explore_distance_percentile": 5,
     "explore_quota_per_page": 3,
+    # Token 日预算闸（默认 0 = 不设限）：当日 usage_log token 汇总达预算即按
+    # "低优先级先停"秩序降级（探索→嵌入→打分慢速→写作确认）；采集与呈现不降级
+    "daily_token_budget": 0,
+    # 预算触发后的打分慢速轮上限（继续低速、绝不整轮停摆）
+    "score_slow_round_max_items": 20,
 }
 
 
