@@ -366,12 +366,24 @@ def hot_batches(limit: int = 5, db: Session = Depends(get_session)):
 
 @router.get("/stats/search")
 def stats_search(days: int = 7, db: Session = Depends(get_session)):
-    """按 provider × 日聚合：次数/成功/失败/被限额拦截/均延迟。"""
+    """按 provider × 日聚合：次数/成功/失败/被限额拦截/均延迟。
+    日键取 site_config timezone 的本地日（created_at 为 UTC 存储，SQL 内按站点
+    时区偏移换算后切日——与预算日/追踪日同一时区口径，设计依据见
+    docs/design-index.md「D16」）。"""
+    from ..timeline import site_zone
+
     since = datetime.now(timezone.utc) - timedelta(days=days)
+    zone_offset = int(site_zone(db).utcoffset(datetime.now(timezone.utc)).total_seconds())
     rows = (
         db.query(
             SearchCallLog.provider,
-            func.substr(func.cast(SearchCallLog.created_at, sqlalchemy.String), 1, 10).label("day"),
+            func.substr(
+                func.datetime(
+                    func.cast(SearchCallLog.created_at, sqlalchemy.String),
+                    f"+{zone_offset} seconds",
+                ),
+                1, 10,
+            ).label("day"),
             func.count(SearchCallLog.id),
             func.sum(func.cast(SearchCallLog.ok, sqlalchemy.Integer)),
             func.sum(func.cast(SearchCallLog.status == "blocked", sqlalchemy.Integer)),
