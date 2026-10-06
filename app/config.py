@@ -81,9 +81,18 @@ MOARK_BASE_URL = _get("MOARK_BASE_URL") or "https://api.moark.com"
 MOARK_JEV_MODEL = _get("MOARK_JEV_MODEL") or "APUS-OpenJev-v1-9B"
 # NeoHorse-Jev-4B（EV7 实测新配置；不改变 MOARK_JEV_MODEL 默认行为）
 MOARK_JEV_MODEL_NEOHORSE = _get("MOARK_JEV_MODEL_NEOHORSE") or "NeoHorse-Jev-4B"
-# moark embedding（能力⑥，注册不接线）：默认模型与单请求批量上限
-MOARK_EMBED_MODEL = _get("MOARK_EMBED_MODEL") or "Qwen3-Embedding-0.6B"
+# moark embedding（能力⑥，检索层接线见 app/retrieval/）：默认模型与单请求批量上限。
+# 嵌入禁用语义：环境变量显式置空或 none → 检索层整体回退全量慢速（嵌入不可用路径），
+# 未设置则用默认模型。显式空串与未设置必须区分，故不走 _get 的空值归一。
+_MOARK_EMBED_MODEL_ENV = os.environ.get("MOARK_EMBED_MODEL")
+if _MOARK_EMBED_MODEL_ENV is not None and not _MOARK_EMBED_MODEL_ENV.strip():
+    MOARK_EMBED_MODEL = "none"
+else:
+    MOARK_EMBED_MODEL = _get("MOARK_EMBED_MODEL") or "Qwen3-Embedding-0.6B"
 EMBED_BATCH_SIZE = int(_get("EMBED_BATCH_SIZE") or 32)
+# 嵌入输入正文截断（标题恒保留）；嵌入向量期望维度（模型选型实测口径）
+EMBED_TRUNCATE_CHARS = int(_get("EMBED_TRUNCATE_CHARS") or 2000)
+EMBED_DIMENSIONS = int(_get("EMBED_DIMENSIONS") or 1024)
 # moark rerank（/v1/rerank，注册不接线）：默认模型
 MOARK_RERANK_MODEL = _get("MOARK_RERANK_MODEL") or "Qwen3-Reranker-0.6B"
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, Boolean, DateTime, false, ForeignKey, Index, Integer, String, Text, TypeDecorator, UniqueConstraint, text
+from sqlalchemy import JSON, Boolean, DateTime, LargeBinary, false, ForeignKey, Index, Integer, String, Text, TypeDecorator, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -183,6 +183,27 @@ class Item(Base):
     # 搜索通道命中关键词（逐词新增率归因的数据面；其他通道为空）
     source_keyword: Mapped[str | None] = mapped_column(String(200), nullable=True)
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ItemVec(Base):
+    """条目语义向量（检索层一等模块的存储基座）。
+
+    - vec 为 float32 小端序列化的 BLOB（标题+截断正文嵌入产物），反序列化与点积
+      检索为纯函数（app/retrieval/embedder.py）；万条规模内内存暴力点积足够，
+      不引入向量索引组件。
+    - model_version 记录生成向量所用的嵌入模型名：换模型场景下历史向量不匹配即
+      视同无向量（渐进补齐或显式全量重嵌任务），维度与模型口径绑定防相似度漂移。
+    - 唯一约束 (item_id, model_version)：同一条目每个模型版本至多一行向量。
+    """
+    __tablename__ = "item_vec"
+    __table_args__ = (
+        UniqueConstraint("item_id", "model_version", name="uq_item_vec_item_model"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    item_id: Mapped[int] = mapped_column(ForeignKey("item.id"))
+    model_version: Mapped[str] = mapped_column(String(100))
+    vec: Mapped[bytes] = mapped_column(LargeBinary)
 
 
 class ScoreResult(Base):
