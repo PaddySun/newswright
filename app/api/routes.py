@@ -32,7 +32,6 @@ from ..pipeline.runner import (
     fetch_round,
     process_fetch_round,
     score_round,
-    write_task,
 )
 from ..authors.memory import record_feedback
 from .. import scheduler as scheduler_mod
@@ -52,12 +51,25 @@ def pipeline_run(db: Session = Depends(get_session), direction_id: int | None = 
     return {"fetch": fetch, "score": score}
 
 
-@router.post("/pipeline/write/{author_id}")
+@router.post("/pipeline/write/{author_id}", status_code=202)
+@router.post("/api/pipeline/write/{author_id}", status_code=202)
 def pipeline_write(author_id: int, db: Session = Depends(get_session)):
-    try:
-        return write_task(db, author_id, triggered_by="api")
-    except ValueError as e:
-        raise HTTPException(404, str(e))
+    """异步写作入口：建 kind=write 的 PENDING 任务并立即提交增值线程池消费，
+    响应 202 + {"task_id"}（作者不存在 → 404）。
+
+    任务终态可查（/api/tasks 与 /api/write-runs/{id}），失败原因经 last_error
+    可见；失败可恢复 = FAILED 落因后重新触发即新任务，进程中断遗留的 RUNNING
+    由僵死回收转 FAILED。前端 2s/4s/8s 退避轮询行为归 UI 里程碑，本批落
+    "任务终态可查 + 失败原因可见"。"""
+    author = db.get(Author, author_id)
+    if author is None:
+        raise HTTPException(404, f"author {author_id} 不存在")
+    task = PipelineTask(kind="write", status="PENDING",
+                        payload={"author_id": author_id, "triggered_by": "api"})
+    db.add(task)
+    db.commit()
+    scheduler_mod.submit_write_tasks_async()
+    return {"task_id": task.id}
 
 
 # ---------- 条目与打分 ----------
@@ -298,6 +310,54 @@ def scheduler_status(db: Session = Depends(get_session)):
 
 
 # ---------- 热榜（能力③） ----------
+
+# 热点转方向的方向提示词预填模板（创建即确认：站长点击即人在环路确认动作）
+_HOT_TRACK_PROMPT_TEMPLATE = (
+    "追踪热点关键词「{keyword}」：收集与该关键词直接相关的新闻报道、官方发布、"
+    "数据与多方评论，按重要性与新鲜度评估；只收录与关键词实质相关的内容，"
+    "泛泛提及不收。")
+
+
+class HotToDirectionIn(BaseModel):
+    keyword: str
+
+
+@router.post("/api/hot/to-direction", status_code=201)
+def hot_to_direction(payload: HotToDirectionIn, db: Session = Depends(get_session)):
+    """热点关键词一键转临时追踪方向（人在环路轻量闭环）。
+
+    本端点的调用即站长确认动作（点击=确认）——无任何自动触发路径（热点批次
+    更新不自动建方向；自动注入的三重约束形态列 Out of Scope）。创建物两件：
+    ① temp 方向（TTL 默认 7 天、prompt 预填含关键词模板）；② 搜索源
+    （url 位承载关键词、freshness=oneDay——新页面召回，旧页面不过期规则白花钱）。
+    创建后按常规调度节奏采集（下一轮自然纳入，非本端点触发）。
+    同名方向已存在 → 409 DIRECTION_NAME_EXISTS。"""
+    keyword = payload.keyword.strip()
+    if not keyword:
+        raise HTTPException(400, {"code": "VALIDATION_ERROR", "message": "keyword 不能为空"})
+    name_exists = db.query(Direction.id).filter(Direction.name == keyword).first()
+    if name_exists is not None:
+        raise HTTPException(409, {"code": "DIRECTION_NAME_EXISTS",
+                                  "message": "同名方向已存在"})
+    d = Direction(name=keyword,
+                  prompt=_HOT_TRACK_PROMPT_TEMPLATE.format(keyword=keyword),
+                  prompt_version=1, threshold=60, temp=True,
+                  expires_at=_temp_expires_at(_DEFAULT_TEMP_TTL_DAYS))
+    db.add(d)
+    db.flush()
+    s = Source(direction_id=d.id, type="search", url=keyword,
+               source_config={"keyword": keyword, "freshness": "oneDay"})
+    db.add(s)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(409, {"code": "DIRECTION_NAME_EXISTS",
+                                  "message": "同名方向已存在"})
+    db.refresh(d)
+    db.refresh(s)
+    return {"direction_id": d.id, "source_id": s.id}
+
 
 @router.get("/hot/batches")
 def hot_batches(limit: int = 5, db: Session = Depends(get_session)):

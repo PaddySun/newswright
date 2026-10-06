@@ -52,6 +52,32 @@ def _submit_score_async() -> None:
     value_pool.submit(_run)
 
 
+def submit_write_tasks_async() -> None:
+    """把 PENDING write 任务消化提交增值线程池（自带会话）。
+
+    异步写作消费主路径：API 端点建任务后即时提交（不等待周期 tick）；
+    周期 tick（_tick_write_consume）作兜底消化遗留任务（创建后进程重启等场景）。
+    与打分轮同池串行——增值轮次串行化纪律（max_workers=1）。"""
+
+    def _run() -> None:
+        from .pipeline.runner import process_write_tasks
+
+        try:
+            with SessionLocal() as db:
+                consumed = process_write_tasks(db)
+                for t in consumed:
+                    log.info("write 任务[%s] %s", t.get("task_id"), t.get("status"))
+        except Exception:  # noqa: BLE001  增值层异常绝不冒泡伤及采集线程
+            log.error("异步 write 任务消化异常:\n%s", traceback.format_exc())
+
+    value_pool.submit(_run)
+
+
+def _tick_write_consume() -> None:
+    """周期兜底：消化遗留 PENDING write 任务（正常路径由 API 端点即时提交）。"""
+    submit_write_tasks_async()
+
+
 def _tick_fetch() -> None:
     """fetch 轮：入队 → 执行 → score 链提交增值线程池异步执行（fetch 线程立即返回）。
 
@@ -137,6 +163,11 @@ def start() -> None:
         run_job_safely, args=[_tick_backup],
         trigger=IntervalTrigger(hours=24),
         id="daily_backup", max_instances=1, coalesce=True,
+    )
+    scheduler.add_job(
+        run_job_safely, args=[_tick_write_consume],
+        trigger=IntervalTrigger(minutes=1),
+        id="write_consume", max_instances=1, coalesce=True,
     )
     scheduler.start()
     _started = True

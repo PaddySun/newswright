@@ -686,44 +686,87 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
     return summary
 
 
-def write_task(db: Session, author_id: int, *, triggered_by: str = "manual",
-               budget_confirmed: bool = False, **run_kwargs) -> dict:
-    """触发一次作者写作，状态经 pipeline_task 落库（run_kwargs 透传 batch_id 等）。
+def _execute_write_task(db: Session, task: PipelineTask) -> None:
+    """执行一个已认领（RUNNING）的 write 任务：预算确认闸 → run_write → CAS 终态。
 
-    预算闸④写作确认：Token 日预算触发且未携带站长确认标记时拒绝自动执行
-    （任务落 DONE + budget_confirmation_required 标记，不产生任何 LLM 调用），
-    携带 budget_confirmed=True 的手动触发照常执行。
+    任务化统一入口：同步（write_task）与异步（process_write_tasks 消费者）共用。
+    预算闸语义保持：Token 日预算触发且任务未携带站长确认标记时不执行任何 LLM
+    调用（任务落 DONE + budget_confirmation_required 标记）。阅读集域名硬约束的
+    截断计数随 run payload 汇入任务 payload.stats（domain_capped）。
     """
     from ..models import Author
     from ..authors.writer import run_write
     from .budget import budget_exceeded
 
+    payload = task.payload or {}
+    author_id = payload.get("author_id")
+    triggered_by = payload.get("triggered_by") or "manual"
+    budget_confirmed = bool(payload.get("budget_confirmed"))
+    run_kwargs = {k: v for k, v in payload.items()
+                  if k not in ("author_id", "triggered_by", "budget_confirmed")}
     author = db.get(Author, author_id)
     if author is None:
-        raise ValueError(f"author {author_id} 不存在")
+        _finish(db, task, status="FAILED", error=f"author {author_id} 不存在")
+        return
     if budget_exceeded(db) and not budget_confirmed:
-        task = _new_task(db, kind="write",
-                         payload={"author_id": author_id, **run_kwargs})
-        task.status = "RUNNING"
-        task.attempts += 1
-        db.commit()
         _finish(db, task, status="DONE",
                 payload_extra={"executed": False, "budget_confirmation_required": True,
                                "note": "Token 日预算已触发，写作需站长确认后执行"})
-        return {"task_id": task.id, "status": task.status,
-                "budget_confirmation_required": True, "executed": False}
-    task = _new_task(db, kind="write", payload={"author_id": author_id, **run_kwargs})
-    task.status = "RUNNING"
-    task.attempts += 1
-    db.commit()
+        return
     try:
         run = run_write(db, author, triggered_by=triggered_by, **run_kwargs)
+        run_payload = getattr(run, "payload", None)
+        run_payload = run_payload if isinstance(run_payload, dict) else {}
+        rank_meta = run_payload.get("rank") if isinstance(run_payload.get("rank"), dict) else run_payload
         _finish(db, task, status="DONE" if run.status == "OK" else "FAILED",
                 payload_extra={"write_run_id": run.id, "decision": run.decision,
                                "article_id": run.article_id},
+                stats={"domain_capped": int(rank_meta.get("domain_capped") or 0)},
                 error=run.error if run.status != "OK" else None)
     except Exception as e:  # noqa: BLE001
         db.rollback()  # P1-1：先回滚再落终态（动机见 fetch_round 同款注释）
         _finish(db, task, status="FAILED", error=f"{type(e).__name__}: {e}")
+
+
+def write_task(db: Session, author_id: int, *, triggered_by: str = "manual",
+               budget_confirmed: bool = False, **run_kwargs) -> dict:
+    """触发一次作者写作（同步入口），状态经 pipeline_task 落库
+    （run_kwargs 透传 batch_id 等）。预算确认闸语义见 _execute_write_task。
+    """
+    from ..models import Author
+
+    author = db.get(Author, author_id)
+    if author is None:
+        raise ValueError(f"author {author_id} 不存在")
+    task = _new_task(db, kind="write",
+                     payload={"author_id": author_id, "triggered_by": triggered_by,
+                              "budget_confirmed": budget_confirmed, **run_kwargs})
+    task.status = "RUNNING"
+    task.attempts += 1
+    db.commit()
+    _execute_write_task(db, task)
+    if (task.payload or {}).get("budget_confirmation_required"):
+        return {"task_id": task.id, "status": task.status,
+                "budget_confirmation_required": True, "executed": False}
     return {"task_id": task.id, "status": task.status, "payload": task.payload,
             "last_error": task.last_error}
+
+
+def process_write_tasks(db: Session) -> list[dict]:
+    """消化全部 PENDING 的 write 任务（异步写作消费者）。
+
+    与重打分任务同构的 DB-as-queue 链：PENDING 原子认领（CAS）→ 执行 →
+    DONE/FAILED 终态落库（CAS 收尾，迟到完成写被拒）。失败可恢复：FAILED 带
+    last_error 可查，重新触发即新任务；进程中断遗留的 RUNNING 由僵死回收
+    按分档阈值（write=120min）转 FAILED。重复消化幂等：认领失败即跳过，
+    同一任务至多执行一次。
+    """
+    out: list[dict] = []
+    tasks = db.query(PipelineTask).filter(PipelineTask.kind == "write",
+                                          PipelineTask.status == "PENDING").all()
+    for task in tasks:
+        if not _claim(db, task):
+            continue
+        _execute_write_task(db, task)
+        out.append({"task_id": task.id, "status": task.status})
+    return out
