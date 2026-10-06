@@ -17,6 +17,7 @@ from ..models import (
     Author,
     Direction,
     Item,
+    ItemVec,
     MemoryEntry,
     PipelineTask,
     ScoreResult,
@@ -428,9 +429,15 @@ def interleave_low_score(ranked: list[dict], low_pool: list[dict], *,
 
 @router.get("/stream/b")
 def stream_b(direction_id: int | None = None, limit: int = 50,
-             interleave: bool = True, db: Session = Depends(get_session)):
+             interleave: bool = True, sort: str = "score",
+             db: Session = Depends(get_session)):
     """登录态 B 流列表（拍板④）：按高分排序 + 可调概率穿插低分（≥最低阈值）条目，
-    真实评分原样返回，穿插条目 band 标记 low_interleaved。"""
+    真实评分原样返回，穿插条目 band 标记 low_interleaved。
+
+    探索层注入（sort=score 路径）：方向查询向量就绪且探索开关（site_config 全局
+    或方向级 explore_config 覆盖）开启时，在常规排序结果之后按配额注入探索条目
+    ——条目带 flag="explore" 且展示真实低相关分（不伪装）；开关关闭时零探索条目。
+    阈值过滤仅约束常规条目（探索条目经注入路径出现）。"""
     import os
 
     from .. import config
@@ -470,7 +477,71 @@ def stream_b(direction_id: int | None = None, limit: int = 50,
     ]
     merged, meta = interleave_low_score(ranked, low_pool, probability=probability,
                                         enabled=enabled)
-    return {"items": merged[:limit], "interleave": meta}
+    out_items = merged[:limit]
+    explore_meta = {"enabled": False, "inserted": 0}
+    if direction_id is not None and sort == "score":
+        explore_meta = _inject_explore_items(db, direction_id, out_items, limit)
+    return {"items": out_items, "interleave": meta, "explore": explore_meta}
+
+
+def _inject_explore_items(db: Session, direction_id: int, out_items: list[dict],
+                          limit: int) -> dict:
+    """B 流探索条目注入：探索层选样（质量地板×距离分位×MMR）后追加到常规结果之后。
+
+    总开关关（site_config 或方向级覆盖为关）、方向查询向量未就绪或嵌入禁用时
+    零注入；注入条目带 flag="explore" 与真实低相关分。每页配额 ≤ quota。
+    """
+    from .. import config
+    from ..retrieval.embedder import blob_to_vec, embed_enabled
+    from ..retrieval.explore import explore_params, explore_pick
+    from ..siteconfig import get_config as site_get_config
+
+    meta = {"enabled": False, "inserted": 0}
+    d = db.get(Direction, direction_id)
+    if d is None:
+        return meta
+    params = explore_params(db, d, get_config=site_get_config)
+    meta["enabled"] = params["enabled"]
+    model_version = config.MOARK_EMBED_MODEL
+    if (not params["enabled"] or not embed_enabled()
+            or not model_version or model_version == "none"
+            or d.query_vec is None):
+        return meta
+    rows = (
+        db.query(Item, ScoreResult, ItemVec)
+        .join(ScoreResult, ScoreResult.item_id == Item.id)
+        .join(ItemVec, ItemVec.item_id == Item.id)
+        .filter(
+            ScoreResult.direction_id == direction_id,
+            ScoreResult.status == "OK",
+            ItemVec.model_version == model_version,
+            Item.fetch_status == "FETCHED",
+            Item.duplicate_of.is_(None),
+        )
+        .all()
+    )
+    pool = [
+        {"id": item.id, "title": item.title, "url": item.url,
+         "relevance": sr.relevance_score, "quality": sr.quality_score,
+         "band": sr.band, "reason": sr.reason, "source_id": item.source_id,
+         "passed": sr.passed, "vec": blob_to_vec(iv.vec)}
+        for item, sr, iv in rows
+    ]
+    picks = explore_pick(pool, blob_to_vec(d.query_vec),
+                         floor=params["floor"], percentile=params["percentile"],
+                         quota=params["quota"])
+    existing_ids = {i["id"] for i in out_items}
+    for p in picks:
+        if p["id"] in existing_ids:
+            continue
+        out_items.append({
+            "id": p["id"], "title": p["title"], "url": p["url"],
+            "relevance": p["relevance"], "quality": p["quality"],
+            "band": p["band"], "reason": p["reason"], "source_id": p["source_id"],
+            "flag": "explore",
+        })
+        meta["inserted"] += 1
+    return meta
 
 
 # ---------- OV3：热点面板数据端点（拍板②数据侧） ----------
