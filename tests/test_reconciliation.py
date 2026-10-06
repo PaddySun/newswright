@@ -21,6 +21,8 @@ class FakeResp:
         self.content = content
         self.status_code = status_code
         self.headers = httpx.Headers(headers or {})
+        self.text = (content.decode("utf-8", errors="replace")
+                     if isinstance(content, bytes) else str(content))
 
     def raise_for_status(self):
         if self.status_code >= 400:
@@ -182,3 +184,122 @@ def test_search_channel_attribution_ledger(db_session, source, monkeypatch):
     assert stats.inserted == 2
     rows = db_session.query(Item).filter_by(source_id=d_kw.id).all()
     assert all(it.source_keyword == "词甲" for it in rows)
+
+
+# ---------- F2 增补：web / search 通道账目等式（与 RSS 同式同口径） ----------
+
+def _web_html(title: str, body: str) -> str:
+    return (f"<!DOCTYPE html><html><head><title>{title}</title></head><body>"
+            f"<article><p>{body}</p></article></body></html>")
+
+
+def _fetch_web(db_session, monkeypatch, src, html: str):
+    import app.ingest.web as web_mod
+
+    FakeClient.responses = [FakeResp(html.encode())]
+    monkeypatch.setattr(web_mod.httpx, "Client", FakeClient)
+    return web_mod.fetch_web_source(db_session, src)
+
+
+@pytest.fixture()
+def web_source(db_session, source):
+    from app.models import Direction
+
+    d = db_session.get(Direction, source.direction_id)
+    return Source(direction_id=d.id, url="https://monitor.example/page",
+                  type="web")
+
+
+def test_web_channel_equation_single_page(db_session, monkeypatch, web_source):
+    """单页监测：监测页即一个条目位——首抓 1 页 1 落行，等式平衡。"""
+    db_session.add(web_source)
+    db_session.commit()
+    stats = _fetch_web(db_session, monkeypatch, web_source,
+                       _web_html("页面标题", "正文内容足够长。" * 60))
+    assert stats.feed_entries == 1
+    assert stats.inserted == 1
+    _assert_balanced(stats)
+
+
+def test_web_channel_equation_llm_mixture(db_session, monkeypatch, web_source):
+    """列表页抽取混合景：3 条目 = 1 新入库 + 1 同批重复 guid 拦截（不落行）
+    + 1 过短规则拒绝（落行单列）——等式平衡。"""
+    import app.ingest.web as web_mod
+    from app.ingest.web import WebPayload
+
+    db_session.add(web_source)
+    db_session.commit()
+    now = datetime.now(timezone.utc)
+
+    def fake_entries(db, *, page_url, content_text, extraction_prompt):
+        return [
+            WebPayload(guid="https://ex.com/e1", url="https://ex.com/e1",
+                       title="正常条目", published_at=now, content_text=_LONG),
+            WebPayload(guid="https://ex.com/e1", url="https://ex.com/e1",
+                       title="同批重复", published_at=now, content_text=_LONG),
+            WebPayload(guid="https://ex.com/e2", url="https://ex.com/e2",
+                       title="过短条目", published_at=now, content_text="太短"),
+        ]
+
+    monkeypatch.setattr(web_mod, "llm_extract_entries", fake_entries)
+    web_source.source_config = {"llm_extract": True}
+    stats = _fetch_web(db_session, monkeypatch, web_source,
+                       _web_html("列表页", "页面正文" * 60))
+    assert stats.feed_entries == 3
+    assert stats.inserted == 1 and stats.dup_blocked == 1 and stats.rule_rejected == 1
+    _assert_balanced(stats)
+
+
+def test_web_channel_equation_extract_failure(db_session, monkeypatch, web_source):
+    """抽取失败景：拉回 1 页 0 落行 1 失败（监测页本身算一个条目位），等式平衡。"""
+    import app.ingest.web as web_mod
+
+    db_session.add(web_source)
+    db_session.commit()
+    monkeypatch.setattr(web_mod, "llm_extract_entries",
+                        lambda db, **kw: None)
+    web_source.source_config = {"llm_extract": True}
+    stats = _fetch_web(db_session, monkeypatch, web_source,
+                       _web_html("列表页", "页面正文" * 60))
+    assert stats.failed == 1 and stats.error is not None
+    _assert_balanced(stats)
+
+
+def test_search_channel_equation(db_session, monkeypatch, source):
+    """搜索通道混合景：5 结果 = 2 新入库 + 1 已存在 guid 拦截（不落行）
+    + 1 无效 URL 拦截（不落行）+ 1 过短规则拒绝（落行单列）——等式平衡。"""
+    import app.search.pipeline as search_pipeline
+    import app.search.registry as registry
+    from app.search.base import SearchResult
+
+    d_kw = Source(direction_id=source.direction_id, url="search://equ/等式词",
+                  type="search", source_config={"keyword": "等式词", "provider": "fakeprov"})
+    db_session.add(d_kw)
+    db_session.commit()
+    # 预置已存在 guid：https://ex.com/eq/0 的归一化形态
+    db_session.add(Item(source_id=d_kw.id, guid="https://ex.com/eq/0",
+                        title="已存在", content_text=_LONG,
+                        fetched_at=datetime.now(timezone.utc)))
+    db_session.commit()
+    results = [
+        SearchResult(title="已入库", url="https://ex.com/eq/0",
+                     snippet=_LONG, content=_LONG, published_at=None, raw={}),
+        SearchResult(title="无效URL", url="",
+                     snippet=_LONG, content=_LONG, published_at=None, raw={}),
+        SearchResult(title="过短", url="https://ex.com/eq/2",
+                     snippet="短", content="短", published_at=None, raw={}),
+        SearchResult(title="新1", url="https://ex.com/eq/3",
+                     snippet=_LONG, content=_LONG, published_at=None, raw={}),
+        SearchResult(title="新2", url="https://ex.com/eq/4",
+                     snippet=_LONG, content=_LONG, published_at=None, raw={}),
+    ]
+    monkeypatch.setattr(registry, "get_provider", lambda name: type("P", (), {
+        "name": name, "search": lambda self, q, count=10, **kw: results})())
+    stats = search_pipeline.fetch_search_source(db_session, d_kw)
+    assert stats.feed_entries == 5
+    assert stats.inserted == 2 and stats.dup_blocked == 2 and stats.rule_rejected == 1
+    # 拒绝行已落库但计入 rule_rejected 桶（inserted 不含拒绝行——与 RSS 同式）
+    rejected = db_session.query(Item).filter_by(source_id=d_kw.id,
+                                                fetch_status="REJECTED_RULED").all()
+    assert len(rejected) == 1
+    _assert_balanced(stats)

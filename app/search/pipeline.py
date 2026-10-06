@@ -78,7 +78,10 @@ def fetch_search_source(db: Session, source: Source) -> SourceFetchStats:
     for r in results:
         guid = normalize_url(r.url)
         if not guid:
+            # 无效 URL 建不出 guid：不落行拦截，计入 dup_blocked（与 RSS 通道
+            # "同 feed 重复 guid 不落行"同桶），等式不重不漏
             stats.guid_collisions += 1
+            stats.dup_blocked += 1
             continue
         exists = db.query(Item.id).filter_by(source_id=source.id, guid=guid).one_or_none()
         if exists:
@@ -109,7 +112,6 @@ def fetch_search_source(db: Session, source: Source) -> SourceFetchStats:
             else:
                 item.fetch_status = "REJECTED_RULED"
                 item.rule_reject_reason = rule.reason
-                stats.rule_rejected += 1
         sr = run_sanitize(SanitizeTarget(title=item.title, content_text=item.content_text,
                                          url=item.url))
         item.sanitize_status = "PASSED" if sr.passed else "REJECTED"
@@ -121,7 +123,12 @@ def fetch_search_source(db: Session, source: Source) -> SourceFetchStats:
             stats.sanitize_rejected += 1
         db.add(item)
         db.flush()
-        stats.inserted += 1
+        # 账目口径（与 RSS 通道同式）：inserted 只含 FETCHED/DUP 落行，
+        # rule_rejected 落行单列——等式不重不漏
+        if item.fetch_status == "REJECTED_RULED":
+            stats.rule_rejected += 1
+        else:
+            stats.inserted += 1
 
     db.commit()
     return stats

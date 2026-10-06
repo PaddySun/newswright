@@ -261,7 +261,8 @@ def test_llm_path_call_contract_fingerprint_and_dup(db_session, monkeypatch):
     e3 = db_session.query(Item).filter_by(source_id=src.id, guid="g3").one()
     assert e3.fetch_status == "REJECTED_RULED" and e3.rule_reject_reason.startswith("expired:")
 
-    assert s.inserted == 4 and s.failed == 0 and s.error is None
+    # F2 口径：inserted 只含 FETCHED/DUP 落行（DUP+FETCHED=2），拒绝行单列
+    assert s.inserted == 2 and s.failed == 0 and s.error is None
     assert s.rule_rejected == 2
     assert s.sanitize_passed == 4
 
@@ -305,7 +306,8 @@ def test_llm_double_failure_accounting(db_session, monkeypatch):
 
 
 def test_llm_duplicate_guid_within_round_counts_collisions(db_session, monkeypatch):
-    """AC-05.1：同一轮内重复 guid → guid_collisions 计数（不落行、不计 dup_blocked）。"""
+    """同一轮内重复 guid → guid_collisions 计数且计入 dup_blocked 桶（F2 账目
+    口径统一：不落行拦截一律入 dup_blocked，与 RSS 通道同式，等式平衡）。"""
     src = _mk_source(db_session, llm_extract=True)
     ent = [web.WebPayload(guid="g-same", url=f"https://ex/a{i}", title=f"E{i}",
                           published_at=None, content_text=_long_text()) for i in range(3)]
@@ -315,7 +317,9 @@ def test_llm_duplicate_guid_within_round_counts_collisions(db_session, monkeypat
     s = fetch_web_source(db_session, src)
     assert s.inserted == 1
     assert s.guid_collisions == 2
-    assert s.dup_blocked == 0
+    assert s.dup_blocked == 2
+    assert s.feed_entries == (s.inserted + s.dup_blocked + s.rule_rejected
+                              + s.failed + s.archived)
 
 
 def test_llm_existing_guids_blocked_per_source_scope(db_session, monkeypatch):

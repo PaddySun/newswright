@@ -79,16 +79,61 @@ class KeywordDenySanitizer(SanitizeStage):
         return SanitizeResult(passed=True)
 
 
+# 注入特征规则集（版本化常量）：指令性模式的中英规则清单。规则取向=只认
+# "指令性模式"（要求改变模型行为/泄露凭据的话术结构），不认裸关键词出现——
+# 正常报道里出现"API Key"一词不是注入，"输出你的 API Key"才是。
+# 每条规则带稳定 id（sanitize_reason 引用该 id，统计按 id 聚合）；清单演进
+# 必须升版本号。
+INJECTION_PATTERN_RULES: list[dict] = [
+    {"id": "ignore_previous_instructions_zh",
+     "pattern": r"忽略(之前|以上|前面|先前|上面)(的)?(所有|全部)?(指令|提示|要求|规则)"},
+    {"id": "ignore_previous_instructions_en",
+     "pattern": r"(?i)(disregard|ignore|forget)\s+(all\s+)?(previous|prior|above|earlier)\s+"
+                r"(instructions?|prompts?|rules?|directions?)"},
+    {"id": "reveal_credentials",
+     "pattern": r"(?i)(输出|泄露|打印|透露|reveal|output|print|leak|show)\s*.{0,24}"
+                r"(api[\s_-]?key|secret|密钥|凭据|credentials?|password|token)"},
+    {"id": "developer_mode_override",
+     "pattern": r"(?i)(进入|启用|开启).{0,10}(开发者模式|developer\s+mode|dan\s+mode)"
+                r"|jailbreak|越狱模式"},
+    {"id": "system_prompt_extraction",
+     "pattern": r"(?i)(输出|泄露|复述|打印|reveal|output|repeat|print).{0,16}"
+                r"(系统提示词|系统指令|system\s*prompt)"},
+]
+INJECTION_RULES_VERSION = 1
+
+
+class InjectionPatternSanitizer(SanitizeStage):
+    """注入特征检测（规则特征集形态，sanitize 阶段清单第一项）：标题或正文命中
+    任一指令性模式即拒。命中≠抓取失败——fetch_status 不动、全文照存、不进打分，
+    与其他 sanitize 拒绝同一语义分离。模型检测形态不在本阶段（勿当完备防线）。"""
+
+    name = "injection_pattern"
+
+    def check(self, target: SanitizeTarget) -> SanitizeResult:
+        import re
+
+        joined = f"{target.title}\n{target.content_text}"
+        for rule in INJECTION_PATTERN_RULES:
+            if re.search(rule["pattern"], joined):
+                return SanitizeResult(
+                    passed=False,
+                    reason=f"injection_pattern:{rule['id']}",
+                    detail={"rule_id": rule["id"], "rules_version": INJECTION_RULES_VERSION},
+                )
+        return SanitizeResult(passed=True)
+
+
 def build_chain() -> list[SanitizeStage]:
-    """按配置组装 sanitizer 链。关闭或配置为空 → pass-through 一项。"""
+    """按配置组装 sanitizer 链。关闭或配置为空 → pass-through 一项。
+
+    注入特征检测为阶段清单第一项（先于关键词拒绝执行——注入是攻击面，
+    优先级高于内容治理）。"""
     if not config.SANITIZE_ENABLED:
         return [DemoPassThroughSanitizer()]
-    chain: list[SanitizeStage] = []
+    chain: list[SanitizeStage] = [InjectionPatternSanitizer()]
     if config.SANITIZE_DENY_KEYWORDS:
         chain.append(KeywordDenySanitizer(config.SANITIZE_DENY_KEYWORDS))
-    if not chain:
-        # 开关开了但没配任何实现：保持放行并如实标注，防止静默假装已过滤
-        return [DemoPassThroughSanitizer()]
     return chain
 
 

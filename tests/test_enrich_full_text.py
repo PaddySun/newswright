@@ -290,6 +290,7 @@ def test_web_list_enrich_receives_current_summary_text(db_session, monkeypatch):
     monkeypatch.setattr(web_mod2.httpx, "Client", FakeClient)
     stats = web_mod2.fetch_web_source(db_session, db_session.merge(src))
     assert recorded == ["太短了。"]
-    assert stats.inserted == 1
+    # 富化后仍过短 → 落行但计入 rule_rejected 桶（F2 口径：inserted 只含 FETCHED/DUP）
+    assert stats.inserted == 0 and stats.rule_rejected == 1
     row = db_session.query(Item).filter_by(source_id=src.id).one()
     assert row.content_text == "太短了。（富化全文）"
