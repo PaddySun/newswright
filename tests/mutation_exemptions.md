@@ -249,7 +249,6 @@
 | app.ingest.rss.x_extract_entry_text__mutmut_26 | A | or "XXXX"：content/summary 全缺条目正文 "XXXX"——正文空值形态无条款 | 无条款域核查 |
 | app.ingest.rss.x_extract_entry_text__mutmut_28 | A | if (html) or True：html 空时 _html_to_text("") 返回 ""——恰等价 | 控制流等价 |
 | app.ingest.rss.x_extract_entry_text__mutmut_30 | A | else "XXXX"：同 m26 | 同 m26 |
-| app.ingest.rss.x_fetch_source__mutmut_91 | A | fetched_at naive（now(None)）：存储 tz 未钉（C1-3 m160 先例） | D16 范围核查 |
 | app.ingest.rss.x_fetch_source__mutmut_122 | A | SanitizeTarget(url=None)：现有链（passthrough/KeywordDeny）不读 url 字段（C1-3 m187 先例） | sanitize.py 调用点核查 |
 | app.ingest.rss.x_fetch_source__mutmut_150 | A | log 参数 source.id→None：同 m149 | 同 m149 |
 | app.ingest.rss.x_fetch_source__mutmut_154 | A | log 缺 e 参数：同 m149 | 同 m149 |
@@ -269,7 +268,6 @@
 | app.ingest.rss.x_normalize_url__mutmut_9 | A | keep_blank_values 实参删除：同 m7 | 同 m7 |
 | app.ingest.rss.x_normalize_url__mutmut_10 | A | keep_blank_values=False：同 m7 | 同 m7 |
 | app.ingest.rss.x_parse_feed_entries__mutmut_24 | A | url or "XXXX"：缺 link 条目 url "XXXX"——url 空值形态无条款（注：feedparser 对可回填 guid 会注入 link，差异域=不可回填 guid 条目） | 无条款域核查 |
-| app.ingest.rss.x_parse_feed_entries__mutmut_29 | A | title or "XXXX"：缺标题条目 title "XXXX"——标题空值形态无条款 | 无条款域核查 |
 | app.ingest.sanitize.x_run_sanitize__mutmut_2 | A | last_pass 初值 None：初值仅在链为空时返回——build_chain 恒返回非空链（至少 passthrough 一项），循环体必覆写，不可达 | 控制流推理（build_chain 全分支核查） |
 | app.ingest.sanitize.x_run_sanitize__mutmut_3 | A | 同 m2（passed=None 形态） | 同 m2 |
 | app.ingest.sanitize.x_run_sanitize__mutmut_4 | A | 同 m2（reason=None 形态） | 同 m2 |
@@ -516,7 +514,6 @@
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_246 | A | prompt_snapshot 定界符内部形态未钉（§4.1 钉列存在+阅读集/切片可核，不钉分隔符） | §4.1 prompt_snapshot 范围核查 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_247 | A | prompt_snapshot 定界符内部形态未钉（§4.1 钉列存在+阅读集/切片可核，不钉分隔符） | §4.1 prompt_snapshot 范围核查 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_258 | A | before None 被 if before 守卫——仅 stats 形态 | pass_stats 字段未钉 |
-| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_268 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_269 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_270 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_271 | A | pass params 读取——自定义 instruction 进提示词措辞 | 提示词形态 |
@@ -1049,7 +1046,6 @@
 | app.authors.gates.x_gate_length__mutmut_25 | A | n>hi→n>=hi：同 m23（上边界含等性未钉） | 同 m23 |
 | app.authors.gates.x_gate_length__mutmut_8 | A | get('min',None) 缺省变体：schema 必填 min（_validate_gates _int_field min/max），缺省分支不可达 | 调用点核查：authors/schema.py:186 min/max 必填校验 |
 | app.authors.gates.x_gate_topic_dedup__mutmut_16 | A | sim>=threshold→>：恰等于阈值的边界含等性无条款（沿数值边界先例） | docs 未钉 threshold 含等性 |
-| app.authors.gates.x_gate_topic_dedup__mutmut_17 | A | issue 文案→None：拒收语义不变，文案无条款 | AC-20.4 文案先例 |
 | app.authors.gates.x_gate_topic_dedup__mutmut_5 | A | not t or not r→and：t/r 任一为空的继续条件在结果上等价（dice 空串→0.0 不判重；双空 continue 同原） | 真值表推理：四组合输出全部一致 |
 | app.authors.gates.x_gate_topic_dedup__mutmut_8 | A | continue→break：仅近期标题归一为空串（空白标题）时可达，生产标题恒非空（str(...) or 「（无题）」） | 调用点核查：run_write/pipeline 标题构造恒非空 |
 | app.authors.gates.x_norm__mutmut_1 | A | norm().lower()→.upper()：比较两侧（正文/块、标题/近期题）均经同一 norm 自洽折叠，匹配结果等价 | 控制流推理：norm 只用于门内两两比较，无跨系统大小写契约 |
@@ -1242,7 +1238,6 @@
 |---|---|---|---|
 | app.embedding.moark.xǁMoarkEmbeddingProviderǁ__init____mutmut_1 | A | timeout 120 未钉数值缺省 | 数值缺省/边界无条款（沿数值缺省先例） |
 | app.embedding.moark.xǁMoarkEmbeddingProviderǁ__init____mutmut_7 | A | rstrip 是字符集语义,'XX/XX'≡'X/' | 等价/不可达（控制流推理、列缺省承载、类属性兜底或平台语义） |
-| app.embedding.moark.xǁMoarkEmbeddingProviderǁ__init____mutmut_12 | A | timeout 120 未钉数值缺省 | 数值缺省/边界无条款（沿数值缺省先例） |
 
 ### app.embedding.registry.x_get_provider（7 条）
 
@@ -2247,3 +2242,11 @@
 | app.api.routes.x__temp_expires_at__mutmut_12 | A | now(None) naive/返回 tzinfo=None/缺参：SQLite DateTime 方言存储丢 tz、date() 域不变，落库/回读两形态等价——datetime.now(None) 族（总纲判据族）+ SQLite dialect 存储形态（C2-1 m9 先例） | 历史判据族复用（详见说明列） |
 | app.api.routes.x__temp_expires_at__mutmut_3 | A | now(None) naive/返回 tzinfo=None/缺参：SQLite DateTime 方言存储丢 tz、date() 域不变，落库/回读两形态等价——datetime.now(None) 族（总纲判据族）+ SQLite dialect 存储形态（C2-1 m9 先例） | 历史判据族复用（详见说明列） |
 | app.api.routes.x__temp_expires_at__mutmut_8 | A | now(None) naive/返回 tzinfo=None/缺参：SQLite DateTime 方言存储丢 tz、date() 域不变，落库/回读两形态等价——datetime.now(None) 族（总纲判据族）+ SQLite dialect 存储形态（C2-1 m9 先例） | 历史判据族复用（详见说明列） |
+
+---
+
+## C2-5 收官再同步记录（2026-10-06，统筹亲执）
+
+> 收官统一 dispatch（run 37410775426 @ main 2f9824d）逐名核对：豁免位中 **5 条转 killed**（C2 各批新测试顺带杀灭：pipeline.execute m268 / rss m91 / moark __init__ m12 / rss.parse_feed_entries m29 / gates.topic_dedup m17）——本节移除，清单 1868 → **1863**。
+> 同批收官处置：interleave m17（Random(seed)→Random(None)）系 **RNG 依赖型 flaky 变异**（两轮 dispatch 映射与代码零变化下判定翻转）——已补确定性杀灭测试（同 seed 两次调用必一致），非豁免；D1（暂态轮 last_error）经用户拍板①落册产品书 v1.8 并补测试杀灭。
+

@@ -198,3 +198,20 @@ def test_non_xml_challenge_counts_as_empty_round(db_session, rss_source, monkeyp
     src = db_session.merge(src)
     assert src.failure_level == "suspect"
     assert src.hard_failures == 0
+
+
+def test_transient_round_keeps_last_error_text(db_session, rss_source):
+    """暂态错误轮记录最近错误文本（截断 2000）：网络/5xx 类错误发生时
+    last_error 保留本轮错误信息供运维排障展示，不清空；后续暂态错误覆盖更新。
+    设计依据见 docs/design-index.md「AC-04.4」（v1.8 补句：暂态轮保留最近错误文本）。
+    """
+    from app.pipeline.runner import _error_stats
+    src = rss_source
+    _update_source_health(db_session, src, _error_stats("RemoteProtocolError: server closed"))
+    src = db_session.merge(src)
+    assert src.last_error == "RemoteProtocolError: server closed"
+    assert src.failure_level == "none"  # 暂态不标失效（主行为，既有测试另钉）
+
+    _update_source_health(db_session, src, _error_stats("ConnectTimeout: dial fail"))
+    src = db_session.merge(src)
+    assert src.last_error == "ConnectTimeout: dial fail"
