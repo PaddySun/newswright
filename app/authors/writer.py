@@ -34,8 +34,22 @@ def _norm(s: str) -> str:
 
 
 def assemble_reading_set(db: Session, author: Author, k: int | None = None) -> list[tuple[Item, ScoreResult]]:
-    """可读方向中 relevance≥阈值 且 passed 的条目，按 relevance 降序取前 K。"""
+    """可读方向中 relevance≥阈值 且 passed 的条目，按 relevance 降序取前 K
+    （含每源域名硬约束——见 _assemble_with_domain_cap）。"""
+    return _assemble_with_domain_cap(db, author, k)[0]
+
+
+def _assemble_with_domain_cap(db: Session, author: Author, k: int | None = None
+                              ) -> tuple[list[tuple[Item, ScoreResult]], int]:
+    """阅读集装配（含域名硬约束）：每源域名（条目 URL 的 netloc）至多
+    site_config.reading_set_domain_cap 条（默认 3，≤0 = 不设限）；同一域名
+    超额的条目跳过并继续收集其他域名条目直至 K——保证 K 个席位不被单一域名
+    垄断（阅读集多样性硬约束，MMR 软选样为二期可选项不在本批）。
+    返回 (阅读集, 因域名超额被截断的条数)。"""
+    from ..siteconfig import get_config
+
     k = k or config.WRITE_READING_SET_K
+    cap = int(get_config(db, "reading_set_domain_cap") or 0)
     q = (
         db.query(Item, ScoreResult)
         .join(ScoreResult, ScoreResult.item_id == Item.id)
@@ -49,15 +63,26 @@ def assemble_reading_set(db: Session, author: Author, k: int | None = None) -> l
     )
     thresholds = {rd["direction_id"]: rd.get("threshold") for rd in (author.readable_directions or [])}
     out: list[tuple[Item, ScoreResult]] = []
+    domain_counts: dict[str, int] = {}
+    domain_capped = 0
+    from urllib.parse import urlparse
+
     for item, sr in q.all():
         if sr.direction_id not in thresholds:
             continue
         th = thresholds[sr.direction_id] or 60
-        if sr.relevance_score >= th:
-            out.append((item, sr))
+        if sr.relevance_score < th:
+            continue
+        if cap and cap > 0:
+            domain = urlparse(item.url or "").netloc or ""
+            if domain_counts.get(domain, 0) >= cap:
+                domain_capped += 1
+                continue
+            domain_counts[domain] = domain_counts.get(domain, 0) + 1
+        out.append((item, sr))
         if len(out) >= k:
             break
-    return out
+    return out, domain_capped
 
 
 RANK_POOL_K = 50  # 预排序候选池：先放宽到 50，排序后取 top-K
@@ -79,10 +104,12 @@ def assemble_ranked_reading_set(
     k = k or config.WRITE_READING_SET_K
     provider_name = (author.rank_provider or "none").strip()
     if provider_name == "none":
-        return assemble_reading_set(db, author, k), {"rank_provider": "none"}
+        pairs, domain_capped = _assemble_with_domain_cap(db, author, k)
+        return pairs, {"rank_provider": "none", "domain_capped": domain_capped}
 
-    pool = assemble_reading_set(db, author, k=RANK_POOL_K)
-    meta: dict = {"rank_provider": provider_name, "pool": len(pool)}
+    pool, pool_capped = _assemble_with_domain_cap(db, author, k=RANK_POOL_K)
+    meta: dict = {"rank_provider": provider_name, "pool": len(pool),
+                  "domain_capped": pool_capped}
     if not pool:
         return pool, meta
 
@@ -118,14 +145,18 @@ def assemble_ranked_reading_set(
     if not ranked_pairs:
         # 排序失败/被限额/明细缺失：回退 relevance 口径，不丢阅读集
         meta["fallback"] = "rank_failed_or_empty"
-        return assemble_reading_set(db, author, k), meta
+        pairs, domain_capped = _assemble_with_domain_cap(db, author, k)
+        meta["domain_capped"] = domain_capped
+        return pairs, meta
 
     threshold = author.rank_exclude_below
     kept = [(pair, det) for pair, det in ranked_pairs if det["rank_score"] >= threshold]
     if not kept:
         # 全被排除（如排序后端与长 criteria 语义不匹配的退化场景）：回退而非清空阅读集
         meta["fallback"] = "all_excluded"
-        return assemble_reading_set(db, author, k), meta
+        pairs, domain_capped = _assemble_with_domain_cap(db, author, k)
+        meta["domain_capped"] = domain_capped
+        return pairs, meta
     kept.sort(key=lambda pd: -pd[1]["rank_score"])
     meta["ranked"] = len(ranked_pairs)
     meta["kept"] = len(kept[:k])

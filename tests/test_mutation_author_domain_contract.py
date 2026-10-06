@@ -274,16 +274,17 @@ def _R(item_id, score, band="high"):
 
 
 def test_ranked_none_provider_meta_exact(env):
-    """rank_provider=none：回退 relevance 且 meta 如实 = {"rank_provider":"none"}（docstring）。"""
+    """rank_provider=none：回退 relevance 且 meta 如实 = {"rank_provider":"none",
+    "domain_capped":0}（docstring；domain_capped 为阅读集域名硬约束截断计数，F2 增补）。"""
     db, i1, i2 = env
     a1 = _old_author(db, readable_directions=[{"direction_id": 1, "threshold": 60}])
     pairs, meta = wr.assemble_ranked_reading_set(db, a1)
-    assert meta == {"rank_provider": "none"}
+    assert meta == {"rank_provider": "none", "domain_capped": 0}
     assert [it.id for it, _ in pairs] == [i1.id, i2.id]
     a2 = _old_author(db, name="空排序作者", rank_provider="",
                      readable_directions=[{"direction_id": 1, "threshold": 60}])
     _, meta2 = wr.assemble_ranked_reading_set(db, a2)
-    assert meta2 == {"rank_provider": "none"}
+    assert meta2 == {"rank_provider": "none", "domain_capped": 0}
 
 
 def test_ranked_path_criteria_candidates_details(db_session, monkeypatch):
@@ -497,7 +498,7 @@ def test_single_route_e2e_row_shape(env, monkeypatch):
     assert run.status == "OK" and run.decision == "WRITE"
     assert run.triggered_by == "test"
     assert run.reading_set_item_ids == [i1.id, i2.id]      # 阅读集落库
-    assert run.payload == {"rank_provider": "none"}        # rank_meta 如实（none 路线）
+    assert run.payload == {"rank_provider": "none", "domain_capped": 0}  # rank_meta 如实（none 路线；domain_capped 为域名硬约束截断计数）
     assert run.model == "fake-old-model"
     # messages 契约与计量归因（ADR-8 + AC-11.6）
     call = fake.calls[0]

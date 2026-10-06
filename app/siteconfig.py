@@ -32,6 +32,9 @@ DEFAULTS: dict[str, object] = {
     "daily_token_budget": 0,
     # 预算触发后的打分慢速轮上限（继续低速、绝不整轮停摆）
     "score_slow_round_max_items": 20,
+    # 阅读集域名硬约束：每源域名（条目 URL netloc）至多 N 条进阅读集；
+    # 0 = 不设限。多样性硬约束；MMR 软选样为二期可选项
+    "reading_set_domain_cap": 3,
     # 健康自省 503 阈值：抓取停滞分钟数（部署后 60 分钟冷启动宽限内不触发）与
     # 待处理任务堆积数
     "healthz_fetch_stale_minutes": 90,
