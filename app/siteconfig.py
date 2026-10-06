@@ -20,6 +20,13 @@ DEFAULTS: dict[str, object] = {
     "semantic_dedup_threshold": 0.92,
     # 方向路由每轮命中桶容量：检索相似度 top-K 优先打分的条目数
     "retrieval_top_k": 5,
+    # 探索层全局开关与参数（默认关；以下数值全部为示例值，正式值实测后定）：
+    # quality_floor=质量分地板；distance_percentile=与方向相似度的最低分位（P5）；
+    # quota_per_page=B 流每页探索条目配额上限
+    "explore_enabled": False,
+    "explore_quality_floor": 50,
+    "explore_distance_percentile": 5,
+    "explore_quota_per_page": 3,
 }
 
 

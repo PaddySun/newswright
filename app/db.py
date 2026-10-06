@@ -87,6 +87,8 @@ def _migrate_added_columns() -> None:
             # 方向查询向量缓存（检索层）：历史行为空 = 未生成，路由时按未命中处理
             "query_vec": "BLOB",
             "query_vec_version": "INTEGER",
+            # 探索层方向级配置（JSON）：null = 继承 site_config 全局键
+            "explore_config": "JSON",
         },
     }
     with engine.begin() as conn:

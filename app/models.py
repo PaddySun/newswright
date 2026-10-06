@@ -106,6 +106,9 @@ class Direction(Base):
     # query_vec_version 记录生成时的 prompt_version——提示词升版即缓存失效重生成
     query_vec: Mapped[bytes | None] = mapped_column(LargeBinary, nullable=True)
     query_vec_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # 探索层方向级配置（JSON: {enabled, floor, percentile, quota}）：null = 继承
+    # site_config 全局键；enabled 缺失键同样回退全局。参数全部为示例值，正式值实测后定
+    explore_config: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     def apply_status(self, new_status: str) -> None:
         """切换生命周期状态并同步 enabled 镜像列（仅 active 为真）。"""
