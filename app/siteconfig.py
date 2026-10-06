@@ -36,6 +36,8 @@ DEFAULTS: dict[str, object] = {
     # 待处理任务堆积数
     "healthz_fetch_stale_minutes": 90,
     "healthz_pending_stale_count": 500,
+    # 备份目录（本地目录备份插件产物位置；轮转保留 ≥7 份）
+    "backup_dir": "backups",
 }
 
 

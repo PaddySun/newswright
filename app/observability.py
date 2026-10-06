@@ -15,7 +15,6 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import func, text
 from sqlalchemy.orm import Session
 
-from .db import engine
 from .models import Item, PipelineTask, ScoreResult, Source, UsageLog
 from .siteconfig import get_config
 
@@ -32,10 +31,17 @@ def _minutes_ago(dt: datetime | None, now: datetime) -> float | None:
     return round(max((now - dt).total_seconds(), 0) / 60, 1)
 
 
+def _current_engine():
+    """动态取当前 engine（测试夹具会重绑 appdb.engine，模块级导入会绑到旧库）。"""
+    from . import db as appdb
+
+    return appdb.engine
+
+
 def _db_writable(db: Session) -> bool:
     """写探针：独占写锁探测（只读库在 BEGIN IMMEDIATE 即失败）。"""
     try:
-        with engine.connect() as conn:
+        with _current_engine().connect() as conn:
             conn.exec_driver_sql("BEGIN IMMEDIATE")
             conn.exec_driver_sql("ROLLBACK")
         return True
@@ -52,7 +58,7 @@ def _db_size_mb(db: Session) -> float:
 
 
 def _disk_free_mb(db: Session) -> float:
-    path = engine.url.database or "."
+    path = _current_engine().url.database or "."
     return round(shutil.disk_usage(path).free / (1024 * 1024), 2)
 
 
