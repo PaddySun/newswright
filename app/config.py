@@ -122,6 +122,9 @@ SCORE_ROUND_MAX_ITEMS = int(_get("SCORE_ROUND_MAX_ITEMS") or 200)
 # 调度（能力①）：默认周期，可被环境变量覆盖
 SCHED_FETCH_MINUTES = int(_get("SCHED_FETCH_MINUTES") or 15)
 SCHED_HOT_MINUTES = int(_get("SCHED_HOT_MINUTES") or 60)
+# 独立打分节奏（显式配置键）：score 定时 job 的触发间隔；与 fetch 完成后的
+# 联锁触发并存（双形态：新内容低延迟打分 + 无新内容时定时兜底）
+SCHED_SCORE_MINUTES = int(_get("SCHED_SCORE_MINUTES") or 15)
 # 源连续失败退避：连续 FAILED ≥3 次跳过该源，此后每 4 轮放行一次探测
 BACKOFF_FAIL_THRESHOLD = int(_get("BACKOFF_FAIL_THRESHOLD") or 3)
 BACKOFF_PROBE_EVERY = int(_get("BACKOFF_PROBE_EVERY") or 4)

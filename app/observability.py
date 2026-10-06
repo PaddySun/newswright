@@ -5,6 +5,10 @@
 200 + degraded 清单，报警交给外部探测、通知交给邮件通道——防报警疲劳。
 口径细则：304/not_modified 轮计入成功抓取（源与管线都活着）；部署后 60 分钟
 冷启动宽限内抓取停滞不触发 503（新装不报警）。
+时区口径注记：本模块各窗口（llm_error_rate_24h/degraded/items_24h 等）为滚动
+窗——无零点语义、时区不变式（站点时区键不改变滚动窗边界；当日窗会在本地零点
+出现小分母抖动，非观测本意）。日切消费点（预算日/通知自然日/TTL 零点）在
+app/timeline.py 统一解析。
 设计依据见 docs/design-index.md「AC-18.3」「AC-18.4」。
 """
 from __future__ import annotations

@@ -54,8 +54,10 @@ def notify_source_failure(db: Session, source, *, level: str) -> dict:
 
 
 def notify_budget_exceeded(db: Session, *, used_tokens: int, budget: int) -> dict:
-    """Token 日预算触发通知：每自然日至多一次（去重键带日期）。"""
-    day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    """Token 日预算触发通知：每自然日至多一次（去重键带日期；自然日取站点时区）。"""
+    from ..timeline import local_date_key, site_zone
+
+    day = local_date_key(site_zone(db))
     return _dispatch(
         db, switch_key="notify_on_token_budget", category="token_budget",
         dedupe_key=f"daily-{day}",
