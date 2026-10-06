@@ -114,12 +114,37 @@ def list_items(direction_id: int | None = None, status: str | None = None,
 # ---------- 文章 ----------
 
 @router.get("/articles")
-def list_articles(db: Session = Depends(get_session)):
+@router.get("/api/articles")
+def list_articles(author_id: int | None = None, bookmarked: bool | None = None,
+                  db: Session = Depends(get_session)):
+    """文章列表：author_id=按作者筛选（仅返回该作者文章）；bookmarked=按书签位
+    筛选（true=已书签）。两个参数可独立使用，均为可选。"""
+    q = db.query(Article).order_by(Article.id.desc())
+    if author_id is not None:
+        q = q.filter(Article.author_id == author_id)
+    if bookmarked is not None:
+        q = q.filter(Article.bookmarked.is_(bookmarked))
     return [
         {"id": a.id, "author_id": a.author_id, "title": a.title,
-         "status": a.status, "citations": len(a.citations or [])}
-        for a in db.query(Article).order_by(Article.id.desc()).all()
+         "status": a.status, "citations": len(a.citations or []),
+         "bookmarked": a.bookmarked}
+        for a in q.all()
     ]
+
+
+@router.post("/api/articles/{article_id}/bookmark")
+def bookmark_article(article_id: int, db: Session = Depends(get_session)):
+    """书签端点：置位文章的 bookmarked 列并返回 200。
+
+    幂等语义天然成立：书签状态是文章行上的一个布尔位而非独立书签行/计数器，
+    重复或并发调用都收敛到同一终态（bookmarked=true），不会产生第二份书签。
+    取消书签的翻转操作（unbookmark）不在此端点（后续呈现批次）。"""
+    a = db.get(Article, article_id)
+    if a is None:
+        raise HTTPException(404, {"code": "ARTICLE_NOT_FOUND", "message": "文章不存在"})
+    a.bookmarked = True
+    db.commit()
+    return {"article_id": a.id, "bookmarked": True}
 
 
 @router.get("/articles/{article_id}")

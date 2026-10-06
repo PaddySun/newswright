@@ -1,5 +1,8 @@
 """db 轻量迁移测试：方向生命周期列与来源失效列的旧库升级（G2/W1）。
 
+F2 增补：article 呈现三列（bookmarked/public/ai_label）与 author 呈现两列
+（bio/public_visible）的旧库升级断言（文末）。
+
 夹具模式沿用旧库升级测试先例（tests/test_mutation_db_migration_contract.py 的
 历史形状裸建 + init_db 由测试自调）：direction 为「生命周期列上线前」形态，
 source 为「失效判别列上线前」形态，含历史行。断言全部来自设计书条款：
@@ -227,3 +230,76 @@ def test_migrate_old_prompt_version_normalized_in_storage(g2_older_item_db):
             text("SELECT prompt_version FROM score_result")).scalar_one()
     assert str(d_pv) == "2"
     assert str(s_pv) == "1"
+
+
+# ---------- F2 呈现层列：article 三列 + author 两列（技术书 §4.1 表行） ----------
+
+_OLD_AUTHOR = """
+CREATE TABLE author (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(200) UNIQUE,
+    model VARCHAR(100),
+    persona_prompt TEXT,
+    global_system_prompt TEXT,
+    readable_directions JSON,
+    memory_config JSON,
+    rank_provider VARCHAR(30) DEFAULT 'none',
+    rank_exclude_below INTEGER DEFAULT 30,
+    include_hot_brief BOOLEAN DEFAULT 0,
+    author_json JSON,
+    enabled BOOLEAN DEFAULT 1
+)"""
+
+_OLD_ARTICLE = """
+CREATE TABLE article (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER REFERENCES author(id),
+    title VARCHAR(2000),
+    body TEXT,
+    citations JSON,
+    status VARCHAR(30) DEFAULT 'PUBLISHED_TO_C',
+    citation_violated BOOLEAN DEFAULT 0
+)"""
+
+
+@pytest.fixture()
+def f2_presentation_old_db(tmp_path):
+    """呈现列上线前的旧库夹具：author（无 bio/public_visible）+ article（无
+    bookmarked/public/ai_label），各含历史行——升级后历史行的默认值断言面。"""
+    _bind_engine(tmp_path, "f2_presentation_old.db")
+    with appdb.engine.begin() as conn:
+        conn.execute(text(_OLD_AUTHOR))
+        conn.execute(text(_OLD_ARTICLE))
+        conn.execute(text(
+            "INSERT INTO author (name, model) VALUES ('旧作者', 'm')"))
+        conn.execute(text(
+            "INSERT INTO article (author_id, title, body) VALUES (1, '旧文', 'b')"))
+    yield
+    _restore_engine()
+
+
+def test_migrate_old_db_adds_article_presentation_columns(f2_presentation_old_db):
+    """旧库 article 补三列，历史行默认值：未书签、不公开、AI 标识默认开
+    （设计依据见 docs/design-index.md「AC-16.2」——AI 生成内容显著标识默认开）。"""
+    from app.db import init_db
+
+    init_db()
+    cols = _columns_of("article")
+    assert {"bookmarked", "public", "ai_label"} <= cols
+    with appdb.engine.connect() as conn:
+        row = conn.execute(text(
+            "SELECT bookmarked, public, ai_label FROM article WHERE id = 1")).one()
+    assert row == (0, 0, 1)
+
+
+def test_migrate_old_db_adds_author_presentation_columns(f2_presentation_old_db):
+    """旧库 author 补两列，历史行默认值：简介为空、未公开。"""
+    from app.db import init_db
+
+    init_db()
+    cols = _columns_of("author")
+    assert {"bio", "public_visible"} <= cols
+    with appdb.engine.connect() as conn:
+        row = conn.execute(text(
+            "SELECT bio, public_visible FROM author WHERE id = 1")).one()
+    assert row == ("", 0)

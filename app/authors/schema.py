@@ -322,6 +322,14 @@ def validate_author_json(data: object) -> list[str]:
         return [f"(root): 顶层必须为 object，实得 {type(data).__name__}"]
     _require_str(data, "id", "(root)", errors)
     _validate_template(data, "(root)", errors)
+    # 呈现层可选键（可增不可减原则下的可选项）：bio=公开页作者简介（str），
+    # public_visible=作者是否勾选公开（bool）。缺省时 DB 列维持原值/默认值。
+    bio = data.get("bio")
+    if bio is not None and not isinstance(bio, str):
+        _type_err(errors, "bio", bio, "string")
+    pv = data.get("public_visible")
+    if pv is not None and not isinstance(pv, bool):
+        _type_err(errors, "public_visible", pv, "bool")
     identity = _require_dict(data, "identity", "(root)", errors)
     if identity is not None:
         _validate_identity(identity, errors)

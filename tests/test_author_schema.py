@@ -89,3 +89,39 @@ def test_optional_object_explicit_null_treated_as_absent():
     cfg["output"]["max_tokens_per_node"] = None
     cfg["route"]["think_routing"]["per_node"] = None
     assert validate_author_json(cfg) == []
+
+
+def test_bio_public_visible_roundtrip(db_session):
+    """呈现层两列随 author.json 文档 round-trip：导入时映射到 DB 列、导出时
+    回填进文档；导出文档再导入即恢复同一作者的完整呈现配置（幂等一致，
+    设计依据见 docs/design-index.md「AC-10.1」呈现层增补）。"""
+    from app.authors.importer import export_author_json
+
+    cfg = default_author_config("tanya_t", "测试·谭雅")
+    cfg["bio"] = "退役情报官，以冷笔写作。"
+    cfg["public_visible"] = True
+    author = import_author_json(db_session, cfg, model="test-model")
+    assert author.bio == "退役情报官，以冷笔写作。"
+    assert author.public_visible is True
+
+    exported = export_author_json(author)
+    assert exported["bio"] == "退役情报官，以冷笔写作。"
+    assert exported["public_visible"] is True
+    assert roundtrip_check(author, exported)[0] is True
+
+    # 导出文档再导入（同名 upsert）：呈现两列保持恢复一致
+    again = import_author_json(db_session, exported, model="test-model")
+    assert again.bio == "退役情报官，以冷笔写作。"
+    assert again.public_visible is True
+
+
+def test_bio_public_visible_optional_and_type_checked():
+    """缺省合法（可增不可减原则下的可选项）；类型错报字段路径。"""
+    cfg = default_author_config("t1", "无呈现键作者")
+    assert validate_author_json(cfg) == []
+    bad = default_author_config("t2", "类型错作者")
+    bad["bio"] = 123
+    bad["public_visible"] = "yes"
+    errors = validate_author_json(bad)
+    assert any(e.startswith("bio") for e in errors)
+    assert any(e.startswith("public_visible") for e in errors)
