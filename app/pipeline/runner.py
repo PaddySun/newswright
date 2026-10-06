@@ -77,6 +77,11 @@ def _new_task(db: Session, *, kind: str, payload: dict) -> PipelineTask:
     t = PipelineTask(kind=kind, status="PENDING", payload=payload)
     db.add(t)
     db.commit()
+    # 日志上下文注入点：任务创建即把 task_id/call_point 写入 contextvars
+    # （结构化日志 Filter 统一注入，业务 log 调用不手工拼字段）
+    from ..logging_setup import set_log_context
+
+    set_log_context(task_id=t.id, call_point=kind)
     return t
 
 
@@ -116,6 +121,9 @@ def _finish(db: Session, task: PipelineTask, *, status: str, stats: dict | None 
         .execution_options(synchronize_session=False)
     )
     db.commit()
+    from ..logging_setup import set_log_context
+
+    set_log_context(task_id=None, call_point=None)  # 任务终态：清空认领上下文
     task.status = status
     if "payload" in values:
         task.payload = values["payload"]

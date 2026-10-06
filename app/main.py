@@ -42,6 +42,27 @@ def create_app() -> FastAPI:
         return JSONResponse(status_code=400,
                             content={"code": "VALIDATION_ERROR", "message": "; ".join(parts)})
 
+    from .logging_setup import reset_log_context, set_log_context, setup_logging
+
+    setup_logging()
+
+    @app.middleware("http")
+    async def log_context_middleware(request, call_next):
+        """请求侧日志上下文注入：route + actor（会话身份）经 contextvars 写入，
+        业务代码不手工拼上下文字段。请求完成记一条 INFO 行（访问面留痕）。"""
+        token = set_log_context(route=request.url.path,
+                                actor=_session_actor(request))
+        import logging as _logging
+
+        try:
+            response = await call_next(request)
+            _logging.getLogger("newswright.http").info(
+                "http %s %s", request.method, request.url.path,
+                extra={"http_status": response.status_code})
+            return response
+        finally:
+            reset_log_context(token)
+
     @app.get("/")
     def root():
         return {"app": "newswright-demo", "hint": "POST /pipeline/run 触发抓取+打分；POST /pipeline/write/{author_id} 触发写作"}
@@ -62,6 +83,27 @@ def create_app() -> FastAPI:
                             headers={"Cache-Control": "no-store"})
 
     return app
+
+
+def _session_actor(request) -> str | None:
+    """请求会话身份（日志 actor 字段）：cookie → 未过期会话 → 用户名；匿名 None。"""
+    from .auth import COOKIE_NAME, get_valid_session
+    from .models import User
+
+    sid = request.cookies.get(COOKIE_NAME)
+    if not sid:
+        return None
+    try:
+        from .db import SessionLocal as _SL
+
+        with _SL() as db:
+            sess = get_valid_session(db, sid)
+            if sess is None:
+                return None
+            user = db.get(User, sess.user_id)
+            return user.username if user else None
+    except Exception:  # noqa: BLE001  actor 解析失败不影响请求本身
+        return None
 
 
 app = create_app()
