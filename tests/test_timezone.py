@@ -189,3 +189,43 @@ def test_hot_to_direction_ttl_uses_site_zone_midnight(auth_client, db_session,
     expires = d.expires_at if d.expires_at.tzinfo else \
         d.expires_at.replace(tzinfo=timezone.utc)
     assert expires == datetime(2026, 10, 12, 16, 0, tzinfo=timezone.utc)
+
+
+# ---------- 搜索统计日键（第五个日切消费点：统计自然日） ----------
+
+def test_stats_search_day_key_uses_site_zone(auth_client, db_session):
+    """搜索调用统计的日聚合键取站点时区本地日：UTC 前一日 17:00（上海当日
+    01:00）的调用归上海当日，而非 UTC 日键的前一日。"""
+    from app.models import SearchCallLog
+
+    set_config(db_session, "timezone", "Asia/Shanghai")
+    db_session.add(SearchCallLog(
+        provider="bocha", query="q", ok=True, status="ok",
+        created_at=datetime(2026, 10, 6, 17, 0, tzinfo=timezone.utc),  # 上海 10-07 01:00
+    ))
+    db_session.add(SearchCallLog(
+        provider="bocha", query="q", ok=True, status="ok",
+        created_at=datetime(2026, 10, 6, 10, 0, tzinfo=timezone.utc),  # 上海 10-06 18:00（同日）
+    ))
+    db_session.commit()
+
+    r = auth_client.get("/stats/search?days=3")
+    assert r.status_code == 200
+    days = sorted(row["day"] for row in r.json() if row["provider"] == "bocha")
+    assert days == ["2026-10-06", "2026-10-07"]  # UTC 日键会误并为一日（10-06）
+
+
+def test_stats_search_day_key_utc_fallback_zero_offset(auth_client, db_session):
+    """timezone 配置为 UTC 时日键与 UTC 存储日一致（偏移零，行为不回归）。"""
+    from app.models import SearchCallLog
+
+    set_config(db_session, "timezone", "UTC")
+    db_session.add(SearchCallLog(
+        provider="bocha", query="q", ok=True, status="ok",
+        created_at=datetime(2026, 10, 6, 23, 30, tzinfo=timezone.utc),
+    ))
+    db_session.commit()
+
+    r = auth_client.get("/stats/search?days=3")
+    assert r.status_code == 200
+    assert [row["day"] for row in r.json() if row["provider"] == "bocha"] == ["2026-10-06"]
