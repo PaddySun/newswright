@@ -62,3 +62,6 @@ def rotate_backups(directory: Path, prefix: str,
         old.unlink(missing_ok=True)
         removed.append(old)
     return removed
+
+# 内建目标自注册（导入包即生效）
+from . import localdir as _localdir  # noqa: E402,F401

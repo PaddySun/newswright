@@ -107,3 +107,7 @@ class Notifier(ABC):
         log.info("通知已发送（通道 %s）: category=%s key=%s subject=%s",
                  self.name, category, dedupe_key, subject)
         return {"sent": True}
+
+
+# 内建通道自注册（导入包即生效；新通道 = 新子类模块 + 在此追加一行）
+from . import smtp as _smtp  # noqa: E402,F401

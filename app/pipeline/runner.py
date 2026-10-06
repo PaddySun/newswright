@@ -274,6 +274,10 @@ def _update_source_health(db: Session, src: Source, stats) -> None:
                     and src.failure_level == "none"):
                 src.failure_level = "suspect"
                 src.failure_since = now
+                # 通知挂钧：疑似失效转换点（同源 24h 去重）
+                from ..notify.triggers import notify_source_failure
+
+                notify_source_failure(db, src, level="suspect")
 
     # --- 硬失效判别（404/403/410）---
     if error is not None and not non_xml:
@@ -283,6 +287,10 @@ def _update_source_health(db: Session, src: Source, stats) -> None:
             if src.hard_failures >= config.HARD_FAIL_ROUNDS and src.failure_level != "hard_failed":
                 src.failure_level = "hard_failed"
                 src.failure_since = now
+                # 通知挂钧：源失效状态转换点（SMTP 未配置时仅落日志，不报错）
+                from ..notify.triggers import notify_source_failure
+
+                notify_source_failure(db, src, level="hard_failed")
         else:
             src.hard_failures = 0  # 非硬失效错误打断连续硬失效序列
             src.last_error = error[:2000]
@@ -444,6 +452,14 @@ def process_fetch_round(db: Session, round_task: PipelineTask) -> dict:
         })
     _finish(db, round_task, status="FAILED" if any_failed else "DONE")
     summary["status"] = round_task.status
+    # fetch 轮末顺带检查：采集面聚合哨兵（持续 2 轮超半数降级）与磁盘阈值
+    try:
+        from ..notify.triggers import check_collective_sentinel, check_disk_usage
+
+        summary["sentinel"] = check_collective_sentinel(db)
+        summary["disk"] = check_disk_usage(db)
+    except Exception as e:  # noqa: BLE001  通知面异常绝不阻断采集轮收尾
+        log.warning("fetch 轮末通知检查异常: %s", e)
     return summary
 
 
@@ -598,6 +614,14 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
     directions = q.all()
     summary: dict[str, object] = {"triggered_by": triggered_by, "directions": []}
     budget_slow = budget_exceeded(db)
+    if budget_slow:
+        # 预算闸事件通知（每自然日至多一次，去重键带日期；未配置仅落日志）
+        from ..pipeline.budget import tokens_used_today
+        from ..siteconfig import get_config as _get_config
+        from ..notify.triggers import notify_budget_exceeded
+
+        notify_budget_exceeded(db, used_tokens=tokens_used_today(db),
+                               budget=int(_get_config(db, "daily_token_budget") or 0))
 
     for d in directions:
         task = _new_task(db, kind="score", payload={"direction_id": d.id, "prompt_version": d.prompt_version})

@@ -38,6 +38,13 @@ DEFAULTS: dict[str, object] = {
     "healthz_pending_stale_count": 500,
     # 备份目录（本地目录备份插件产物位置；轮转保留 ≥7 份）
     "backup_dir": "backups",
+    # 通知触发开关（US-19：GET /api/settings/notify 回显；未配置 SMTP 时事件仅落日志）
+    "notify_on_source_failure": True,
+    "notify_on_token_budget": True,
+    "notify_on_collective": True,
+    "notify_on_disk": True,
+    # 磁盘用量告警阈值（百分比）
+    "disk_usage_warn_percent": 80,
 }
 
 
