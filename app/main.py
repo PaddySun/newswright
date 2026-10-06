@@ -46,6 +46,21 @@ def create_app() -> FastAPI:
     def root():
         return {"app": "newswright-demo", "hint": "POST /pipeline/run 触发抓取+打分；POST /pipeline/write/{author_id} 触发写作"}
 
+    @app.get("/healthz")
+    def healthz():
+        """健康自省三态端点（无鉴权，security: []；外部探测以此报警）。
+
+        200 = 健康；200+degraded = 增值层故障的合法稳态（不触发外部报警）；
+        503 = 仅基本功能故障（DB 不可写/抓取停滞超阈/任务堆积超阈）。
+        响应头 Cache-Control: no-store——前置层永不缓存，防"假活"复刻。
+        """
+        from .observability import health_payload
+
+        with SessionLocal() as db:
+            status_code, payload = health_payload(db)
+        return JSONResponse(status_code=status_code, content=payload,
+                            headers={"Cache-Control": "no-store"})
+
     return app
 
 

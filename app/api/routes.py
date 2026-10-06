@@ -208,6 +208,15 @@ def usage_summary(db: Session = Depends(get_session)):
     return out
 
 
+@router.get("/api/stats/pipeline")
+@router.get("/stats/pipeline")
+def stats_pipeline(db: Session = Depends(get_session)):
+    """管线体检（会话守卫）：任务面 + 采集面聚合哨兵 + 存储面。"""
+    from ..observability import pipeline_stats_payload
+
+    return pipeline_stats_payload(db)
+
+
 @router.get("/tasks")
 def list_tasks(kind: str | None = None, limit: int = 50, db: Session = Depends(get_session)):
     q = db.query(PipelineTask).order_by(PipelineTask.id.desc())
