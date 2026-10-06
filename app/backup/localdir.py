@@ -13,7 +13,6 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session
 
-from ..db import engine
 from ..siteconfig import get_config
 from . import BackupTarget, register, rotate_backups
 
@@ -28,9 +27,12 @@ class LocalDirectoryBackup(BackupTarget):
     def run_backup(self) -> Path:
         directory = Path(str(get_config(self.db, "backup_dir") or "backups"))
         directory.mkdir(parents=True, exist_ok=True)
-        # 纳秒尾缀零补齐 6 位：文件名字典序 = 时间序（轮转按名排序挤出最旧）
+        # 纳秒尾缀零补齐 6 位：文件名可读（轮转按修改时间排序，不依赖名字典序）
         dest_path = directory / f"{FILE_PREFIX}{time.strftime('%Y%m%d-%H%M%S')}-{time.time_ns() % 1_000_000:06d}.db"
-        src_conn = engine.raw_connection()
+        # 动态取当前 engine：测试夹具会重绑 appdb.engine（模块级导入会绑到旧库）
+        from .. import db as appdb
+
+        src_conn = appdb.engine.raw_connection()
         try:
             dest = sqlite3.connect(str(dest_path))
             try:
