@@ -1881,3 +1881,181 @@
 > 收官统一 dispatch（run 37410775426 @ main 2f9824d）逐名核对：豁免位中 **5 条转 killed**（C2 各批新测试顺带杀灭：pipeline.execute m268 / rss m91 / moark __init__ m12 / rss.parse_feed_entries m29 / gates.topic_dedup m17）——本节移除，清单 1868 → **1863**。
 > 同批收官处置：interleave m17（Random(seed)→Random(None)）系 **RNG 依赖型 flaky 变异**（两轮 dispatch 映射与代码零变化下判定翻转）——已补确定性杀灭测试（同 seed 两次调用必一致），非豁免；D1（暂态轮 last_error）经用户拍板①落册产品书 v1.8 并补测试杀灭。
 
+
+## C3-1 分诊批次 1（2026-10-07，通知触发与通道族 251 条）：A 124 条
+
+> 种子 251 = C 87（补测杀灭：tests/test_smtp_delivery_contract.py + tests/test_notify_trigger_guards.py）+ A 139（本节）+ D 25（呈统筹，不在本清单：通知邮件内容承载/MIME 头形态/部分凭据登录门槛未落条款）。B 0。核验-改判循环：C 逐条施加必杀、A 逐条施加必活至零意外（doc/C3/C3-1-核验结果.json）。
+
+### app.notify.smtp.xǁSMTPNotifierǁ_deliver（19 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_12 | A | 端口缺省回退 465→466：差异域=port 未设——configured 门槛（send 与 /notify/test 双入口先查 configured）使缺省域不可达（防御缺省不可达族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_31 | A | 收件备用键 to_addrs 变体：routes PUT 实证 to_addrs 落 smtp_to 键，smtp_to_addrs 无生产写入口——备用键域不可达（调用点核查先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_32 | A | 收件备用键 to_addrs 变体：routes PUT 实证 to_addrs 落 smtp_to 键，smtp_to_addrs 无生产写入口——备用键域不可达（调用点核查先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_33 | A | 收件备用键 to_addrs 变体：routes PUT 实证 to_addrs 落 smtp_to 键，smtp_to_addrs 无生产写入口——备用键域不可达（调用点核查先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_34 | A | 字符串收件配置归一分支 None 化：差异域=手写字符串形态 smtp_to——API 写入口恒 list（PUT schema 实证），兼容域正常运行不可达 | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_37 | A | MIME 子类型变体（None/utf-8/XX/大写）：正文仍在位、邮件仍发出——MIME 子类型细节无条款（实测不抛异常；内容承载未钉） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_38 | A | 字符集变体（None/缺省/UTF-8）：实测输出与原形全同（charset None/缺省即 utf-8）——恰等价（venv 实测） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_40 | A | MIME 子类型变体（None/utf-8/XX/大写）：正文仍在位、邮件仍发出——MIME 子类型细节无条款（实测不抛异常；内容承载未钉） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_41 | A | 字符集变体（None/缺省/UTF-8）：实测输出与原形全同（charset None/缺省即 utf-8）——恰等价（venv 实测） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_42 | A | MIME 子类型变体（None/utf-8/XX/大写）：正文仍在位、邮件仍发出——MIME 子类型细节无条款（实测不抛异常；内容承载未钉） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_43 | A | MIME 子类型变体（None/utf-8/XX/大写）：正文仍在位、邮件仍发出——MIME 子类型细节无条款（实测不抛异常；内容承载未钉） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_45 | A | 字符集变体（None/缺省/UTF-8）：实测输出与原形全同（charset None/缺省即 utf-8）——恰等价（venv 实测） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_48 | A | Subject/From/To 头名小写/大写：RFC 5322 头字段名大小写不敏感——HTTP 头名不敏感先例族（EMB m23-27 同构） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_49 | A | Subject/From/To 头名小写/大写：RFC 5322 头字段名大小写不敏感——HTTP 头名不敏感先例族（EMB m23-27 同构） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_52 | A | Subject/From/To 头名小写/大写：RFC 5322 头字段名大小写不敏感——HTTP 头名不敏感先例族（EMB m23-27 同构） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_53 | A | Subject/From/To 头名小写/大写：RFC 5322 头字段名大小写不敏感——HTTP 头名不敏感先例族（EMB m23-27 同构） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_56 | A | Subject/From/To 头名小写/大写：RFC 5322 头字段名大小写不敏感——HTTP 头名不敏感先例族（EMB m23-27 同构） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_57 | A | Subject/From/To 头名小写/大写：RFC 5322 头字段名大小写不敏感——HTTP 头名不敏感先例族（EMB m23-27 同构） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁ_deliver__mutmut_66 | A | timeout 30→31：任意有限值满足 §4.2——数值缺省族（批次 10 先例） | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.smtp.xǁSMTPNotifierǁconfigured（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.smtp.xǁSMTPNotifierǁconfigured__mutmut_6 | A | 收件备用键 to_addrs 变体：smtp_to_addrs 无生产写入口（PUT 实证存 smtp_to）——备用键域不可达（调用点核查先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁconfigured__mutmut_7 | A | 收件备用键 to_addrs 变体：smtp_to_addrs 无生产写入口（PUT 实证存 smtp_to）——备用键域不可达（调用点核查先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.smtp.xǁSMTPNotifierǁconfigured__mutmut_8 | A | 收件备用键 to_addrs 变体：smtp_to_addrs 无生产写入口（PUT 实证存 smtp_to）——备用键域不可达（调用点核查先例） | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.triggers.x__dispatch（24 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.triggers.x__dispatch__mutmut_13 | A | 开关关闭 log.info 文案/实参变体（格式化仍合法）：日志措辞无条款、格式化正常完成——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_18 | A | switch_off 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C，reason 字符串无条款） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_19 | A | switch_off 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C，reason 字符串无条款） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_20 | A | switch_off 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C，reason 字符串无条款） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_21 | A | switch_off 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C，reason 字符串无条款） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_25 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_26 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_27 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_28 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_29 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_30 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_31 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_32 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_33 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_34 | A | 无通道 log.info 文案/实参变体：日志措辞无条款——同上文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_35 | A | not_configured 返回字典键/值/文案变体：同 m15 族判据（诊断镜像键面） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_36 | A | not_configured 返回字典键/值/文案变体：同 m15 族判据（诊断镜像键面） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_37 | A | not_configured 返回字典键/值/文案变体：同 m15 族判据（诊断镜像键面） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_38 | A | not_configured 返回字典键/值/文案变体：同 m15 族判据（诊断镜像键面） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_39 | A | not_configured 返回字典键/值/文案变体：同 m15 族判据（诊断镜像键面） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_40 | A | not_configured 返回字典键/值/文案变体：同 m15 族判据（诊断镜像键面） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_41 | A | not_configured 返回字典键/值/文案变体：同 m15 族判据（诊断镜像键面） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_8 | A | 开关关闭 log.info 文案/实参变体（格式化仍合法）：日志措辞无条款、格式化正常完成——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x__dispatch__mutmut_9 | A | 开关关闭 log.info 文案/实参变体（格式化仍合法）：日志措辞无条款、格式化正常完成——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.triggers.x_check_collective_sentinel（15 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.triggers.x_check_collective_sentinel__mutmut_10 | A | no_sources 返回字典键/值/文案变体：返回值汇入轮次 summary 无行为消费方——诊断镜像键面判据（HR m296/297 先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_11 | A | no_sources 返回字典键/值/文案变体：返回值汇入轮次 summary 无行为消费方——诊断镜像键面判据（HR m296/297 先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_12 | A | no_sources 返回字典键/值/文案变体：返回值汇入轮次 summary 无行为消费方——诊断镜像键面判据（HR m296/297 先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_13 | A | no_sources 返回字典键/值/文案变体：返回值汇入轮次 summary 无行为消费方——诊断镜像键面判据（HR m296/297 先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_14 | A | no_sources 返回字典键/值/文案变体：返回值汇入轮次 summary 无行为消费方——诊断镜像键面判据（HR m296/297 先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_15 | A | no_sources 返回字典键/值/文案变体：返回值汇入轮次 summary 无行为消费方——诊断镜像键面判据（HR m296/297 先例） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_69 | A | 标题文案 XX 包裹/前缀大写：事件名「采集面整体降级」仍在位、标题整体措辞无条款——文案先例（钉名断言为子串在位非全文精确） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_70 | A | 标题文案 XX 包裹/前缀大写：事件名「采集面整体降级」仍在位、标题整体措辞无条款——文案先例（钉名断言为子串在位非全文精确） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_71 | A | 正文时间戳 datetime.now(None) naive：正文展示用途、形态无条款——datetime.now(None) 族先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_78 | A | 恢复清零存 None：None/0 同 falsy，后续读取 int(None or 0) 恒等——存储值 falsy 等价判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_86 | A | healthy 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（同 m9 族；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_87 | A | healthy 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（同 m9 族；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_88 | A | healthy 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（同 m9 族；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_89 | A | healthy 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（同 m9 族；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_collective_sentinel__mutmut_9 | A | no_sources 返回字典键/值/文案变体：返回值汇入轮次 summary 无行为消费方——诊断镜像键面判据（HR m296/297 先例） | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.triggers.x_check_disk_usage（13 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.triggers.x_check_disk_usage__mutmut_2 | A | 盘符/路径回退变体：conftest/生产库路径恒绝对（DEFAULTS 形态核查+venv 实测 absolute 同盘同值），回退域（内存库/相对路径）两形态等价或不可达 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_27 | A | 代码内缺省回退破坏/变体：siteconfig DEFAULTS 实证 disk_usage_warn_percent=80 恒回退，raw is None 域不可达——防御缺省不可达族（DEFAULTS 核查） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_29 | A | 代码内缺省回退破坏/变体：siteconfig DEFAULTS 实证 disk_usage_warn_percent=80 恒回退，raw is None 域不可达——防御缺省不可达族（DEFAULTS 核查） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_3 | A | 盘符/路径回退变体：conftest/生产库路径恒绝对（DEFAULTS 形态核查+venv 实测 absolute 同盘同值），回退域（内存库/相对路径）两形态等价或不可达 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_35 | A | below_threshold 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_36 | A | below_threshold 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_37 | A | below_threshold 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_38 | A | below_threshold 返回字典 reason 键/值变体：诊断文案无消费方——诊断镜像键面判据（HR m296/297 先例；sent 布尔已另判 C） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_6 | A | 盘符/路径回退变体：conftest/生产库路径恒绝对（DEFAULTS 形态核查+venv 实测 absolute 同盘同值），回退域（内存库/相对路径）两形态等价或不可达 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_60 | A | 正文剩余 MB 计算变体（整除→浮点/除数变体）：正文诊断文案细节无条款——文案先例（HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_61 | A | 正文剩余 MB 计算变体（整除→浮点/除数变体）：正文诊断文案细节无条款——文案先例（HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_62 | A | 正文剩余 MB 计算变体（整除→浮点/除数变体）：正文诊断文案细节无条款——文案先例（HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_check_disk_usage__mutmut_63 | A | 正文剩余 MB 计算变体（整除→浮点/除数变体）：正文诊断文案细节无条款——文案先例（HR m228 族） | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.triggers.x_notify_source_failure（26 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.triggers.x_notify_source_failure__mutmut_10 | A | 非失效态返回字典键/值/文案变体：level 防御分支（调用点恒传两级态）+返回值无消费方——诊断镜像+防御域判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_11 | A | 非失效态返回字典键/值/文案变体：level 防御分支（调用点恒传两级态）+返回值无消费方——诊断镜像+防御域判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_12 | A | 非失效态返回字典键/值/文案变体：level 防御分支（调用点恒传两级态）+返回值无消费方——诊断镜像+防御域判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_23 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_24 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_25 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_26 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_27 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_28 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_29 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_30 | A | 正文 label 文案/条件变体：通知正文措辞无条款——文案先例（批次 3/HR m228 族） | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_32 | A | 标题内状态词条件/文案变体：标题整体措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_33 | A | 标题内状态词条件/文案变体：标题整体措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_34 | A | 标题内状态词条件/文案变体：标题整体措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_35 | A | 标题内状态词条件/文案变体：标题整体措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_36 | A | 标题内状态词条件/文案变体：标题整体措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_37 | A | 标题内状态词条件/文案变体：标题整体措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_38 | A | 标题内状态词条件/文案变体：标题整体措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_39 | A | URL 截断界 [:80]→[:81]：截断界数值无条款——batch2 m42/批次 10 先例族 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_54 | A | 正文最近错误回退/文案变体：正文诊断细节无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_55 | A | 正文最近错误回退/文案变体：正文诊断细节无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_56 | A | 正文时间戳 datetime.now(None) naive：正文展示形态无条款——datetime.now(None) 族 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_6 | A | 非失效态返回字典键/值/文案变体：level 防御分支（调用点恒传两级态）+返回值无消费方——诊断镜像+防御域判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_7 | A | 非失效态返回字典键/值/文案变体：level 防御分支（调用点恒传两级态）+返回值无消费方——诊断镜像+防御域判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_8 | A | 非失效态返回字典键/值/文案变体：level 防御分支（调用点恒传两级态）+返回值无消费方——诊断镜像+防御域判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.triggers.x_notify_source_failure__mutmut_9 | A | 非失效态返回字典键/值/文案变体：level 防御分支（调用点恒传两级态）+返回值无消费方——诊断镜像+防御域判据 | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.triggers.x_notify_usage_reconcile_deviation（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.triggers.x_notify_usage_reconcile_deviation__mutmut_17 | A | 正文时间戳 datetime.now(None) naive：正文展示形态无条款——datetime.now(None) 族 | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.x_get_notifier（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.x_get_notifier__mutmut_4 | A | 未注册名返回 None→恒实例化：调用点核查——default_notifier 取注册表键、routes/get 测试恒传已注册名，未知名域生产不可达（record_usage 缺省先例族） | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.xǁNotifierǁ_recently_sent（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.xǁNotifierǁ_recently_sent__mutmut_15 | A | 损坏时间戳（非 ISO）兜底 True：差异域=手工损坏 site_config 时间戳——去重时间戳唯一写入口 _record_sent 恒写 aware ISO（实证），损坏域正常运行不可达 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁ_recently_sent__mutmut_16 | A | tzinfo 判定取反：aware 时间戳（唯一写入形态）上 replace(tzinfo=utc) 恒等no-op；naive 差异域不可达——同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁ_recently_sent__mutmut_17 | A | naive 归一分支体破坏（last=None / tzinfo=None）：仅 naive 时间戳触达——写入形态恒 aware，分支域不可达（同上判据） | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁ_recently_sent__mutmut_18 | A | naive 归一分支体破坏（last=None / tzinfo=None）：仅 naive 时间戳触达——写入形态恒 aware，分支域不可达（同上判据） | 设计书条款/实证推理（详见说明列） |
+
+### app.notify.xǁNotifierǁsend（18 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.notify.xǁNotifierǁsend__mutmut_14 | A | 未配置分支 log.info 文案/实参变体：日志措辞无条款、格式化异常 logging 自吞——批次 3 m3-m9 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_30 | A | 去重命中分支 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_31 | A | 去重命中分支 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_35 | A | 去重命中分支 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_49 | A | 投递失败 WARN 日志文案/实参变体：D12 未钉该行业务文案（错误语义已由返回值 deliver_failed 承载）——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_5 | A | 未配置分支 log.info 文案/实参变体：日志措辞无条款、格式化异常 logging 自吞——批次 3 m3-m9 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_50 | A | 投递失败 WARN 日志文案/实参变体：D12 未钉该行业务文案（错误语义已由返回值 deliver_failed 承载）——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_51 | A | 投递失败 WARN 日志文案/实参变体：D12 未钉该行业务文案（错误语义已由返回值 deliver_failed 承载）——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_56 | A | 投递失败 WARN 日志文案/实参变体：D12 未钉该行业务文案（错误语义已由返回值 deliver_failed 承载）——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_58 | A | 投递失败 WARN 日志文案/实参变体：D12 未钉该行业务文案（错误语义已由返回值 deliver_failed 承载）——批次 3 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_6 | A | 未配置分支 log.info 文案/实参变体：日志措辞无条款、格式化异常 logging 自吞——批次 3 m3-m9 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_7 | A | 未配置分支 log.info 文案/实参变体：日志措辞无条款、格式化异常 logging 自吞——批次 3 m3-m9 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_73 | A | 已发送 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_74 | A | 已发送 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_75 | A | 已发送 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_76 | A | 已发送 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_8 | A | 未配置分支 log.info 文案/实参变体：日志措辞无条款、格式化异常 logging 自吞——批次 3 m3-m9 文案先例 | 设计书条款/实证推理（详见说明列） |
+| app.notify.xǁNotifierǁsend__mutmut_82 | A | 已发送 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
