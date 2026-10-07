@@ -2540,3 +2540,237 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 > 拼接抛 TypeError（12 月对账 500）——12 月契约测试 xfail(strict) 占位（任务书 §0
 > 零生产改动铁律），修复后由修复批测试自然杀灭相关 6 条 12 月域变异（已判 A 等价崩）。
 
+
+## 批次 4：检索与打分族（C3-4，2026-10-07）
+
+> 分诊执行 Agent 依 `doc/C3/C3-4-任务书.md` 出具；C 类 165 条由六个新测试
+> 文件杀灭（test_scoring_validate_contract / test_scoring_user_message_context /
+> test_retrieval_embedder_guard / test_retrieval_query_gen_contract /
+> test_retrieval_router_domain / test_explore_config_and_pick），D 类 8 条呈
+> 统筹拍板（见 doc/C3/C3-4-执行Agent工作汇报.md §3），均不在本清单。核验
+> 数据：doc/C3/C3-4-核验结果.json（施加必杀/必活循环）。
+
+#### retrieval.embedder.cosine_similarity（余弦相似度）（B 1）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.embedder.x_cosine_similarity__mutmut_8 | B | 零向量兜底 0.0→1.0：嵌入护栏保证非零输入（AC-08.5），docstring 明示「仅防御性兜底」——防御分支正常运行不可达；设计书要求护栏存在（B 豁免） | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+
+#### retrieval.embedder.embed_input_text（嵌入输入组装）（A 3）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.embedder.x_embed_input_text__mutmut_2 | A | 覆写判定 and False 恒假：limit 恒=config——生产调用恒传 None 恰等价；显式覆写域=测试隔离面（生产调用点核查 ensure_item_vectors 恒透传 None） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_embed_input_text__mutmut_7 | A | title or ""→or "XXXX"：item.title 列 NOT NULL default=""（models 实证），None 分支不可达——死码域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_embed_input_text__mutmut_10 | A | content_text or ""→or "XXXX"：content_text 列 NOT NULL default=""（models 实证），None 分支不可达——死码域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.embedder.ensure_item_vectors（批量嵌入补齐）（A 42 + B 1）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_4 | A | dims 覆写 and False 恒假：恒=config——生产调用（runner）恒不传 expected_dims，恰等价（生产调用点核查；显式覆写域=测试隔离面） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_8 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_9 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_10 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_11 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_12 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_13 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_14 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_15 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_16 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_17 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_18 | A | 禁用态早退 stats 键名/值变体：runner 不消费 ensure_item_vectors 返回值、测试仅断言 disabled 键（键不在变异位）、stats 键面无条款——payload.stats 面板域判例（任务书 §2 A 类兜底形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_25 | B | provider is None or not items → and 化：差异域=provider None 且 items 非空——embed_enabled 时注册表恒解析出 moark，provider None 不可达；即便触达亦由ADR-6 回退兜住（异常→embed_fallback 全慢速）——防御分支豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_28 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_29 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_30 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_31 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_32 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_33 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_34 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_35 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_36 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_37 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_38 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_39 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_40 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_41 | A | provider None 短路返回 stats 键名/值变体：同禁用态 stats——runner 不消费返回值、键面无断言（面板域判例；m41 disabled 反转亦在域内） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_51 | A | 正常路径 stats 初始 model_version 键变体：后续无重写但消费面（runner/测试）不断言该键——面板域（payload.stats 消费方=诊断面板） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_52 | A | 正常路径 stats 初始 model_version 键变体：后续无重写但消费面（runner/测试）不断言该键——面板域（payload.stats 消费方=诊断面板） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_58 | A | 正常路径 stats failed/disabled 键名/值变体：m58/59 失败路径重写正确键吸收；m60-63 无断言面——面板域判例（stats 键值=诊断面板消费） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_59 | A | 正常路径 stats failed/disabled 键名/值变体：m58/59 失败路径重写正确键吸收；m60-63 无断言面——面板域判例（stats 键值=诊断面板消费） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_60 | A | 正常路径 stats failed/disabled 键名/值变体：m58/59 失败路径重写正确键吸收；m60-63 无断言面——面板域判例（stats 键值=诊断面板消费） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_61 | A | 正常路径 stats failed/disabled 键名/值变体：m58/59 失败路径重写正确键吸收；m60-63 无断言面——面板域判例（stats 键值=诊断面板消费） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_62 | A | 正常路径 stats failed/disabled 键名/值变体：m58/59 失败路径重写正确键吸收；m60-63 无断言面——面板域判例（stats 键值=诊断面板消费） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_63 | A | 正常路径 stats failed/disabled 键名/值变体：m58/59 失败路径重写正确键吸收；m60-63 无断言面——面板域判例（stats 键值=诊断面板消费） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_75 | A | truncate_chars 实参 None 化/移除：生产调用链 runner→ensure 恒不传 → 形参恒 None，变异与原值恰等价（生产调用点核查——实参变异恒替换判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_77 | A | truncate_chars 实参 None 化/移除：生产调用链 runner→ensure 恒不传 → 形参恒 None，变异与原值恰等价（生产调用点核查——实参变异恒替换判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_86 | A | call_point kwarg 移除：EmbeddingProvider.embed 签名 call_point 缺省恰="embed"（base.py 实证）——缺省值等价族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_92 | A | failed = missing-embedded → +：失败态 stats 值（runner 不消费、test_per_batch 不断言 failed）——面板值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_96 | A | WARN 实参 None/移除/文案 XX/单参：logging 缺参静默门+文案子串无断言——文案先例族（C2-1 enqueue m47 组判据） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_97 | A | WARN 实参 None/移除/文案 XX/单参：logging 缺参静默门+文案子串无断言——文案先例族（C2-1 enqueue m47 组判据） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_98 | A | WARN 实参 None/移除/文案 XX/单参：logging 缺参静默门+文案子串无断言——文案先例族（C2-1 enqueue m47 组判据） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.embedder.x_ensure_item_vectors__mutmut_99 | A | WARN 实参 None/移除/文案 XX/单参：logging 缺参静默门+文案子串无断言——文案先例族（C2-1 enqueue m47 组判据） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.embedder.missing_vector_items（缺失向量过滤）（A 1）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.embedder.x_missing_vector_items__mutmut_7 | A | item_id.in_(ids) 过滤删除：have 超集仅含 items 外 id，不在 items 的 id 不影响 [i for i in items if i.id not in have] 结果——返回列表恰等价（查询量差异非可观察行为） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.explore.explore_params（探索参数合成）（A 2）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.explore.x_explore_params__mutmut_47 | A | direction is not None → or True 恒真：direction None 时 getattr(None,...)→None→or {} 恰等价——冗余守卫等价族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.explore.x_explore_params__mutmut_53 | A | getattr 缺省值移除：direction 恒为 ORM 实例（explore_config 列恒存在），缺省分支不可达——列存在性等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.explore.explore_pick（探索选样 MMR）（A 6 + B 5）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.explore.x_explore_pick__mutmut_1 | A | 首两守卫 or→and 化：quota≤0 时 while len(picked)<quota 恒假仍返回空——两形态返回值恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.explore.x_explore_pick__mutmut_2 | B | 首两守卫 and 化：query_vec None 且 quota>0 时不再早退→cosine(None,·) 崩——生产注入端恒有 query_vec 守卫（routes d.query_vec is None 前置），纯函数签名契约的防御短路——防御分支豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.explore.x_explore_pick__mutmut_4 | A | quota <= 0 → < 0：quota=0 时循环不执行仍返回空——恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.explore.x_explore_pick__mutmut_16 | B | vec is not None → or True 恒真：vec=None 条目进 cosine 崩——生产 pool 由 join ItemVec 构造恒带向量（routes 实证），防御短路豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.explore.x_explore_pick__mutmut_32 | A | percentile 数组 dtype float64→None/移除：known 为 float 列表，asarray dtype=None 推断恒 float64——恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.explore.x_explore_pick__mutmut_34 | A | percentile 数组 dtype float64→None/移除：known 为 float 列表，asarray dtype=None 推断恒 float64——恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.explore.x_explore_pick__mutmut_41 | B | it.get("passed", True) 缺省 None/移除/False：缺 passed 键的条目纳入候选——生产 pool 恒带 passed 键（routes 构造实证），缺省分支不可达——防御缺省豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.explore.x_explore_pick__mutmut_43 | B | it.get("passed", True) 缺省 None/移除/False：缺 passed 键的条目纳入候选——生产 pool 恒带 passed 键（routes 构造实证），缺省分支不可达——防御缺省豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.explore.x_explore_pick__mutmut_46 | B | it.get("passed", True) 缺省 None/移除/False：缺 passed 键的条目纳入候选——生产 pool 恒带 passed 键（routes 构造实证），缺省分支不可达——防御缺省豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.explore.x_explore_pick__mutmut_51 | A | quality or 0 → or 1：0/None 哨兵与 floor 整数比较 (0>=f) ⇔ (1>=f) 对整数 f 恒同真假——数学恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.explore.x_explore_pick__mutmut_88 | A | MMR sim_sel 缺省 0.0→1.0：picked 为空时全体候选分数同平移 (1-λ)，argmax 不变；picked 非空时生成器非空缺省不可达——等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.query.ensure_direction_query_vec（方向查询向量）（A 19 + B 2）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_7 | B | query_vec_version or 0 → or 1：差异域=vec 落列而 version None 的不一致态（commit 双写恒一致，生产不可达）且 prompt_version=1 时误判缓存命中——防御分支豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_16 | A | call_point="query_gen" 值 None/XX/大写：query_gen 非嵌入计量口径（生产配置表仅钉 embed/embed_query），账本归因值域无行为消费方（budget 按日总量聚合）——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_17 | A | ref_type 值 None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_18 | A | ref_id 值 None/移除：同 ref_type——账本归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_19 | A | max_tokens 500→None/移除：生成上限护栏数值（chat 签名缺省 None），「200 字以内」由提示词文本承载——护栏数值无条款 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_22 | A | ref_type 值 None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_23 | A | ref_id 值 None/移除：同 ref_type——账本归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_24 | A | max_tokens 500→None/移除：生成上限护栏数值（chat 签名缺省 None），「200 字以内」由提示词文本承载——护栏数值无条款 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_31 | A | system 短句 XX 包裹：LLM-facing 文案变体（消息协议形态完整、user 内容不变）——文案先例族（措辞无条款，断言面=协议形态非内容） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_39 | A | call_point="query_gen" 值 None/XX/大写：query_gen 非嵌入计量口径（生产配置表仅钉 embed/embed_query），账本归因值域无行为消费方（budget 按日总量聚合）——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_40 | A | call_point="query_gen" 值 None/XX/大写：query_gen 非嵌入计量口径（生产配置表仅钉 embed/embed_query），账本归因值域无行为消费方（budget 按日总量聚合）——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_41 | A | ref_type 值 None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_42 | A | ref_type 值 None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_43 | A | max_tokens 500→501：同上护栏数值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_46 | A | ProviderError 文案 None/XX：异常被捕获落 log（文案无断言）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_47 | A | ProviderError 文案 None/XX：异常被捕获落 log（文案无断言）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_52 | B | embed_provider None → return True 误报就绪：差异域=embed_enabled 且注册表解析失败（moark 恒注册不可达）——防御分支豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_54 | A | dims 覆写 and False 恒假：不传时恒=config 与原等价（生产调用形态；显式覆写域=测试隔离面） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_68 | A | WARN 实参 None 化/文案 XX：logging 合法格式化、无断言——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_69 | A | WARN 实参 None 化/文案 XX：logging 合法格式化、无断言——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_73 | A | WARN 实参 None 化/文案 XX：logging 合法格式化、无断言——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.router._load_direction_vectors（方向向量加载）（A 4）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.router.x__load_direction_vectors__mutmut_7 | A | join onclause None/省略：ItemVec→Item→Source 均单 FK，SQLAlchemy 回退 FK 推断恰等价（C2-1/C3-3 join 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x__load_direction_vectors__mutmut_9 | A | join onclause None/省略：ItemVec→Item→Source 均单 FK，SQLAlchemy 回退 FK 推断恰等价（C2-1/C3-3 join 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x__load_direction_vectors__mutmut_11 | A | join onclause None/省略：ItemVec→Item→Source 均单 FK，SQLAlchemy 回退 FK 推断恰等价（C2-1/C3-3 join 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x__load_direction_vectors__mutmut_13 | A | join onclause None/省略：ItemVec→Item→Source 均单 FK，SQLAlchemy 回退 FK 推断恰等价（C2-1/C3-3 join 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.router.is_version_item（版本条目判定）（A 1）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.router.x_is_version_item__mutmut_3 | A | guid or ""→or "XXXX"：guid 列 NOT NULL（models 实证），None 分支不可达；"XXXX" 亦不含 #v- 判定恒同——死码等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.router.mark_semantic_duplicates（语义判重标记）（A 4）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.router.x_mark_semantic_duplicates__mutmut_1 | A | 守卫 or→and 化：model_version None 时 vecs 查询恒空→循环全跳过→返回 []；items 空时循环体不执行——两形态返回值恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_mark_semantic_duplicates__mutmut_14 | A | 兜底 0.92→1.92：DEFAULTS 恒回退（semantic_dedup_threshold=0.92 实证在册），or 右支仅 falsy set 域可达——DEFAULTS 判例族（同 explore m22 域；set 0 的falsy 语义无条款但此处与 or→and 值域不同属等价域边缘——施加必活验证） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_mark_semantic_duplicates__mutmut_61 | A | INFO 实参 None/文案 XX：logging 合法格式化、无断言——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_mark_semantic_duplicates__mutmut_67 | A | INFO 实参 None/文案 XX：logging 合法格式化、无断言——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### retrieval.router.partition_items（打分路由分桶）（A 7）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.router.x_partition_items__mutmut_5 | A | stats 初始 routed_misses/embed_disabled 键名/值变体：embed_disabled 分支重写吸收（正确键恒在）；正常路径暴露域仅面板值（无断言）——初值吸收+面板域判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_partition_items__mutmut_6 | A | stats 初始 routed_misses/embed_disabled 键名/值变体：embed_disabled 分支重写吸收（正确键恒在）；正常路径暴露域仅面板值（无断言）——初值吸收+面板域判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_partition_items__mutmut_7 | A | stats 初始 routed_misses/embed_disabled 键名/值变体：embed_disabled 分支重写吸收（正确键恒在）；正常路径暴露域仅面板值（无断言）——初值吸收+面板域判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_partition_items__mutmut_8 | A | stats 初始 routed_misses/embed_disabled 键名/值变体：embed_disabled 分支重写吸收（正确键恒在）；正常路径暴露域仅面板值（无断言）——初值吸收+面板域判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_partition_items__mutmut_9 | A | stats 初始 routed_misses/embed_disabled 键名/值变体：embed_disabled 分支重写吸收（正确键恒在）；正常路径暴露域仅面板值（无断言）——初值吸收+面板域判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_partition_items__mutmut_10 | A | embed_disabled 初始 False→True：正常路径不写该键、初始值直接透出——面板误标域（runner 落 payload.stats 诊断消费、无断言与条款）——面板域判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.retrieval.router.x_partition_items__mutmut_42 | A | top_k 兜底 or 5→or 6：DEFAULTS 恒回退（retrieval_top_k=5 实证在册），or 右支仅 falsy set 域可达——DEFAULTS 判例族（同 explore m22 域形态，此处 set 0 的 falsy 语义同域但分诊从 A——施加必活验证实证；若核验意外改判） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### scoring._host（来源域名抽取）（A 4）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scoring.service.x__host__mutmut_2 | A | urlparse(item.url or "")→urlparse(None)：url 列 NOT NULL default=""（models 实证），None 分支不可达——死码域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__host__mutmut_4 | A | or ""→or "XXXX"：url None 态 urlparse("XXXX") netloc 恒空 → 「未知」同值——恰等价（且 None 分支本身死码） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__host__mutmut_5 | A | 「未知」→XX未知XX：prompt 上下文段文案（LLM-facing 文案先例族——任务书 _host 先例域） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__host__mutmut_6 | A | except ValueError 文案 XX：防御分支文案变体——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### scoring._render_user_message（user 消息组装）（A 8）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scoring.service.x__render_user_message__mutmut_3 | A | or ""→or "XXXX"：content_text 列 NOT NULL default=""（models 实证），None 分支不可达——死码域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__render_user_message__mutmut_4 | A | 发布日期段 None 化/恒「未知」：prompt 上下文段细节（日期格式与占位语义无条款——任务书 _host「无条款细节」先例域；LLM-facing 文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__render_user_message__mutmut_5 | A | 发布日期段 None 化/恒「未知」：prompt 上下文段细节（日期格式与占位语义无条款——任务书 _host「无条款细节」先例域；LLM-facing 文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__render_user_message__mutmut_8 | A | 日期格式串 XX/%y/%M-%D 变体：日期段格式细节（格式无条款；strftime(None) 崩溃域已单列 C）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__render_user_message__mutmut_9 | A | 日期格式串 XX/%y/%M-%D 变体：日期段格式细节（格式无条款；strftime(None) 崩溃域已单列 C）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__render_user_message__mutmut_10 | A | 日期格式串 XX/%y/%M-%D 变体：日期段格式细节（格式无条款；strftime(None) 崩溃域已单列 C）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__render_user_message__mutmut_11 | A | 「未知」「（无正文）」占位文案 XX：占位措辞无条款——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__render_user_message__mutmut_14 | A | 「未知」「（无正文）」占位文案 XX：占位措辞无条款——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### scoring._validate（打分 strict JSON 校验）（A 12）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scoring.service.x__validate__mutmut_18 | A | JSONParseError 文案/got 截断变体（None/键序/ensure_ascii 缺省/True/[:201]）：异常类型不变、构造合法——异常文案域（调用方按类型处理不计文案）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_19 | A | JSONParseError 文案/got 截断变体（None/键序/ensure_ascii 缺省/True/[:201]）：异常类型不变、构造合法——异常文案域（调用方按类型处理不计文案）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_20 | A | JSONParseError 文案/got 截断变体（None/键序/ensure_ascii 缺省/True/[:201]）：异常类型不变、构造合法——异常文案域（调用方按类型处理不计文案）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_22 | A | JSONParseError 文案/got 截断变体（None/键序/ensure_ascii 缺省/True/[:201]）：异常类型不变、构造合法——异常文案域（调用方按类型处理不计文案）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_23 | A | JSONParseError 文案/got 截断变体（None/键序/ensure_ascii 缺省/True/[:201]）：异常类型不变、构造合法——异常文案域（调用方按类型处理不计文案）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_24 | A | JSONParseError 文案/got 截断变体（None/键序/ensure_ascii 缺省/True/[:201]）：异常类型不变、构造合法——异常文案域（调用方按类型处理不计文案）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_35 | A | raise 文案 None/XX：同上异常文案域——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_38 | A | raise 文案 None/XX：同上异常文案域——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_40 | A | raise 文案 None/XX：同上异常文案域——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_41 | A | raise 文案 None/XX：同上异常文案域——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_42 | A | raise 文案 None/XX：同上异常文案域——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x__validate__mutmut_51 | A | reason 截断界 [:300]→[:301]：截断界数值无条款（providers.base m42 [:2000]→[:2001] A 先例同族）——界值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### scoring.load_prompt_template（提示词模板加载）（A 2 + B 3）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scoring.service.x_load_prompt_template__mutmut_2 | B | 版本串 lower→upper：差异域=历史 'v1' 字符串形态入参（D19 生产恒 int→"1" 对 lower/upper 恒等）——历史形态兼容=防御域豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.scoring.service.x_load_prompt_template__mutmut_6 | B | startswith("v")→XXvXX：同 m2 历史形态域（int 形态恒补 v 前缀等价）——防御豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.scoring.service.x_load_prompt_template__mutmut_7 | B | startswith("V") 大写：同上（lower 后恒小写 v，大写判定恒 False 与 not startswith("v") 在 int 形态恒同）——防御豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
+| app.scoring.service.x_load_prompt_template__mutmut_11 | A | encoding="utf-8"→None：dispatch/CI 目标平台 Ubuntu locale 恒 utf-8——目标运行环境恰等价（本机 Windows gbk 差异为开发环境形态，已备案） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_load_prompt_template__mutmut_13 | A | encoding="UTF-8"：Python 编码别名大小写不敏感——恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### scoring.score_item（打分调用编排）（A 18）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scoring.service.x_score_item__mutmut_47 | A | last_error 初始 ""：失败路径恒先赋值（两分支均 last_error=...），初始值不可达读——初值吸收判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_52 | A | chat_json model=model None 化/移除：生产调用点（runner 两处）恒不传 model →形参恒 None，变异与原值恰等价（实参变异恒替换判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_54 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_55 | A | ref_id=None/移除：同 ref_type——账本归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_56 | A | temperature=0.0 None/移除/1.0：温度数值无条款（移除时 chat 签名缺省恰 0.0 等价；None/1.0 为 LLM 参数域）——护栏数值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_58 | A | chat_json model=model None 化/移除：生产调用点（runner 两处）恒不传 model →形参恒 None，变异与原值恰等价（实参变异恒替换判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_60 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_61 | A | ref_id=None/移除：同 ref_type——账本归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_62 | A | temperature=0.0 None/移除/1.0：温度数值无条款（移除时 chat 签名缺省恰 0.0 等价；None/1.0 为 LLM 参数域）——护栏数值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_65 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_66 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_67 | A | temperature=0.0 None/移除/1.0：温度数值无条款（移除时 chat 签名缺省恰 0.0 等价；None/1.0 为 LLM 参数域）——护栏数值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_87 | A | status="OK"→None：ScoreResult.status 列 default="OK"（models.py 实证），ORM flush 对显式 None 省略列使 default 落库恰等原值——列 default 吸收恰等价（m36 同族判例；施加实证 28 passed） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_90 | A | 成功行 error=None→""：成功路径 error 值域（面板/诊断域，无断言与条款）——值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_93 | A | last_error=str(None)：失败原因文案变体（error 载体仍在——文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_102 | A | 追加 assistant content 值 XX 包裹：重试附加说明措辞（自定形态域，协议形态完整——文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_112 | A | error 赋值守卫 !=OK 字面量 XX/ok：比较恒 False→error 赋值恒执行——成功行 error=last_error=None 与原等价、失败行照常（恰等价推理） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scoring.service.x_score_item__mutmut_113 | A | error 赋值守卫 !=OK 字面量 XX/ok：比较恒 False→error 赋值恒执行——成功行 error=last_error=None 与原等价、失败行照常（恰等价推理） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
