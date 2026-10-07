@@ -2226,3 +2226,323 @@
 | app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_45 | A | 轮转/完成日志文案与实参变体（格式化均合法）：日志措辞无条款——文案先例族（C3-1 批次 3 m3-m9 同判） | 设计书条款/实证推理（详见说明列） |
 | app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_46 | A | 日志占位符缺实参：logging 对空实参静默跳过格式化（LogRecord.getMessage 的 if self.args 门——venv 实证 getMessage 不抛、占位符字面残留），属消息文本失真无条款——文案先例族（非 C3-1「格式错误零容忍」域：该域=非空实参下 format 抛错） | 设计书条款/实证推理（详见说明列） |
 | app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_47 | A | 轮转/完成日志文案与实参变体（格式化均合法）：日志措辞无条款——文案先例族（C3-1 批次 3 m3-m9 同判） | 设计书条款/实证推理（详见说明列） |
+
+## C3-3 分诊批次 3（2026-10-07，API 守卫与管线调度族 310 + suspicious 首案 14）：A 209 + B 1 = 210 条
+
+> 种子=统一 dispatch run 37474801690 幸存者之 api.routes 81 + pipeline.runner 147 +
+> pipeline.budget 14 + scheduler 68（doc/C3/C3-3-种子.txt）+ suspicious 首案 14
+> （api.deps.require_session m18-m29 + providers.base.LLMProvider._call m157/158）。
+> diff 经 mutmut 3.8.0 库级静态重建（app/ 自 890a345 零变化），逐条施加→跑判据面
+> 测试→还原定案。终态：**C 103/103 全杀**（tests/test_month_range_window.py 等 11 文件
+> 28 测试 + 既有面）**、A 210/210 全活、B 1 存活（B 不杀）**、D 10 条出问题清单
+> （见 doc/C3/C3-3-执行Agent工作汇报.md §四）。核验-改判四轮（C 轮 99→17 意外→改判
+> 11 A+修测杀 4+1 改判；C 轮 2 87/87 零意外；A 轮 226→20 意外→16 改判 C+4 测试弱化；
+> R2 复验 20/20）：313/313 零意外（C 必杀/A 必活；D 不施加）。新判例：m135/136 id 键=
+> 注入对象辨识承载（C）、m149/153 值 None 化=检查调用整体跳过（C，非面板值域）、
+> job id 变体=可寻址标识契约（C，test_score_schedule 先例）、query(None).filter()
+> .first() 行存在性等价（A）、DEFAULTS 恒回退致 or 分支不可达（A）、diff 概览行文本
+> 双匹配陷阱（变异行位必查 body 行号）。数据：doc/C3/C3-3-重建-diff.json、
+> C3-3-核验结果.json、C3-3-核验.py（定案表）。
+### 本节统计
+A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不重复登记）
+
+#### app.api.routes.x__inject_explore_items（A 27）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.api.routes.x__inject_explore_items__mutmut_2 | A | meta 初始键/值变体：enabled 键紧随被 params 覆写、inserted 由注入路径计数，初始死赋值差异——初值吸收（C3-2 per_source m41 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_3 | A | meta 初始键/值变体：enabled 键紧随被 params 覆写、inserted 由注入路径计数，初始死赋值差异——初值吸收（C3-2 per_source m41 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_4 | A | meta enabled False→True 初始：同上被覆写吸收——死赋值 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_27 | A | WARN 消息 None：logging None 消息+空 args 合法格式化（venv 实证），文案域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_28 | A | getLogger(None) 返回 root logger（venv 实证），warning 照常输出——日志器名域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_29 | A | 日志器名/文案 XX/大小写变体：格式化合法、无断言条款——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_30 | A | 日志器名/文案 XX/大小写变体：格式化合法、无断言条款——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_31 | A | 日志器名/文案 XX/大小写变体：格式化合法、无断言条款——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_32 | A | 日志器名/文案 XX/大小写变体：格式化合法、无断言条款——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_33 | A | 日志器名/文案 XX/大小写变体：格式化合法、无断言条款——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_40 | A | not mv or mv==none → and 化：差异域内 rows 恒空/提前 return 两形态 meta 全同（inserted=0、enabled 已覆写）——恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_49 | A | none 字符串 XX/NONE：差异域=模型键恰为 none 时走空查询 vs 提前 return，两形态 meta 全同——恰等价（域内 rows 恒空） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_50 | A | none 字符串 XX/NONE：差异域=模型键恰为 none 时走空查询 vs 提前 return，两形态 meta 全同——恰等价（域内 rows 恒空） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_64 | A | join ItemVec onclause None/省略：单 FK 回退推断等价（C2-1 join 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_66 | A | join ItemVec onclause None/省略：单 FK 回退推断等价（C2-1 join 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_68 | A | join ScoreResult onclause None/省略：单 FK（item_id）回退推断等价——同上 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_70 | A | join ScoreResult onclause None/省略：单 FK（item_id）回退推断等价——同上 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_139 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_140 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_143 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_144 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_155 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_156 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_159 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_160 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_163 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__inject_explore_items__mutmut_164 | A | 注入条目键变体（title/url/band/reason/source_id）：条目契约钉 flag=explore+真实分数（relevance/quality 断言在位）+id（辨识注入对象），该五键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.api.routes.x__month_range（A 11）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.api.routes.x__month_range__mutmut_8 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_12 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_22 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_23 | A | mon 上界 <=13：13 月放行后 start 行（try 内）datetime(2026,13,1) 先抛 ValueError 被 except 捕获返回 None——守卫上界冗余，恰等价（施加实证；核验 C 轮实锤改判 A——try 兜底判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_29 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_31 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_32 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_33 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_36 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_43 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__month_range__mutmut_47 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.api.routes.x__unscored_entries（A 14）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.api.routes.x__unscored_entries__mutmut_5 | A | 窗宽 24→25h：窗口数字未落条款（AC-21.1 仅说「近期」）——自定窗口域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_13 | A | query(None)：venv 实证 filter 照常渲染、命中行返回 (None,) 元组非 None——first() is not None 的行存在性判定与 query(id) 恰等价（count(None) 行数判例的 first 版；核验 C 轮实锤改判） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_20 | A | 窗 >=→>：恰 24h 边界含等性无条款——自定边界域（C3-2 degraded m28 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_59 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_60 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_61 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_62 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_63 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_64 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_65 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_66 | A | 附带条目键/值变体（title/url/flag 键、unscored 值）：断言面=id+note==「暂未评分」（AC-21.1 钉标注语），其余键无断言——键面无断言先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_70 | A | limit 10→None/11、order_by None：附带上限与顺序无条款（自定上限；顺序无断言面——C2-1 fingerprint order_by 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_71 | A | limit 10→None/11、order_by None：附带上限与顺序无条款（自定上限；顺序无断言面——C2-1 fingerprint order_by 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.api.routes.x__unscored_entries__mutmut_72 | A | limit 10→None/11、order_by None：附带上限与顺序无条款（自定上限；顺序无断言面——C2-1 fingerprint order_by 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.api.deps.x_require_session（A 1）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+
+#### app.pipeline.runner.x__execute_write_task（A 19）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x__execute_write_task__mutmut_12 | A | or "manual"→XX/MANUAL：创建路径 payload 恒带 triggered_by（routes 恒 api、write_task 恒传参），缺省分支不可达——缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_13 | A | or "manual"→XX/MANUAL：创建路径 payload 恒带 triggered_by（routes 恒 api、write_task 恒传参），缺省分支不可达——缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_21 | A | run_kwargs 排除键变体：write_task 生产调用点（仅测试）不带额外 kwargs，排除键失效域=透传域且 run_write **kw 吸收——调用点核查等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_22 | A | run_kwargs 排除键变体：write_task 生产调用点（仅测试）不带额外 kwargs，排除键失效域=透传域且 run_write **kw 吸收——调用点核查等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_25 | A | run_kwargs 排除键变体：write_task 生产调用点（仅测试）不带额外 kwargs，排除键失效域=透传域且 run_write **kw 吸收——调用点核查等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_26 | A | run_kwargs 排除键变体：write_task 生产调用点（仅测试）不带额外 kwargs，排除键失效域=透传域且 run_write **kw 吸收——调用点核查等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_62 | A | 预算确认 note 键/文案变体：note=人读提示字段，无断言/契约面（钉的是 executed/budget_confirmation_required 两键，已在位）——诊断镜像键面先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_63 | A | 预算确认 note 键/文案变体：note=人读提示字段，无断言/契约面（钉的是 executed/budget_confirmation_required 两键，已在位）——诊断镜像键面先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_64 | A | 预算确认 note 键/文案变体：note=人读提示字段，无断言/契约面（钉的是 executed/budget_confirmation_required 两键，已在位）——诊断镜像键面先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_65 | A | 预算确认 note 键/文案变体：note=人读提示字段，无断言/契约面（钉的是 executed/budget_confirmation_required 两键，已在位）——诊断镜像键面先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_66 | A | 预算确认 note 键/文案变体：note=人读提示字段，无断言/契约面（钉的是 executed/budget_confirmation_required 两键，已在位）——诊断镜像键面先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_74 | A | **run_kwargs 删除：生产调用点不带额外 kwargs（调用点核查），差异域不可达 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_115 | A | payload decision 键变体（核验 C 轮行位实锤：变异位=decision 而非 write_run_id，后者断言在位不受影响）：decision 镜像键无断言面——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_116 | A | decision/article_id 键变体：payload 镜像键无断言面（消费方 tasks 端点人读） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_117 | A | decision/article_id 键变体：payload 镜像键无断言面（消费方 tasks 端点人读） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_118 | A | decision/article_id 键变体：payload 镜像键无断言面（消费方 tasks 端点人读） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_128 | A | error 条件 or True：OK 域 run.error 恒 None（写作管线 OK 不设 error），两形态同传 None——恰等价（调用点核查） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_130 | A | error 行 OK 字符串变体（核验 C 轮行位实锤：变异位=error 实参三元而非 status 三元）：run.status 恒!=XXOKXX/ok → error=run.error 恒传，OK 域 run.error 恒 None 与原 else None 同值——恰等价（调用点核查：status=OK ⟹ error=None） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__execute_write_task__mutmut_131 | A | error 行 OK 字符串变体（核验 C 轮行位实锤：变异位=error 实参三元而非 status 三元）：run.status 恒!=XXOKXX/ok → error=run.error 恒传，OK 域 run.error 恒 None 与原 else None 同值——恰等价（调用点核查：status=OK ⟹ error=None） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.runner.x__finish（A 4）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x__finish__mutmut_53 | A | WARN 实参 None 化：格式化合法（test_reclaim 断言子串「迟到完成被拒」仍在）——文案值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__finish__mutmut_54 | A | WARN 实参 None 化：格式化合法（test_reclaim 断言子串「迟到完成被拒」仍在）——文案值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__finish__mutmut_58 | A | WARN 文案 XX/小写：子串断言仍命中——文案先例族（C2-1 enqueue m47 组判据：WARNING 级格式破坏才是杀面，文案值变体不是） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__finish__mutmut_59 | A | WARN 文案 XX/小写：子串断言仍命中——文案先例族（C2-1 enqueue m47 组判据：WARNING 级格式破坏才是杀面，文案值变体不是） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.runner.x__route_candidates（A 32）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x__route_candidates__mutmut_2 | A | 预算闸回退 stats 键/值变体：budget_embed_paused/embed_disabled 键不在变异位（test_budget_2 断言在位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_3 | A | 预算闸回退 stats 键/值变体：budget_embed_paused/embed_disabled 键不在变异位（test_budget_2 断言在位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_4 | A | 预算闸回退 stats 键/值变体：budget_embed_paused/embed_disabled 键不在变异位（test_budget_2 断言在位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_5 | A | 预算闸回退 stats 键/值变体：budget_embed_paused/embed_disabled 键不在变异位（test_budget_2 断言在位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_6 | A | 预算闸回退 stats 键/值变体：budget_embed_paused/embed_disabled 键不在变异位（test_budget_2 断言在位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_18 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_19 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_20 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_21 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_22 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_23 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_24 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_25 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_26 | A | 空候选回退 stats 键/值变体：空域无断言面（score_round 空 direction stats 未钉）——面板键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_33 | A | not mv or→and：query_ready=False（mv falsy 域 ensure 恒 False）承载同一return——冗余子句恰等价（test_embed_disabled 两形态同走 return） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_34 | A | query_ready and 化：差异域=query 失败+mv 真值——不 return 后 partition(query_vec=None) 仍输出 embed_disabled（partition 内部承载，test 226 行断言）——恰等价（回退形态同构） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_38 | A | none 字符串 XX/NONE：mv==none 域与 not mv/not query_ready 子句重合（ensure 在 none 域恒 False）——冗余子句恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_39 | A | none 字符串 XX/NONE：mv==none 域与 not mv/not query_ready 子句重合（ensure 在 none 域恒 False）——冗余子句恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_40 | A | 查询未就绪回退 stats 键/值变体：embed_disabled 断言在位（键不在变异位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_41 | A | 查询未就绪回退 stats 键/值变体：embed_disabled 断言在位（键不在变异位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_42 | A | 查询未就绪回退 stats 键/值变体：embed_disabled 断言在位（键不在变异位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_43 | A | 查询未就绪回退 stats 键/值变体：embed_disabled 断言在位（键不在变异位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_44 | A | 查询未就绪回退 stats 键/值变体：embed_disabled 断言在位（键不在变异位），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_73 | A | 回退 WARN 文案/实参变体：格式化合法（e 值/文案域）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_74 | A | 回退 WARN 文案/实参变体：格式化合法（e 值/文案域）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_75 | A | 回退 WARN 文案/实参变体：格式化合法（e 值/文案域）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_76 | A | 回退 WARN 文案/实参变体：格式化合法（e 值/文案域）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_78 | A | embed_fallback 回退 stats 键/值变体：test_query_gen_failure 弱断言（get embed_disabled or embed_fallback），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_79 | A | embed_fallback 回退 stats 键/值变体：test_query_gen_failure 弱断言（get embed_disabled or embed_fallback），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_80 | A | embed_fallback 回退 stats 键/值变体：test_query_gen_failure 弱断言（get embed_disabled or embed_fallback），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_81 | A | embed_fallback 回退 stats 键/值变体：test_query_gen_failure 弱断言（get embed_disabled or embed_fallback），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__route_candidates__mutmut_82 | A | embed_fallback 回退 stats 键/值变体：test_query_gen_failure 弱断言（get embed_disabled or embed_fallback），routed_hits/misses 面板值无契约——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.runner.x__update_source_health（A 15）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x__update_source_health__mutmut_98 | A | last_error 截断 [:2000]→[:2001]：截断界数值无条款（Text 列——C2-1 m103 同语句判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_102 | A | failure_level != XX 变体：已 hard_failed 源重复设置同值+通知重发被 24h 去重吸收，failure_since 重置为时间戳值域——防御幂等域等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_119 | A | last_error 截断 [:2000]→[:2001]：截断界数值无条款（Text 列——C2-1 m103 同语句判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_122 | A | getattr rate_limited 缺省 False→None/True：stats 恒带该字段（数据类/_error_stats 构造域），缺省不可达——缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_128 | A | getattr rate_limited 缺省 False→None/True：stats 恒带该字段（数据类/_error_stats 构造域），缺省不可达——缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_145 | A | getattr retry_after 缺省删：字段恒在（SourceFetchStats 构造域）——同上 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_160 | A | until tzinfo 条件 and False：SQLite 读回 datetime 恒 naive（tzinfo 恒 None），replace 分支本就恒走——恰等价（C3-2 _aware naive 域判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_195 | A | 退避 if 段 stats→None（核验 C 轮实锤：段位=递增段非清零段）：本段以 error is not None 为前件，判定域内 429 轮 error 恒 None 前件短路——C2-1 m179 同语句判据族（子句恒真等价） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_197 | A | rate_limited 键/缺省变体（elif/搜索段）：缺省域=stats 缺字段（恒带——不可达）；键变体绕过真值 True 的 429 域仅退避段可达（m195/m201/m202 已承载）——缺省不可达/冗余域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_201 | A | 退避 if 段 rate_limited 键变体（核验实锤：同 m195 段位）：429 轮 error 恒 None 前件短路，键取值不影响判定——C2-1 m179 判据族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_202 | A | 退避 if 段 rate_limited 键变体（核验实锤：同 m195 段位）：429 轮 error 恒 None 前件短路，键取值不影响判定——C2-1 m179 判据族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_215 | A | rate_limited 键/缺省变体（elif/搜索段）：缺省域=stats 缺字段（恒带——不可达）；键变体绕过真值 True 的 429 域仅退避段可达（m195/m201/m202 已承载）——缺省不可达/冗余域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_240 | A | 搜索段缺省 None：not None 恒 True 但缺省域不可达（字段恒带）——缺省不可达 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_243 | A | rate_limited 键/缺省变体（elif/搜索段）：缺省域=stats 缺字段（恒带——不可达）；键变体绕过真值 True 的 429 域仅退避段可达（m195/m201/m202 已承载）——缺省不可达/冗余域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x__update_source_health__mutmut_246 | A | rate_limited 键/缺省变体（elif/搜索段）：缺省域=stats 缺字段（恒带——不可达）；键变体绕过真值 True 的 429 域仅退避段可达（m195/m201/m202 已承载）——缺省不可达/冗余域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.runner.x_process_fetch_round（A 10）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x_process_fetch_round__mutmut_150 | A | sentinel/disk 键变体：检查仍执行、summary 面板键无消费断言（_tick_fetch 不读，API 响应镜像）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_151 | A | sentinel/disk 键变体：检查仍执行、summary 面板键无消费断言（_tick_fetch 不读，API 响应镜像）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_154 | A | sentinel/disk 键变体：检查仍执行、summary 面板键无消费断言（_tick_fetch 不读，API 响应镜像）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_155 | A | sentinel/disk 键变体：检查仍执行、summary 面板键无消费断言（_tick_fetch 不读，API 响应镜像）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_157 | A | 通知异常 WARN 文案/实参变体：格式化合法（含 %S printf 合法指示符）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_158 | A | 通知异常 WARN 文案/实参变体：格式化合法（含 %S printf 合法指示符）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_159 | A | 通知异常 WARN 文案/实参变体：格式化合法（含 %S printf 合法指示符）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_160 | A | 通知异常 WARN 文案/实参变体：格式化合法（含 %S printf 合法指示符）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_161 | A | 通知异常 WARN 文案/实参变体：格式化合法（含 %S printf 合法指示符）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_fetch_round__mutmut_162 | A | 通知异常 WARN 文案/实参变体：格式化合法（含 %S printf 合法指示符）——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.runner.x_process_write_tasks（A 1 + B 1）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x_process_write_tasks__mutmut_6 | A | status==PENDING 过滤删除：非 PENDING 任务被 _claim 的 WHERE status=PENDING CAS 复核拒绝——双保险等价（C2-1 m6/batch11 m17 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_process_write_tasks__mutmut_19 | B | claim 失败 continue→break：CAS 认领竞争防御分支，单 worker 判定域不可达（ADR-2 单机单进程）——C2-1 m19 B 判据族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.runner.x_score_round（A 14）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x_score_round__mutmut_21 | A | 预算通知实参/键变体（used/budget 值）：通知正文值域（C3-1 notify 判例：sent 布尔=C、正文值=A） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_22 | A | 预算通知实参/键变体（used/budget 值）：通知正文值域（C3-1 notify 判例：sent 布尔=C、正文值=A） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_28 | A | 预算通知实参/键变体（used/budget 值）：通知正文值域（C3-1 notify 判例：sent 布尔=C、正文值=A） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_30 | A | 预算通知实参/键变体（used/budget 值）：通知正文值域（C3-1 notify 判例：sent 布尔=C、正文值=A） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_33 | A | 预算通知实参/键变体（used/budget 值）：通知正文值域（C3-1 notify 判例：sent 布尔=C、正文值=A） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_52 | A | task.attempts 变体：attempts 数值无条款（C1-9a m34/35 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_53 | A | task.attempts 变体：attempts 数值无条款（C1-9a m34/35 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_54 | A | task.attempts 变体：attempts 数值无条款（C1-9a m34/35 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_115 | A | 单条异常 WARN 文案/实参变体：格式化合法——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_116 | A | 单条异常 WARN 文案/实参变体：格式化合法——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_120 | A | 单条异常 WARN 文案/实参变体：格式化合法——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_146 | A | candidates_total 键变体：stats[candidates] 断言在位（scheduler_rounds m142），total 键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_147 | A | candidates_total 键变体：stats[candidates] 断言在位（scheduler_rounds m142），total 键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_score_round__mutmut_174 | A | _error 公式 failed+parse→failed-parse：错误留痕=presence 钉（含解析失败计数），算术细节=诊断文案值域——文案组判据（C2-1 process m50） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.runner.x_write_task（A 14）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.runner.x_write_task__mutmut_1 | A | triggered_by 缺省变体：生产调用点（仅测试，均显式传参）缺省不可达——缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_2 | A | triggered_by 缺省变体：生产调用点（仅测试，均显式传参）缺省不可达——缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_10 | A | ValueError(None)：异常消息文本无条款（C2-1 m77 文案组判据） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_27 | A | task.status=RUNNING 变体：_finish 内存同步+后续 commit ORM 回写修复，终态恒 DONE/FAILED（C2-1 fetch_round m26/27 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_28 | A | task.status=RUNNING 变体：_finish 内存同步+后续 commit ORM 回写修复，终态恒 DONE/FAILED（C2-1 fetch_round m26/27 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_29 | A | task.attempts 变体：attempts 数值无条款——C1-9a 判据族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_30 | A | task.attempts 变体：attempts 数值无条款——C1-9a 判据族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_31 | A | task.attempts 变体：attempts 数值无条款——C1-9a 判据族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_42 | A | 预算确认早返回的 status 键变体（核验 C 轮行位实锤：变异位=早返回而非正常返回，正常路径断言不受影响）：早返回消费面仅 budget_confirmation_required/executed 两键（budget_4 断言在位），status 键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_43 | A | 预算确认早返回的 status 键变体（核验 C 轮行位实锤：变异位=早返回而非正常返回，正常路径断言不受影响）：早返回消费面仅 budget_confirmation_required/executed 两键（budget_4 断言在位），status 键无断言——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_54 | A | 返回 payload/last_error 键变体：out 镜像键无测试消费（grep 实证零断言）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_55 | A | 返回 payload/last_error 键变体：out 镜像键无测试消费（grep 实证零断言）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_56 | A | 返回 payload/last_error 键变体：out 镜像键无测试消费（grep 实证零断言）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.runner.x_write_task__mutmut_57 | A | 返回 payload/last_error 键变体：out 镜像键无测试消费（grep 实证零断言）——键面无断言先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.budget.x_score_slow_cap（A 1）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.budget.x_score_slow_cap__mutmut_9 | A | 回退 20→21：siteconfig DEFAULTS 实证 score_slow_round_max_items=20 恒回退，or 分支不可达——DEFAULTS 判例族（C3-1 disk m27/29 同判；核验 C 轮实锤改判） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.pipeline.budget.x_tokens_used_today（A 5）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.pipeline.budget.x_tokens_used_today__mutmut_10 | A | coalesce 缺省 0→None：列 default=0+调用点恒传 int（record_usage meter.get 域），NULL 行生产不可达——防御缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.budget.x_tokens_used_today__mutmut_13 | A | coalesce 缺省 0→None：列 default=0+调用点恒传 int（record_usage meter.get 域），NULL 行生产不可达——防御缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.budget.x_tokens_used_today__mutmut_15 | A | coalesce 缺省 0→None：列 default=0+调用点恒传 int（record_usage meter.get 域），NULL 行生产不可达——防御缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.budget.x_tokens_used_today__mutmut_18 | A | coalesce 缺省 0→None：列 default=0+调用点恒传 int（record_usage meter.get 域），NULL 行生产不可达——防御缺省不可达族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.pipeline.budget.x_tokens_used_today__mutmut_19 | A | 日切窗 >=→>：恰 day_start 瞬间归属无条款——自定边界域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.scheduler.x__register_jobs（A 28）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scheduler.x__register_jobs__mutmut_6 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_7 | A | next_run_time None/挪位/删除/naive：启动首跑时机无条款（AC-20.1 钉的是运行期间隔，启动即跑仅为代码注释自述）——启动时机自定域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_12 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_13 | A | next_run_time None/挪位/删除/naive：启动首跑时机无条款（AC-20.1 钉的是运行期间隔，启动即跑仅为代码注释自述）——启动时机自定域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_14 | A | next_run_time None/挪位/删除/naive：启动首跑时机无条款（AC-20.1 钉的是运行期间隔，启动即跑仅为代码注释自述）——启动时机自定域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_18 | A | max_instances 1→2：同 kind 重叠防护由 round_busy DB 级防重叠承载（双保险另一翼，G3 裁定③），可观察行为（无重叠）不变——双保险冗余翼等价（C2-1 m17 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_19 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_20 | A | next_run_time None/挪位/删除/naive：启动首跑时机无条款（AC-20.1 钉的是运行期间隔，启动即跑仅为代码注释自述）——启动时机自定域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_26 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_31 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_32 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_36 | A | max_instances 1→2：同 kind 重叠防护由 round_busy DB 级防重叠承载（双保险另一翼，G3 裁定③），可观察行为（无重叠）不变——双保险冗余翼等价（C2-1 m17 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_37 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_43 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_48 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_49 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_53 | A | max_instances 1→2：同 kind 重叠防护由 round_busy DB 级防重叠承载（双保险另一翼，G3 裁定③），可观察行为（无重叠）不变——双保险冗余翼等价（C2-1 m17 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_54 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_60 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_65 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_66 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_71 | A | max_instances 1→2：同 kind 重叠防护由 round_busy DB 级防重叠承载（双保险另一翼，G3 裁定③），可观察行为（无重叠）不变——双保险冗余翼等价（C2-1 m17 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_72 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_78 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_83 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_84 | A | max_instances/coalesce 参数删除：APScheduler 缺省值即 1/True——恰等价（缺省承载） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_89 | A | max_instances 1→2：同 kind 重叠防护由 round_busy DB 级防重叠承载（双保险另一翼，G3 裁定③），可观察行为（无重叠）不变——双保险冗余翼等价（C2-1 m17 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__register_jobs__mutmut_90 | A | coalesce None/False 变体：APScheduler 行为参数（错过触发合并策略）无设计条款——参数形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.scheduler.x__tick_backup（A 11）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scheduler.x__tick_backup__mutmut_4 | A | 跳过分支 info 文案 None/XX：有注册目标的判据域不触达该分支——不可达域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_5 | A | 跳过分支 info 文案 None/XX：有注册目标的判据域不触达该分支——不可达域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_7 | A | 完成 log msg=None+args 非空：INFO 级记录在 root WARNING 级下不格式化直接丢弃（logger 层级门），格式错误不可达——C2-1 m47 判据族（核验 C 轮实锤改判 A） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_8 | A | 完成 log 值/文案变体：格式化合法或静默门——文案先例族（C3-2 run_backup m40/46 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_9 | A | 完成 log 值/文案变体：格式化合法或静默门——文案先例族（C3-2 run_backup m40/46 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_10 | A | 完成 log 值/文案变体：格式化合法或静默门——文案先例族（C3-2 run_backup m40/46 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_11 | A | 完成 log 值/文案变体：格式化合法或静默门——文案先例族（C3-2 run_backup m40/46 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_12 | A | 完成 log 值/文案变体：格式化合法或静默门——文案先例族（C3-2 run_backup m40/46 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_14 | A | 异常 WARN traceback 实参 None/删除/文案 XX：格式化合法/静默门/子串断言（备份 in message）仍命中——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_16 | A | 异常 WARN traceback 实参 None/删除/文案 XX：格式化合法/静默门/子串断言（备份 in message）仍命中——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_backup__mutmut_17 | A | 异常 WARN traceback 实参 None/删除/文案 XX：格式化合法/静默门/子串断言（备份 in message）仍命中——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### app.scheduler.x__tick_score（A 3）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.scheduler.x__tick_score__mutmut_7 | A | 防重叠 info 文案 None/XX/大小写：格式化合法，无断言面——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_score__mutmut_8 | A | 防重叠 info 文案 None/XX/大小写：格式化合法，无断言面——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.scheduler.x__tick_score__mutmut_9 | A | 防重叠 info 文案 None/XX/大小写：格式化合法，无断言面——文案先例族 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+> 注：app.api.deps.x_require_session__mutmut_18（suspicious 定案=A 文案域）为批次 1
+> 在册条目，保留原登记不重复。生产缺陷呈报：_month_range 12 月分支 year+1 对 str
+> 拼接抛 TypeError（12 月对账 500）——12 月契约测试 xfail(strict) 占位（任务书 §0
+> 零生产改动铁律），修复后由修复批测试自然杀灭相关 6 条 12 月域变异（已判 A 等价崩）。
+
