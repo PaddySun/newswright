@@ -2284,13 +2284,7 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 |---|---|---|---|
 | app.api.routes.x__month_range__mutmut_8 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.api.routes.x__month_range__mutmut_12 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.api.routes.x__month_range__mutmut_22 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.api.routes.x__month_range__mutmut_23 | A | mon 上界 <=13：13 月放行后 start 行（try 内）datetime(2026,13,1) 先抛 ValueError 被 except 捕获返回 None——守卫上界冗余，恰等价（施加实证；核验 C 轮实锤改判 A——try 兜底判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.api.routes.x__month_range__mutmut_29 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.api.routes.x__month_range__mutmut_31 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.api.routes.x__month_range__mutmut_32 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.api.routes.x__month_range__mutmut_33 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.api.routes.x__month_range__mutmut_36 | A | 12 月域五变体+边界：当前生产 12 月分支 year+1 对 str 拼接抛 TypeError（500）——变异形态同为崩溃家族，行为面等价；12 月契约测试 xfail(strict) 占位，生产缺陷已呈统筹，修复后由修复批测试自然杀灭 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.api.routes.x__month_range__mutmut_43 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.api.routes.x__month_range__mutmut_47 | A | tzinfo None/缺参：SQLite DATETIME 绑定渲染不含 tz（strftime 无 %z），naive 与 aware UTC 渲染同串——恰等价（实现形态） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 
