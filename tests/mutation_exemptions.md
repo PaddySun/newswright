@@ -2059,3 +2059,170 @@
 | app.notify.xǁNotifierǁsend__mutmut_76 | A | 已发送 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
 | app.notify.xǁNotifierǁsend__mutmut_8 | A | 未配置分支 log.info 文案/实参变体：日志措辞无条款、格式化异常 logging 自吞——批次 3 m3-m9 文案先例 | 设计书条款/实证推理（详见说明列） |
 | app.notify.xǁNotifierǁsend__mutmut_82 | A | 已发送 log.info 文案/实参变体：同上判据 | 设计书条款/实证推理（详见说明列） |
+
+## C3-2 分诊批次 2（2026-10-07，可观测/日志/时区/备份族 212 条）：A 83 条
+
+> 种子 212 = C 124（补测杀灭：tests/test_observability_meters.py 等 7 文件）+ A 83（本节）+ D 5（呈统筹，不在本清单：日切时钟取值形态/astimezone 时区标签形态未落条款）。B 0。核验-改判循环：C 逐条施加必杀、A 逐条施加必活至零意外（doc/C3/C3-2-核验结果.json；ENV_WHITELIST 2 条为平台差异白名单，详见汇报偏离记录）。
+
+### x__aware（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.timeline.x__aware__mutmut_1 | A | _aware 归一分支变体：aware-UTC 域 replace(tzinfo=utc) 恒等 no-op、naive 域调用点核查不可达（四消费点恒传 aware UTC 或 None→now(utc)）——恰等价/不可达域（C3-1 _recently_sent m16-18 判例） | 设计书条款/实证推理（详见说明列） |
+| app.timeline.x__aware__mutmut_2 | A | _aware 归一分支变体：aware-UTC 域 replace(tzinfo=utc) 恒等 no-op、naive 域调用点核查不可达（四消费点恒传 aware UTC 或 None→now(utc)）——恰等价/不可达域（C3-1 _recently_sent m16-18 判例） | 设计书条款/实证推理（详见说明列） |
+| app.timeline.x__aware__mutmut_3 | A | _aware 归一分支变体：aware-UTC 域 replace(tzinfo=utc) 恒等 no-op、naive 域调用点核查不可达（四消费点恒传 aware UTC 或 None→now(utc)）——恰等价/不可达域（C3-1 _recently_sent m16-18 判例） | 设计书条款/实证推理（详见说明列） |
+
+### x__db_size_mb（5 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x__db_size_mb__mutmut_5 | A | PRAGMA 关键字大小写变体：SQLite pragma 大小写不敏感——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__db_size_mb__mutmut_6 | A | PRAGMA 关键字大小写变体：SQLite pragma 大小写不敏感——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__db_size_mb__mutmut_11 | A | PRAGMA 关键字大小写变体：SQLite pragma 大小写不敏感——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__db_size_mb__mutmut_12 | A | PRAGMA 关键字大小写变体：SQLite pragma 大小写不敏感——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__db_size_mb__mutmut_13 | A | or→and：差异域=page_count=0 且 page_size>0 组合（真实 SQLite page_size 恒>0），该域计算结果同为 0.0——恰等价 | 设计书条款/实证推理（详见说明列） |
+
+### x__db_writable（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x__db_writable__mutmut_3 | A | BEGIN IMMEDIATE/ROLLBACK 关键字小写：SQLite 关键字大小写不敏感——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__db_writable__mutmut_6 | A | BEGIN IMMEDIATE/ROLLBACK 关键字小写：SQLite 关键字大小写不敏感——恰等价 | 设计书条款/实证推理（详见说明列） |
+
+### x__degraded_levels（7 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x__degraded_levels__mutmut_21 | A | query(None).count()：渲染 SELECT count(*) FROM (SELECT NULL … WHERE …) 行数语义（venv echo 实证），attempted/done 仅作 >0 与 ==0 判定——与 query(id).count() 恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__degraded_levels__mutmut_24 | A | attempted 状态元组去 DONE（XX/小写）：degraded 条件=attempted>0 且 done==0；去 DONE 后 attempted=FAILED 计数，FAILED>0⟺attempted>0 恒成立——恰等价（恒等式推演） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__degraded_levels__mutmut_25 | A | attempted 状态元组去 DONE（XX/小写）：degraded 条件=attempted>0 且 done==0；去 DONE 后 attempted=FAILED 计数，FAILED>0⟺attempted>0 恒成立——恰等价（恒等式推演） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__degraded_levels__mutmut_28 | A | attempted/done 窗 >=→>：恰 24h 边界含等性无条款钉死（任务书仅钉 90 分钟宽限与 pending 500 两边界；窗口主体语义由 m4 族承载）——自定边界域 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__degraded_levels__mutmut_37 | A | attempted/done 窗 >=→>：恰 24h 边界含等性无条款钉死（任务书仅钉 90 分钟宽限与 pending 500 两边界；窗口主体语义由 m4 族承载）——自定边界域 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__degraded_levels__mutmut_38 | A | query(None).count()：渲染 SELECT count(*) FROM (SELECT NULL … WHERE …) 行数语义（venv echo 实证），attempted/done 仅作 >0 与 ==0 判定——与 query(id).count() 恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__degraded_levels__mutmut_43 | A | attempted/done 窗 >=→>：恰 24h 边界含等性无条款钉死（任务书仅钉 90 分钟宽限与 pending 500 两边界；窗口主体语义由 m4 族承载）——自定边界域 | 设计书条款/实证推理（详见说明列） |
+
+### x__disk_free_mb（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x__disk_free_mb__mutmut_3 | A | 回退 "."→"XX.XX"：差异域=url.database 为空的引擎（生产恒文件路径），回退域生产不可达——防御缺省不可达族（C3-1 磁盘路径回退 m2/3/6 判例） | 设计书条款/实证推理（详见说明列） |
+
+### x__ensure_parent（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.logging_setup.x__ensure_parent__mutmut_1 | A | parent=None 跳过 makedirs：差异域=日志父目录缺失，可达域（tmp_path/部署路径）父目录恒存在；父目录自创建健壮性无条款——防御域等价 | 设计书条款/实证推理（详见说明列） |
+
+### x__llm_error_rate_24h（5 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x__llm_error_rate_24h__mutmut_9 | A | count(None)：带 filter 的 query(func.count(None)) 渲染 SELECT count(*) FROM … WHERE … 行数语义（venv echo 实证——初判 EXISTS 系裸查询无 FROM 常量形态误读），id 恒非 NULL 与 count(id) 恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__llm_error_rate_24h__mutmut_10 | A | total/errors 窗 >=→>：恰 24h 边界含等性无条款钉死——自定边界域（同 degraded m28 判据） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__llm_error_rate_24h__mutmut_11 | A | total or 0→or 1：total=0 时 errors 亦必为 0（同窗子集），0/1=0.0 恒等——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__llm_error_rate_24h__mutmut_21 | A | count(None)：带 filter 的 query(func.count(None)) 渲染 SELECT count(*) FROM … WHERE … 行数语义（venv echo 实证——初判 EXISTS 系裸查询无 FROM 常量形态误读），id 恒非 NULL 与 count(id) 恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x__llm_error_rate_24h__mutmut_22 | A | total/errors 窗 >=→>：恰 24h 边界含等性无条款钉死——自定边界域（同 degraded m28 判据） | 设计书条款/实证推理（详见说明列） |
+
+### x__minutes_ago（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x__minutes_ago__mutmut_15 | A | max 下界 0→1：1s/60<0.05 舍入后恒 0.0 与原形全同（负值域/亚秒域均同）——恰等价 | 设计书条款/实证推理（详见说明列） |
+
+### x_get_backup_target（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.backup.x_get_backup_target__mutmut_4 | A | or True 使未知名恒实例化（None(db) 崩溃）：调用点核查——default_backup_target 取注册表键、测试恒传已注册名，未知名域生产不可达——C3-1 get_notifier m4 判例 | 设计书条款/实证推理（详见说明列） |
+
+### x_health_payload（5 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x_health_payload__mutmut_4 | A | _db_writable(None)：实现忽略形参（取 _current_engine 动态 engine）——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_health_payload__mutmut_31 | A | pending count(None)：带 filter 渲染 SELECT count(*) 行数语义（venv echo 实证），id 恒非 NULL 与 count(id) 恰等价——同 llm m9 判据 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_health_payload__mutmut_71 | A | _disk_free_mb(None)：实现忽略形参——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_health_payload__mutmut_95 | A | 缺省阈值 90→91/500→501：siteconfig DEFAULTS 实证 healthz_fetch_stale_minutes=90/healthz_pending_stale_count=500 恒回退，or 分支不可达（DEFAULTS 判例+任务书缺省键回退自定） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_health_payload__mutmut_112 | A | 缺省阈值 90→91/500→501：siteconfig DEFAULTS 实证 healthz_fetch_stale_minutes=90/healthz_pending_stale_count=500 恒回退，or 分支不可达（DEFAULTS 判例+任务书缺省键回退自定） | 设计书条款/实证推理（详见说明列） |
+
+### x_pipeline_stats_payload（14 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.observability.x_pipeline_stats_payload__mutmut_11 | A | pending count(None)：带 filter 渲染 SELECT count(*) 行数语义（venv echo 实证），id 恒非 NULL 与 count(id) 恰等价——同 llm m9 判据 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_32 | A | stale count(None)：带 filter 渲染 SELECT count(*) 行数语义（venv echo 实证），id 恒非 NULL 与 count(id) 恰等价——同 llm m9 判据 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_38 | A | like "STALE_RECLAIM:%"：SQLite LIKE ASCII 大小写不敏感（venv 实证）——恰等价（HTTP 头名不敏感先例族） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_39 | A | stale 窗 >=→>：自定边界域（同 degraded m28 判据） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_41 | A | per_source 初值 None 化：紧随其后的整体再赋值使初值为死赋值——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_46 | A | rows kind 过滤删除：DONE score/write payload 无 source_id 键（runner.py:627 实证score payload 仅 direction_id/prompt_version），sid 不命中 per_source——调用点核查等价 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_70 | A | updated_at None 守卫破坏：updated_at 恒有 default=utcnow（模型实证），None 域生产不可达——防御域不可达（C3-1 损坏时间戳判例） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_88 | A | items/scored/passed count(None)：带 filter 渲染 SELECT count(*) 行数语义（venv echo 实证），id 恒非 NULL 与 count(id) 恰等价——同 llm m9 判据 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_89 | A | items/scored/passed 窗 >=→>：自定边界域（同 degraded m28 判据） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_98 | A | items/scored/passed count(None)：带 filter 渲染 SELECT count(*) 行数语义（venv echo 实证），id 恒非 NULL 与 count(id) 恰等价——同 llm m9 判据 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_99 | A | items/scored/passed 窗 >=→>：自定边界域（同 degraded m28 判据） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_113 | A | items/scored/passed count(None)：带 filter 渲染 SELECT count(*) 行数语义（venv echo 实证），id 恒非 NULL 与 count(id) 恰等价——同 llm m9 判据 | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_114 | A | items/scored/passed 窗 >=→>：自定边界域（同 degraded m28 判据） | 设计书条款/实证推理（详见说明列） |
+| app.observability.x_pipeline_stats_payload__mutmut_154 | A | _disk_free_mb(None)：实现忽略形参——恰等价 | 设计书条款/实证推理（详见说明列） |
+
+### x_resolve_zone（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.timeline.x_resolve_zone__mutmut_6 | A | WARN 文案实参化/XX 包裹：格式化均合法、caplog 断言（非法名 in message 子串在位）仍命中——文案先例族 | 设计书条款/实证推理（详见说明列） |
+| app.timeline.x_resolve_zone__mutmut_8 | A | WARN 文案实参化/XX 包裹：格式化均合法、caplog 断言（非法名 in message 子串在位）仍命中——文案先例族 | 设计书条款/实证推理（详见说明列） |
+| app.timeline.x_resolve_zone__mutmut_9 | A | WARN 文案 "utc" 小写：回退目标仍是 _FALLBACK_ZONE(UTC)、文案措辞无条款——文案先例 | 设计书条款/实证推理（详见说明列） |
+
+### x_rotate_backups（5 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.backup.x_rotate_backups__mutmut_10 | A | len>keep 守卫 or True/>→>=：切片语义 files[:-keep] 在 len<=keep 时恒空，守卫冗余——恰等价（venv 可推演） | 设计书条款/实证推理（详见说明列） |
+| app.backup.x_rotate_backups__mutmut_12 | A | len>keep 守卫 or True/>→>=：切片语义 files[:-keep] 在 len<=keep 时恒空，守卫冗余——恰等价（venv 可推演） | 设计书条款/实证推理（详见说明列） |
+| app.backup.x_rotate_backups__mutmut_13 | A | missing_ok=None/False：falsy 等价；差异域=列出后消失的竞态域，可达域文件恒存在——防御域等价 | 设计书条款/实证推理（详见说明列） |
+| app.backup.x_rotate_backups__mutmut_14 | A | missing_ok=None/False：falsy 等价；差异域=列出后消失的竞态域，可达域文件恒存在——防御域等价 | 设计书条款/实证推理（详见说明列） |
+| app.backup.x_rotate_backups__mutmut_15 | A | removed.append(None)：返回列表元素无消费方（run_backup 仅 len() 计数）——诊断镜像键面判据（C3-1 reason 键面先例） | 设计书条款/实证推理（详见说明列） |
+
+### x_setup_logging（14 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.logging_setup.x_setup_logging__mutmut_5 | A | force_console 判定 and False 恒走 env 路径：生产/测试无 force_console=False 调用点（grep 实证），force=None/True 域两形态等价——调用点核查先例 | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_9 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_14 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_15 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_16 | A | 缺省 "1"→"XX1XX"：两者均不在关闭元组内、env 未设域行为恒等——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_18 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_19 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_20 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_21 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_22 | A | console 开关键/取值域变体（键 XX/小写、元组项 XX/大写、lower→upper）：关闭开关取值域仅模块文档串自赋、无设计条款——自定开关域（大小写细节先例族） | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_24 | A | StreamHandler(None)：stream 缺省即 sys.stderr——恰等价；本机重定向 stdio 的测试夹具形态差异属施加面伪差——ENV_WHITELIST | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_39 | A | 文件 handler encoding=None/删除：部署平台（Linux）缺省即 UTF-8 两形态等价（本机venv 实测 preferred encoding=utf-8 全同）——平台等价 | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_43 | A | 文件 handler encoding=None/删除：部署平台（Linux）缺省即 UTF-8 两形态等价（本机venv 实测 preferred encoding=utf-8 全同）——平台等价 | 设计书条款/实证推理（详见说明列） |
+| app.logging_setup.x_setup_logging__mutmut_45 | A | encoding "utf-8"→"UTF-8"：Python 编码名归一化——恰等价 | 设计书条款/实证推理（详见说明列） |
+
+### x_teardown_logging（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.logging_setup.x_teardown_logging__mutmut_1 | A | removeHandler(None)：root handler 清理卫生面无条款（close/_installed 清空仍执行，残留 closed handler 不再合法输出）——内部卫生域等价 | 设计书条款/实证推理（详见说明列） |
+
+### xǁLocalDirectoryBackupǁrun_backup（15 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_11 | A | backup_dir 缺省回退变体：siteconfig DEFAULTS 实证 backup_dir="backups" 恒回退，or 分支不可达——DEFAULTS 核查判例族（C3-1 disk m27/29 同判） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_12 | A | backup_dir 缺省回退变体：siteconfig DEFAULTS 实证 backup_dir="backups" 恒回退，or 分支不可达——DEFAULTS 核查判例族（C3-1 disk m27/29 同判） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_13 | A | mkdir parents 形参变体（None/缺省/False 均 falsy 等价）：差异域=父目录缺失的嵌套创建健壮性，可达域（tmp_path/生产 CWD）父目录恒存在——防御域等价，无条款 | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_15 | A | mkdir parents 形参变体（None/缺省/False 均 falsy 等价）：差异域=父目录缺失的嵌套创建健壮性，可达域（tmp_path/生产 CWD）父目录恒存在——防御域等价，无条款 | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_17 | A | mkdir parents 形参变体（None/缺省/False 均 falsy 等价）：差异域=父目录缺失的嵌套创建健壮性，可达域（tmp_path/生产 CWD）父目录恒存在——防御域等价，无条款 | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_22 | A | 文件名时间戳形态变体（XX 包裹/纳秒模数 1000001）：文件名形态无条款，轮转按修改时间 glob 前缀不依赖名字典序（F2 追认形态；同秒内尾缀仍单调） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_23 | A | 文件名小写指示符变体（%y%h%m%s）：Linux CI/生产平台（glibc）指示符合法、文件名形态无条款；Windows 本机 strftime 拒绝 %s（venv 实测 ValueError）属平台差异假阳性——ENV_WHITELIST | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_26 | A | 文件名时间戳形态变体（XX 包裹/纳秒模数 1000001）：文件名形态无条款，轮转按修改时间 glob 前缀不依赖名字典序（F2 追认形态；同秒内尾缀仍单调） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_39 | A | 轮转/完成日志文案与实参变体（格式化均合法）：日志措辞无条款——文案先例族（C3-1 批次 3 m3-m9 同判） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_40 | A | 日志占位符缺实参：logging 对空实参静默跳过格式化（LogRecord.getMessage 的 if self.args 门——venv 实证 getMessage 不抛、占位符字面残留），属消息文本失真无条款——文案先例族（非 C3-1「格式错误零容忍」域：该域=非空实参下 format 抛错） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_41 | A | 轮转/完成日志文案与实参变体（格式化均合法）：日志措辞无条款——文案先例族（C3-1 批次 3 m3-m9 同判） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_44 | A | 轮转/完成日志文案与实参变体（格式化均合法）：日志措辞无条款——文案先例族（C3-1 批次 3 m3-m9 同判） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_45 | A | 轮转/完成日志文案与实参变体（格式化均合法）：日志措辞无条款——文案先例族（C3-1 批次 3 m3-m9 同判） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_46 | A | 日志占位符缺实参：logging 对空实参静默跳过格式化（LogRecord.getMessage 的 if self.args 门——venv 实证 getMessage 不抛、占位符字面残留），属消息文本失真无条款——文案先例族（非 C3-1「格式错误零容忍」域：该域=非空实参下 format 抛错） | 设计书条款/实证推理（详见说明列） |
+| app.backup.localdir.xǁLocalDirectoryBackupǁrun_backup__mutmut_47 | A | 轮转/完成日志文案与实参变体（格式化均合法）：日志措辞无条款——文案先例族（C3-1 批次 3 m3-m9 同判） | 设计书条款/实证推理（详见说明列） |
