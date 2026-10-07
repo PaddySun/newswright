@@ -1025,7 +1025,7 @@ def _month_range(month: str) -> tuple[datetime, datetime] | None:
         return None
     if not (1 <= int(mon) <= 12) or len(mon) != 2 or len(year) != 4:
         return None
-    end_year, end_mon = (year + 1, 1) if int(mon) == 12 else (year, f"{int(mon) + 1:02d}")
+    end_year, end_mon = (int(year) + 1, 1) if int(mon) == 12 else (year, f"{int(mon) + 1:02d}")
     return start, datetime(int(end_year), int(end_mon), 1, tzinfo=timezone.utc)
 
 

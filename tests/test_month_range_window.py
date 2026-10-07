@@ -25,11 +25,10 @@ def test_month_range_january_valid():
     assert _month_range("2026-01") is not None
 
 
-@pytest.mark.xfail(reason="生产缺陷（C3-3 呈统筹）：12 月分支 year+1 对字符串 year 做 int 拼接 "
-                   "抛 TypeError——12 月对账请求 500。缺陷修复后本测试应转 XPASS 提醒移除标记",
-                   strict=True)
 def test_month_range_december_valid_and_spans_year():
-    """12 月合法且闭端跨年：end = 次年 1 月 1 日（值比较不含 tz 标签）。"""
+    """12 月合法且闭端跨年：end = 次年 1 月 1 日（值比较不含 tz 标签）。
+    12 月分支曾对字符串 year 做 int 拼接抛 TypeError（12 月对账 500），
+    分诊批次发现后由统筹修复，本测试即该修复的契约钉。"""
     rng = _month_range("2026-12")
     assert rng is not None
     start, end = rng
