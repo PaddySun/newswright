@@ -179,3 +179,20 @@ def test_origin_is_earliest_item_among_ties(db_session):
     marked = mark_semantic_duplicates(db_session, d, [late], model_version="m",
                                       threshold=0.92)
     assert late.duplicate_of == min(first.id, second.id)  # 最早入库条目为 origin
+
+
+def test_version_only_origin_not_eligible_even_if_smallest_id(db_session):
+    """判重池内仅有版本条目与新条目相似（版本 id 更小）时不判重——版本条目
+    不作为其他条目的判重 origin，该保护不能依赖取最小 id 的兜底次序。"""
+    d, (version_item, new_item) = _seed(
+        db_session, guids=("page#v-aaa", "fresh-copy"))
+    from app.models import ItemVec
+
+    for it in (version_item, new_item):
+        db_session.add(ItemVec(item_id=it.id, model_version="m",
+                               vec=vec_to_blob(_same_vec())))
+    db_session.commit()
+    marked = mark_semantic_duplicates(db_session, d, [new_item], model_version="m",
+                                      threshold=0.92)
+    assert marked == []
+    assert new_item.duplicate_of is None
