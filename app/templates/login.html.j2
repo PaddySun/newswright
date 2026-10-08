@@ -1,0 +1,59 @@
+{# login.html.j2 — 登录页（全模式可达；表单交互在 W2 由 SPA 模块接线）
+
+结构承载登录表单与首登改密表单（PASSWORD_CHANGE_REQUIRED 403 时由前端
+切换展示）；错误呈现（401/429/403 错误码 message）由登录模块消费文案块
+键位（W2 接线，键位先行对齐 zh-CN.js）。
+#}
+{% extends "base.html.j2" %}
+{% import "_copy.html.j2" as i18n %}
+{% block title %}{{ i18n.t("login.heading") }} - {{ i18n.t("site.name") }}{% endblock %}
+{% block nav_login_active %}active{% endblock %}
+{% block content %}
+<section class="login-page" id="login-view"
+         data-i18n-heading="{{ i18n.t("login.heading") }}"
+         data-i18n-username="{{ i18n.t("login.usernameLabel") }}"
+         data-i18n-password="{{ i18n.t("login.passwordLabel") }}"
+         data-i18n-submit="{{ i18n.t("login.submit") }}"
+         data-i18n-error-generic="{{ i18n.t("login.errorGeneric") }}"
+         data-i18n-locked-hint="{{ i18n.t("login.lockedHint") }}"
+         data-i18n-mismatch="{{ i18n.t("login.mismatch") }}"
+         data-i18n-change-required="{{ i18n.t("login.changeRequired") }}">
+  <h1 class="page-serif-headline">{{ i18n.t("login.heading") }}</h1>
+
+  <form id="login-form" class="login-form" autocomplete="off">
+    <div class="form-field">
+      <label for="login-username">{{ i18n.t("login.usernameLabel") }}</label>
+      <input class="form-input" type="text" id="login-username" name="username"
+             placeholder="{{ i18n.t("login.usernamePlaceholder") }}" required>
+    </div>
+    <div class="form-field">
+      <label for="login-password">{{ i18n.t("login.passwordLabel") }}</label>
+      <input class="form-input" type="password" id="login-password" name="password"
+             placeholder="{{ i18n.t("login.passwordPlaceholder") }}" required>
+    </div>
+    <p class="form-alert" id="login-alert" role="alert" hidden></p>
+    <button type="submit" class="btn-pill btn-primary login-submit">{{ i18n.t("login.submit") }}</button>
+  </form>
+
+  <form id="password-change-form" class="login-form" autocomplete="off" hidden>
+    <p class="form-alert alert-visible">{{ i18n.t("login.changeRequired") }}</p>
+    <div class="form-field">
+      <label for="change-old">{{ i18n.t("login.oldPasswordLabel") }}</label>
+      <input class="form-input" type="password" id="change-old" name="old_password" required>
+    </div>
+    <div class="form-field">
+      <label for="change-new">{{ i18n.t("login.newPasswordLabel") }}</label>
+      <input class="form-input" type="password" id="change-new" name="new_password" required>
+    </div>
+    <div class="form-field">
+      <label for="change-confirm">{{ i18n.t("login.confirmPasswordLabel") }}</label>
+      <input class="form-input" type="password" id="change-confirm" name="confirm_password" required>
+    </div>
+    <p class="form-alert" id="change-alert" role="alert" hidden></p>
+    <button type="submit" class="btn-pill btn-primary login-submit">{{ i18n.t("login.changeSubmit") }}</button>
+  </form>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="module" src="/static/app/login-view.js?v={{ static_version }}"></script>
+{% endblock %}

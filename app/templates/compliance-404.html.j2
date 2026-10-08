@@ -1,0 +1,15 @@
+{# compliance-404.html.j2 — 404 合规页（模式 A 一切公开路由的落点，AC-02.1/02.2）
+
+站长自定义 HTML：内容承载于本模板（可按需改写文案），不含任何 API 结构、
+站点能力或内容线索。
+#}
+{% extends "base.html.j2" %}
+{% import "_copy.html.j2" as i18n %}
+{% block title %}{{ i18n.t("compliance.title") }} - {{ i18n.t("site.name") }}{% endblock %}
+{% block content %}
+<section class="compliance-page">
+  <p class="eyebrow">{{ i18n.t("compliance.title") }}</p>
+  <h1 class="page-serif-headline">{{ i18n.t("compliance.headline") }}</h1>
+  <p class="muted-note">{{ i18n.t("compliance.note") }}</p>
+</section>
+{% endblock %}

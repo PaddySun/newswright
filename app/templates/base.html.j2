@@ -1,19 +1,42 @@
-{# base.html.j2 — SSR 基础模板占位（G0/D3 骨架）
+{# base.html.j2 — SSR 公共骨架（裁定③：杂志风骨架语言两类共享）
 
-公开页/登录页 Jinja2 SSR 的公共骨架位。正式 UI 里程碑落地：
-- <head>：meta/OG 标签、AI 标识、robots 策略注入位
-- <body>：内容区块（模式 A 404 自定义 HTML / 模式 B 降深列表 / 模式 C 文章页）
-
-本文件仅为占位，不含任何实际页面结构。
+结构 = 头部导航（胶囊形态）+ 内容区块 + 页脚；设计 token 全量在
+app/static/css/design-system.css（裁定⑧），本骨架只做语义容器与导航。
+文案经 _copy.html.j2 文案块取用（裁定⑦）。
+静态资源以版本 query 引用（?v=static_version）配合响应头 immutable 段
+（P2-4 三段式：版本 query 变更即换 URL，旧 URL 永久缓存不再回源）。
 #}
+{% import "_copy.html.j2" as i18n %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}newswright{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ i18n.t("site.name") }}{% endblock %}</title>
+  {% if og_title %}<meta property="og:title" content="{{ og_title }}">{% endif %}
+  {% if og_description %}<meta property="og:description" content="{{ og_description }}">{% endif %}
+  {% if og_title %}<meta property="og:site_name" content="{{ i18n.t('site.name') }}">{% endif %}
+  <link rel="stylesheet" href="/static/css/design-system.css?v={{ static_version }}">
   {% block head %}{% endblock %}
 </head>
 <body>
-  {% block content %}{% endblock %}
+  <header class="site-topbar">
+    <div class="shell topbar-row">
+      <span class="brand-logo">{{ i18n.t("site.name") }}</span>
+      <nav class="pill-nav" aria-label="{{ i18n.t("site.name") }}">
+        <a class="pill-item {% block nav_home_active %}{% endblock %}" href="/public">{{ i18n.t("nav.home") }}</a>
+        <a class="pill-item {% block nav_login_active %}{% endblock %}" href="/login">{{ i18n.t("nav.login") }}</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="shell">
+      <p>{{ i18n.t("site.copyright") }}</p>
+    </div>
+  </footer>
+  {% block scripts %}{% endblock %}
 </body>
 </html>
