@@ -298,3 +298,11 @@ def feed(request: Request, db: Session = Depends(get_session)):
 def login_page(request: Request):
     """登录页（全模式可达——模式 A 合规期站长仍需登录配置站点）。"""
     return _render(request, "login.html.j2", {})
+
+
+@router.get("/app")
+@router.get("/app/")
+def spa_host(request: Request):
+    """SPA 宿主页（登录态 B/C 流与后台）：壳与挂载点，数据面全部经 /api
+    既有契约（401 统一跳登录——守卫在数据面而非壳面）。"""
+    return _render(request, "app.html.j2", {})
