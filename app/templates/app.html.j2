@@ -1,0 +1,29 @@
+{# app.html.j2 — SPA 宿主页（登录态：B 流浏览 / C 流文章 / 后台）
+
+免构建形态（裁定①）：import map 解析 "vue"/"vue-i18n" → /static/vendor/；
+应用代码 app/static/app/（ES modules 按对象组织）。宿主只承载壳与挂载点，
+界面文案全部在 SPA 语言包（裁定⑦）。
+#}
+{% import "_copy.html.j2" as i18n %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ i18n.t("site.name") }}</title>
+  <link rel="stylesheet" href="/static/css/design-system.css?v={{ static_version }}">
+  <link rel="stylesheet" href="/static/css/app.css?v={{ static_version }}">
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "/static/vendor/vue.esm-browser.prod.js?v={{ static_version }}",
+        "vue-i18n": "/static/vendor/vue-i18n.esm-browser.prod.js?v={{ static_version }}"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="/static/app/main.js?v={{ static_version }}"></script>
+</body>
+</html>
