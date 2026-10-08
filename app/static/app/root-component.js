@@ -36,7 +36,7 @@ export default {
       return "/stream";
     },
     avatarChar() {
-      return "编"; // 站长单管理员体系（US-01）的头像占位字
+      return this.$t("nav.avatarChar"); // 站长单管理员体系（US-01）的头像占位字
     },
   },
   methods: {
