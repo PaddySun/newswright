@@ -1,0 +1,38 @@
+{# public-article.html.j2 — 公开文章页（模式 C）
+
+正文经服务端白名单渲染（body_html，render_markdown_whitelist 产物 |safe）；
+AI 标识按 article.ai_label 开关联动（AC-16.2）；点赞按钮经 /feedback 匿名
+提交（AC-16.5，同 AC-13.1 去重链），按钮文案经文案块注入 data 属性。
+#}
+{% extends "base.html.j2" %}
+{% import "_copy.html.j2" as i18n %}
+{% block title %}{{ article.title }} - {{ i18n.t("site.name") }}{% endblock %}
+{% block nav_home_active %}active{% endblock %}
+{% block content %}
+<article class="public-article">
+  <header class="article-head">
+    <p class="eyebrow">
+      {% if ai_label %}<span class="ai-chip">{{ i18n.tf("home.aiGenerated", {"name": author.name}) }}</span>{% endif %}
+    </p>
+    <h1 class="article-headline">{{ article.title }}</h1>
+    <p class="article-byline">{{ i18n.tf("article.byAuthor", {"name": author.name}) }} ·
+      <a href="/public/author/{{ author.id }}">{{ i18n.t("home.viewAuthor") }}</a></p>
+  </header>
+
+  <div class="article-body rich-text">{{ body_html | safe }}</div>
+
+  <div class="article-actions">
+    <button type="button" id="public-like" class="btn-pill btn-primary"
+            data-article-id="{{ article.id }}"
+            data-label-like="{{ i18n.t("article.like") }}"
+            data-label-liked="{{ i18n.t("article.liked") }}"
+            data-label-failed="{{ i18n.t("article.likeFailed") }}">
+      {{ i18n.t("article.like") }}
+    </button>
+    <a class="btn-pill btn-ghost" href="/public">{{ i18n.t("article.backHome") }}</a>
+  </div>
+</article>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/public-like.js?v={{ static_version }}" defer></script>
+{% endblock %}

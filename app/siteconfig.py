@@ -60,6 +60,18 @@ DEFAULTS: dict[str, object] = {
     "ua_strategy": "honest",
     "ua_custom": "",
     "contact_email": "",
+    # 公开页模式（AC-16.x）：A=合规期全站不公开（一切公开路由落 404 合规页）；
+    # B=降深列表（条目仅标题/原文一句话摘要/原文链接）；C=公开文章卡片流+文章页+作者页。
+    # 默认 A=出厂即不公开（暴露面最小化）
+    "public_mode": "A",
+    # 模式 B 降深列表的数据面：公开方向 id 列表（空=无公开方向，列表为空）
+    "public_directions": [],
+    # RSS Feed 开关（AC-16.4）：默认关（/feed.xml 落 404 合规页语义的 404）；
+    # 开启后由 feedgen 生成 RSS（仅摘要深度，不含全文）
+    "feed_enabled": False,
+    # sitemap 绝对 URL 前缀（如 https://example.com，末尾不带斜杠；空=仅输出路径形态）。
+    # sitemap 协议期望绝对 URL，生产部署应配置该键
+    "public_base_url": "",
 }
 
 

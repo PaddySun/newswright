@@ -1,0 +1,60 @@
+{# public-home.html.j2 — 公开首页（模式 B 降深列表 / 模式 C 文章卡片流）
+
+模式 B：条目仅标题/原文首句摘要/原文链接三字段（AC-16.1，模板层不再增字段）；
+模式 C：公开文章卡片 + AI 生成标识（article.ai_label 开关联动，AC-16.2）。
+#}
+{% extends "base.html.j2" %}
+{% import "_copy.html.j2" as i18n %}
+{% block title %}{{ i18n.t("nav.home") }} - {{ i18n.t("site.name") }}{% endblock %}
+{% block nav_home_active %}active{% endblock %}
+{% block content %}
+<section class="home-heading">
+  <p class="eyebrow">{{ i18n.t("site.name") }}</p>
+  <h1 class="page-serif-headline">{{ i18n.t("nav.home") }}</h1>
+  <p class="muted-note">{% if mode == "B" %}{{ i18n.t("home.modeBNote") }}{% endif %}</p>
+</section>
+
+{% if mode == "B" %}
+  <p class="section-label">{{ i18n.t("home.sectionToday") }}</p>
+  {% if entries %}
+  <section class="brief-list">
+    {% for entry in entries %}
+    <article class="brief-item card-base">
+      <h2 class="card-serif-title"><a href="{{ entry.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ entry.title }}</a></h2>
+      <p class="card-body-text">{{ entry.summary }}</p>
+      <p class="card-meta"><a href="{{ entry.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ i18n.t("home.readOriginal") }} ↗</a></p>
+    </article>
+    {% endfor %}
+  </section>
+  {% else %}
+  <div class="empty-state">
+    <h3 class="card-serif-title">{{ i18n.t("home.empty") }}</h3>
+    <p class="muted-note">{{ i18n.t("home.emptyHint") }}</p>
+  </div>
+  {% endif %}
+{% else %}
+  <p class="section-label">{{ i18n.t("home.sectionToday") }}</p>
+  {% if articles %}
+  <section class="article-card-grid">
+    {% for card in articles %}
+    <article class="article-card card-base">
+      <p class="eyebrow">
+        {% if card.ai_label %}<span class="ai-chip">{{ i18n.tf("home.aiGenerated", {"name": card.author_name}) }}</span>{% endif %}
+      </p>
+      <h2 class="card-serif-title"><a href="/public/article/{{ card.id }}">{{ card.title }}</a></h2>
+      <p class="card-body-text">{{ card.summary }}</p>
+      <div class="card-meta">
+        <a href="/public/author/{{ card.author_id }}">{{ i18n.t("home.viewAuthor") }} · {{ card.author_name }}</a>
+        <a href="/public/article/{{ card.id }}">{{ i18n.t("home.readOriginal") }}</a>
+      </div>
+    </article>
+    {% endfor %}
+  </section>
+  {% else %}
+  <div class="empty-state">
+    <h3 class="card-serif-title">{{ i18n.t("home.empty") }}</h3>
+    <p class="muted-note">{{ i18n.t("home.emptyHint") }}</p>
+  </div>
+  {% endif %}
+{% endif %}
+{% endblock %}

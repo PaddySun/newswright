@@ -15,6 +15,8 @@ dependencies = [
     "apscheduler>=3.10,<4",
     "argon2-cffi>=25.1",
     "numpy>=2.0",
+    "jinja2>=3.1",
+    "feedgen>=1.0",
 ]
 
 [project.optional-dependencies]
@@ -34,3 +36,6 @@ packages = { find = { include = ["app*"] } }
 
 [tool.setuptools.package-data]
 "app.authors" = ["prompts/*.md"]
+"app" = ["templates/*.j2", "static/css/*.css", "static/js/*.js",
+         "static/app/**/*.js", "static/app/locales/*.js",
+         "static/vendor/*.js"]

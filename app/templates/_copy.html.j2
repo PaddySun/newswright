@@ -1,0 +1,54 @@
+{# _copy.html.j2 — SSR 界面文案块（裁定⑦：模板不硬编码界面字符串）
+
+全部公开页/登录页界面文案集中于此（键名与 SPA 语言包
+app/static/app/locales/zh-CN.js 对齐——同名键两处各自实现，不强求运行时
+同源）。模板经 `{% import "_copy.html.j2" as i18n %}` 后以
+`{{ i18n.t("键名") }}` 取文案。不做翻译、不建其他语言包（结构留空为将来
+翻译位）。
+#}
+{% set SSR_COPY = {
+  "site.name": "Newswright",
+  "site.tagline": "精选，为你而写。",
+  "site.copyright": "© 2026 Newswright. 精选，为你而写。",
+  "nav.home": "精选",
+  "nav.login": "登录",
+  "nav.authors": "作者",
+  "home.sectionToday": "今日精选",
+  "home.modeBNote": "内容摘要与原文链接",
+  "home.readOriginal": "阅读原文",
+  "home.aiGenerated": "AI {name} 生成",
+  "home.viewAuthor": "作者主页",
+  "home.empty": "暂无公开内容",
+  "home.emptyHint": "请稍后再来，内容更新后会在这里呈现。",
+  "article.byAuthor": "由 {name} 主笔",
+  "article.original": "查看原文",
+  "article.backHome": "返回精选",
+  "article.like": "点赞",
+  "article.liked": "已支持",
+  "article.likeFailed": "操作未成功，请稍后再试",
+  "author.articles": "该作者的文章",
+  "author.bioEmpty": "这位作者还没有写下简介。",
+  "author.backHome": "返回精选",
+  "compliance.title": "404",
+  "compliance.headline": "页面不存在",
+  "compliance.note": "你所寻找的内容不在这里，或当前不可访问。",
+  "login.heading": "登录 Newswright",
+  "login.usernameLabel": "用户名",
+  "login.usernamePlaceholder": "输入用户名",
+  "login.passwordLabel": "密码",
+  "login.passwordPlaceholder": "输入密码",
+  "login.submit": "登录",
+  "login.submitting": "登录中…",
+  "login.errorGeneric": "登录未成功，请检查用户名与密码后重试",
+  "login.lockedHint": "失败次数过多，请 15 分钟后重试",
+  "login.changeRequired": "首次登录需要修改密码",
+  "login.oldPasswordLabel": "当前密码",
+  "login.newPasswordLabel": "新密码",
+  "login.confirmPasswordLabel": "确认新密码",
+  "login.changeSubmit": "修改密码",
+  "login.mismatch": "两次输入的新密码不一致",
+  "login.changeSuccess": "密码已更新，正在进入站点…"
+} %}
+{% macro t(key) %}{{ SSR_COPY[key] }}{% endmacro %}
+{# 带占位符文案（如 "AI {name} 生成"）：tf("home.aiGenerated", {"name": 作者名}) #}
+{% macro tf(key, vars) %}{{ SSR_COPY[key].format(**vars) }}{% endmacro %}

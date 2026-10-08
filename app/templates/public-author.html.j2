@@ -1,0 +1,38 @@
+{# public-author.html.j2 — 作者公开页（模式 C，public_visible 过滤后可达） #}
+{% extends "base.html.j2" %}
+{% import "_copy.html.j2" as i18n %}
+{% block title %}{{ author.name }} - {{ i18n.t("site.name") }}{% endblock %}
+{% block nav_home_active %}active{% endblock %}
+{% block content %}
+<section class="author-head">
+  <div class="author-avatar" aria-hidden="true">{{ author.name[:1] }}</div>
+  <div>
+    <h1 class="author-name">{{ author.name }}</h1>
+    {% if author.bio %}
+    <p class="author-bio">{{ author.bio }}</p>
+    {% else %}
+    <p class="author-bio muted-note">{{ i18n.t("author.bioEmpty") }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<p class="section-label">{{ i18n.t("author.articles") }}</p>
+{% if articles %}
+<section class="brief-list">
+  {% for card in articles %}
+  <article class="brief-item card-base">
+    <p class="eyebrow">
+      {% if card.ai_label %}<span class="ai-chip">{{ i18n.tf("home.aiGenerated", {"name": card.author_name}) }}</span>{% endif %}
+    </p>
+    <h2 class="card-serif-title"><a href="/public/article/{{ card.id }}">{{ card.title }}</a></h2>
+    <p class="card-body-text">{{ card.summary }}</p>
+  </article>
+  {% endfor %}
+</section>
+{% else %}
+<div class="empty-state">
+  <h3 class="card-serif-title">{{ i18n.t("home.empty") }}</h3>
+</div>
+{% endif %}
+<p><a class="btn-pill btn-ghost" href="/public">{{ i18n.t("author.backHome") }}</a></p>
+{% endblock %}

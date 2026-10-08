@@ -1,25 +1,46 @@
 """FastAPI 入口：uvicorn app.main:app --port 8300"""
 from __future__ import annotations
 
-from fastapi import FastAPI, HTTPException
+import os
+
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from .api.auth import router as auth_router
 from .api.feedback import router as feedback_router
+from .api.middleware import cache_header_middleware
+from .api.public import public_mode, router as public_router
 from .api.routes import router
 from .auth import bootstrap_admin
-from .db import SessionLocal, init_db
+from .db import SessionLocal, get_session, init_db
+
+
+def _docs_enabled() -> bool:
+    """/docs 生产门禁（P1-8）：env DOCS_ENABLED 显式开启才提供文档面；
+    默认关闭——模式 A 合规期不得泄露 API 结构（部署矩阵硬条款②）。"""
+    return os.environ.get("DOCS_ENABLED", "").strip().lower() in ("1", "true", "yes", "on")
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="newswright-demo", version="0.1.0")
+    docs_open = _docs_enabled()
+    app = FastAPI(
+        title="newswright-demo",
+        version="0.1.0",
+        docs_url="/docs" if docs_open else None,
+        redoc_url="/redoc" if docs_open else None,
+        openapi_url="/openapi.json" if docs_open else None,
+    )
     init_db()
     with SessionLocal() as db:
         bootstrap_admin(db)  # AC-01.1：users 空表时创建 admin（已有用户不覆盖）
     app.include_router(auth_router)  # /api/auth：守卫豁免路由（先注册）
     app.include_router(feedback_router)  # /feedback：匿名反馈（守卫豁免，独立 router）
     app.include_router(router)
+    app.include_router(public_router)  # 公开页 SSR + SEO 三件 + 登录页（无守卫）
+    # 静态资源（CSS/JS/vendor）：immutable 段由中间件按路径判定域赋头
+    app.mount("/static", StaticFiles(directory=str(_static_dir())), name="static")
 
     @app.exception_handler(HTTPException)
     async def coded_error_handler(request, exc: HTTPException):
@@ -64,6 +85,12 @@ def create_app() -> FastAPI:
         return response
 
     @app.middleware("http")
+    async def cache_contract_middleware(request, call_next):
+        """响应头契约三段式（P2-4）：路径判定域纯函数见 api/middleware.py；
+        只补缺不覆盖（healthz 等自带契约头的端点保持第一责任方）。"""
+        return await cache_header_middleware(request, call_next)
+
+    @app.middleware("http")
     async def log_context_middleware(request, call_next):
         """请求侧日志上下文注入：route + actor（会话身份）经 contextvars 写入，
         业务代码不手工拼上下文字段。请求完成记一条 INFO 行（访问面留痕）。"""
@@ -81,8 +108,15 @@ def create_app() -> FastAPI:
             reset_log_context(token)
 
     @app.get("/")
-    def root():
-        return {"app": "newswright-demo", "hint": "POST /pipeline/run 触发抓取+打分；POST /pipeline/write/{author_id} 触发写作"}
+    def root(request: Request, db: Session = Depends(get_session)):
+        """站点根：模式 A=404 合规页（AC-02.1 未登录首页 404 无内容泄露，
+        原 JSON 提示面随公开模式契约退役——demo 残留、无契约在册、测试零覆盖，
+        变更已在 UI 批汇报声明）；模式 B/C=重定向公开首页。"""
+        if public_mode(db) == "A":
+            from .api.public import mode_a_404
+
+            return mode_a_404(request)
+        return RedirectResponse(url="/public", status_code=307)
 
     @app.get("/healthz")
     def healthz():
@@ -100,6 +134,12 @@ def create_app() -> FastAPI:
                             headers={"Cache-Control": "no-store"})
 
     return app
+
+
+def _static_dir():
+    from pathlib import Path
+
+    return Path(__file__).resolve().parent / "static"
 
 
 def _session_actor(request) -> str | None:
