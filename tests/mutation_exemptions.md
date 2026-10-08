@@ -2932,3 +2932,14 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.search.pipeline.x_fetch_search_source__mutmut_227 | A | apply_rules title 实参 None：apply_rules 内 title 仅参与黑名单 joined 串，管线调用恒不传 blacklist（恒 []）→ title 不可观察（调用点核查）——实参死参等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.search.pipeline.x_fetch_search_source__mutmut_241 | A | fetch_status="FETCHED"→None：Item.fetch_status 列 default="FETCHED" 兜底（models 实证；C2-3 实证显式 None 触发列 default 判例族）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.search.pipeline.x_fetch_search_source__mutmut_255 | A | SanitizeTarget url 实参移除：sanitize 链两阶段（注入特征/关键词拒绝）均只扫 title+content（build_chain 实证），url 无阶段消费方——死参等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+## C3 D 类拍板登记（2026-10-08 用户拍板·6 条 A）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.retrieval.embedder.x_embed_input_text__mutmut_12 | A | 空标题（合法值）嵌入输入多前导换行——标题保留条款不钉空标题形态，输入文本差异无条款 | 探索/嵌入输入形态无条款（D 类拍板 #6 判 A） |
+| app.retrieval.explore.x_explore_params__mutmut_22 | A | floor 兜底 or 50→51 仅显式 set 0 的 falsy 域可达，生产恒回退 DEFAULTS 域等价 | falsy 配置语义无条款（拍板 #6 判 A；DEFAULTS 恒回退判例族） |
+| app.retrieval.explore.x_explore_params__mutmut_33 | A | percentile 兜底 or 5→6 同上 | 同上 |
+| app.retrieval.explore.x_explore_params__mutmut_44 | A | quota 兜底 or 3→4 同上 | 同上 |
+| app.retrieval.explore.x_explore_pick__mutmut_94 | A | MMR 权重 (1-λ)→(1+λ)——λ 已 site_config 化（管理员可调调试位，默认 0.3），常量缺省变体属回退值域 | 拍板 #7 判 A + λ 配置位化（本批落地） |
+| app.retrieval.explore.x_explore_pick__mutmut_95 | A | (1-λ)→(2-λ) 同上 | 同上 |

@@ -23,8 +23,9 @@ MMR_LAMBDA = 0.3
 def explore_params(db, direction=None, *, get_config) -> dict:
     """合成探索层生效参数：方向级 explore_config 逐键覆盖 site_config 全局值。
 
-    返回 {enabled, floor, percentile, quota}；enabled = 方向级显式值优先，
-    否则取全局开关。
+    返回 {enabled, floor, percentile, quota, mmr_lambda}；enabled = 方向级显式值
+    优先，否则取全局开关。mmr_lambda 为 MMR 多样性权重——管理员可调的调试位
+    （默认 0.3 = 探索语义下"离方向更远"主导）。
     """
     enabled = bool(get_config(db, "explore_enabled"))
     params = {
@@ -32,6 +33,7 @@ def explore_params(db, direction=None, *, get_config) -> dict:
         "floor": int(get_config(db, "explore_quality_floor") or 50),
         "percentile": int(get_config(db, "explore_distance_percentile") or 5),
         "quota": int(get_config(db, "explore_quota_per_page") or 3),
+        "mmr_lambda": float(get_config(db, "explore_mmr_lambda") or MMR_LAMBDA),
     }
     cfg = (getattr(direction, "explore_config", None) or {}) if direction is not None else {}
     if "enabled" in cfg:
@@ -39,6 +41,8 @@ def explore_params(db, direction=None, *, get_config) -> dict:
     for key in ("floor", "percentile", "quota"):
         if key in cfg and cfg[key] is not None:
             params[key] = int(cfg[key])
+    if cfg.get("mmr_lambda") is not None:
+        params["mmr_lambda"] = float(cfg["mmr_lambda"])
     return params
 
 
@@ -49,6 +53,7 @@ def explore_pick(
     floor: int,
     percentile: int,
     quota: int,
+    mmr_lambda: float = MMR_LAMBDA,
 ) -> list[dict]:
     """探索选样纯函数。scored_items 元素形态：
     {id, quality, relevance, passed, vec(ndarray|None)}。
@@ -85,7 +90,7 @@ def explore_pick(
                 (cosine_similarity(it["vec"], p["vec"]) for p in picked if p.get("vec") is not None),
                 default=0.0,
             )
-            score = -MMR_LAMBDA * sim_q - (1 - MMR_LAMBDA) * sim_sel
+            score = -mmr_lambda * sim_q - (1 - mmr_lambda) * sim_sel
             if best_score is None or score > best_score:
                 best, best_score = it, score
         picked.append(best)

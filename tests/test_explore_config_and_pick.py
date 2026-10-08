@@ -110,3 +110,18 @@ def test_explore_pick_prefers_farthest_from_direction():
     far = _cand(2, 72, _tilted(0.1))
     picked = explore_pick([near, far], d, floor=50, percentile=100, quota=1)
     assert [p["id"] for p in picked] == [2]
+
+
+def test_mmr_lambda_config_consumed(db_session):
+    """MMR 多样性权重为管理员可调配置位：site_config explore_mmr_lambda
+    显式值进入合成参数（缺省回退 0.3）；高权重改变选样主导性。"""
+    from app.siteconfig import set_config
+    from app.retrieval.explore import explore_params
+
+    set_config(db_session, "explore_mmr_lambda", 0.8)
+    get_config = ConfigStub({"explore_mmr_lambda": 0.8})
+    params = explore_params(object(), None, get_config=get_config)
+    assert params["mmr_lambda"] == 0.8
+    # 未配置时回退常量缺省
+    import app.retrieval.explore as ex
+    assert ex.MMR_LAMBDA == 0.3
