@@ -2943,3 +2943,261 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.retrieval.explore.x_explore_params__mutmut_44 | A | quota 兜底 or 3→4 同上 | 同上 |
 | app.retrieval.explore.x_explore_pick__mutmut_94 | A | MMR 权重 (1-λ)→(1+λ)——λ 已 site_config 化（管理员可调调试位，默认 0.3），常量缺省变体属回退值域 | 拍板 #7 判 A + λ 配置位化（本批落地） |
 | app.retrieval.explore.x_explore_pick__mutmut_95 | A | (1-λ)→(2-λ) 同上 | 同上 |
+## C3-6 收官批（2026-10-08，采集写作与长尾 305 条）：A 234 + B 2 = 236 条
+
+> 种子=C3 轮统一 dispatch 幸存长尾（doc/C3/C3-6-种子.txt，305 条：authors 131 /
+> ingest 115 / hot 54 / api.deps 5）。diff 经 mutmut 3.8.0 库级静态重建
+> （doc/C3/C3-6-重建.py → C3-6-重建-diff.json），逐条施加→跑判据面→还原定案
+> （doc/C3/C3-6-核验.py / C3-6-核验结果.json，C/A/B/V 四轮至零意外）。
+> **C 69/69 全杀**（新测试 10 文件：test_pipeline_execute_assembly_contract /
+> test_reading_set_assembly_contract / test_hot_fetch_contract /
+> test_http_client_policy_contract / test_rss_ingest_upgrade_contract /
+> test_web_ingest_upgrade_contract + 拍板补测 4 文件，C 类不在本清单）。
+> **D 0**（D16 双层口径/AC-19.5/R9 落册后条款面已齐，收官批零新 D）。
+> 判据族复用：C2-2 authors / C1-3+C2-3 ingest / C2-4 hot / C3-1~5 全系先例。
+> 本批新判例：①SQLAlchemy INSERT-NULL 应用列 default——显式 None 与缺失不可
+> 区分（m465/208/254/268/150/175 施加实证，ORM 列缺省兜底族扩展）；②D16 落册
+> 使 now(None) 写库/时钟判定=C（aware 契约断言=模块 datetime 打桩记录 tz 实参）；
+> ③R9 工厂落地使出网 db 实参接线=C；④normalize_url 有 not-url 守卫返回原值
+> （m160 死域）；⑤rolling execute 分支 lo/hi 死变量族=A（消费方核查）；⑥A/B 轮
+> 施加实锤改判 3 条（m210 序数装配语义 / m65 下标抛错 vs get 回退分判 / m20
+> 防垃圾过滤属正常路径非纯防御）。
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.api.deps.x_visitor_hash__mutmut_11 | A | UA 头缺失时缺省值形态（None/XXXX）只改 anon 哈希输入常量——id 为不透明值，单一实现下同访客跨请求恒稳定、唯一约束去重语义不变（feedback.py 唯一消费核查）；与原实现的值差异非行为面 | 等价/不可达或条款未钉 |
+| app.api.deps.x_visitor_hash__mutmut_13 | A | UA 头缺失时缺省值形态（None/XXXX）只改 anon 哈希输入常量——id 为不透明值，单一实现下同访客跨请求恒稳定、唯一约束去重语义不变（feedback.py 唯一消费核查）；与原实现的值差异非行为面 | 等价/不可达或条款未钉 |
+| app.api.deps.x_visitor_hash__mutmut_15 | A | get("USER-AGENT")：starlette Headers（CIMultiDict）大小写不敏感恰等价（httpx 头名判据族） | 等价/不可达或条款未钉 |
+| app.api.deps.x_visitor_hash__mutmut_16 | A | UA 头缺失时缺省值形态（None/XXXX）只改 anon 哈希输入常量——id 为不透明值，单一实现下同访客跨请求恒稳定、唯一约束去重语义不变（feedback.py 唯一消费核查）；与原实现的值差异非行为面 | 等价/不可达或条款未钉 |
+| app.api.deps.x_visitor_hash__mutmut_21 | A | encode("UTF-8")：Python 编码名归一化恰等价（C2 先例族） | 等价/不可达或条款未钉 |
+| app.authors.importer.x_export_author_json__mutmut_10 | A | bio 未设作者导出缺省串形态（"" vs XXXX）无条款；round-trip 各自自洽（导入侧非 None 即覆盖，导出缺省形态未钉） | 等价/不可达或条款未钉 |
+| app.authors.importer.x_export_author_json__mutmut_2 | A | 无 author.json 时异常消息文案：异常措辞无条款（异常消息先例族）；ValueError 类型与触发域不变 | 等价/不可达或条款未钉 |
+| app.authors.importer.x_export_author_json__mutmut_5 | A | deepcopy→copy：顶层独立满足 bio/public_visible 注入；嵌套共享无修改方（导出只读序列化消费面核查） | 等价/不可达或条款未钉 |
+| app.authors.memory.x_record_feedback__mutmut_13 | A | verdict 非法异常消息文案：异常措辞无条款（先例族）；路由层枚举校验在位 | 等价/不可达或条款未钉 |
+| app.authors.memory.x_record_feedback__mutmut_14 | A | 评语附加行 +=→=：feedback 记忆条目文案结构无条款（回流文案组；评语原文承载语义不变） | 等价/不可达或条款未钉 |
+| app.authors.memory.x_record_feedback__mutmut_33 | A | source_event 诊断值域 XX/大写：列值无枚举条款、无按 source_event 的查询消费方（routes.py:181 仅呈现）；sent 布尔分判线对照（诊断值域 A） | 等价/不可达或条款未钉 |
+| app.authors.memory.x_record_feedback__mutmut_34 | A | source_event 诊断值域 XX/大写：列值无枚举条款、无按 source_event 的查询消费方（routes.py:181 仅呈现）；sent 布尔分判线对照（诊断值域 A） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_100 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_116 | A | recent_n 缺省 5→6：数值缺省先例族（topic_dedup.recent_n 可配，缺省粒度无条款） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_127 | A | 【近期已写文章标题】文案与 join 分隔符：prompt 装配文案组 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_129 | A | 【近期已写文章标题】文案与 join 分隔符：prompt 装配文案组 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_174 | A | rolling lo //3→/3：整除→浮点的渲染形态差异（"100.0" vs "100"）——指引文案渲染粒度无条款 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_178 | A | rolling lo/hi get 键变体与缺省字面量（None/XX/MAX/600→601/1400→1401）：schema 必填（length.min/max required）使缺省域不可达——死缺省域判据族 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_179 | A | rolling 分支 lo/hi 逐节指引计算（行 567-568）：计算后无任何消费方（execute rolling 分支死变量——下游 node_draft 不接收 lo/hi，_draft_task 的长度行出自 _draft_task 自行读取 gates）——死变量域恰等价（初判 C 经消费方核查改判 A） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_187 | A | rolling lo/hi get 键变体与缺省字面量（None/XX/MAX/600→601/1400→1401）：schema 必填（length.min/max required）使缺省域不可达——死缺省域判据族 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_191 | A | rolling 分支 lo/hi 逐节指引计算（行 567-568）：计算后无任何消费方（execute rolling 分支死变量——下游 node_draft 不接收 lo/hi，_draft_task 的长度行出自 _draft_task 自行读取 gates）——死变量域恰等价（初判 C 经消费方核查改判 A） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_195 | A | rolling lo/hi get 键变体与缺省字面量（None/XX/MAX/600→601/1400→1401）：schema 必填（length.min/max required）使缺省域不可达——死缺省域判据族 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_196 | A | rolling 分支 lo/hi 逐节指引计算（行 567-568）：计算后无任何消费方（execute rolling 分支死变量——下游 node_draft 不接收 lo/hi，_draft_task 的长度行出自 _draft_task 自行读取 gates）——死变量域恰等价（初判 C 经消费方核查改判 A） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_203 | A | rolling lo/hi get 键变体与缺省字面量（None/XX/MAX/600→601/1400→1401）：schema 必填（length.min/max required）使缺省域不可达——死缺省域判据族 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_204 | A | rolling lo/hi get 键变体与缺省字面量（None/XX/MAX/600→601/1400→1401）：schema 必填（length.min/max required）使缺省域不可达——死缺省域判据族 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_205 | A | rolling 分支 lo/hi 逐节指引计算（行 567-568）：计算后无任何消费方（execute rolling 分支死变量——下游 node_draft 不接收 lo/hi，_draft_task 的长度行出自 _draft_task 自行读取 gates）——死变量域恰等价（初判 C 经消费方核查改判 A） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_224 | A | rolling 节间 join 分隔符 XX：装配文案组 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_239 | A | 中段 flush 的 payload trace/cost 键变体：行 102 最终写入恢复同名键——最终态等价（同键多处写入吸收；中间态无消费方） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_240 | A | 中段 flush 的 payload trace/cost 键变体：行 102 最终写入恢复同名键——最终态等价（同键多处写入吸收；中间态无消费方） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_241 | A | 中段 flush 的 payload trace/cost 键变体：行 102 最终写入恢复同名键——最终态等价（同键多处写入吸收；中间态无消费方） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_248 | A | prompt_snapshot 分隔符 ---USER---/---TASK--- 变体：W4 钉快照可核性（内容逐字在位）非分隔符措辞；技术书钉独立列非分隔符串（文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_249 | A | prompt_snapshot 分隔符 ---USER---/---TASK--- 变体：W4 钉快照可核性（内容逐字在位）非分隔符措辞；技术书钉独立列非分隔符串（文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_250 | A | prompt_snapshot 分隔符 ---USER---/---TASK--- 变体：W4 钉快照可核性（内容逐字在位）非分隔符措辞；技术书钉独立列非分隔符串（文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_26 | A | 「【本期阅读集】」标题文案 XX：prompt 装配文案组（条目定界符在 _refs_listing 内部未被变异） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_261 | A | pass_stats chars_before/prune_ratio 诊断值与键变体：payload 内部形态判据族（prune_ratio 无条款） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_285 | A | pass_stats chars_before/prune_ratio 诊断值与键变体：payload 内部形态判据族（prune_ratio 无条款） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_294 | A | pass_stats chars_before/prune_ratio 诊断值与键变体：payload 内部形态判据族（prune_ratio 无条款） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_295 | A | pass_stats chars_before/prune_ratio 诊断值与键变体：payload 内部形态判据族（prune_ratio 无条款） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_296 | A | pass_stats chars_before/prune_ratio 诊断值与键变体：payload 内部形态判据族（prune_ratio 无条款） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_320 | A | max_attempts get(None/XX/MAX/3→4)：schema 必填（required lo=1 hi=10）使缺省域不可达——死缺省域 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_324 | A | max_attempts get(None/XX/MAX/3→4)：schema 必填（required lo=1 hi=10）使缺省域不可达——死缺省域 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_325 | A | max_attempts get(None/XX/MAX/3→4)：schema 必填（required lo=1 hi=10）使缺省域不可达——死缺省域 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_326 | A | max_attempts get(None/XX/MAX/3→4)：schema 必填（required lo=1 hi=10）使缺省域不可达——死缺省域 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_343 | A | gate_history attempt 键变体：payload 内部形态（C2-2 m390/391 同语句族先例） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_344 | A | gate_history attempt 键变体：payload 内部形态（C2-2 m390/391 同语句族先例） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_349 | A | last_issues 初值 None→""：与列表比较恒 False（== 语义）——同因早停行为恰等价 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_392 | A | gate_history attempt 键变体：payload 内部形态（C2-2 m390/391 同语句族先例） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_397 | A | 终态 payload trace/cost 键变体：行 61 已写正常同名键，合并后最终态含全部键——冗余镜像键（"trace" in payload 断言不受影响；cost 诊断账 CI0-7 m396 先例） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_398 | A | 终态 payload trace/cost 键变体：行 61 已写正常同名键，合并后最终态含全部键——冗余镜像键（"trace" in payload 断言不受影响；cost 诊断账 CI0-7 m396 先例） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_399 | A | 终态 payload trace/cost 键变体：行 61 已写正常同名键，合并后最终态含全部键——冗余镜像键（"trace" in payload 断言不受影响；cost 诊断账 CI0-7 m396 先例） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_406 | A | payload rewrite.mode/revise_enabled/title 键变体：payload 内部形态判据族（无行为消费断言面） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_407 | A | payload rewrite.mode/revise_enabled/title 键变体：payload 内部形态判据族（无行为消费断言面） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_412 | A | payload rewrite.mode/revise_enabled/title 键变体：payload 内部形态判据族（无行为消费断言面） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_416 | A | payload rewrite.mode/revise_enabled/title 键变体：payload 内部形态判据族（无行为消费断言面） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_417 | A | payload rewrite.mode/revise_enabled/title 键变体：payload 内部形态判据族（无行为消费断言面） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_425 | A | stop_note 文案/连接符/截断 [:501]：error 消息文案组+截断界数值先例族（FAILED 语义由 status 承载，reason 文案 A 分判线） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_429 | A | stop_note 文案/连接符/截断 [:501]：error 消息文案组+截断界数值先例族（FAILED 语义由 status 承载，reason 文案 A 分判线） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_430 | A | stop_note 文案/连接符/截断 [:501]：error 消息文案组+截断界数值先例族（FAILED 语义由 status 承载，reason 文案 A 分判线） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_434 | A | audit_note 文案 XX/大写：payload 审计注记文案组 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_435 | A | audit_note 文案 XX/大写：payload 审计注记文案组 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_446 | A | marks 扫描临时文本 sub("")→sub("XXXX")：仅内部临时变量行内容差异——marks 集合语义不变、draft_text 原样传 assemble（恒等价） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_448 | A | assemble_article_text title 实参 None：该形参在函数体未被使用（标题走 Article.title 单独存）——死参数恰等价 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_465 | A | Article status=None：SQLAlchemy 对 INSERT 时值为 NULL 的列应用列 default（显式 None 与缺失不可区分——unit of work 实证，施加全绿）——与 m470 缺参同域恰等价（ORM 列缺省兜底判据族） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_470 | A | Article status 实参删除：列 default=PUBLISHED_TO_C 兜底恰等价（ORM 列缺省判据族） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_481 | A | OK 轮 run.error=None→""：空值形态（null=视为缺失判例 C1 拍板；"" 同缺失态 falsy 等价） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_482 | A | topic 记忆条目 first_item 值 None 化：记忆文案内容文案组（module/source_event 承载语义不变） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_483 | A | topic 记忆条目 first_item 值 None 化：记忆文案内容文案组（module/source_event 承载语义不变） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_5 | A | WRITING_DOCUMENT_DELARATION 拼接符变体：定界声明常量本体未动（AC-06.4 钉声明句与 <document id> 定界，均不在变异位）；拼接符文案组 | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_500 | A | source_event="write" 诊断值域 XX/大写：同 record_feedback m33 判据（诊断值域 A） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_501 | A | source_event="write" 诊断值域 XX/大写：同 record_feedback m33 判据（诊断值域 A） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_76 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_77 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_82 | A | len(slices)>1→>=1：slices=1 时 slices[1:]=[]→_slices_block 返回空串——恰等价（追加空串无行为差） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_87 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_91 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_92 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
+| app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_99 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_33 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_34 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_41 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_42 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_52 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_53 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_60 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.schema.x_validate_author_json__mutmut_61 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_14 | A | 候选池 limit(None)：200 上限数值无条款（池大小数值缺省先例族；pool 语义与 domain cap 不受影响） | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_23 | A | join(ScoreResult, None)/实参删除：onclause=None 走 FK 自动推断（ScoreResult.item_id FK 实证）——恰等价 | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_25 | A | join(ScoreResult, None)/实参删除：onclause=None 走 FK 自动推断（ScoreResult.item_id FK 实证）——恰等价 | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_39 | A | limit 200→201：数值缺省先例族 | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_55 | A | 阈值缺省回退 or 60→61：方向阈值可配（rd.get("threshold")），缺省粒度数值先例族（60 为配置缺省非硬条款） | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_59 | A | cap>0→cap>=0：and 短路——cap=0 时首操作数 falsy 恒 False，右操作数不可达（施加实证）——与原恒等价（初判 C 的 >=0 设限推演误判 and 语义，核验纠正） | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_65 | A | urlparse(item.url or "XXXX")：无 scheme 串 netloc 恒空→domain "" 同原（or "" 兜底吸收）——恰等价 | 等价/不可达或条款未钉 |
+| app.authors.writer.x__assemble_with_domain_cap__mutmut_66 | A | netloc or "XXXX"：无 netloc 条目的计数键名差异——计数语义与收集结果不变（字典内部键名恰等价） | 等价/不可达或条款未钉 |
+| app.authors.writer.x__build_prompt__mutmut_58 | A | 「（本期阅读集为空）」提示文案 XX：prompt 装配文案组 | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_102 | A | none/回退路径 k 实参 None/缺省形态：k=None 落 _assemble_with_domain_cap 内 WRITE_READING_SET_K 兜底，与原 k 同源等价（C2-2 m113/116 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_105 | A | none/回退路径 k 实参 None/缺省形态：k=None 落 _assemble_with_domain_cap 内 WRITE_READING_SET_K 兜底，与原 k 同源等价（C2-2 m113/116 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_115 | A | fallback 诊断标记值/键变体：C2-2 m106/107/108 同语句族先例（回退行为本身不变） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_117 | A | fallback 诊断标记值/键变体：C2-2 m106/107/108 同语句族先例（回退行为本身不变） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_118 | A | fallback 诊断标记值/键变体：C2-2 m106/107/108 同语句族先例（回退行为本身不变） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_119 | A | fallback 诊断标记值/键变体：C2-2 m106/107/108 同语句族先例（回退行为本身不变） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_126 | A | none/回退路径 k 实参 None/缺省形态：k=None 落 _assemble_with_domain_cap 内 WRITE_READING_SET_K 兜底，与原 k 同源等价（C2-2 m113/116 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_127 | A | meta pool/domain_capped 键变体与 None 化：payload 诊断面板（CI0-7 m123/m129 先例族） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_128 | A | meta pool/domain_capped 键变体与 None 化：payload 诊断面板（CI0-7 m123/m129 先例族） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_13 | A | none/回退路径 k 实参 None/缺省形态：k=None 落 _assemble_with_domain_cap 内 WRITE_READING_SET_K 兜底，与原 k 同源等价（C2-2 m113/116 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_136 | A | meta ranked/excluded 键变体：payload 诊断面板（m123/m129 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_137 | A | meta ranked/excluded 键变体：payload 诊断面板（m123/m129 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_138 | A | meta ranked/excluded 键变体：payload 诊断面板（m123/m129 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_142 | A | meta ranked/excluded 键变体：payload 诊断面板（m123/m129 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_143 | A | meta ranked/excluded 键变体：payload 诊断面板（m123/m129 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_144 | A | meta ranked/excluded 键变体：payload 诊断面板（m123/m129 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_145 | A | excluded=len-len→len+len：排除计数值变体——writer meta 排除账无条款（诊断值域；fetch 账目等式条款不覆盖 rank meta） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_16 | A | none/回退路径 k 实参 None/缺省形态：k=None 落 _assemble_with_domain_cap 内 WRITE_READING_SET_K 兜底，与原 k 同源等价（C2-2 m113/116 先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_29 | A | pool k=RANK_POOL_K 实参删除：落 WRITE_READING_SET_K 兜底——池大小数值无条款（50 vs 10 池深数值缺省先例族；rank 行为契约不变） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_33 | A | meta pool/domain_capped 键变体与 None 化：payload 诊断面板（CI0-7 m123/m129 先例族） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_34 | A | meta pool/domain_capped 键变体与 None 化：payload 诊断面板（CI0-7 m123/m129 先例族） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_35 | A | meta pool/domain_capped 键变体与 None 化：payload 诊断面板（CI0-7 m123/m129 先例族） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_36 | A | meta pool/domain_capped 键变体与 None 化：payload 诊断面板（CI0-7 m123/m129 先例族） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_90 | A | latency_ms 缩放退化（/1000/+t0/*1001）：耗时仅诊断无精度条款（C2-2 m85 providers.base m13 缩放先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_91 | A | latency_ms 缩放退化（/1000/+t0/*1001）：耗时仅诊断无精度条款（C2-2 m85 providers.base m13 缩放先例） | 等价/不可达或条款未钉 |
+| app.authors.writer.x_assemble_ranked_reading_set__mutmut_92 | A | latency_ms 缩放退化（/1000/+t0/*1001）：耗时仅诊断无精度条款（C2-2 m85 providers.base m13 缩放先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_fetch_platform__mutmut_1 | A | timeout 缺省 20→21：数值缺省先例族（§4.2 任意有限值满足） | 等价/不可达或条款未钉 |
+| app.hot.service.x_fetch_platform__mutmut_17 | A | ValueError 消息 None/str(None)/[:201]：异常消息文案组+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.hot.service.x_fetch_platform__mutmut_18 | A | ValueError 消息 None/str(None)/[:201]：异常消息文案组+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.hot.service.x_fetch_platform__mutmut_19 | A | ValueError 消息 None/str(None)/[:201]：异常消息文案组+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.hot.service.x_fetch_platform__mutmut_25 | B | 空 title 反向泄漏（空串条目放行）：源站脏数据防御域——正常条目不受影响（防御分支 B） | B 类防御分支豁免 |
+| app.hot.service.x_fetch_platform__mutmut_6 | A | timeout/follow_redirects 实参删除：http_client 缺省 60/True 同值——恰等价 | 等价/不可达或条款未钉 |
+| app.hot.service.x_fetch_platform__mutmut_7 | A | timeout/follow_redirects 实参删除：http_client 缺省 60/True 同值——恰等价 | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_100 | A | 礼貌间隔 0.5→1.5：数值缺省（m97 先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_119 | A | 全平台失败 error 文案 XX/小写：task error 文案组（FAILED 语义由 status 承载） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_120 | A | 全平台失败 error 文案 XX/小写：task error 文案组（FAILED 语义由 status 承载） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_132 | A | HotBatch 初值变体：行 237-239 恒覆写（初始化即覆盖先例 m131/134/136/145） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_137 | A | HotBatch 初值变体：行 237-239 恒覆写（初始化即覆盖先例 m131/134/136/145） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_139 | A | HotBatch 初值变体：行 237-239 恒覆写（初始化即覆盖先例 m131/134/136/145） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_141 | A | now(None).astimezone().strftime：naive 假定本机语义——wall-clock 同源，strftime 日期与原实现恒同（恰等价推演；原代码 astimezone() 本就取本机日切口径，变异未改变日期行为面） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_148 | A | HotBatch 初值变体：行 237-239 恒覆写（初始化即覆盖先例 m131/134/136/145） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_181 | A | title or "XXXX"/[:2001]：fetch_platform 过滤保证 title 恒非空——or 死域+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_182 | A | title or "XXXX"/[:2001]：fetch_platform 过滤保证 title 恒非空——or 死域+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_189 | B | url or "XXXX"：空 url 条目（源数据缺失防御域）落 "XXXX" 垃圾值而非 None——or None 兜底防御形态破坏（可空列设计承载；防御分支 B） | B 类防御分支豁免 |
+| app.hot.service.x_run_hot_round__mutmut_190 | A | url 截断 [:2001]：截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_207 | A | keywords 初值 None：topics 空时 falsy 等价（消费方 _hot_brief/if keywords 全 falsy 同支）；topics 非空时恒覆写——恰等价 | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_216 | A | _rank_filter_topics db None：HOT_RANK_FILTER 默认关→首分支不触 db（m213 死参先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_229 | A | 降级 log.warning 消息本身变 e/缺实参/文案 XX：占位完整渲染合法域（C3-2 占位符静默门判例；m225-227 文案先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_230 | A | 降级 log.warning 消息本身变 e/缺实参/文案 XX：占位完整渲染合法域（C3-2 占位符静默门判例；m225-227 文案先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_231 | A | 降级 log.warning 消息本身变 e/缺实参/文案 XX：占位完整渲染合法域（C3-2 占位符静默门判例；m225-227 文案先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_245 | A | task_status 计算与 error 条件死域（m243/279 六条同族）：全平台失败在提前 return FAILED 分支终结，后段 not ok_platforms 恒 False——控制流不可达（提前 return 域核查先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_246 | A | task_status 计算与 error 条件死域（m243/279 六条同族）：全平台失败在提前 return FAILED 分支终结，后段 not ok_platforms 恒 False——控制流不可达（提前 return 域核查先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_273 | A | task_status 计算与 error 条件死域（m243/279 六条同族）：全平台失败在提前 return FAILED 分支终结，后段 not ok_platforms 恒 False——控制流不可达（提前 return 域核查先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_278 | A | task_status 计算与 error 条件死域（m243/279 六条同族）：全平台失败在提前 return FAILED 分支终结，后段 not ok_platforms 恒 False——控制流不可达（提前 return 域核查先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_282 | A | task_status 计算与 error 条件死域（m243/279 六条同族）：全平台失败在提前 return FAILED 分支终结，后段 not ok_platforms 恒 False——控制流不可达（提前 return 域核查先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_283 | A | task_status 计算与 error 条件死域（m243/279 六条同族）：全平台失败在提前 return FAILED 分支终结，后段 not ok_platforms 恒 False——控制流不可达（提前 return 域核查先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_299 | A | 返回 dict degraded 键变体：run_hot_round 返回值无行为消费方（调用点核查丢弃；m60 诊断镜像先例族） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_300 | A | 返回 dict degraded 键变体：run_hot_round 返回值无行为消费方（调用点核查丢弃；m60 诊断镜像先例族） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_51 | A | 平台耗时 ms 缩放退化：计时值无条款（m46/m48 先例直接复用） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_52 | A | 平台耗时 ms 缩放退化：计时值无条款（m46/m48 先例直接复用） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_53 | A | 平台耗时 ms 缩放退化：计时值无条款（m46/m48 先例直接复用） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_61 | A | platform_stats ITEMS 键：诊断镜像键面（m60 先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_73 | A | log.info 文案 XX：文案措辞无条款（m62/63/66 先例） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_77 | A | 平台耗时 ms 缩放退化：计时值无条款（m46/m48 先例直接复用） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_78 | A | 平台耗时 ms 缩放退化：计时值无条款（m46/m48 先例直接复用） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_79 | A | 平台耗时 ms 缩放退化：计时值无条款（m46/m48 先例直接复用） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_92 | A | log.warning 实参 None：占位完整渲染 None（m318/319 先例；非 C3-1 格式错误域） | 等价/不可达或条款未钉 |
+| app.hot.service.x_run_hot_round__mutmut_93 | A | log.warning 实参 None：占位完整渲染 None（m318/319 先例；非 C3-1 格式错误域） | 等价/不可达或条款未钉 |
+| app.ingest.http.x_effective_user_agent__mutmut_11 | A | strategy 缺省回退串变体：DEFAULTS 恒回退 ua_strategy="honest"（实证）——尾字面量死域；非 custom 值同落 honest 分支恰等价（DEFAULTS 判例族） | 等价/不可达或条款未钉 |
+| app.ingest.http.x_effective_user_agent__mutmut_12 | A | strategy 缺省回退串变体：DEFAULTS 恒回退 ua_strategy="honest"（实证）——尾字面量死域；非 custom 值同落 honest 分支恰等价（DEFAULTS 判例族） | 等价/不可达或条款未钉 |
+| app.ingest.http.x_honest_user_agent__mutmut_3 | A | 条件 str(None).strip() 恒真化：仅影响条件判定、分支体内 contact_email 取原值——真值邮箱行为不变、None 邮箱被 and 左侧短路（施加实证）——恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.http.x_honest_user_agent__mutmut_5 | A | base[:-1]→[:-2]：UA 模板串拼接形态（括号内截断）——模板串形态无条款（R9 钉策略键消费非模板串措辞；自定域） | 等价/不可达或条款未钉 |
+| app.ingest.http.x_http_client__mutmut_1 | A | timeout 缺省 60→61：数值缺省先例族 | 等价/不可达或条款未钉 |
+| app.ingest.http.x_http_client__mutmut_2 | A | follow_redirects 缺省 True→False：调用点核查（hot/rss/web/enrich 全显式传 True）——签名缺省死域 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_120 | A | extra["skip_days"]=None：唯一消费方 runner 只读 skip_day 布尔（C2-3 m121 同语句位先例；payload 内部形态） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_160 | A | enrich page_url=None：normalize_url(None) 有 not-url 守卫原样返回 None（源码实证）——预采循环已过滤 url 非 http(s)，normalize(url) 恒非 None，比较恒 False 不触发护栏短路——死域恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_208 | A | fetched_at=None：ORM INSERT-NULL 应用 default=utcnow（SQLAlchemy 实证，显式 None 与缺失不可区分）——与 m217 删参同域恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_217 | A | fetched_at 实参删除：ORM default=utcnow 兜底恰等价（同源 aware UTC） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_229 | A | 首导 apply_rules published_at=None：ignore_expiry=True 下 expiry 判定整体跳过——published_at 死参（rules.py 代码路径实证）；窗口判定用 item.published_at 不受实参影响 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_235 | A | max_age_days=None 实参删除：apply_rules 缺省同 None（签名缺省恰等价；ignore_expiry=True 下死域双保险） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_254 | A | fetch_status=None：ORM INSERT-NULL 应用 default="FETCHED"（实证施加全绿）——规则通过分支原值即 FETCHED、首导 FETCHED 分支同——恰等价（ORM 列缺省兜底判据族） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_268 | A | fetch_status=None：ORM INSERT-NULL 应用 default="FETCHED"（实证施加全绿）——规则通过分支原值即 FETCHED、首导 FETCHED 分支同——恰等价（ORM 列缺省兜底判据族） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_279 | A | SanitizeTarget url=None/实参删：现有链不读 url 字段（C2-3 m122 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_282 | A | SanitizeTarget url=None/实参删：现有链不读 url 字段（C2-3 m122 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_30 | A | If-Modified-Since 键变体：条件头回传未钉（batch4 m35/m36、C2-3 m33 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_31 | A | If-Modified-Since 键变体：条件头回传未钉（batch4 m35/m36、C2-3 m33 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_32 | A | If-Modified-Since 键变体：条件头回传未钉（batch4 m35/m36、C2-3 m33 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_320 | A | log.warning 实参 None/文案 XX：占位完整渲染+文案组（m318/319 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_324 | A | log.warning 实参 None/文案 XX：占位完整渲染+文案组（m318/319 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_330 | A | get("ETAG")：httpx 大小写不敏感恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_334 | A | etag/last_modified 截断 [:501]：SQLite VARCHAR 不强制长度（m333/m340 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_341 | A | etag/last_modified 截断 [:501]：SQLite VARCHAR 不强制长度（m333/m340 先例） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_38 | A | timeout 实参删除：http_client 缺省 60 同值恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_39 | A | follow_redirects 实参删除：缺省 True 同值恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_41 | A | timeout 60→61：数值缺省先例族 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_59 | A | RETRY-AFTER in/get 大写：httpx Headers 大小写不敏感恰等价（判据族） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_66 | A | RETRY-AFTER in/get 大写：httpx Headers 大小写不敏感恰等价（判据族） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_69 | A | HTTPStatusError error 前缀 NoneType：DT-1 判别唯一前缀消费=non_xml_response startswith（runner.py:259 实证）——两形态同 False 判别恒等；诊断文案组 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_74 | A | getattr(e, "response", ) 缺省删除：HTTPStatusError.response 恒在——缺省死域 | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_89 | A | content-type get None/缺省/大写：None or "" 吸收+httpx 大小写不敏感（判据族） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_91 | A | content-type get None/缺省/大写：None or "" 吸收+httpx 大小写不敏感（判据族） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_93 | A | content-type get None/缺省/大写：None or "" 吸收+httpx 大小写不敏感（判据族） | 等价/不可达或条款未钉 |
+| app.ingest.rss.x_fetch_source__mutmut_97 | A | non_xml error 正文小写化：前缀 "non_xml_response" 保留（DT-1 判别消费在位）——正文文案组 | 等价/不可达或条款未钉 |
+| app.ingest.sanitize.xǁInjectionPatternSanitizerǁcheck__mutmut_13 | A | detail dict 删除：sanitize_reason（injection_pattern:<id>）承载统计语义、stage 由 run_sanitize 注入——detail 为诊断面（payload 内部形态判据族） | 等价/不可达或条款未钉 |
+| app.ingest.sanitize.xǁInjectionPatternSanitizerǁcheck__mutmut_17 | A | detail rule_id/rules_version 键变体：同 m13 诊断面（统计按 reason 聚合实证核查） | 等价/不可达或条款未钉 |
+| app.ingest.sanitize.xǁInjectionPatternSanitizerǁcheck__mutmut_18 | A | detail rule_id/rules_version 键变体：同 m13 诊断面（统计按 reason 聚合实证核查） | 等价/不可达或条款未钉 |
+| app.ingest.sanitize.xǁInjectionPatternSanitizerǁcheck__mutmut_21 | A | detail rule_id/rules_version 键变体：同 m13 诊断面（统计按 reason 聚合实证核查） | 等价/不可达或条款未钉 |
+| app.ingest.sanitize.xǁInjectionPatternSanitizerǁcheck__mutmut_22 | A | detail rule_id/rules_version 键变体：同 m13 诊断面（统计按 reason 聚合实证核查） | 等价/不可达或条款未钉 |
+| app.ingest.sanitize.xǁInjectionPatternSanitizerǁcheck__mutmut_8 | A | passed=None：falsy 同 False——run_sanitize if not passed 同走 REJECTED（falsy 等价判据族） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_enrich_entry_text__mutmut_14 | A | timeout 实参删除：http_client 缺省 60 同值恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_enrich_entry_text__mutmut_15 | A | follow_redirects 实参删除：缺省 True 同值恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_enrich_entry_text__mutmut_16 | A | timeout 30→31：数值缺省先例族（§4.2 任意有限值） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_enrich_entry_text__mutmut_24 | A | 富化失败 WARN 实参 None/文案 XX/url[:121]：日志文案组+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_enrich_entry_text__mutmut_25 | A | 富化失败 WARN 实参 None/文案 XX/url[:121]：日志文案组+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_enrich_entry_text__mutmut_29 | A | 富化失败 WARN 实参 None/文案 XX/url[:121]：日志文案组+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_enrich_entry_text__mutmut_31 | A | 富化失败 WARN 实参 None/文案 XX/url[:121]：日志文案组+截断界数值先例族 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_119 | A | _ingest 返回布尔翻转：返回值无生产消费方（llm/单页两处调用均丢弃；rotate m15 返回值先例）——stats 副作用在 return 前已发生 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_129 | A | _ingest 返回布尔翻转：返回值无生产消费方（llm/单页两处调用均丢弃；rotate m15 返回值先例）——stats 副作用在 return 前已发生 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_150 | A | fetched_at=None：ORM INSERT-NULL 应用 default=utcnow（同 rss m208 实证）——恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_159 | A | fetched_at 实参删除（行重组）：ORM default=utcnow 兜底恰等价（同 rss m217） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_169 | A | apply_rules(title=None)：web 通道 apply_rules 调用未传 blacklist（fetch_web_source 实参核查）——title 仅进 joined 供黑名单扫描，joined 无生产消费方（rules.py 路径实证）——死参恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_175 | A | fetch_status=None：ORM INSERT-NULL 应用 default（同 rss m254 实证）——恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_186 | A | SanitizeTarget url=None/实参删：现有链不读 url 字段（C2-3 m122 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_189 | A | SanitizeTarget url=None/实参删：现有链不读 url 字段（C2-3 m122 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_217 | A | _ingest 返回布尔翻转：返回值无生产消费方（llm/单页两处调用均丢弃；rotate m15 返回值先例）——stats 副作用在 return 前已发生 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_230 | A | stats.failed += 1→= 1：该分支为 failed 唯一写入位（初值 0）——0+1=1 恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_234 | A | web_extract error 文案 XX/小写/大写：DT-1 判别唯一消费前缀 non_xml_response 不涉此串（runner.py:259 实证）；诊断文案组 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_235 | A | web_extract error 文案 XX/小写/大写：DT-1 判别唯一消费前缀 non_xml_response 不涉此串（runner.py:259 实证）；诊断文案组 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_236 | A | web_extract error 文案 XX/小写/大写：DT-1 判别唯一消费前缀 non_xml_response 不涉此串（runner.py:259 实证）；诊断文案组 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_255 | A | apply_fp=None：falsy 同 False（C2-3 m243 None/False 同 falsy 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_269 | A | ignore_page_date 表达式恒 pub：配置键全档无条款（batch4 m17-21「键变体/配置失效同域」先例——配置消费面无条款钉） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_32 | A | If-Modified-Since 置 None/键变体：条件头回传未钉（batch4 m35/m36 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_33 | A | If-Modified-Since 置 None/键变体：条件头回传未钉（batch4 m35/m36 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_34 | A | If-Modified-Since 置 None/键变体：条件头回传未钉（batch4 m35/m36 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_40 | A | timeout 实参删除/尾逗号：缺省 60 同值恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_41 | A | timeout 实参删除/尾逗号：缺省 60 同值恰等价 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_42 | A | timeout 60→61：数值缺省先例族 | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_57 | A | HTTPError error 前缀 NoneType：DT-1 判别恒等（同 rss m69 判据） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_62 | A | ETAG get 大写：httpx 大小写不敏感恰等价（batch4 m79 先例；get 返回 None 走 content_hash 兜底路径同结果——A 轮施加必活实锤） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_71 | A | etag 截断 [:501]：截断界数值先例族（m72/m83 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_77 | A | last-modified 键 XX/大写：存储跳过未钉+httpx 不敏感（batch4 m78/m82 先例） | 等价/不可达或条款未钉 |
+| app.ingest.web.x_fetch_web_source__mutmut_81 | A | last-modified 键 XX/大写：存储跳过未钉+httpx 不敏感（batch4 m78/m82 先例） | 等价/不可达或条款未钉 |
