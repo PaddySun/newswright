@@ -2774,3 +2774,161 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.scoring.service.x_score_item__mutmut_102 | A | 追加 assistant content 值 XX 包裹：重试附加说明措辞（自定形态域，协议形态完整——文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.scoring.service.x_score_item__mutmut_112 | A | error 赋值守卫 !=OK 字面量 XX/ok：比较恒 False→error 赋值恒执行——成功行 error=last_error=None 与原等价、失败行照常（恰等价推理） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.scoring.service.x_score_item__mutmut_113 | A | error 赋值守卫 !=OK 字面量 XX/ok：比较恒 False→error 赋值恒执行——成功行 error=last_error=None 与原等价、失败行照常（恰等价推理） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+## 批次 5：外部能力族（C3-5，2026-10-08）
+
+> 分诊执行 Agent 依 `doc/C3/C3-5-任务书.md` 出具；本族种子 242 条（moark_reranker
+> 90 + search.base 20 + search.bocha 106 + search.pipeline 25 + search.registry 1）
+> 四分类 = C 130 / A 112 / B 0 / D 0。C 类 130 条由三个新测试文件杀灭
+> （test_search_provider_contract / test_moark_rerank_contract /
+> test_search_pipeline_assembly），不在本清单。核验-改判循环三轮：①C 轮 2 条
+> 意外（moark _rank_chunk m25 / bocha _search m48——httpx 对 json= 自动携带
+> Content-Type 主头，C2-4 embedding.moark m25 判例同构）沿判例改判 A；②B 轮
+> 1 条意外（moark m76——and 化破坏越界跳过全部功能，落任务书 §2「失效条目过滤」
+> C 地形）改判 C 并补恰边界条目、同守卫 m78 一并改 C；终态 C 130/130 全杀、
+> A 112/112 全活零意外。核验数据：doc/C3/C3-5-核验结果.json。
+
+### app.rerank.moark_reranker
+
+#### rerank.moark_reranker._rank_chunk（单批请求与响应解析）（A 65）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_2 | A | query_max_chars 覆写判定 and False/or True/is not None：生产构造缺省恒 None（__init__ m13 豁免判例——None=不截断 8K 直吃口径），三形态与原恒等；整数截断域=对照实验用（docstring 明示）——生产调用形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_3 | A | query_max_chars 覆写判定 and False/or True/is not None：生产构造缺省恒 None（__init__ m13 豁免判例——None=不截断 8K 直吃口径），三形态与原恒等；整数截断域=对照实验用（docstring 明示）——生产调用形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_4 | A | query_max_chars 覆写判定 and False/or True/is not None：生产构造缺省恒 None（__init__ m13 豁免判例——None=不截断 8K 直吃口径），三形态与原恒等；整数截断域=对照实验用（docstring 明示）——生产调用形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_23 | A | Authorization 键小写/大写：httpx Headers 大小写不敏感（RFC 头名不分区），线格式恒等——HTTP 头形态等价（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_24 | A | Authorization 键小写/大写：httpx Headers 大小写不敏感（RFC 头名不分区），线格式恒等——HTTP 头形态等价（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_25 | A | Content-Type 键 XX：httpx 对 json= 参数自动携带 Content-Type: application/json，显式键名变异被自动头兜底、结果头不变——恰等价（C2-4 embedding.moark m25 实测新判例同构：本批 C 轮施加杀灭面测试仍全绿实证） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_26 | A | Content-Type 键小写/大写：同 m23 域——头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_27 | A | Content-Type 键小写/大写：同 m23 域——头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_32 | A | 429 错误消息 RankError(None)/scrub(None)/[:301]：异常类型与 retryable 标记不变，消息文案/截断界无条款——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_33 | A | 429 错误消息 RankError(None)/scrub(None)/[:301]：异常类型与 retryable 标记不变，消息文案/截断界无条款——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_34 | A | 429 错误消息 RankError(None)/scrub(None)/[:301]：异常类型与 retryable 标记不变，消息文案/截断界无条款——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_35 | A | e.retryable=None/False：rank 链无重试环（rerank.base.rank 捕获 RankError 落账即raise、writer/hot 捕获回退，全链无 retryable 消费方——grep 实证）——标记无消费方等价（报错脱敏/重试纪律的消费面在 LLM/search 底座非 rank） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_36 | A | e.retryable=None/False：rank 链无重试环（rerank.base.rank 捕获 RankError 落账即raise、writer/hot 捕获回退，全链无 retryable 消费方——grep 实证）——标记无消费方等价（报错脱敏/重试纪律的消费面在 LLM/search 底座非 rank） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_39 | A | ≥400 错误消息 RankError(None)/scrub(None)/[:301]：异常类型不变——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_40 | A | ≥400 错误消息 RankError(None)/scrub(None)/[:301]：异常类型不变——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_41 | A | ≥400 错误消息 RankError(None)/scrub(None)/[:301]：异常类型不变——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_44 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_45 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_46 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_47 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_49 | A | usage_flat prompt_tokens 键 XX/大写：raw 存档键面（无行为消费方）——存档键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_50 | A | usage_flat prompt_tokens 键 XX/大写：raw 存档键面（无行为消费方）——存档键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_52 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_53 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_54 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_55 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_56 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_57 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_58 | A | usage_flat total_tokens 键 XX/大写：同 m49 域——存档键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_59 | A | usage_flat total_tokens 键 XX/大写：同 m49 域——存档键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_61 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_62 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_63 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_64 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_65 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_66 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_90 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_91 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_92 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_93 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_94 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_95 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_96 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_97 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_98 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_99 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_100 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_101 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_102 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_103 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_104 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_108 | A | band=None：同上拍板域——band 明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_109 | A | provider=None：RankedResult.provider 归因值域（writer/hot 只读 id/score/band；rank_call_log.provider 出自 self.name 非该字段）——归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_110 | A | raw=None/raw 实参移除（default_factory=dict 兜底）：RankedResult.raw 不落库（writer/hot 均不持久化 rank raw）——内存存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_116 | A | raw=None/raw 实参移除（default_factory=dict 兜底）：RankedResult.raw 不落库（writer/hot 均不持久化 rank raw）——内存存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_118 | A | round(norm,1)→None/单参/2：舍入位数无条款（×100 归一化已发生；int/float 数值在阈值比较与明细域等价——施加必活验证）——数值形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_120 | A | round(norm,1)→None/单参/2：舍入位数无条款（×100 归一化已发生；int/float 数值在阈值比较与明细域等价——施加必活验证）——数值形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_121 | A | round(norm,1)→None/单参/2：舍入位数无条款（×100 归一化已发生；int/float 数值在阈值比较与明细域等价——施加必活验证）——数值形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_122 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_123 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_124 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_125 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_126 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_127 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_128 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+### app.search.base
+
+#### search.base.HTTPSearchProvider._post_json（传输层）（A 7）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_14 | A | 429 错误消息 SearchError(None)/scrub(None)/[:301]：异常类型与 retryable 不变，消息文案/截断界无条款——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_15 | A | 429 错误消息 SearchError(None)/scrub(None)/[:301]：异常类型与 retryable 不变，消息文案/截断界无条款——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_16 | A | 429 错误消息 SearchError(None)/scrub(None)/[:301]：异常类型与 retryable 不变，消息文案/截断界无条款——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_21 | A | ≥400 错误消息 None/scrub(None)/[:301]：同 m14 域——异常文案域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_22 | A | ≥400 错误消息 None/scrub(None)/[:301]：同 m14 域——异常文案域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_23 | A | ≥400 错误消息 None/scrub(None)/[:301]：同 m14 域——异常文案域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_24 | A | 非 JSON 错误消息 None：异常类型不变（SearchError 照抛）——异常文案域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+### app.search.bocha
+
+#### search.bocha.BochaSearchProvider.__init__（构造）（A 3）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.search.bocha.xǁBochaSearchProviderǁ__init____mutmut_10 | A | 缺 Key 错误文案 XX/小写/大写：文案措辞无条款（C1-7/jev_rank m5 先例——test_bocha_missing_api_key_rejected 仅断言类型化 SearchError） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ__init____mutmut_11 | A | 缺 Key 错误文案 XX/小写/大写：文案措辞无条款（C1-7/jev_rank m5 先例——test_bocha_missing_api_key_rejected 仅断言类型化 SearchError） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ__init____mutmut_12 | A | 缺 Key 错误文案 XX/小写/大写：文案措辞无条款（C1-7/jev_rank m5 先例——test_bocha_missing_api_key_rejected 仅断言类型化 SearchError） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+#### search.bocha.BochaSearchProvider._search（请求构造与响应解析）（A 16）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_20 | A | summary 读取键 None/XX/大写：生产调用链（pipeline）恒不传 summary → 恒走缺省 True 恰等价（实参变异恒替换判例；显式 summary 覆写域=opts 契约测试隔离面） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_24 | A | summary 读取键 None/XX/大写：生产调用链（pipeline）恒不传 summary → 恒走缺省 True 恰等价（实参变异恒替换判例；显式 summary 覆写域=opts 契约测试隔离面） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_25 | A | summary 读取键 None/XX/大写：生产调用链（pipeline）恒不传 summary → 恒走缺省 True 恰等价（实参变异恒替换判例；显式 summary 覆写域=opts 契约测试隔离面） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_30 | A | freshness 缺省值 None/单参/XX/小写/大写：仅 opts 缺键域可达，freshness 服务端生效实测无效已备案（M8-M13 备案——配置传入契约只锚配置值透传非缺省值）——服务端忽略域参数缺省（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_32 | A | freshness 缺省值 None/单参/XX/小写/大写：仅 opts 缺键域可达，freshness 服务端生效实测无效已备案（M8-M13 备案——配置传入契约只锚配置值透传非缺省值）——服务端忽略域参数缺省（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_35 | A | freshness 缺省值 None/单参/XX/小写/大写：仅 opts 缺键域可达，freshness 服务端生效实测无效已备案（M8-M13 备案——配置传入契约只锚配置值透传非缺省值）——服务端忽略域参数缺省（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_36 | A | freshness 缺省值 None/单参/XX/小写/大写：仅 opts 缺键域可达，freshness 服务端生效实测无效已备案（M8-M13 备案——配置传入契约只锚配置值透传非缺省值）——服务端忽略域参数缺省（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_37 | A | freshness 缺省值 None/单参/XX/小写/大写：仅 opts 缺键域可达，freshness 服务端生效实测无效已备案（M8-M13 备案——配置传入契约只锚配置值透传非缺省值）——服务端忽略域参数缺省（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_46 | A | Authorization 键小写/大写：httpx 头名大小写不敏感线格式恒等——HTTP 头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_47 | A | Authorization 键小写/大写：httpx 头名大小写不敏感线格式恒等——HTTP 头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_48 | A | Content-Type 键 XX：http_client 出口 post 同走 json= 自动头（httpx 对 json= 自动携带 Content-Type: application/json），显式键名变异被自动头兜底——恰等价（C2-4 embedding.moark m25 实测新判例同构） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_49 | A | Content-Type 键小写/大写：同 m46 域——头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_50 | A | Content-Type 键小写/大写：同 m46 域——头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_60 | A | 响应异常 SearchError(None)/str(None)/[:301]：异常类型不变（pipeline 按类型走 error 账行）——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_61 | A | 响应异常 SearchError(None)/str(None)/[:301]：异常类型不变（pipeline 按类型走 error 账行）——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.bocha.xǁBochaSearchProviderǁ_search__mutmut_62 | A | 响应异常 SearchError(None)/str(None)/[:301]：异常类型不变（pipeline 按类型走 error 账行）——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+
+### app.search.pipeline
+
+#### search.pipeline.fetch_search_source（搜索通道装配）（A 21）
+
+| mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
+|---|---|---|---|
+| app.search.pipeline.x_fetch_search_source__mutmut_112 | A | error 账行 result_count/latency_ms None/实参移除：列 default=0 兜底（models 实证；C1-8 m55/56/63/64 同函数同列判据族）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_113 | A | error 账行 result_count/latency_ms None/实参移除：列 default=0 兜底（models 实证；C1-8 m55/56/63/64 同函数同列判据族）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_120 | A | error 账行 result_count/latency_ms None/实参移除：列 default=0 兜底（models 实证；C1-8 m55/56/63/64 同函数同列判据族）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_121 | A | error 账行 result_count/latency_ms None/实参移除：列 default=0 兜底（models 实证；C1-8 m55/56/63/64 同函数同列判据族）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_131 | A | error 截断界 [:500]→[:501]：截断界数值无条款（rank.base m69/providers m42 界值先例族）——界值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_139 | A | ok 账行 ok=None/status=None/实参移除：列 default=True/"ok" 兜底（models 实证；rerank.base m78/79 先例）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_140 | A | ok 账行 ok=None/status=None/实参移除：列 default=True/"ok" 兜底（models 实证；rerank.base m78/79 先例）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_146 | A | ok 账行 ok=None/status=None/实参移除：列 default=True/"ok" 兜底（models 实证；rerank.base m78/79 先例）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_147 | A | ok 账行 ok=None/status=None/实参移除：列 default=True/"ok" 兜底（models 实证；rerank.base m78/79 先例）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_155 | A | stats.extra["latency_ms"] 值/键变体：stats.extra 诊断镜像键面（账本行本体已由 C 测试断言；C1-8 m152-154 同函数判据族）——诊断镜像键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_156 | A | stats.extra["latency_ms"] 值/键变体：stats.extra 诊断镜像键面（账本行本体已由 C 测试断言；C1-8 m152-154 同函数判据族）——诊断镜像键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_157 | A | stats.extra["latency_ms"] 值/键变体：stats.extra 诊断镜像键面（账本行本体已由 C 测试断言；C1-8 m152-154 同函数判据族）——诊断镜像键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_182 | A | fp 三元 or True 恒真：guid 非空 ⇔ url 非空 ⇔ fingerprint 恒非空（normalize_url/url_fingerprint 实证链），else 死分支不可达——死分支等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_201 | A | fetched_at=None：Item.fetched_at 列 default=utcnow 兜底（models 实证；C3-4 m87 列缺省吸收判例族）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_216 | A | guid[:1000]/url[:2000]/title[:2000] 截断界 +1：截断界数值无条款（providers m42/scoring m51 界值先例族；SQLite 不强制 VARCHAR 界）——界值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_217 | A | guid[:1000]/url[:2000]/title[:2000] 截断界 +1：截断界数值无条款（providers m42/scoring m51 界值先例族；SQLite 不强制 VARCHAR 界）——界值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_218 | A | guid[:1000]/url[:2000]/title[:2000] 截断界 +1：截断界数值无条款（providers m42/scoring m51 界值先例族；SQLite 不强制 VARCHAR 界）——界值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_220 | A | datetime.now(None)（naive 本地时钟）：存储 tz 形态未钉（web __published_date m112「存储 tz 未钉（D16 仅钉日切口径）」先例+C1-8 m212 同函数孪生判据；CI/部署矩阵 TZ=UTC 宿主墙钟同值）——时钟形态域沿先例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_227 | A | apply_rules title 实参 None：apply_rules 内 title 仅参与黑名单 joined 串，管线调用恒不传 blacklist（恒 []）→ title 不可观察（调用点核查）——实参死参等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_241 | A | fetch_status="FETCHED"→None：Item.fetch_status 列 default="FETCHED" 兜底（models 实证；C2-3 实证显式 None 触发列 default 判例族）——列缺省承载恰等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
+| app.search.pipeline.x_fetch_search_source__mutmut_255 | A | SanitizeTarget url 实参移除：sanitize 链两阶段（注入特征/关键词拒绝）均只扫 title+content（build_chain 实证），url 无阶段消费方——死参等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
