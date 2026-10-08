@@ -666,7 +666,7 @@ def _inject_explore_items(db: Session, direction_id: int, out_items: list[dict],
     ]
     picks = explore_pick(pool, blob_to_vec(d.query_vec),
                          floor=params["floor"], percentile=params["percentile"],
-                         quota=params["quota"])
+                         quota=params["quota"], mmr_lambda=params["mmr_lambda"])
     existing_ids = {i["id"] for i in out_items}
     for p in picks:
         if p["id"] in existing_ids:

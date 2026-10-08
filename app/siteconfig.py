@@ -18,6 +18,8 @@ DEFAULTS: dict[str, object] = {
     "timezone": "Asia/Shanghai",
     # 新源首导打分窗口（天）：site_config 可调；source_config.first_ingest_days 逐源覆盖
     "first_ingest_days": 7,
+    # 探索层 MMR 多样性权重（管理员可调调试位；0.3=离方向更远主导）
+    "explore_mmr_lambda": 0.3,
     # 语义近重复判定阈值：0.92 为示例值（qwen06 标定结果），按金标分模型标定；
     # 换嵌入模型（model_version 变更）时必须重新标定
     "semantic_dedup_threshold": 0.92,
