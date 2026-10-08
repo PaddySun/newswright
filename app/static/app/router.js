@@ -6,10 +6,14 @@
  */
 import { reactive, markRaw } from "../vendor/vue.esm-browser.prod.js";
 import StreamBrowseView from "./views/stream-browse-view.js";
+import ArticleListView from "./views/article-list-view.js";
+import ArticleDetailView from "./views/article-detail-view.js";
 
-// 路由表：W2 段收录 B 流浏览；C 流文章与后台四页视图随 W3/W4 段入表
+// 路由表：W2 段 B 流浏览 + W3 段 C 流文章列表/详情；后台四页视图随 W4 段入表
 const routes = [
   { path: "/stream", component: markRaw(StreamBrowseView) },
+  { path: "/articles", component: markRaw(ArticleListView) },
+  { path: "/articles/:id", component: markRaw(ArticleDetailView) },
 ];
 
 export const route = reactive({ path: "/", params: {}, component: null });
