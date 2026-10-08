@@ -128,7 +128,10 @@ def mark_semantic_duplicates(
             if cosine_similarity(vec, other_vec) < threshold:
                 continue
             origin = db.get(Item, other_id)
-            if origin is None or _is_exempt_pair(item, origin):
+            if (origin is None or is_version_item(origin)
+                    or _is_exempt_pair(item, origin)):
+                # 版本条目不作 origin：页面快照不是独立事件源（含单方版本对，
+                # 不能只靠取最小 id 兜底——版本条目 id 更小时会误指）
                 continue
             eligible.append(other_id)
         if eligible:
