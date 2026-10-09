@@ -47,6 +47,7 @@ export default {
     adminWrite: "写作面板",
     adminSystem: "系统管理",
     logoutHint: "退出登录请清除站点会话（本地部署形态）",
+    avatarChar: "编",
   },
   stream: {
     heading: "今日内容",
