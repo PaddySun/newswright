@@ -4,6 +4,7 @@
  * 全部组件 props 驱动、零页面专属逻辑；视觉从设计稿九页提炼而非复制
  * 标记结构（设计 token 在 design-system.css / app.css）。
  */
+export { NwButton } from "./nw-button.js";
 export { NwCard } from "./nw-card.js";
 export { NwTag } from "./nw-tag.js";
 export { NwBadge } from "./nw-badge.js";

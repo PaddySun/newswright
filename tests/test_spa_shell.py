@@ -48,9 +48,12 @@ def test_design_system_css_served_with_immutable(auth_client):
     """设计系统 CSS（token 层）与 SPA 布局 CSS 经静态面可达；命中 immutable
     判定域（P2-4 三段式）。"""
     for path in ("/static/css/design-system.css", "/static/css/app.css"):
-        r = auth_client.get(path)
+        r = auth_client.get(path, params={"v": "1"})
         assert r.status_code == 200
+        # 带版本锚=immutable；裸 URL（复验证形态）另测 no-cache——适配注记：
+        # 静态缓存域按版本锚细分（ESM 内层 import 无锚，immutable 会伤正确性）
         assert "immutable" in r.headers["cache-control"]
+        assert "immutable" not in auth_client.get(path).headers["cache-control"]
 
 
 def test_vendor_assets_served(auth_client):

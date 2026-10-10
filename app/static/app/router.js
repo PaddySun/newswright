@@ -8,12 +8,21 @@ import { reactive, markRaw } from "../vendor/vue.esm-browser.prod.js";
 import StreamBrowseView from "./views/stream-browse-view.js";
 import ArticleListView from "./views/article-list-view.js";
 import ArticleDetailView from "./views/article-detail-view.js";
+import AdminDirectionsView from "./views/admin-directions-view.js";
+import AdminAuthorsView from "./views/admin-authors-view.js";
+import AdminWriteView from "./views/admin-write-view.js";
+import AdminSystemView from "./views/admin-system-view.js";
 
-// 路由表：W2 段 B 流浏览 + W3 段 C 流文章列表/详情；后台四页视图随 W4 段入表
+// 路由表：B 流浏览 + C 流文章列表/详情 + 后台四页（方向与来源/作者配置/
+// 写作面板/系统管理）——admin hash 曾漏注册致全部回退浏览视图，浏览器亲测抓出
 const routes = [
   { path: "/stream", component: markRaw(StreamBrowseView) },
   { path: "/articles", component: markRaw(ArticleListView) },
   { path: "/articles/:id", component: markRaw(ArticleDetailView) },
+  { path: "/admin/directions", component: markRaw(AdminDirectionsView) },
+  { path: "/admin/authors", component: markRaw(AdminAuthorsView) },
+  { path: "/admin/write", component: markRaw(AdminWriteView) },
+  { path: "/admin/system", component: markRaw(AdminSystemView) },
 ];
 
 export const route = reactive({ path: "/", params: {}, component: null });

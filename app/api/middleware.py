@@ -27,15 +27,26 @@ POLICY_NO_CACHE = "no-cache, must-revalidate"
 # 默认禁缓存，取保守侧；漏配 HTML 的后果只是多回源，配错方向不会伤正确性）。
 _HTML_EXACT = ("/", "/app", "/app/", "/login", "/sitemap.xml", "/robots.txt", "/feed.xml")
 _HTML_PREFIXES = ("/public",)
-# 静态资源判定域：全部经 StaticFiles 托管于 /static，引用侧带版本 query
+# 静态资源判定域：全部经 StaticFiles 托管于 /static。**按版本锚细分**——带
+# ``?v=`` 版本参数的引用（页面 HTML 生成）内容随版本失效，可 immutable 永久
+# 缓存；无版本参数的裸 URL（ESM 模块内层的相对 import 无法携带 query）必须
+# no-cache 复验证——否则代码更新后浏览器永久使用旧模块（immutable 组合内层
+# import 会伤正确性，复验证走 304 只损毫秒级性能）。
 _IMMUTABLE_PREFIX = "/static/"
+_IMMUTABLE_VERSION_PARAM = "v"
 
 
-def cache_policy_for(path: str) -> str:
-    """路径 → 缓存策略（纯函数）。判定次序：静态 → HTML 白名单 → 兜底
-    no-store——healthz 等自带契约头的端点不受影响（只补缺不覆盖）。"""
+def cache_policy_for(path: str, query: str = "") -> str:
+    """路径（与可选 query）→ 缓存策略（纯函数）。判定次序：静态（带版本锚
+    immutable / 裸 URL 复验证）→ HTML 白名单 → 兜底 no-store——healthz 等
+    自带契约头的端点不受影响（只补缺不覆盖）。"""
     if path.startswith(_IMMUTABLE_PREFIX):
-        return POLICY_IMMUTABLE
+        params = dict(
+            part.split("=", 1) for part in query.split("&") if "=" in part
+        )
+        if params.get(_IMMUTABLE_VERSION_PARAM):
+            return POLICY_IMMUTABLE
+        return POLICY_NO_CACHE
     if path in _HTML_EXACT or path.startswith(_HTML_PREFIXES):
         return POLICY_NO_CACHE
     return POLICY_NO_STORE
@@ -49,5 +60,7 @@ async def cache_header_middleware(request, call_next):
     """
     response = await call_next(request)
     if "cache-control" not in response.headers:
-        response.headers["Cache-Control"] = cache_policy_for(request.url.path)
+        response.headers["Cache-Control"] = cache_policy_for(
+            request.url.path, query=request.url.query or ""
+        )
     return response
