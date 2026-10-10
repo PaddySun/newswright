@@ -38,7 +38,11 @@ def create_app() -> FastAPI:
         bootstrap_admin(db)  # AC-01.1：users 空表时创建 admin（已有用户不覆盖）
     app.include_router(auth_router)  # /api/auth：守卫豁免路由（先注册）
     app.include_router(feedback_router)  # /feedback：匿名反馈（守卫豁免，独立 router）
+    # 守卫路由双挂载：demo 兼容形态（无前缀——既有测试与历史消费者）+ 契约形态
+    # （/api 前缀——技术书 §3 OpenAPI 契约与 SPA 消费）。装饰器内不写 /api 前缀
+    # （防 /api/api 冗余），两形态由挂载点统一产生。
     app.include_router(router)
+    app.include_router(router, prefix="/api")
     app.include_router(public_router)  # 公开页 SSR + SEO 三件 + 登录页（无守卫）
     # 静态资源（CSS/JS/vendor）：immutable 段由中间件按路径判定域赋头
     app.mount("/static", StaticFiles(directory=str(_static_dir())), name="static")
