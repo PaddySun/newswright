@@ -28,8 +28,10 @@ def test_cache_policy_pure_function_matrix():
     assert cache_policy_for("/stream/b") == POLICY_NO_STORE   # demo 兼容形态 API
     assert cache_policy_for("/items") == POLICY_NO_STORE       # demo 兼容形态 API
     assert cache_policy_for("/stats/search") == POLICY_NO_STORE
-    assert cache_policy_for("/static/css/design-system.css?v=1") == POLICY_IMMUTABLE
-    assert cache_policy_for("/static/js/public-like.js") == POLICY_IMMUTABLE
+    assert cache_policy_for("/static/css/design-system.css", query="v=1") == POLICY_IMMUTABLE
+    # ESM 内层相对 import 无法携带版本锚——裸静态 URL 必须复验证（immutable
+    # 组合内层 import 会让代码更新对浏览器永久不可见，伤正确性）
+    assert cache_policy_for("/static/app/components/index.js") == POLICY_NO_CACHE
     assert cache_policy_for("/public") == POLICY_NO_CACHE
     assert cache_policy_for("/public/article/1") == POLICY_NO_CACHE
     assert cache_policy_for("/login") == POLICY_NO_CACHE
@@ -61,10 +63,14 @@ def test_html_pages_carry_no_cache(auth_client, db_session):
 
 
 def test_static_assets_carry_immutable(auth_client):
-    """静态资源实带头：immutable（内容由版本 query 锚定，可永久缓存）。"""
-    r = auth_client.get("/static/css/design-system.css")
+    """静态资源实带头：带版本锚 immutable（页面引用形态）；裸 URL（ESM 内层
+    import 形态）no-cache 复验证——适配注记：原断言裸 URL=immutable，按版本
+    锚细分语义修正（immutable×内层 import 会伤正确性）。"""
+    r = auth_client.get("/static/css/design-system.css", params={"v": "1"})
     assert r.status_code == 200
     assert r.headers["cache-control"] == POLICY_IMMUTABLE
+    bare = auth_client.get("/static/css/design-system.css")
+    assert bare.headers["cache-control"] == POLICY_NO_CACHE
 
 
 def test_healthz_header_not_overridden(api_client, db_session):
