@@ -17,21 +17,27 @@ from app.api.middleware import (
 
 
 def test_cache_policy_pure_function_matrix():
-    """纯函数路径判定矩阵（脱离 ASGI 可单测）。"""
+    """纯函数路径判定矩阵（脱离 ASGI 可单测）。判定域为 HTML 白名单式（守卫
+    路由双挂载后 demo 兼容形态同为 API 端点，未知路径兜底 no-store 取保守侧
+    ——适配注记：兜底方向由 no-cache 反转为 no-store，语义更紧不放松）。"""
     assert cache_policy_for("/api/items") == POLICY_NO_STORE
     assert cache_policy_for("/api") == POLICY_NO_STORE
     assert cache_policy_for("/api/auth/login") == POLICY_NO_STORE
     assert cache_policy_for("/feedback") == POLICY_NO_STORE
     assert cache_policy_for("/healthz") == POLICY_NO_STORE
+    assert cache_policy_for("/stream/b") == POLICY_NO_STORE   # demo 兼容形态 API
+    assert cache_policy_for("/items") == POLICY_NO_STORE       # demo 兼容形态 API
+    assert cache_policy_for("/stats/search") == POLICY_NO_STORE
     assert cache_policy_for("/static/css/design-system.css?v=1") == POLICY_IMMUTABLE
     assert cache_policy_for("/static/js/public-like.js") == POLICY_IMMUTABLE
     assert cache_policy_for("/public") == POLICY_NO_CACHE
     assert cache_policy_for("/public/article/1") == POLICY_NO_CACHE
     assert cache_policy_for("/login") == POLICY_NO_CACHE
+    assert cache_policy_for("/app") == POLICY_NO_CACHE
     assert cache_policy_for("/sitemap.xml") == POLICY_NO_CACHE
     assert cache_policy_for("/robots.txt") == POLICY_NO_CACHE
     assert cache_policy_for("/feed.xml") == POLICY_NO_CACHE
-    assert cache_policy_for("/staticfoo") == POLICY_NO_CACHE  # 前缀非 /static/ 不误判
+    assert cache_policy_for("/staticfoo") == POLICY_NO_STORE  # 未知路径兜底禁缓存
 
 
 def test_api_responses_carry_no_store(auth_client):

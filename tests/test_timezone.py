@@ -196,23 +196,32 @@ def test_hot_to_direction_ttl_uses_site_zone_midnight(auth_client, db_session,
 def test_stats_search_day_key_uses_site_zone(auth_client, db_session):
     """搜索调用统计的日聚合键取站点时区本地日：UTC 前一日 17:00（上海当日
     01:00）的调用归上海当日，而非 UTC 日键的前一日。"""
+    from datetime import timedelta
+
     from app.models import SearchCallLog
 
     set_config(db_session, "timezone", "Asia/Shanghai")
-    db_session.add(SearchCallLog(
-        provider="bocha", query="q", ok=True, status="ok",
-        created_at=datetime(2026, 10, 6, 17, 0, tzinfo=timezone.utc),  # 上海 10-07 01:00
-    ))
-    db_session.add(SearchCallLog(
-        provider="bocha", query="q", ok=True, status="ok",
-        created_at=datetime(2026, 10, 6, 10, 0, tzinfo=timezone.utc),  # 上海 10-06 18:00（同日）
-    ))
+    # 动态构造（防固定日期滑出统计窗口的时间炸弹）：站点时区今日 01:00 的
+    # UTC 时刻（跨日仅当当前上海时刻 ≥01:00，凌晨运行时两条同日、断言同构）
+    zone = timeline.site_zone(db_session)
+    now_local = datetime.now(timezone.utc).astimezone(zone)
+    sh_today_0100_utc = now_local.replace(hour=1, minute=0, second=0, microsecond=0,
+                                          tzinfo=None).replace(tzinfo=zone)        .astimezone(timezone.utc)
+    from datetime import timedelta as _td
+    sh_yesterday_1800_utc = (now_local.replace(hour=18, minute=0, second=0, microsecond=0,
+                                               tzinfo=None) - _td(days=1)).replace(tzinfo=zone)        .astimezone(timezone.utc)
+    db_session.add(SearchCallLog(provider="bocha", query="q", ok=True, status="ok",
+                                 created_at=sh_today_0100_utc))
+    db_session.add(SearchCallLog(provider="bocha", query="q", ok=True, status="ok",
+                                 created_at=sh_yesterday_1800_utc))
     db_session.commit()
 
-    r = auth_client.get("/stats/search?days=3")
+    r = auth_client.get(f"/stats/search?days=3")
     assert r.status_code == 200
-    days = sorted(row["day"] for row in r.json() if row["provider"] == "bocha")
-    assert days == ["2026-10-06", "2026-10-07"]  # UTC 日键会误并为一日（10-06）
+    days = sorted(set(row["day"] for row in r.json() if row["provider"] == "bocha"))
+    # 站点今日 01:00（UTC 键=昨日 17:00）+ 站点昨日 18:00（UTC=昨日 10:00）：
+    # 站点日键恒两日；UTC 日键会误并为一日——日键口径的分判点
+    assert len(days) == 2
 
 
 def test_stats_search_day_key_utc_fallback_zero_offset(auth_client, db_session):
@@ -220,12 +229,14 @@ def test_stats_search_day_key_utc_fallback_zero_offset(auth_client, db_session):
     from app.models import SearchCallLog
 
     set_config(db_session, "timezone", "UTC")
+    stamp = datetime.now(timezone.utc) - timedelta(hours=1)  # 动态构造防时间炸弹
     db_session.add(SearchCallLog(
-        provider="bocha", query="q", ok=True, status="ok",
-        created_at=datetime(2026, 10, 6, 23, 30, tzinfo=timezone.utc),
+        provider="bocha", query="q", ok=True, status="ok", created_at=stamp,
     ))
     db_session.commit()
 
     r = auth_client.get("/stats/search?days=3")
     assert r.status_code == 200
-    assert [row["day"] for row in r.json() if row["provider"] == "bocha"] == ["2026-10-06"]
+    assert [row["day"] for row in r.json() if row["provider"] == "bocha"] == [
+        stamp.date().isoformat()
+    ]

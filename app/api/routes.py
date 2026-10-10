@@ -51,7 +51,6 @@ def pipeline_run(db: Session = Depends(get_session), direction_id: int | None = 
 
 
 @router.post("/pipeline/write/{author_id}", status_code=202)
-@router.post("/api/pipeline/write/{author_id}", status_code=202)
 def pipeline_write(author_id: int, db: Session = Depends(get_session)):
     """异步写作入口：建 kind=write 的 PENDING 任务并立即提交增值线程池消费，
     响应 202 + {"task_id"}（作者不存在 → 404）。
@@ -74,7 +73,6 @@ def pipeline_write(author_id: int, db: Session = Depends(get_session)):
 # ---------- 条目与打分 ----------
 
 @router.get("/items")
-@router.get("/api/items")
 def list_items(direction_id: int | None = None, status: str | None = None,
                limit: int = 100, db: Session = Depends(get_session)):
     if direction_id is not None:
@@ -125,7 +123,6 @@ def list_items(direction_id: int | None = None, status: str | None = None,
 # ---------- 文章 ----------
 
 @router.get("/articles")
-@router.get("/api/articles")
 def list_articles(author_id: int | None = None, bookmarked: bool | None = None,
                   db: Session = Depends(get_session)):
     """文章列表：author_id=按作者筛选（仅返回该作者文章）；bookmarked=按书签位
@@ -143,7 +140,7 @@ def list_articles(author_id: int | None = None, bookmarked: bool | None = None,
     ]
 
 
-@router.post("/api/articles/{article_id}/bookmark")
+@router.post("/articles/{article_id}/bookmark")
 def bookmark_article(article_id: int, db: Session = Depends(get_session)):
     """书签端点：置位文章的 bookmarked 列并返回 200。
 
@@ -225,7 +222,7 @@ def usage_summary(db: Session = Depends(get_session)):
     return out
 
 
-@router.get("/api/stats/pipeline")
+@router.get("/stats/pipeline")
 @router.get("/stats/pipeline")
 def stats_pipeline(db: Session = Depends(get_session)):
     """管线体检（会话守卫）：任务面 + 采集面聚合哨兵 + 存储面。"""
@@ -302,7 +299,7 @@ class HotToDirectionIn(BaseModel):
     keyword: str
 
 
-@router.post("/api/hot/to-direction", status_code=201)
+@router.post("/hot/to-direction", status_code=201)
 def hot_to_direction(payload: HotToDirectionIn, db: Session = Depends(get_session)):
     """热点关键词一键转临时追踪方向（人在环路轻量闭环）。
 
@@ -830,7 +827,7 @@ def _get_live_direction(db: Session, direction_id: int) -> Direction:
     return d
 
 
-@router.post("/api/directions", status_code=201)
+@router.post("/directions", status_code=201)
 def create_direction(payload: DirectionCreate, db: Session = Depends(get_session)):
     """创建方向：prompt_version 从 1 起；temp 方向按 ttl_days 算到期时刻
     （站点时区零点口径）。"""
@@ -853,7 +850,7 @@ def create_direction(payload: DirectionCreate, db: Session = Depends(get_session
     return _direction_out(d)
 
 
-@router.get("/api/directions")
+@router.get("/directions")
 def list_directions(db: Session = Depends(get_session)):
     """方向列表（不含 deleted）；读取前先做 temp TTL 到期扫描（懒翻 expired）。"""
     expire_due_temp_directions(db)
@@ -863,7 +860,7 @@ def list_directions(db: Session = Depends(get_session)):
     return [_direction_out(d) for d in rows]
 
 
-@router.put("/api/directions/{direction_id}")
+@router.put("/directions/{direction_id}")
 def update_direction(direction_id: int, payload: DirectionUpdate,
                      db: Session = Depends(get_session)):
     """编辑方向：仅修改 prompt 时升 prompt_version（历史打分行的版本号不变）；
@@ -887,7 +884,7 @@ def update_direction(direction_id: int, payload: DirectionUpdate,
     return _direction_out(d)
 
 
-@router.delete("/api/directions/{direction_id}", status_code=204)
+@router.delete("/directions/{direction_id}", status_code=204)
 def delete_direction(direction_id: int, db: Session = Depends(get_session)):
     """软删除：status=deleted + deleted_at 落库；条目与打分全保留、不再进调度。"""
     d = _get_live_direction(db, direction_id)
@@ -896,7 +893,7 @@ def delete_direction(direction_id: int, db: Session = Depends(get_session)):
     return Response(status_code=204)
 
 
-@router.post("/api/directions/{direction_id}/rescore", status_code=202)
+@router.post("/directions/{direction_id}/rescore", status_code=202)
 def rescore_direction(direction_id: int, payload: RescoreIn,
                       db: Session = Depends(get_session)):
     """方向重打分入口：建 kind=rescore 任务异步分批消化（响应 202 + 任务 id）。"""
@@ -939,7 +936,7 @@ def _smtp_configured(db: Session) -> bool:
     return bool(notifier and notifier.configured())
 
 
-@router.put("/api/settings/notify")
+@router.put("/settings/notify")
 def put_notify_settings(payload: NotifySettingsIn,
                         db: Session = Depends(get_session)):
     """保存通知设置：SMTP 参数落 site_config（凭据只写不回显）+ 触发开关；
@@ -969,7 +966,7 @@ def put_notify_settings(payload: NotifySettingsIn,
             "smtp_configured": _smtp_configured(db)}
 
 
-@router.get("/api/settings/notify")
+@router.get("/settings/notify")
 def get_notify_settings(db: Session = Depends(get_session)):
     """读取通知设置：凭据只出布尔位（smtp_configured），绝不回显任何配置值。"""
     from ..siteconfig import get_config
@@ -980,7 +977,7 @@ def get_notify_settings(db: Session = Depends(get_session)):
     }
 
 
-@router.post("/api/settings/notify/test")
+@router.post("/settings/notify/test")
 def test_notify_settings(db: Session = Depends(get_session)):
     """测试邮件：200 = 已发出；502 SMTP_UNREACHABLE = 不可达或未配置。"""
     from ..notify import get_notifier
@@ -1000,7 +997,7 @@ def test_notify_settings(db: Session = Depends(get_session)):
 
 # ---------- 站长端点：关键词降频复位 / 月度计费对账 ----------
 
-@router.post("/api/directions/{direction_id}/refresh-keyword")
+@router.post("/directions/{direction_id}/refresh-keyword")
 def refresh_keyword(direction_id: int, db: Session = Depends(get_session)):
     """搜索关键词边际降频的手工恢复入口：清零该方向全部搜索源的零收益计数
     与降频档（复位了状态的源数即返回值；无搜索源或本就无降频时 reset=0）。"""
@@ -1029,7 +1026,7 @@ def _month_range(month: str) -> tuple[datetime, datetime] | None:
     return start, datetime(int(end_year), int(end_mon), 1, tzinfo=timezone.utc)
 
 
-@router.post("/api/settings/usage/reconcile")
+@router.post("/settings/usage/reconcile")
 def usage_reconcile(payload: UsageReconcileIn, db: Session = Depends(get_session)):
     """月度计费对账：平台账单计费量 vs 账本（usage_log 当月 billing_units 汇总）。
 
@@ -1101,7 +1098,7 @@ def _source_out(s: Source) -> dict:
     }
 
 
-@router.post("/api/directions/{direction_id}/sources", status_code=201)
+@router.post("/directions/{direction_id}/sources", status_code=201)
 def create_source(direction_id: int, payload: SourceCreate,
                   db: Session = Depends(get_session)):
     """新增来源：type 限 rss|web|search；同方向重复注册同 URL → 409 SOURCE_URL_EXISTS
@@ -1131,7 +1128,7 @@ def create_source(direction_id: int, payload: SourceCreate,
     return _source_out(s)
 
 
-@router.get("/api/directions/{direction_id}/sources")
+@router.get("/directions/{direction_id}/sources")
 def list_sources(direction_id: int, db: Session = Depends(get_session)):
     """来源列表（含失效级别与退避状态字段，供采集面体检消费）。"""
     _get_live_direction(db, direction_id)
@@ -1140,7 +1137,7 @@ def list_sources(direction_id: int, db: Session = Depends(get_session)):
     return [_source_out(s) for s in rows]
 
 
-@router.put("/api/sources/{source_id}")
+@router.put("/sources/{source_id}")
 def update_source(source_id: int, payload: SourceUpdate,
                   db: Session = Depends(get_session)):
     """更新来源（启停/源级间隔）：停用后调度跳过该源，已抓数据与失效状态不动。"""
