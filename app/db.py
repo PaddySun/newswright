@@ -46,6 +46,9 @@ def _migrate_added_columns() -> None:
             "keyword_limited_until": "DATETIME",
             "keyword_rate_level": "INTEGER NOT NULL DEFAULT 0",
             "keyword_zero_rounds": "INTEGER NOT NULL DEFAULT 0",
+            # 来源自定义名称（UI2 W0a / L1 名称制）：无回填——历史行 null 即
+            # 呈现缺省（域名），语义归前端
+            "name": "VARCHAR(200)",
         },
         "author": {
             "rank_provider": "VARCHAR(30) NOT NULL DEFAULT 'none'",
@@ -65,6 +68,9 @@ def _migrate_added_columns() -> None:
             "bookmarked": "BOOLEAN NOT NULL DEFAULT 0",
             "public": "BOOLEAN NOT NULL DEFAULT 0",
             "ai_label": "BOOLEAN NOT NULL DEFAULT 1",
+            # 成文时间（UI2 W0a）：nullable；补列当次按 write_run 成文时间 MIN
+            # 回填（回填口径见下方 backfill），回填不到留 null
+            "created_at": "DATETIME",
         },
         "usage_log": {
             "cache_hit_tokens": "INTEGER NOT NULL DEFAULT 0",
@@ -101,6 +107,7 @@ def _migrate_added_columns() -> None:
     with engine.begin() as conn:
         backfill_sanitize = False
         backfill_direction_status = False
+        backfill_article_created_at = False
         for table, cols in additions.items():
             if not insp.has_table(table):
                 continue
@@ -113,6 +120,8 @@ def _migrate_added_columns() -> None:
                     backfill_sanitize = True
                 if table == "direction" and col == "status":
                     backfill_direction_status = True
+                if table == "article" and col == "created_at":
+                    backfill_article_created_at = True
                 log.info("migrate: %s.%s 已补列", table, col)
         # G1/W4：方向内指纹索引（新库由 create_all 的 __table_args__ 建立；旧库补建）
         if insp.has_table("item"):
@@ -145,6 +154,16 @@ def _migrate_added_columns() -> None:
             conn.execute(text(
                 "UPDATE item SET sanitize_status='PASSED', "
                 "sanitize_reason='demo:零信任过滤未启用(历史回填)' WHERE sanitize_status='PENDING'"
+            ))
+        # UI2 W0a：article.created_at 历史行回填 = 该文章 write_run 成文时间 MIN
+        # （多次成文取最早；SKIP/失败无 write_run 的文章回填不到留 null——呈现
+        # 按时间未知处理，归前端）。write_run 表由 create_all 先行补建，此处必在。
+        if backfill_article_created_at:
+            conn.execute(text(
+                "UPDATE article SET created_at = "
+                "(SELECT MIN(write_run.created_at) FROM write_run "
+                " WHERE write_run.article_id = article.id) "
+                "WHERE created_at IS NULL"
             ))
 
 

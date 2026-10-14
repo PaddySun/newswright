@@ -85,8 +85,12 @@ def test_explore_skips_existing_but_continues(db_session, monkeypatch):
     candidate = _scored_item(db, src_a, "candidate")
 
     def _pick_entry(item_id):
+        # UI2 W0a 起池条目携带来源三字段（source_name/domain/published_at），
+        # 注入输出原样透传——手工 pick 保持与真实池同形态
         return {"id": item_id, "title": "t", "url": "u", "relevance": 30,
-                "quality": 72, "band": "low", "reason": "r", "source_id": 1}
+                "quality": 72, "band": "low", "reason": "r", "source_id": 1,
+                "source_name": None, "domain": "example.com",
+                "published_at": None}
 
     monkeypatch.setattr("app.retrieval.explore.explore_pick",
                         lambda pool, qv, **kw: [_pick_entry(regular.id),
