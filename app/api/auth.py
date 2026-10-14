@@ -21,7 +21,7 @@ from ..auth import (
     verify_password,
 )
 from ..db import get_session
-from ..models import User
+from ..models import User, UserSession
 from .deps import LoginRateLimiter, get_client_ip
 
 router = APIRouter()
@@ -71,6 +71,35 @@ def auth_login(payload: LoginIn, request: Request, db: Session = Depends(get_ses
     resp.set_cookie(COOKIE_NAME, sess.id, httponly=COOKIE_HTTP_ONLY,
                     samesite=COOKIE_SAMESITE, path="/")
     return resp
+
+
+@router.post("/api/auth/logout")
+def auth_logout(request: Request, db: Session = Depends(get_session)):
+    """登出：删当前会话行（cookie→sessions 匹配，过期行顺带回收）+ Set-Cookie
+    清除 nw_session（Max-Age=0，与登录 cookie 同属性域）。无会话/已过期也
+    200 幂等——登出语义上「本来就没登录」不是错误。"""
+    session_id = request.cookies.get(COOKIE_NAME)
+    if session_id:
+        sess = db.get(UserSession, session_id)
+        if sess is not None:
+            db.delete(sess)
+            db.commit()
+    resp = JSONResponse({"logged_out": True})
+    resp.delete_cookie(COOKIE_NAME, httponly=COOKIE_HTTP_ONLY,
+                       samesite=COOKIE_SAMESITE, path="/")
+    return resp
+
+
+@router.get("/api/auth/me")
+def auth_me(request: Request, db: Session = Depends(get_session)):
+    """会话身份（前端会话引导）：有有效会话 → {"username","must_change_password"}；
+    无/过期 → 401 AUTH_REQUIRED。不受首登改密门禁拦截——must_change_password
+    字段正是给前端引导改密用（语义=查身份而非用功能）。"""
+    user = get_current_user(request, db)
+    if user is None:
+        raise _error(401, "AUTH_REQUIRED", "未认证")
+    return {"username": user.username,
+            "must_change_password": user.must_change_password}
 
 
 @router.post("/api/auth/password")
