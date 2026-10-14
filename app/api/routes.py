@@ -523,7 +523,6 @@ def usage_summary(db: Session = Depends(get_session)):
 
 
 @router.get("/stats/pipeline")
-@router.get("/stats/pipeline")
 def stats_pipeline(db: Session = Depends(get_session)):
     """管线体检（会话守卫）：任务面 + 采集面聚合哨兵 + 存储面。"""
     from ..observability import pipeline_stats_payload
@@ -669,6 +668,63 @@ def hot_batches(limit: int = 5, db: Session = Depends(get_session)):
             "created_at": b.created_at,
         })
     return out
+
+
+def _hot_heat(extra: dict | None) -> float | None:
+    """热度数值归一：extra 按 info → hover 键序取第一个可数值化的值（键形
+    核实=app/hot/service.py 关键词输入构造是 extra 的唯二消费点，聚合 API
+    原样透传）；数值型直取（bool 排除），纯数字字符串剥空白解析，取不到
+    返回 None（不误报 0）。"""
+    if not isinstance(extra, dict):
+        return None
+    for key in ("info", "hover"):
+        if key not in extra:
+            continue
+        value = extra[key]
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            try:
+                return float(value.strip())
+            except ValueError:
+                continue
+    return None
+
+
+@router.get("/hot/topics")
+def hot_topics(limit: int = Query(20, ge=1), db: Session = Depends(get_session)):
+    """最新一轮热榜平台榜（P9）：一轮 = hot 写入侧的一个 batch（写入时每条
+    显式填 batch_id；同轮 fetched_at 逐条独立落库互有微差，不可作同轮判据）
+    ——取 MAX(batch_id) 轮全体，平台内 rank 升序、每平台截 limit（上限 50）。
+    空表空态（fetched_at=null + platforms=[]），不用错误码。"""
+    from ..models import HotTopic
+
+    actual_limit = min(limit, 50)
+    latest_batch_id = db.query(func.max(HotTopic.batch_id)).scalar()
+    if latest_batch_id is None:
+        return {"fetched_at": None, "platforms": []}
+    rows = (db.query(HotTopic)
+            .filter(HotTopic.batch_id == latest_batch_id)
+            .order_by(HotTopic.platform, HotTopic.rank).all())
+    fetched_at = max(r.fetched_at for r in rows)
+    by_platform: dict[str, list[HotTopic]] = {}
+    for row in rows:
+        by_platform.setdefault(row.platform, []).append(row)
+    platforms = []
+    for platform in sorted(by_platform):
+        topics = sorted(by_platform[platform], key=lambda t: t.rank)[:actual_limit]
+        platforms.append({
+            "platform": platform,
+            "topics": [
+                {"rank": t.rank, "title": t.title, "url": t.url,
+                 "heat": _hot_heat(t.extra), "keyword_contrib": t.keyword_contrib,
+                 "extra": t.extra}
+                for t in topics
+            ],
+        })
+    return {"fetched_at": fetched_at, "platforms": platforms}
 
 
 # ---------- 搜索统计（能力④B） ----------
@@ -1220,6 +1276,34 @@ def update_direction(direction_id: int, payload: DirectionUpdate,
     return _direction_out(d)
 
 
+@router.get("/directions/{direction_id}")
+def get_direction(direction_id: int, db: Session = Depends(get_session)):
+    """方向单条（P7 方向表单初始值）：_direction_out 形态，与列表行同构；
+    404 两态沿既有判别（不存在/已软删）。"""
+    return _direction_out(_get_live_direction(db, direction_id))
+
+
+class DirectionStatusIn(BaseModel):
+    status: str
+
+
+@router.put("/directions/{direction_id}/status")
+def update_direction_status(direction_id: int, payload: DirectionStatusIn,
+                            db: Session = Depends(get_session)):
+    """方向启停（P7 方向表启停操作）：body {"status":"active"|"disabled"} →
+    Direction.apply_status()（enabled 镜像自动同步）。deleted/expired 等生命
+    周期态不可经此端点设置——生命周期删除走既有 DELETE /directions/{id}，
+    expired 由调度侧懒扫描管理。"""
+    d = _get_live_direction(db, direction_id)
+    if payload.status not in (Direction.STATUS_ACTIVE, Direction.STATUS_DISABLED):
+        raise HTTPException(400, {"code": "VALIDATION_ERROR",
+                                  "message": "status 必须是 active|disabled"})
+    d.apply_status(payload.status)
+    db.commit()
+    db.refresh(d)
+    return _direction_out(d)
+
+
 @router.delete("/directions/{direction_id}", status_code=204)
 def delete_direction(direction_id: int, db: Session = Depends(get_session)):
     """软删除：status=deleted + deleted_at 落库；条目与打分全保留、不再进调度。"""
@@ -1436,6 +1520,14 @@ def _source_out(s: Source) -> dict:
         "failure_level": s.failure_level, "failure_since": s.failure_since,
         "backoff_failures": s.backoff_failures, "backoff_skips": s.backoff_skips,
         "last_error": s.last_error,
+        # 采集体检状态字段（UI2 W0c / P7 来源表呈现面）：抓取时间、动态降频两通道
+        # 与三级判别计数直出；deleted 为软删除位
+        "last_fetched_at": s.last_fetched_at,
+        "rate_limited_until": s.rate_limited_until, "rate_level": s.rate_level,
+        "keyword_limited_until": s.keyword_limited_until,
+        "keyword_rate_level": s.keyword_rate_level,
+        "hard_failures": s.hard_failures, "empty_rounds": s.empty_rounds,
+        "deleted": s.deleted,
     }
 
 
@@ -1471,20 +1563,37 @@ def create_source(direction_id: int, payload: SourceCreate,
 
 @router.get("/directions/{direction_id}/sources")
 def list_sources(direction_id: int, db: Session = Depends(get_session)):
-    """来源列表（含失效级别与退避状态字段，供采集面体检消费）。"""
+    """来源列表（含失效级别与退避状态字段，供采集面体检消费）；软删除源
+    不再呈现（deleted=true 行过滤——删除后对外即不存在）。"""
     _get_live_direction(db, direction_id)
-    rows = (db.query(Source).filter_by(direction_id=direction_id)
+    rows = (db.query(Source).filter_by(direction_id=direction_id, deleted=False)
             .order_by(Source.id).all())
     return [_source_out(s) for s in rows]
+
+
+@router.delete("/sources/{source_id}")
+def delete_source(source_id: int, db: Session = Depends(get_session)):
+    """软删除来源（P7 删除操作）：deleted=true 且 enabled=false 一步到位——
+    列表隐藏 + 调度停抓（调度侧既有 enabled 过滤天然跳过，零调度改动）；
+    该源条目数据保留（条目表零改动）。已删除源对外即不存在：重复删除与
+    PUT 均落 404 SOURCE_NOT_FOUND（幂等 = 终态稳定，无累积副作用）。"""
+    s = db.get(Source, source_id)
+    if s is None or s.deleted:
+        raise HTTPException(404, {"code": "SOURCE_NOT_FOUND", "message": "来源不存在"})
+    s.deleted = True
+    s.enabled = False
+    db.commit()
+    return {"id": s.id, "deleted": True}
 
 
 @router.put("/sources/{source_id}")
 def update_source(source_id: int, payload: SourceUpdate,
                   db: Session = Depends(get_session)):
     """更新来源（启停/源级间隔/自定义名称）：停用后调度跳过该源，已抓数据与
-    失效状态不动。name 传 None（缺省）=不改名。"""
+    失效状态不动。name 传 None（缺省）=不改名。软删除源对外即不存在 →
+    404 SOURCE_NOT_FOUND。"""
     s = db.get(Source, source_id)
-    if s is None:
+    if s is None or s.deleted:
         raise HTTPException(404, {"code": "SOURCE_NOT_FOUND", "message": "来源不存在"})
     if payload.enabled is not None:
         s.enabled = payload.enabled

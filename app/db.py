@@ -49,6 +49,8 @@ def _migrate_added_columns() -> None:
             # 来源自定义名称（UI2 W0a / L1 名称制）：无回填——历史行 null 即
             # 呈现缺省（域名），语义归前端
             "name": "VARCHAR(200)",
+            # 软删除位（UI2 W0c / P7）：历史行 DEFAULT 0 即未删除，无需回填
+            "deleted": "BOOLEAN NOT NULL DEFAULT 0",
         },
         "author": {
             "rank_provider": "VARCHAR(30) NOT NULL DEFAULT 'none'",
