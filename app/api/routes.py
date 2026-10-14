@@ -1220,6 +1220,34 @@ def update_direction(direction_id: int, payload: DirectionUpdate,
     return _direction_out(d)
 
 
+@router.get("/directions/{direction_id}")
+def get_direction(direction_id: int, db: Session = Depends(get_session)):
+    """方向单条（P7 方向表单初始值）：_direction_out 形态，与列表行同构；
+    404 两态沿既有判别（不存在/已软删）。"""
+    return _direction_out(_get_live_direction(db, direction_id))
+
+
+class DirectionStatusIn(BaseModel):
+    status: str
+
+
+@router.put("/directions/{direction_id}/status")
+def update_direction_status(direction_id: int, payload: DirectionStatusIn,
+                            db: Session = Depends(get_session)):
+    """方向启停（P7 方向表启停操作）：body {"status":"active"|"disabled"} →
+    Direction.apply_status()（enabled 镜像自动同步）。deleted/expired 等生命
+    周期态不可经此端点设置——生命周期删除走既有 DELETE /directions/{id}，
+    expired 由调度侧懒扫描管理。"""
+    d = _get_live_direction(db, direction_id)
+    if payload.status not in (Direction.STATUS_ACTIVE, Direction.STATUS_DISABLED):
+        raise HTTPException(400, {"code": "VALIDATION_ERROR",
+                                  "message": "status 必须是 active|disabled"})
+    d.apply_status(payload.status)
+    db.commit()
+    db.refresh(d)
+    return _direction_out(d)
+
+
 @router.delete("/directions/{direction_id}", status_code=204)
 def delete_direction(direction_id: int, db: Session = Depends(get_session)):
     """软删除：status=deleted + deleted_at 落库；条目与打分全保留、不再进调度。"""
