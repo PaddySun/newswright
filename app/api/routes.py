@@ -523,7 +523,6 @@ def usage_summary(db: Session = Depends(get_session)):
 
 
 @router.get("/stats/pipeline")
-@router.get("/stats/pipeline")
 def stats_pipeline(db: Session = Depends(get_session)):
     """管线体检（会话守卫）：任务面 + 采集面聚合哨兵 + 存储面。"""
     from ..observability import pipeline_stats_payload
