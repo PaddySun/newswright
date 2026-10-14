@@ -1436,6 +1436,14 @@ def _source_out(s: Source) -> dict:
         "failure_level": s.failure_level, "failure_since": s.failure_since,
         "backoff_failures": s.backoff_failures, "backoff_skips": s.backoff_skips,
         "last_error": s.last_error,
+        # 采集体检状态字段（UI2 W0c / P7 来源表呈现面）：抓取时间、动态降频两通道
+        # 与三级判别计数直出；deleted 为软删除位
+        "last_fetched_at": s.last_fetched_at,
+        "rate_limited_until": s.rate_limited_until, "rate_level": s.rate_level,
+        "keyword_limited_until": s.keyword_limited_until,
+        "keyword_rate_level": s.keyword_rate_level,
+        "hard_failures": s.hard_failures, "empty_rounds": s.empty_rounds,
+        "deleted": s.deleted,
     }
 
 
@@ -1471,20 +1479,37 @@ def create_source(direction_id: int, payload: SourceCreate,
 
 @router.get("/directions/{direction_id}/sources")
 def list_sources(direction_id: int, db: Session = Depends(get_session)):
-    """来源列表（含失效级别与退避状态字段，供采集面体检消费）。"""
+    """来源列表（含失效级别与退避状态字段，供采集面体检消费）；软删除源
+    不再呈现（deleted=true 行过滤——删除后对外即不存在）。"""
     _get_live_direction(db, direction_id)
-    rows = (db.query(Source).filter_by(direction_id=direction_id)
+    rows = (db.query(Source).filter_by(direction_id=direction_id, deleted=False)
             .order_by(Source.id).all())
     return [_source_out(s) for s in rows]
+
+
+@router.delete("/sources/{source_id}")
+def delete_source(source_id: int, db: Session = Depends(get_session)):
+    """软删除来源（P7 删除操作）：deleted=true 且 enabled=false 一步到位——
+    列表隐藏 + 调度停抓（调度侧既有 enabled 过滤天然跳过，零调度改动）；
+    该源条目数据保留（条目表零改动）。已删除源对外即不存在：重复删除与
+    PUT 均落 404 SOURCE_NOT_FOUND（幂等 = 终态稳定，无累积副作用）。"""
+    s = db.get(Source, source_id)
+    if s is None or s.deleted:
+        raise HTTPException(404, {"code": "SOURCE_NOT_FOUND", "message": "来源不存在"})
+    s.deleted = True
+    s.enabled = False
+    db.commit()
+    return {"id": s.id, "deleted": True}
 
 
 @router.put("/sources/{source_id}")
 def update_source(source_id: int, payload: SourceUpdate,
                   db: Session = Depends(get_session)):
     """更新来源（启停/源级间隔/自定义名称）：停用后调度跳过该源，已抓数据与
-    失效状态不动。name 传 None（缺省）=不改名。"""
+    失效状态不动。name 传 None（缺省）=不改名。软删除源对外即不存在 →
+    404 SOURCE_NOT_FOUND。"""
     s = db.get(Source, source_id)
-    if s is None:
+    if s is None or s.deleted:
         raise HTTPException(404, {"code": "SOURCE_NOT_FOUND", "message": "来源不存在"})
     if payload.enabled is not None:
         s.enabled = payload.enabled

@@ -160,6 +160,10 @@ class Source(Base):
     # 来源自定义名称（UI2 W0a / L1 名称制）：站长起的呈现名；null = 呈现缺省用
     # 域名（呈现归前端，后端不兜底拼接）。写入面 = SourceCreate/SourceUpdate。
     name: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    # 软删除位（UI2 W0c / P7 删除操作）：删除 = deleted=true 且 enabled=false
+    # 一步到位（列表隐藏 + 调度停抓——调度侧既有 enabled 过滤天然跳过）；
+    # 该源条目数据保留（条目表零改动）
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
 
 
 class Item(Base):
