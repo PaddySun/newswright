@@ -19,6 +19,12 @@ from ..models import Author
 from .schema import AuthorConfigError, load_author_config
 
 
+class AuthorModelRequired(AuthorConfigError):
+    """新作者导入未显式绑定 model（AuthorConfigError 的可分拣子类——HTTP
+    导入端点据此区分 AUTHOR_MODEL_REQUIRED 与文档校验失败的
+    AUTHOR_JSON_INVALID；既有按基类捕获的调用方行为不变）。"""
+
+
 def render_persona_prompt(cfg: dict) -> str:
     """identity 层扁平渲染（后台可见的作者人设文本）。"""
     ident = cfg["identity"]
@@ -57,7 +63,8 @@ def import_author_json(
     author = db.query(Author).filter_by(name=name).first()
     if author is None:
         if not model:
-            raise AuthorConfigError(f"新作者 {name!r} 需要显式 model 绑定（模型不在 JSON 中）")
+            raise AuthorModelRequired(
+                f"新作者 {name!r} 需要显式 model 绑定（模型不在 JSON 中）")
         author = Author(name=name, model=model)
         db.add(author)
     if model:
