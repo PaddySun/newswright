@@ -322,6 +322,11 @@ def validate_author_json(data: object) -> list[str]:
         return [f"(root): 顶层必须为 object，实得 {type(data).__name__}"]
     _require_str(data, "id", "(root)", errors)
     _validate_template(data, "(root)", errors)
+    # 模型绑定分层纪律（模块头「模型不在 JSON 中」）：文档携带 model 键即校验失败
+    # ——运行时绑定只走导入请求参数/后台配置（UI2 W0b 起校验器落这条纪律）
+    if "model" in data:
+        _err(errors, "model",
+             "model 由后台/DB 绑定，不在 author.json 中（导入时经请求参数传入）")
     # 呈现层可选键（可增不可减原则下的可选项）：bio=公开页作者简介（str），
     # public_visible=作者是否勾选公开（bool）。缺省时 DB 列维持原值/默认值。
     bio = data.get("bio")

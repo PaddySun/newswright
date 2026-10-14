@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 
 import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -291,6 +292,180 @@ def get_article(article_id: int, request: Request,
 
 # ---------- 作者与记忆 ----------
 
+
+class AuthorUpdate(BaseModel):
+    """作者更新（P6 表单保存）：传值即改、缺省不动（沿 SourceUpdate 形态）。"""
+    name: str | None = None
+    model: str | None = None
+    enabled: bool | None = None
+    bio: str | None = None
+    public_visible: bool | None = None
+    rank_provider: str | None = None
+    include_hot_brief: bool | None = None
+
+
+class AuthorImportIn(BaseModel):
+    """author.json 导入（AC-10.1）：author_json=文档本体；model 等=运行时绑定
+    参数，透传 importer 关键字参数（文档内含 model 键由 schema 校验拒绝）。"""
+    author_json: dict
+    model: str | None = None
+    readable_directions: list | None = None
+    rank_provider: str | None = None
+
+
+def _live_direction_name(db: Session, direction_id) -> str | None:
+    """方向的呈现名：行不存在或已删（软删）返回 None——列表呈现只给活方向。"""
+    if not isinstance(direction_id, int):
+        return None
+    d = db.get(Direction, direction_id)
+    if d is None or d.status == Direction.STATUS_DELETED:
+        return None
+    return d.name
+
+
+def _author_full_out(db: Session, a: Author) -> dict:
+    """作者单条全量（P6 表单初始值）：readable_directions 富化方向名（行失效
+    name=null 但条目保留——配置完整性优先）；memory_counts 按 module 分组。"""
+    rds = []
+    for rd in (a.readable_directions or []):
+        if not isinstance(rd, dict):
+            continue
+        did = rd.get("direction_id")
+        d = db.get(Direction, did) if isinstance(did, int) else None
+        rds.append({"direction_id": did,
+                    "direction_name": d.name if d is not None else None,
+                    "threshold": rd.get("threshold")})
+    counts = dict(
+        db.query(MemoryEntry.module, func.count(MemoryEntry.id))
+        .filter(MemoryEntry.author_id == a.id)
+        .group_by(MemoryEntry.module).all())
+    return {
+        "id": a.id, "name": a.name, "model": a.model, "enabled": a.enabled,
+        "public_visible": a.public_visible, "bio": a.bio,
+        "rank_provider": a.rank_provider,
+        "rank_exclude_below": a.rank_exclude_below,
+        "include_hot_brief": a.include_hot_brief,
+        "readable_directions": rds,
+        "memory_config": a.memory_config or {},
+        "memory_counts": counts,
+        "has_author_json": bool(a.author_json),
+    }
+
+
+def _get_author_or_404(db: Session, author_id: int) -> Author:
+    a = db.get(Author, author_id)
+    if a is None:
+        raise HTTPException(404, {"code": "AUTHOR_NOT_FOUND", "message": "作者不存在"})
+    return a
+
+
+@router.get("/authors")
+def list_authors(db: Session = Depends(get_session)):
+    """作者列表（P5 写作工作台作者卡）：direction_names 只呈现活方向名
+    （已删/失效 id 跳过）；last_article_at=该作者文章成文时间最大值。"""
+    last_by_author = {
+        aid: latest for aid, latest in (
+            db.query(Article.author_id, func.max(Article.created_at))
+            .group_by(Article.author_id).all())
+    }
+    out = []
+    for a in db.query(Author).order_by(Author.id).all():
+        names = [name for name in (
+            _live_direction_name(db, rd.get("direction_id"))
+            for rd in (a.readable_directions or [])
+            if isinstance(rd, dict)) if name is not None]
+        out.append({
+            "id": a.id, "name": a.name, "model": a.model, "enabled": a.enabled,
+            "public_visible": a.public_visible, "bio": a.bio,
+            "direction_names": names,
+            "last_article_at": last_by_author.get(a.id),
+            "has_author_json": bool(a.author_json),
+        })
+    return out
+
+
+@router.get("/authors/{author_id}")
+def get_author(author_id: int, db: Session = Depends(get_session)):
+    """作者单条全量（P6 作者配置表单初始值）。"""
+    return _author_full_out(db, _get_author_or_404(db, author_id))
+
+
+@router.put("/authors/{author_id}")
+def update_author(author_id: int, payload: AuthorUpdate,
+                  db: Session = Depends(get_session)):
+    """更新作者（模型绑定与呈现位）：传值即改、缺省不动。改名撞名 → 409
+    AUTHOR_NAME_EXISTS（作者名=唯一句柄，导入语义按 name upsert）；自身
+    当前名不算撞名。"""
+    a = _get_author_or_404(db, author_id)
+    if payload.name is not None:
+        new_name = payload.name.strip()
+        if not new_name:
+            raise HTTPException(400, {"code": "VALIDATION_ERROR",
+                                      "message": "name 不能为空"})
+        if new_name != a.name and (
+                db.query(Author).filter(Author.name == new_name,
+                                        Author.id != a.id).first() is not None):
+            raise HTTPException(409, {"code": "AUTHOR_NAME_EXISTS",
+                                      "message": "作者名已存在"})
+        a.name = new_name
+    if payload.model is not None:
+        a.model = payload.model
+    if payload.enabled is not None:
+        a.enabled = payload.enabled
+    if payload.bio is not None:
+        a.bio = payload.bio
+    if payload.public_visible is not None:
+        a.public_visible = payload.public_visible
+    if payload.rank_provider is not None:
+        a.rank_provider = payload.rank_provider
+    if payload.include_hot_brief is not None:
+        a.include_hot_brief = payload.include_hot_brief
+    db.commit()
+    db.refresh(a)
+    return _author_full_out(db, a)
+
+
+@router.post("/authors/import")
+def import_author(payload: AuthorImportIn, db: Session = Depends(get_session)):
+    """导入 author.json（AC-10.1）：薄包 importer 库函数，按 identity.name
+    upsert——created 区分新建/更新（P6 同名覆盖确认弹窗的话术依据）。新作者
+    未传 model → 400 AUTHOR_MODEL_REQUIRED；文档校验失败 → 400
+    AUTHOR_JSON_INVALID（message 携带全部校验细节）。"""
+    from ..authors.importer import AuthorModelRequired, import_author_json
+    from ..authors.schema import AuthorConfigError
+
+    pre_ids = {aid for (aid,) in db.query(Author.id).all()}
+    try:
+        author = import_author_json(
+            db, payload.author_json, model=payload.model,
+            readable_directions=payload.readable_directions,
+            rank_provider=payload.rank_provider)
+    except AuthorModelRequired:
+        raise HTTPException(400, {"code": "AUTHOR_MODEL_REQUIRED",
+                                  "message": "新作者需显式 model 绑定（模型不在 JSON 中）"})
+    except AuthorConfigError as e:
+        raise HTTPException(400, {"code": "AUTHOR_JSON_INVALID",
+                                  "message": str(e)})
+    return {"id": author.id, "name": author.name, "created": author.id not in pre_ids}
+
+
+@router.get("/authors/{author_id}/export")
+def export_author(author_id: int, db: Session = Depends(get_session)):
+    """导出 author.json（AC-10.1）：薄包 exporter 库函数；无配置 → 400
+    AUTHOR_JSON_ABSENT。附件头带作者 id，导出文件可直接再导入（round-trip）。"""
+    from ..authors.importer import export_author_json
+
+    a = _get_author_or_404(db, author_id)
+    try:
+        doc = export_author_json(a)
+    except ValueError:
+        raise HTTPException(400, {"code": "AUTHOR_JSON_ABSENT",
+                                  "message": "该作者没有 author.json 配置"})
+    return JSONResponse(
+        content=doc,
+        headers={"Content-Disposition": f'attachment; filename="author-{author_id}.json"'})
+
+
 @router.get("/authors/{author_id}/memory")
 def author_memory(author_id: int, module: str | None = None, db: Session = Depends(get_session)):
     if db.get(Author, author_id) is None:
@@ -358,14 +533,26 @@ def stats_pipeline(db: Session = Depends(get_session)):
 
 @router.get("/tasks")
 def list_tasks(kind: str | None = None, limit: int = 50, db: Session = Depends(get_session)):
+    """任务流（P5 写作工作台）：行增 author_name（payload.author_id 联表，
+    取不到为 null）与 article_id（write 任务终态回填后有值——任务行直链文章，
+    其余恒 null）。既有字段与 limit 语义不动。"""
     q = db.query(PipelineTask).order_by(PipelineTask.id.desc())
     if kind:
         q = q.filter_by(kind=kind)
-    q = q.limit(min(limit, 200))
+    tasks = q.limit(min(limit, 200)).all()
+    author_ids = set()
+    for t in tasks:
+        if isinstance(t.payload, dict) and isinstance(t.payload.get("author_id"), int):
+            author_ids.add(t.payload["author_id"])
+    names = {aid: name for aid, name in (
+        db.query(Author.id, Author.name).filter(Author.id.in_(author_ids)).all()
+    )} if author_ids else {}
     return [
         {"id": t.id, "kind": t.kind, "status": t.status, "attempts": t.attempts,
-         "payload": t.payload, "last_error": t.last_error, "updated_at": t.updated_at}
-        for t in q.all()
+         "payload": t.payload, "last_error": t.last_error, "updated_at": t.updated_at,
+         "author_name": names.get((t.payload or {}).get("author_id")),
+         "article_id": (t.payload or {}).get("article_id") if t.kind == "write" else None}
+        for t in tasks
     ]
 
 
@@ -876,6 +1063,15 @@ def stats_overview(days: int = 7, db: Session = Depends(get_session)):
         d = token_by_author.setdefault(str(rid), {})
         d[cp] = {"calls": n, "prompt_tokens": int(pt or 0), "completion_tokens": int(ct or 0)}
 
+    # 并列映射：token_by_author 的 id 键 → 作者名（零破坏增列；用量行指向
+    # 已删/不存在作者时该 id 不进映射，token_by_author 原键保留）
+    author_names = {}
+    int_ids = [int(k) for k in token_by_author if str(k).lstrip("-").isdigit()]
+    if int_ids:
+        author_names = {str(aid): name for aid, name in (
+            db.query(Author.id, Author.name)
+            .filter(Author.id.in_(int_ids)).all())}
+
     fetch_failed = (db.query(func.count(PipelineTask.id))
                     .filter(PipelineTask.kind == "fetch", PipelineTask.status == "FAILED",
                             PipelineTask.updated_at >= since).scalar()) or 0
@@ -900,6 +1096,7 @@ def stats_overview(days: int = 7, db: Session = Depends(get_session)):
     return {
         "window_days": days,
         "token_by_author": token_by_author,
+        "author_names": author_names,
         "failures": {
             "fetch_failed": fetch_failed,
             "score_failed": score_failed,
