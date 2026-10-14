@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlparse
 
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from pydantic import BaseModel, Field
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -14,6 +15,7 @@ from ..db import get_session
 from ..ingest.fingerprint import canonical_url
 from ..models import (
     Article,
+    ArticleReaction,
     Author,
     Direction,
     Item,
@@ -34,7 +36,7 @@ from ..pipeline.runner import (
     score_round,
 )
 from .. import scheduler as scheduler_mod
-from .deps import require_session
+from .deps import require_session, visitor_hash
 
 # G1 会话守卫接管全部既有端点（AC-01.1/01.3）：路径不加 /api 前缀（统一属后续
 # 契约里程碑，技术书 §3 开头注记为凭）；/api/auth/* 豁免（独立 router）。
@@ -72,9 +74,22 @@ def pipeline_write(author_id: int, db: Session = Depends(get_session)):
 
 # ---------- 条目与打分 ----------
 
+
+def _url_domain(url: str | None) -> str | None:
+    """URL 的展示域名（小写、无端口、无 scheme）；解析失败为 null。
+    P1 卡片与 P4 条目详情共用的唯一域名口径。"""
+    try:
+        return urlparse(url or "").hostname
+    except ValueError:
+        return None
+
+
 @router.get("/items")
 def list_items(direction_id: int | None = None, status: str | None = None,
-               limit: int = 100, db: Session = Depends(get_session)):
+               limit: int = 100, offset: int = Query(0, ge=0),
+               db: Session = Depends(get_session)):
+    """条目列表：分页信封 {items,total,limit,offset}（limit+offset 语义，
+    total=同过滤条件计数不含分页；limit 维持默认 100、上限 500 钳制）。"""
     if direction_id is not None:
         direction = db.get(Direction, direction_id)
         if direction is None:
@@ -93,9 +108,10 @@ def list_items(direction_id: int | None = None, status: str | None = None,
         q = q.filter(Source.direction_id == direction_id)
     if status is not None:
         q = q.filter(Item.fetch_status == status)
-    q = q.limit(min(limit, 500))
+    total = q.count()
+    actual_limit = min(limit, 500)
     out = []
-    for item, sr, src in q.all():
+    for item, sr, src in q.offset(offset).limit(actual_limit).all():
         # 同一条目可能被打分多次（重试历史）——取最新一条
         if sr is not None:
             latest = (
@@ -117,27 +133,82 @@ def list_items(direction_id: int | None = None, status: str | None = None,
                 "prompt_version": sr.prompt_version, "model": sr.model, "status": sr.status,
             },
         })
-    return out
+    return {"items": out, "total": total, "limit": actual_limit, "offset": offset}
+
+
+@router.get("/items/{item_id}")
+def get_item_detail(item_id: int, db: Session = Depends(get_session)):
+    """条目详情（P4 条目落地页数据面）：全文 + 采集/过滤状态 + 各方向最新一条
+    打分（多次打分取最新，与列表同语义）。DUP/REJECTED_RULED 条目同样可查
+    （全文照存语义，docs/design-index.md「AC-18.2」）。source.name 未配置时
+    null 原样透出（呈现缺省=域名，归前端）。"""
+    item = db.get(Item, item_id)
+    if item is None:
+        raise HTTPException(404, {"code": "ITEM_NOT_FOUND",
+                                  "message": "条目不存在（可能已被清理）"})
+    source = db.get(Source, item.source_id) if item.source_id else None
+    latest_by_direction: dict[int, ScoreResult] = {}
+    for sr in (db.query(ScoreResult).filter_by(item_id=item.id)
+               .order_by(ScoreResult.id.desc()).all()):
+        latest_by_direction.setdefault(sr.direction_id, sr)
+    direction_names: dict[int, str | None] = {}
+    if latest_by_direction:
+        for d in (db.query(Direction)
+                  .filter(Direction.id.in_(latest_by_direction)).all()):
+            direction_names[d.id] = d.name
+    return {
+        "id": item.id, "title": item.title, "url": item.url,
+        "published_at": item.published_at, "fetched_at": item.fetched_at,
+        "fetch_status": item.fetch_status, "rule_reject_reason": item.rule_reject_reason,
+        "content_text": item.content_text,
+        "sanitize_status": item.sanitize_status,
+        "sanitize_reason": item.sanitize_reason, "sanitize_detail": item.sanitize_detail,
+        "source_keyword": item.source_keyword, "duplicate_of": item.duplicate_of,
+        "source": None if source is None else {
+            "id": source.id, "url": source.url,
+            "domain": _url_domain(source.url), "name": source.name,
+        },
+        "scores": [
+            {"direction_id": sr.direction_id,
+             "direction_name": direction_names.get(sr.direction_id),
+             "quality": sr.quality_score, "relevance": sr.relevance_score,
+             "band": sr.band, "passed": sr.passed, "reason": sr.reason,
+             "prompt_version": sr.prompt_version, "model": sr.model,
+             "status": sr.status, "created_at": sr.created_at}
+            for sr in latest_by_direction.values()
+        ],
+    }
 
 
 # ---------- 文章 ----------
 
+
 @router.get("/articles")
 def list_articles(author_id: int | None = None, bookmarked: bool | None = None,
+                  limit: int = 50, offset: int = Query(0, ge=0),
                   db: Session = Depends(get_session)):
     """文章列表：author_id=按作者筛选（仅返回该作者文章）；bookmarked=按书签位
-    筛选（true=已书签）。两个参数可独立使用，均为可选。"""
-    q = db.query(Article).order_by(Article.id.desc())
+    筛选（true=已书签）。两个参数可独立使用，均为可选。分页信封
+    {items,total,limit,offset}（limit+offset 语义，total=同过滤条件计数；
+    limit 默认 50、上限 200 钳制）。每条含作者名/成文时间/违规态/AI 标识。"""
+    q = (db.query(Article, Author)
+         .join(Author, Article.author_id == Author.id)
+         .order_by(Article.id.desc()))
     if author_id is not None:
         q = q.filter(Article.author_id == author_id)
     if bookmarked is not None:
         q = q.filter(Article.bookmarked.is_(bookmarked))
-    return [
+    total = q.count()
+    actual_limit = min(limit, 200)
+    items = [
         {"id": a.id, "author_id": a.author_id, "title": a.title,
          "status": a.status, "citations": len(a.citations or []),
-         "bookmarked": a.bookmarked}
-        for a in q.all()
+         "bookmarked": a.bookmarked,
+         "author_name": author.name, "created_at": a.created_at,
+         "citation_violated": a.citation_violated, "ai_label": a.ai_label}
+        for a, author in q.offset(offset).limit(actual_limit).all()
     ]
+    return {"items": items, "total": total, "limit": actual_limit, "offset": offset}
 
 
 @router.post("/articles/{article_id}/bookmark")
@@ -146,7 +217,7 @@ def bookmark_article(article_id: int, db: Session = Depends(get_session)):
 
     幂等语义天然成立：书签状态是文章行上的一个布尔位而非独立书签行/计数器，
     重复或并发调用都收敛到同一终态（bookmarked=true），不会产生第二份书签。
-    取消书签的翻转操作（unbookmark）不在此端点（后续呈现批次）。"""
+    取消书签的翻转操作（unbookmark）在 DELETE 同路径端点。"""
     a = db.get(Article, article_id)
     if a is None:
         raise HTTPException(404, {"code": "ARTICLE_NOT_FOUND", "message": "文章不存在"})
@@ -155,13 +226,67 @@ def bookmark_article(article_id: int, db: Session = Depends(get_session)):
     return {"article_id": a.id, "bookmarked": True}
 
 
-@router.get("/articles/{article_id}")
-def get_article(article_id: int, db: Session = Depends(get_session)):
+@router.delete("/articles/{article_id}/bookmark")
+def unbookmark_article(article_id: int, db: Session = Depends(get_session)):
+    """取消书签：幂等清位（与 POST 置位对偶——重复清位收敛同一终态，不报错
+    不复活）；文章不存在 → 404 coded ARTICLE_NOT_FOUND。"""
     a = db.get(Article, article_id)
     if a is None:
-        raise HTTPException(404, "article not found")
+        raise HTTPException(404, {"code": "ARTICLE_NOT_FOUND", "message": "文章不存在"})
+    a.bookmarked = False
+    db.commit()
+    return {"article_id": a.id, "bookmarked": False}
+
+
+def _enriched_citations(db: Session, article: Article) -> list[dict]:
+    """详情引用富化：k=1-based 引用序号（写入侧脚注键=正文出现顺序的连续
+    序号，citations 列表按该序落库且键本身不落库——app/authors/pipeline.py
+    脚注装配；与公开页渲染器位置序口径一致），url/item_title join item 行；
+    item 已不存在时 url/item_title 为 null 而 k/quote 保留（引用卡仍可呈现
+    序号与 AI 原句）。URL 补齐复用公开页 _citations_with_urls（禁复制分叉）。"""
+    from .public import _citations_with_urls
+
+    enriched: list[dict] = []
+    for k, citation in enumerate(_citations_with_urls(db, article), start=1):
+        item = (db.get(Item, citation["item_id"])
+                if citation["item_id"] else None)
+        enriched.append({
+            "k": k, "item_id": citation["item_id"], "quote": citation["quote"],
+            "url": citation["url"] or None,
+            "item_title": item.title if item is not None else None,
+        })
+    return enriched
+
+
+@router.get("/articles/{article_id}")
+def get_article(article_id: int, request: Request,
+                db: Session = Depends(get_session)):
+    """文章详情（P3 呈现面）：既有字段不动，增作者名/成文时间/书签位/违规态/
+    AI 标识/反应计数（ArticleReaction 按 verdict 计数，comment 不计入）与当前
+    访客反应位（visitor_hash 主备链——与 /feedback 写入端同一取法），citations
+    富化替换为结构化引用（k 序号+原文 URL/标题）。"""
+    a = db.get(Article, article_id)
+    if a is None:
+        raise HTTPException(404, {"code": "ARTICLE_NOT_FOUND", "message": "文章不存在"})
+    author = db.get(Author, a.author_id)
+    likes = (db.query(func.count(ArticleReaction.id))
+             .filter_by(article_id=a.id, verdict="like").scalar()) or 0
+    dislikes = (db.query(func.count(ArticleReaction.id))
+                .filter_by(article_id=a.id, verdict="dislike").scalar()) or 0
+    mine = (db.query(ArticleReaction)
+            .filter_by(article_id=a.id, visitor_hash=visitor_hash(request, db))
+            .first())
+    # 仅 like/dislike 占反应位；无行或 comment 形态行（现实写入路径不产）为 null
+    viewer_reacted = mine.verdict if (mine is not None
+                                      and mine.verdict in ("like", "dislike")) else None
     return {"id": a.id, "author_id": a.author_id, "title": a.title, "body": a.body,
-            "citations": a.citations, "status": a.status}
+            "status": a.status,
+            "author_name": author.name if author is not None else None,
+            "created_at": a.created_at, "bookmarked": a.bookmarked,
+            "citation_violated": a.citation_violated, "ai_label": a.ai_label,
+            "reactions": {"likes": int(likes), "dislikes": int(dislikes)},
+            "viewer_reacted": viewer_reacted,
+            "citations": _enriched_citations(db, a)}
 
 
 # ---------- 作者与记忆 ----------
@@ -532,8 +657,9 @@ def stream_b(direction_id: int | None = None, limit: int = 50,
     probability = float(os.environ.get("INTERLEAVE_PROBABILITY") or 0.2)
     min_threshold = int(os.environ.get("INTERLEAVE_MIN_THRESHOLD") or 40)
 
-    q = (db.query(Item, ScoreResult)
+    q = (db.query(Item, ScoreResult, Source)
          .join(ScoreResult, ScoreResult.item_id == Item.id)
+         .join(Source, Item.source_id == Source.id)
          .filter(ScoreResult.status == "OK", ScoreResult.passed.is_(True),
                  Item.fetch_status == "FETCHED")
          .order_by(ScoreResult.relevance_score.desc()))
@@ -542,12 +668,15 @@ def stream_b(direction_id: int | None = None, limit: int = 50,
     ranked = [
         {"id": item.id, "title": item.title, "url": item.url,
          "relevance": sr.relevance_score, "quality": sr.quality_score,
-         "band": sr.band, "reason": sr.reason, "source_id": item.source_id}
-        for item, sr in q.limit(min(limit, 300)).all()
+         "band": sr.band, "reason": sr.reason, "source_id": item.source_id,
+         "source_name": src.name, "domain": _url_domain(item.url),
+         "published_at": item.published_at}
+        for item, sr, src in q.limit(min(limit, 300)).all()
     ]
     # 低分但高于最低阈值（被记分器打低、本不进流的条目——数据全量已存）
-    lq = (db.query(Item, ScoreResult)
+    lq = (db.query(Item, ScoreResult, Source)
           .join(ScoreResult, ScoreResult.item_id == Item.id)
+          .join(Source, Item.source_id == Source.id)
           .filter(ScoreResult.status == "OK", ScoreResult.passed.is_(False),
                   ScoreResult.relevance_score >= min_threshold,
                   Item.fetch_status == "FETCHED")
@@ -557,8 +686,10 @@ def stream_b(direction_id: int | None = None, limit: int = 50,
     low_pool = [
         {"id": item.id, "title": item.title, "url": item.url,
          "relevance": sr.relevance_score, "quality": sr.quality_score,
-         "band": sr.band, "reason": sr.reason, "source_id": item.source_id}
-        for item, sr in lq.limit(50).all()
+         "band": sr.band, "reason": sr.reason, "source_id": item.source_id,
+         "source_name": src.name, "domain": _url_domain(item.url),
+         "published_at": item.published_at}
+        for item, sr, src in lq.limit(50).all()
     ]
     merged, meta = interleave_low_score(ranked, low_pool, probability=probability,
                                         enabled=enabled)
@@ -589,7 +720,8 @@ def _unscored_entries(db: Session, direction_id: int | None) -> list[dict]:
     if not recent_score_failed:
         return []
     q = (
-        db.query(Item)
+        db.query(Item, Source)
+        .join(Source, Item.source_id == Source.id)
         .filter(
             Item.fetch_status == "FETCHED",
             Item.sanitize_status == "PASSED",
@@ -604,8 +736,10 @@ def _unscored_entries(db: Session, direction_id: int | None) -> list[dict]:
             db.query(Source.id).filter_by(direction_id=direction_id, enabled=True)))
     return [
         {"id": i.id, "title": i.title, "url": i.url, "flag": "unscored",
-         "note": "暂未评分"}
-        for i in q.order_by(Item.id.desc()).limit(10).all()
+         "note": "暂未评分",
+         "source_name": src.name, "domain": _url_domain(i.url),
+         "published_at": i.published_at}
+        for i, src in q.order_by(Item.id.desc()).limit(10).all()
     ]
 
 
@@ -642,9 +776,10 @@ def _inject_explore_items(db: Session, direction_id: int, out_items: list[dict],
             or d.query_vec is None):
         return meta
     rows = (
-        db.query(Item, ScoreResult, ItemVec)
+        db.query(Item, ScoreResult, ItemVec, Source)
         .join(ScoreResult, ScoreResult.item_id == Item.id)
         .join(ItemVec, ItemVec.item_id == Item.id)
+        .join(Source, Item.source_id == Source.id)
         .filter(
             ScoreResult.direction_id == direction_id,
             ScoreResult.status == "OK",
@@ -658,8 +793,10 @@ def _inject_explore_items(db: Session, direction_id: int, out_items: list[dict],
         {"id": item.id, "title": item.title, "url": item.url,
          "relevance": sr.relevance_score, "quality": sr.quality_score,
          "band": sr.band, "reason": sr.reason, "source_id": item.source_id,
+         "source_name": src.name, "domain": _url_domain(item.url),
+         "published_at": item.published_at,
          "passed": sr.passed, "vec": blob_to_vec(iv.vec)}
-        for item, sr, iv in rows
+        for item, sr, iv, src in rows
     ]
     picks = explore_pick(pool, blob_to_vec(d.query_vec),
                          floor=params["floor"], percentile=params["percentile"],
@@ -672,6 +809,8 @@ def _inject_explore_items(db: Session, direction_id: int, out_items: list[dict],
             "id": p["id"], "title": p["title"], "url": p["url"],
             "relevance": p["relevance"], "quality": p["quality"],
             "band": p["band"], "reason": p["reason"], "source_id": p["source_id"],
+            "source_name": p["source_name"], "domain": p["domain"],
+            "published_at": p["published_at"],
             "flag": "explore",
         })
         meta["inserted"] += 1
@@ -1080,17 +1219,22 @@ class SourceCreate(BaseModel):
     type: str
     url: str
     source_config: dict | None = None
+    # 来源自定义名称（L1 名称制）：不强制必填——存量与 CLI 形态兼容；
+    # P7 新建表单的必填约束归前端
+    name: str | None = None
 
 
 class SourceUpdate(BaseModel):
     enabled: bool | None = None
     interval_minutes: int | None = Field(default=None, ge=1)
+    name: str | None = None
 
 
 def _source_out(s: Source) -> dict:
     cfg = s.source_config or {}
     return {
         "id": s.id, "direction_id": s.direction_id, "type": s.type, "url": s.url,
+        "name": s.name,
         "enabled": s.enabled, "interval_minutes": cfg.get("interval_minutes"),
         "failure_level": s.failure_level, "failure_since": s.failure_since,
         "backoff_failures": s.backoff_failures, "backoff_skips": s.backoff_skips,
@@ -1121,7 +1265,7 @@ def create_source(direction_id: int, payload: SourceCreate,
     if payload.type == "search" and d is not None and d.temp and not source_config.get("freshness"):
         source_config["freshness"] = "oneDay"
     s = Source(direction_id=direction_id, type=payload.type, url=payload.url.strip(),
-               source_config=source_config or None)
+               source_config=source_config or None, name=payload.name)
     db.add(s)
     db.commit()
     db.refresh(s)
@@ -1140,7 +1284,8 @@ def list_sources(direction_id: int, db: Session = Depends(get_session)):
 @router.put("/sources/{source_id}")
 def update_source(source_id: int, payload: SourceUpdate,
                   db: Session = Depends(get_session)):
-    """更新来源（启停/源级间隔）：停用后调度跳过该源，已抓数据与失效状态不动。"""
+    """更新来源（启停/源级间隔/自定义名称）：停用后调度跳过该源，已抓数据与
+    失效状态不动。name 传 None（缺省）=不改名。"""
     s = db.get(Source, source_id)
     if s is None:
         raise HTTPException(404, {"code": "SOURCE_NOT_FOUND", "message": "来源不存在"})
@@ -1149,6 +1294,8 @@ def update_source(source_id: int, payload: SourceUpdate,
     if payload.interval_minutes is not None:
         s.source_config = {**(s.source_config or {}),
                            "interval_minutes": payload.interval_minutes}
+    if payload.name is not None:
+        s.name = payload.name
     db.commit()
     db.refresh(s)
     return _source_out(s)

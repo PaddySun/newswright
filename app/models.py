@@ -153,9 +153,13 @@ class Source(Base):
     rate_ok_rounds: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
     # 搜索源关键词边际降频（与 429 降频同构但独立计数）：连续零新增轮计数、
     # 档位与 until；恢复 = hot_batch 关键词更新 / 站长手工刷新 / 方向提示词升版
+    # 关键词边际降频计数与恢复事件（docs/design-index.md「D20」）
     keyword_limited_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     keyword_rate_level: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
     keyword_zero_rounds: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    # 来源自定义名称（UI2 W0a / L1 名称制）：站长起的呈现名；null = 呈现缺省用
+    # 域名（呈现归前端，后端不兜底拼接）。写入面 = SourceCreate/SourceUpdate。
+    name: Mapped[str | None] = mapped_column(String(200), nullable=True)
 
 
 class Item(Base):
@@ -309,6 +313,9 @@ class Article(Base):
     bookmarked: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
     public: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
     ai_label: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("1"))
+    # 成文时间（UI2 W0a）：ORM 写入默认落当下时刻；历史行经 db 迁移按 write_run
+    # 成文时间 MIN 回填，回填不到留 null（呈现按时间未知处理，归前端）。
+    created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=utcnow)
 
 
 class ArticleReaction(Base):

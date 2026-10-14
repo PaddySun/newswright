@@ -23,7 +23,7 @@ def test_author_filter_returns_only_that_author(auth_client, two_authors_six_art
     a2, a3 = two_authors_six_articles
     r = auth_client.get("/api/articles", params={"author_id": a2.id})
     assert r.status_code == 200
-    rows = r.json()
+    rows = r.json()["items"]  # UI2 W0a 起列表为分页信封，数组在 items 键下
     assert len(rows) == 3
     assert all(row["author_id"] == a2.id for row in rows)
     assert all(row["author_id"] != a3.id for row in rows)
@@ -31,11 +31,12 @@ def test_author_filter_returns_only_that_author(auth_client, two_authors_six_art
 
 def test_author_filter_other_author_symmetric(auth_client, two_authors_six_articles):
     a2, a3 = two_authors_six_articles
-    rows = auth_client.get("/api/articles", params={"author_id": a3.id}).json()
+    rows = auth_client.get("/api/articles",
+                           params={"author_id": a3.id}).json()["items"]
     assert len(rows) == 3
     assert all(row["author_id"] == a3.id for row in rows)
 
 
 def test_no_filter_returns_all(auth_client, two_authors_six_articles):
-    rows = auth_client.get("/api/articles").json()
+    rows = auth_client.get("/api/articles").json()["items"]
     assert len(rows) == 6

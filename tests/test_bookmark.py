@@ -29,7 +29,7 @@ def test_bookmark_marks_and_filter_returns_article(auth_client, one_article):
 
     listed = auth_client.get("/api/articles", params={"bookmarked": "true"})
     assert listed.status_code == 200
-    ids = [row["id"] for row in listed.json()]
+    ids = [row["id"] for row in listed.json()["items"]]  # UI2 W0a 起列表为分页信封
     assert one_article.id in ids
 
 
@@ -40,11 +40,13 @@ def test_bookmark_repeated_call_still_single_bookmark(auth_client, one_article):
     second = auth_client.post(f"/api/articles/{one_article.id}/bookmark")
     assert first.status_code == 200 and second.status_code == 200
 
-    rows = auth_client.get("/api/articles", params={"bookmarked": "true"}).json()
+    rows = auth_client.get("/api/articles",
+                           params={"bookmarked": "true"}).json()["items"]
     hits = [row for row in rows if row["id"] == one_article.id]
     assert len(hits) == 1
     # 未书签过滤位此时为空（同一文章不得同时出现在两个过滤位）
-    unbookmarked = auth_client.get("/api/articles", params={"bookmarked": "false"}).json()
+    unbookmarked = auth_client.get(
+        "/api/articles", params={"bookmarked": "false"}).json()["items"]
     assert one_article.id not in [row["id"] for row in unbookmarked]
 
 
