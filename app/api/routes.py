@@ -671,6 +671,63 @@ def hot_batches(limit: int = 5, db: Session = Depends(get_session)):
     return out
 
 
+def _hot_heat(extra: dict | None) -> float | None:
+    """热度数值归一：extra 按 info → hover 键序取第一个可数值化的值（键形
+    核实=app/hot/service.py 关键词输入构造是 extra 的唯二消费点，聚合 API
+    原样透传）；数值型直取（bool 排除），纯数字字符串剥空白解析，取不到
+    返回 None（不误报 0）。"""
+    if not isinstance(extra, dict):
+        return None
+    for key in ("info", "hover"):
+        if key not in extra:
+            continue
+        value = extra[key]
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            try:
+                return float(value.strip())
+            except ValueError:
+                continue
+    return None
+
+
+@router.get("/hot/topics")
+def hot_topics(limit: int = Query(20, ge=1), db: Session = Depends(get_session)):
+    """最新一轮热榜平台榜（P9）：一轮 = hot 写入侧的一个 batch（写入时每条
+    显式填 batch_id；同轮 fetched_at 逐条独立落库互有微差，不可作同轮判据）
+    ——取 MAX(batch_id) 轮全体，平台内 rank 升序、每平台截 limit（上限 50）。
+    空表空态（fetched_at=null + platforms=[]），不用错误码。"""
+    from ..models import HotTopic
+
+    actual_limit = min(limit, 50)
+    latest_batch_id = db.query(func.max(HotTopic.batch_id)).scalar()
+    if latest_batch_id is None:
+        return {"fetched_at": None, "platforms": []}
+    rows = (db.query(HotTopic)
+            .filter(HotTopic.batch_id == latest_batch_id)
+            .order_by(HotTopic.platform, HotTopic.rank).all())
+    fetched_at = max(r.fetched_at for r in rows)
+    by_platform: dict[str, list[HotTopic]] = {}
+    for row in rows:
+        by_platform.setdefault(row.platform, []).append(row)
+    platforms = []
+    for platform in sorted(by_platform):
+        topics = sorted(by_platform[platform], key=lambda t: t.rank)[:actual_limit]
+        platforms.append({
+            "platform": platform,
+            "topics": [
+                {"rank": t.rank, "title": t.title, "url": t.url,
+                 "heat": _hot_heat(t.extra), "keyword_contrib": t.keyword_contrib,
+                 "extra": t.extra}
+                for t in topics
+            ],
+        })
+    return {"fetched_at": fetched_at, "platforms": platforms}
+
+
 # ---------- 搜索统计（能力④B） ----------
 
 @router.get("/stats/search")
