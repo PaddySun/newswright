@@ -19,8 +19,8 @@ from sqlalchemy.orm import Session
 from .. import config
 from ..embedding.base import EmbeddingError
 from ..models import Direction
-from ..providers.base import ProviderError
-from ..providers.deepseek import DeepSeekProvider
+from ..providers.base import LLMProvider, ProviderError
+from ..providers.resolve import resolve_chat
 from .embedder import blob_to_vec, default_provider, embed_enabled, vec_to_blob
 
 log = logging.getLogger("newswright.retrieval")
@@ -41,7 +41,7 @@ def ensure_direction_query_vec(
     db: Session,
     direction: Direction,
     *,
-    llm: DeepSeekProvider | None = None,
+    llm: LLMProvider | None = None,
     embed_provider=None,
     expected_dims: int | None = None,
 ) -> bool:
@@ -57,7 +57,9 @@ def ensure_direction_query_vec(
     ):
         return True
     try:
-        llm = llm or DeepSeekProvider(db)
+        llm = llm or resolve_chat(db)
+        if llm is None:
+            return False  # 全部候选冷却中：按未就绪处理（本轮全量慢速）
         text, _model = llm.chat(
             [
                 {"role": "system", "content": "你是检索查询构造器。"},

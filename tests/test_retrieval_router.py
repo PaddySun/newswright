@@ -149,7 +149,7 @@ def test_query_gen_failure_falls_back_all_slow(db_session, monkeypatch):
     monkeypatch.setattr(cfg, "MOARK_EMBED_MODEL", "Qwen3-Embedding-0.6B")
     # 嵌入调用打桩（LLM 查询生成失败在先，嵌入不应被触达）
     monkeypatch.setattr(
-        "app.retrieval.query.DeepSeekProvider",
+        "app.retrieval.query.resolve_chat",
         lambda db: StubLLM(fail=True),
     )
 

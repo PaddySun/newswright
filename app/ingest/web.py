@@ -102,7 +102,7 @@ def llm_extract_entries(db: Session, *, page_url: str, content_text: str,
     返回 None 表示两次均失败（调用方如实记 FAILED，不 mock）。
     """
     from ..providers.base import JSONParseError
-    from ..providers.deepseek import DeepSeekProvider
+    from ..providers.resolve import resolve_chat
 
     system = (
         "你是网页内容抽取器。从给定的页面内容中抽取最新条目（文章/发布记录/变更日志）。\n"
@@ -118,7 +118,11 @@ def llm_extract_entries(db: Session, *, page_url: str, content_text: str,
         {"role": "system", "content": system},
         {"role": "user", "content": user},
     ]
-    provider = DeepSeekProvider(db)
+    provider = resolve_chat(db)
+    if provider is None:
+        # 全部候选冷却中：与两次抽取失败同轨（返回 None，调用方如实记 FAILED）
+        log.warning("web LLM 抽取无可用提供方（候选全部冷却）page=%s", page_url)
+        return None
     data: dict | None = None
     last_err: str | None = None
     for attempt in range(2):

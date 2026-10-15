@@ -61,7 +61,7 @@ def _keyword_input(topics: list[HotTopic]) -> str:
 def _extract_keywords(db: Session, topics: list[HotTopic]) -> tuple[list[str], str, str]:
     """一次 LLM 调用提炼当日关键词与 summary。返回 (keywords, summary, model)。"""
     from ..providers.base import JSONParseError
-    from ..providers.deepseek import DeepSeekProvider
+    from ..providers.resolve import resolve_chat
 
     system = (
         "你是全网热点分析师。输入是多个平台的热榜条目列表，请提炼今日全网热点。\n"
@@ -73,7 +73,10 @@ def _extract_keywords(db: Session, topics: list[HotTopic]) -> tuple[list[str], s
         {"role": "system", "content": system},
         {"role": "user", "content": _keyword_input(topics)},
     ]
-    provider = DeepSeekProvider(db)
+    provider = resolve_chat(db)
+    if provider is None:
+        # 全部候选冷却中：按既有降级链上抛（调用方降级标题分词兜底）
+        raise JSONParseError("hot_keywords 无可用 LLM 提供方（候选全部冷却）")
     last_err: Exception | None = None
     for _attempt in range(2):  # 解析失败重试一次（同既有纪律）
         try:
@@ -132,16 +135,15 @@ def _fallback_keywords_from_titles(topics: list[HotTopic], limit: int = 15) -> l
 def _rank_filter_topics(db: Session, topics: list[HotTopic]) -> tuple[list[HotTopic], dict]:
     """热点候选筛选（能力⑤应用点 2，默认关）：按「与站长方向的相关性」排序过滤后
     再喂关键词提炼。榜单数据全量已落库，过滤只影响提炼输入。"""
-    import os
-
     from ..rerank import registry as rank_registry
     from ..rerank.base import RankCandidate, RankError
     from ..models import Direction
 
-    if os.environ.get("HOT_RANK_FILTER", "").lower() not in ("1", "true", "yes", "on"):
+    # 三 env 经 config 归口读取（调用时求值，读取时机与原 os.environ.get 一致）
+    if not config.hot_rank_filter_enabled():
         return topics, {"hot_rank_filter": False}
-    provider_name = os.environ.get("HOT_RANK_PROVIDER") or "bocha_jev"
-    min_score = int(os.environ.get("HOT_RANK_MIN_SCORE") or 40)
+    provider_name = config.hot_rank_provider_name()
+    min_score = config.hot_rank_min_score()
     direction = db.query(Direction).filter_by(enabled=True).first()
     if direction is None:
         return topics, {"hot_rank_filter": True, "error": "无启用方向"}

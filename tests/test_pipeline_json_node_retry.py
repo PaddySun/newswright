@@ -72,12 +72,12 @@ def _run(db, cfg, scripts):
     author = import_author_json(db, cfg, model="test-model",
                                 readable_directions=[{"direction_id": 1, "threshold": 60}])
     fake = FakeProvider(scripts)
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     return run, fake
 
 

@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 from .. import config
 from ..models import Direction, Item, ScoreResult
 from ..providers.base import JSONParseError, ProviderError, parse_strict_json
-from ..providers.deepseek import DeepSeekProvider
+from ..providers.resolve import resolve_chat
 
 PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
 
@@ -86,7 +86,7 @@ def _validate(data: dict) -> dict:
 
 def score_item(db: Session, item: Item, direction: Direction, *, model: str | None = None) -> ScoreResult:
     """对单条内容打分一次（内含一次解析失败重试），返回落库的 ScoreResult。"""
-    provider = DeepSeekProvider(db)
+    provider = resolve_chat(db)
     template = load_prompt_template(direction.prompt_version)
     # 定界声明为 system 首行（第三方内容定界双防线的声明半边，快照可核）
     system = DOCUMENT_DELIMITER_DECLARATION + "\n\n" + template.replace(
@@ -106,6 +106,10 @@ def score_item(db: Session, item: Item, direction: Direction, *, model: str | No
     )
     last_error: str | None = None
     for attempt in range(2):  # 解析失败重试一次（同条内容）
+        if provider is None:
+            # 全部候选冷却中：走既有降级链（FAILED 终态，内容不丢）
+            last_error = "无可用 LLM 提供方（候选全部冷却）"
+            break
         try:
             data, actual_model = provider.chat_json(
                 messages,

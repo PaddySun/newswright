@@ -116,7 +116,7 @@ def _patch_provider(monkeypatch, provider):
         provider.ctor_args = (db,)  # 记录真实构造实参（ctor 会话归因断言面）
         return provider
 
-    monkeypatch.setattr(svc, "DeepSeekProvider", factory)
+    monkeypatch.setattr(svc, "resolve_chat", factory)
     return provider
 
 

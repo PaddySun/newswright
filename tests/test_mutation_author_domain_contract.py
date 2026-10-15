@@ -452,7 +452,7 @@ def test_single_dispatch_to_pipeline(env, monkeypatch):
     author = import_author_json(db, _cfg(db), model="test-model",
                                 readable_directions=[{"direction_id": 1, "threshold": 60}])
     fake = FakeProviderPipeline({"w_draft": [_make_draft(i1.id)]})
-    monkeypatch.setattr(pl, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(pl, "resolve_chat", lambda _db: fake)
     overrides = {"gates": {"length": {"min": 20, "max": 5000, "unit": "chars"}}}
     run = wr.run_write(db, author, triggered_by="test", model="explicit-m", batch_id=7,
                        reading_window=(0, 1), route_overrides=overrides)
@@ -493,7 +493,7 @@ def test_single_route_e2e_row_shape(env, monkeypatch):
         assert db_arg is db            # provider 构造实参=请求级会话（ADR-8 计量落账）
         return fake
 
-    monkeypatch.setattr(wr, "DeepSeekProvider", recorder)
+    monkeypatch.setattr(wr, "resolve_chat", recorder)
     run = wr.run_write(db, author, triggered_by="test")
     assert run.status == "OK" and run.decision == "WRITE"
     assert run.triggered_by == "test"
@@ -526,7 +526,7 @@ def test_single_route_e2e_row_shape(env, monkeypatch):
         "title": "无正文文章",
         "citations": [{"item_id": i1.id, "quote": "事实一：模型写出了完整的文章。"}]},
         "reason": "r", "thinking": "t"}])
-    monkeypatch.setattr(wr, "DeepSeekProvider", lambda _db: fake2)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: fake2)
     author3 = _old_author(db, name="无正文作者",
                           readable_directions=[{"direction_id": 1, "threshold": 60}])
     run2 = wr.run_write(db, author3, triggered_by="test")
@@ -539,14 +539,14 @@ def test_single_route_skip_card(env, monkeypatch):
     db, i1, i2 = env
     author = _old_author(db, readable_directions=[{"direction_id": 1, "threshold": 60}])
     fake = FakeOld(db, [{"decision": "skip", "reason": "素材不足R", "thinking": "思考内容T"}])
-    monkeypatch.setattr(wr, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: fake)
     run = wr.run_write(db, author, triggered_by="test")
     assert run.decision == "SKIP" and run.status == "OK"
     assert run.skip_reason == "素材不足R" and run.skip_thinking == "思考内容T"
     assert run.article_id is None
     # 缺 reason/thinking 键 → 空串（不是垃圾占位）
     fake2 = FakeOld(db, [{"decision": "skip"}])
-    monkeypatch.setattr(wr, "DeepSeekProvider", lambda _db: fake2)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: fake2)
     run2 = wr.run_write(db, author, triggered_by="test")
     assert run2.decision == "SKIP"
     assert run2.skip_reason == "" and run2.skip_thinking == ""
@@ -568,7 +568,7 @@ def test_single_route_retry_semantics(env, monkeypatch):
             raise JSONParseError("输出不是合法 JSON")
 
     fake = BadJSONOld(db, [])
-    monkeypatch.setattr(wr, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: fake)
     run = wr.run_write(db, author, triggered_by="test")
     assert len(fake.calls) == 2                            # 恰重试一次
     assert run.status == "FAILED" and run.article_id is None
@@ -585,7 +585,7 @@ def test_single_route_provider_error_failed(env, monkeypatch):
             raise ProviderError("HTTP 500: provider down")
 
     fake = BoomOld(db, [])
-    monkeypatch.setattr(wr, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: fake)
     with pytest.raises(ProviderError):
         wr.run_write(db, author, triggered_by="test")
     db.expire_all()
@@ -598,7 +598,7 @@ def test_single_route_citation_guard(env, monkeypatch):
     db, i1, i2 = env
     author = _old_author(db, readable_directions=[{"direction_id": 1, "threshold": 60}])
     fake = FakeOld(db, [_write_payload(i1.id, 99999), _write_payload(i1.id, i2.id)])
-    monkeypatch.setattr(wr, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: fake)
     run = wr.run_write(db, author, triggered_by="test")
     assert len(fake.calls) == 2                            # 首稿被拒 → 恰重试一次
     assert run.status == "OK"                              # 重试后合规放行

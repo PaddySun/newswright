@@ -61,7 +61,7 @@ def test_scoring_system_first_line_is_declaration(db_session, scored_env, monkey
             captured["messages"] = messages
             return {"quality": 80, "relevance": 80, "band": "high", "reason": "r"}, "m"
 
-    monkeypatch.setattr(svc, "DeepSeekProvider", FakeProvider)
+    monkeypatch.setattr(svc, "resolve_chat", lambda _db: FakeProvider(_db))
     svc.score_item(db_session, item, d)
     system, user = captured["messages"][0]["content"], captured["messages"][1]["content"]
     assert system.splitlines()[0] == _DECLARATION
@@ -88,7 +88,7 @@ def test_writing_snapshot_contains_delimiter_and_declaration(db_session, scored_
 
     import app.authors.writer as wr
 
-    monkeypatch.setattr(wr, "DeepSeekProvider", FakeProvider)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: FakeProvider(_db))
     run = run_write(db_session, author, triggered_by="test")
     user = captured["messages"][1]["content"]
     assert user.splitlines()[0] == _DECLARATION

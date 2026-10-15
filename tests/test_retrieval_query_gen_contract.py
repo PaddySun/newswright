@@ -68,10 +68,10 @@ def _mk_direction(db):
 
 
 def test_query_gen_constructs_llm_with_db_and_generates(db_session, monkeypatch):
-    """未注入 llm：经 DeepSeekProvider(db) 构造并完成生成（生产调用形态）。"""
+    """未注入 llm：经选源层 resolve_chat(db) 取默认候选并完成生成（生产调用形态）。"""
     d = _mk_direction(db_session)
     RecordingLLM.instances = []
-    monkeypatch.setattr("app.retrieval.query.DeepSeekProvider", RecordingLLM)
+    monkeypatch.setattr("app.retrieval.query.resolve_chat", lambda db: RecordingLLM(db))
     assert ensure_direction_query_vec(db_session, d, embed_provider=RecordingEmbed(db_session)) is True
     assert RecordingLLM.instances[0].ctor_args == (db_session,)
 

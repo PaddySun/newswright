@@ -14,6 +14,7 @@ from app.providers.base import (
     parse_strict_json,
 )
 from app.providers.deepseek import DeepSeekProvider
+from app.transport.errors import SemanticError
 
 
 @pytest.fixture()
@@ -96,7 +97,7 @@ def test_compat_valve_strips_thinking_on_400(provider):
 
     def flaky(payload, **kw):
         if "thinking" in payload:
-            raise ProviderError("HTTP 400: unknown field 'thinking'")
+            raise SemanticError("HTTP 400: unknown field 'thinking'", status=400)
         return _body()
 
     provider._call = flaky  # type: ignore[method-assign]

@@ -35,7 +35,17 @@ def available() -> list[str]:
 register("bocha_reranker", BochaRerankerProvider)
 register("bocha_jev", BochaJevRankProvider)
 register("moark_jev", MoarkJevRankProvider)
-register("llm", LLMRankProvider)
+# llm 排序的 chat 提供方在注册处组装（排序实现零具体厂商依赖）：
+# 组合实现漏点修复——此前 llm_rank 内部直接实例化具体厂商类
+
+
+def _llm_rank_factory(db: Session) -> LLMRankProvider:
+    from ..providers.resolve import resolve_chat
+
+    return LLMRankProvider(db, chat_provider=resolve_chat(db))
+
+
+register("llm", _llm_rank_factory)
 # moark reranker（EV6 实测四配置，注册不接线；默认模型走 config.MOARK_RERANK_MODEL）
 register("moark_reranker", MoarkRerankerProvider)
 
