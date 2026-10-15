@@ -408,6 +408,23 @@ class HotBatch(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+class HotCallLog(Base):
+    """热榜聚合 API 调用日志（热榜治理批，与 search_call_log 同纪律）：每平台
+    每次取用一行终态，成败都记——中间重试尝试不逐行。provider=聚合器 origin；
+    status=HTTP 码或错误类别；这是新增持久账，不替代任务 payload 的 platform_stats。
+    设计依据见 docs/design-index.md「HR-3」。"""
+    __tablename__ = "hot_call_log"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    provider: Mapped[str] = mapped_column(String(200))  # 聚合器 origin（scheme://netloc）
+    platform: Mapped[str] = mapped_column(String(50))
+    ok: Mapped[bool] = mapped_column(Boolean, default=True)
+    status: Mapped[str] = mapped_column(String(20), default="ok")  # HTTP 码或错误类别
+    latency_ms: Mapped[int] = mapped_column(Integer, default=0)  # 整次取用耗时（含重试）
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)  # 脱敏后错误摘要
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 class SearchCallLog(Base):
     """搜索 API 调用日志（能力④，与 usage_log 同级纪律）：每次调用一行，成败/被拦截都记。"""
     __tablename__ = "search_call_log"

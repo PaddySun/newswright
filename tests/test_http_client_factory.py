@@ -74,8 +74,9 @@ def test_factory_without_proxy_env_no_proxy_kwarg(monkeypatch):
 
 
 def test_four_channels_use_unified_factory(db_session, monkeypatch):
-    """四调用点统一：rss/web/search/hot 的出网客户端都经工厂构造（同一桩类
-    在四个通道各自触发时都被命中）。"""
+    """四调用点统一：rss/web/hot 的出网客户端都经统一出网面构造——rss/web 走
+    采集工厂 http_client，hot 走传输脊 GET 面的池化客户端（热榜治理批迁移；
+    同一桩类在三个通道各自触发时都被命中，UA 策略全通道生效）。"""
     constructed = []
 
     class TaggedClient:
@@ -88,9 +89,12 @@ def test_four_channels_use_unified_factory(db_session, monkeypatch):
         def __exit__(self, *a):
             return False
 
-        def get(self, url, headers=None):
+        def get(self, url, headers=None, params=None):
+            # rss/web 通道：304 短路即完成一次构造；hot 通道（聚合 URL 带 id=）：
+            # 200 + 空 items——传输脊语义下 304 是可重试错误，不能作热榜短路形态
+            status = 200 if "id=" in str(url) else 304
             return type("R", (), {
-                "status_code": 304, "headers": {}, "content": b"",
+                "status_code": status, "headers": {}, "content": b"",
                 "raise_for_status": lambda self: None,
                 "json": lambda self: {"status": "success", "items": []},
             })()
@@ -117,7 +121,7 @@ def test_four_channels_use_unified_factory(db_session, monkeypatch):
     db_session.commit()
     fetch_web_source(db_session, web_src)
 
-    # hot 通道（fetch_platform 真路径，304 响应不产生条目即返回）
+    # hot 通道（fetch_platform 真路径，经传输脊 GET 面池化构造，空 items 即返回）
     from app.hot.service import fetch_platform
 
     fetch_platform("weibo", db=db_session)

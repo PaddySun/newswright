@@ -221,3 +221,12 @@
 | LR-5 | OpenAI 族厂商差异声明：chat_completions_path 路径前缀为厂商差异（deepseek 官方 base 无 /v1、moark OpenAI 网关族带 /v1，误用即触发 TR-2 的 302 漏网形态）；moark chat 默认模型=冒烟锁定的跨厂商同族主备对（deepseek-v4.1-flash ↔ 官方 deepseek-flash），moark 间歇长挂起定位为备源 |
 | LR-6 | 计量回显与兼容阀状态判定：usage_log 的 model 以响应回显实况优先落账（请求名兜底——计量空洞治理）；网关兼容阀按错误对象结构化 status 判定（400/422 参数拒绝域）+ gateway_compat_params 声明式剥离重发一次（deepseek=thinking 族参数、moark=response_format），全库禁文案嗅探形态 |
 | LR-7 | Jev 决策协议客户端构造期校验：questions 逐项 instructions 必填（服务端对缺失回 400「请求参数缺少必填字段 'questions.q.instructions'」实测锚），缺字段在构造期抛 JevAdapterError 防线前移（消息含字段名与 qid），不烧注定失败的网络调用 |
+
+## HR-x（热榜域治理条款，外部服务治理批（C4-3）增补；条文正文随外层技术书 C4 变更点落册）
+
+| 编号 | 一句话摘要 |
+|---|---|
+| HR-1 | 热榜出网治理（传输脊 GET 面）：hot 取用一律经 transport.get_json——与 post_json 共用客户端池与非 2xx 分类单点（分类不分叉），重定向策略进池键；GET 面 follow_redirects 缺省 True 维持采集通道既有行为，「非 2xx 入错」以重定向终态为准（正常链落 2xx 不入错，裸 302/超限链入可重试 TransportError）；httpx 原生异常（读超时/连接失败/TooManyRedirects）在 GET 面包装为可重试 TransportError 上抛（裸异常零逃逸；POST 面不越权改动，LLM/搜索域重试模板自捕） |
+| HR-2 | 热榜域重试与聚合器候选位：域级重试 ≤2 次（仅可重试 TransportError；退避经 retry_delay_ms 协商——429 Retry-After 优先/随机化指数退避自动继承）；ContractError（items 非列表/响应非 JSON 等契约违例，替换治理前裸 ValueError）与 SemanticError 不重试；HOT_AGG_CANDIDATES 有序候选按序取用（缺省 [HOT_AGG_BASE] 单元素=行为零变），首候选失败（重试耗尽或不可重试）→ 次候选，全败抛 RetryExhausted 终态（reason 两态+跨候选尝试链），轮次层单平台失败不中断整轮照旧 |
+| HR-3 | HotCallLog 成败都记账：每平台每次取用一行终态（中间重试尝试不逐行——search_call_log 同语义），成败各一行；provider=聚合器 origin、platform、status=HTTP 码或错误类别（RetryExhausted 取末次尝试链状态码，无码则类别名）、latency_ms=整次取用耗时（含重试）、error 脱敏（sk- 形态不落账）；这是新增持久账，不替代任务 payload 的 platform_stats（形态零变） |
+| HR-4 | 429 识别与降频边界：429 经传输脊错误对象的结构化 retry_after 字段识别、退避协商自动采纳服务端值，落账 status 如实记录 HTTP 码；动态降频（rate_limited_until 档位语义）记遗留不在治理批做——低流量单聚合器先如实观测 |

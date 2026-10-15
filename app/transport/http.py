@@ -1,18 +1,26 @@
-"""传输脊柱 HTTP 出口：统一出网客户端 + 非 2xx 全入错的 JSON POST 单点。
+"""传输脊柱 HTTP 出口：统一出网客户端 + 非 2xx 全入错的 JSON 出网单点。
 
-定位（外部服务治理批后）：全部 JSON API 出网经 post_json——2xx 返回原始
-httpx.Response（调用方自行 .json()，与迁移前 HTTPProvider._post_json 契约
-一致）；非 2xx 一律入错：3xx=可重试 TransportError 带 location（网关 302
-营销站漏网成「成功空响应」的实锤教训）、429/5xx=可重试 TransportError
-（挂载 Retry-After 双形态解析值）、其余 >=400=不可重试 SemanticError（官方
-错误码语义映射）。重试节奏协商统一走 retry_delay_ms。
+定位（外部服务治理批后）：全部 JSON API 出网经 post_json/get_json——
+2xx 返回原始 httpx.Response（调用方自行 .json()，与迁移前
+HTTPProvider._post_json 契约一致）；非 2xx 一律入错：3xx=可重试
+TransportError 带 location（网关 302 营销站漏网成「成功空响应」的实锤教训）、
+429/5xx=可重试 TransportError（挂载 Retry-After 双形态解析值）、其余 >=400=
+不可重试 SemanticError（官方错误码语义映射）。重试节奏协商统一走
+retry_delay_ms。
+
+两面差异（热榜治理批增 GET 面）：post_json 是 JSON API POST 单点（池客户端
+不跟随重定向——3xx 须在本层拦截入错）；get_json 是采集型 JSON GET 单点
+（热榜聚合 API 等，follow_redirects 缺省 True 维持采集通道既有行为——「非
+2xx 入错」以重定向终态为准），并把 httpx 原生异常包装为可重试 TransportError
+后上抛（裸 httpx 异常零逃逸；POST 面保持既有形态，LLM/搜索域重试模板自行
+捕获）。非 2xx 分类是两面共用的单一实现。重定向策略进池键。
 
 采集 GET 通道的客户端工厂（http_client，UA 策略 + proxy 参数位）自
 ingest/http.py 原位上提至此；进程级客户端池按（源、鉴权头、超时、生效 UA、
-客户端工厂）复用连接——UA 值入键：site_config 运行时切 UA 即新客户端，
-否则管理员切 UA 不生效。工厂身份入键：同进程内工厂替换（测试桩）不串台，
-生产路径工厂恒为 httpx.Client 同对象、池稳定复用。
-设计依据见 docs/design-index.md「TR-1」「TR-2」「TR-3」「TR-4」「TR-6」「R9」。
+客户端工厂、重定向策略）复用连接——UA 值入键：site_config 运行时切 UA 即
+新客户端，否则管理员切 UA 不生效。工厂身份入键：同进程内工厂替换（测试桩）
+不串台，生产路径工厂恒为 httpx.Client 同对象、池稳定复用。
+设计依据见 docs/design-index.md「TR-1」「TR-2」「TR-3」「TR-4」「TR-6」「HR-1」「R9」。
 """
 from __future__ import annotations
 
@@ -133,8 +141,11 @@ def reset_client_pool() -> None:
 
 
 def _origin_of(url: str) -> str:
+    """URL 源（scheme://netloc）。httpx.URL.netloc 是 bytes——解码为 str
+    （GET 面把它用作落账的聚合器 origin 字段，不能带 b'' 形态）。"""
     u = httpx.URL(url)
-    return f"{u.scheme}://{u.netloc}"
+    netloc = u.netloc.decode("ascii") if isinstance(u.netloc, bytes) else str(u.netloc)
+    return f"{u.scheme}://{netloc}"
 
 
 def _pooled_client(
@@ -143,6 +154,7 @@ def _pooled_client(
     *,
     timeout: float,
     user_agent: str,
+    follow_redirects: bool,
 ) -> httpx.Client:
     """池取用（双检锁线程安全）：同键复用、命中失败重建、构造参数=池键成分。"""
     client = _client_pool.get(key)
@@ -155,9 +167,10 @@ def _pooled_client(
         client_kwargs: dict[str, Any] = {
             "timeout": timeout,
             "headers": {"User-Agent": user_agent},
-            # JSON API 出网不跟随重定向：3xx 必须在本层拦截入错（网关 302
-            # 营销站漏网=「成功空响应」形态的实锤教训）。
-            "follow_redirects": False,
+            # 重定向策略是池键成分：JSON API POST 面不跟随（3xx 必须在本层
+            # 拦截入错——网关 302 营销站漏网=「成功空响应」形态的实锤教训）；
+            # 采集 GET 面跟随（既有行为零变，「非 2xx 入错」以终态为准）。
+            "follow_redirects": follow_redirects,
         }
         proxy = proxy_url()
         if proxy:
@@ -165,6 +178,28 @@ def _pooled_client(
         client = factory(**client_kwargs)
         _client_pool[key] = client
         return client
+
+
+def _non_2xx_error(resp: httpx.Response) -> Exception:
+    """非 2xx 响应 → 分类错误对象（POST/GET 两面共用的分类单点，不分叉）。"""
+    retry_after = parse_retry_after(
+        resp.headers.get("retry-after"), now=datetime.now(timezone.utc))
+    if 300 <= resp.status_code < 400:
+        location = resp.headers.get("location")
+        head = (f"HTTP {resp.status_code}: 重定向至 {location}" if location
+                else f"HTTP {resp.status_code}: 重定向（无 location 头）")
+        return TransportError(
+            f"{head}: {_scrub(resp.text[:300])}",
+            retryable=True, status=resp.status_code,
+            location=location, retry_after=retry_after,
+        )
+    if resp.status_code in RETRYABLE_STATUS:
+        return TransportError(
+            f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}",
+            retryable=True, status=resp.status_code, retry_after=retry_after,
+        )
+    msg = FATAL_STATUS_MESSAGE.get(resp.status_code, f"HTTP {resp.status_code}")
+    return SemanticError(f"{msg}: {_scrub(resp.text[:300])}", status=resp.status_code)
 
 
 def post_json(
@@ -176,7 +211,7 @@ def post_json(
     db: Session | None = None,
     client_factory: Callable[..., httpx.Client] | None = None,
 ) -> httpx.Response:
-    """单次 JSON POST（全部 JSON API 出网的统一单点；重试循环在能力域）。
+    """单次 JSON POST（全部 JSON API POST 出网的统一单点；重试循环在能力域）。
 
     2xx 返回原始 httpx.Response（调用方自行 .json()）；非 2xx 抛
     transport.errors 分类异常（3xx/429/5xx=可重试 TransportError，
@@ -185,31 +220,51 @@ def post_json(
     user_agent = effective_user_agent(db)
     factory = client_factory if client_factory is not None else httpx.Client
     key = (_origin_of(url), headers.get("Authorization", ""), float(timeout),
-           user_agent, factory)
-    client = _pooled_client(key, factory, timeout=timeout, user_agent=user_agent)
+           user_agent, factory, False)
+    client = _pooled_client(key, factory, timeout=timeout, user_agent=user_agent,
+                            follow_redirects=False)
     resp = client.post(url, json=payload, headers=headers)
 
     if 200 <= resp.status_code < 300:
         return resp
+    raise _non_2xx_error(resp)
 
-    retry_after = parse_retry_after(
-        resp.headers.get("retry-after"), now=datetime.now(timezone.utc))
-    if 300 <= resp.status_code < 400:
-        location = resp.headers.get("location")
-        head = (f"HTTP {resp.status_code}: 重定向至 {location}" if location
-                else f"HTTP {resp.status_code}: 重定向（无 location 头）")
-        raise TransportError(
-            f"{head}: {_scrub(resp.text[:300])}",
-            retryable=True, status=resp.status_code,
-            location=location, retry_after=retry_after,
-        )
-    if resp.status_code in RETRYABLE_STATUS:
-        raise TransportError(
-            f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}",
-            retryable=True, status=resp.status_code, retry_after=retry_after,
-        )
-    msg = FATAL_STATUS_MESSAGE.get(resp.status_code, f"HTTP {resp.status_code}")
-    raise SemanticError(f"{msg}: {_scrub(resp.text[:300])}", status=resp.status_code)
+
+def get_json(
+    url: str,
+    *,
+    params: dict[str, Any] | None = None,
+    headers: dict[str, str] | None = None,
+    timeout: float,
+    db: Session | None = None,
+    follow_redirects: bool = True,
+    client_factory: Callable[..., httpx.Client] | None = None,
+) -> httpx.Response:
+    """单次 JSON GET（采集型 JSON GET 出网的统一单点：热榜聚合 API 等）。
+
+    与 post_json 共用客户端池（重定向策略进池键）与非 2xx 分类单点；
+    面差异两点：
+    - follow_redirects 缺省 True（采集通道既有行为零变）——「非 2xx 入错」
+      以重定向终态为准：正常重定向链落到 2xx 不入错，终态 3xx（裸 302 无
+      location 等）按可重试 TransportError 入错，超限链以 TooManyRedirects
+      包装入错；
+    - httpx 原生异常（读超时/连接失败等 HTTPError 族）在本面包装为可重试
+      TransportError 再上抛——裸 httpx 异常零逃逸（POST 面不越权改动：
+      LLM/搜索域重试模板自行捕获 httpx 异常）。
+    """
+    user_agent = effective_user_agent(db)
+    factory = client_factory if client_factory is not None else httpx.Client
+    key = (_origin_of(url), (headers or {}).get("Authorization", ""), float(timeout),
+           user_agent, factory, follow_redirects)
+    client = _pooled_client(key, factory, timeout=timeout, user_agent=user_agent,
+                            follow_redirects=follow_redirects)
+    try:
+        resp = client.get(url, params=params, headers=headers)
+    except httpx.HTTPError as e:
+        raise TransportError(f"{type(e).__name__}: {e}", retryable=True) from e
+    if 200 <= resp.status_code < 300:
+        return resp
+    raise _non_2xx_error(resp)
 
 
 # ---------- 重试节奏协商 ----------

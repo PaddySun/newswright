@@ -5,6 +5,8 @@
 - 聚合 API 不可达（采集失败）→ 任务 FAILED 如实呈现，不 mock 数据冒充成功。
 - 关键词提炼失败 ≠ 采集失败：榜单数据已落库，任务照常 DONE，payload.stats 带
   degraded=["hot_keywords"]，关键词降级为标题分词兜底（kw_fallback=title_tokens）。
+- 出网治理（热榜治理批）：取用一律经传输脊 GET 面 get_json（裸 httpx 异常零
+  逃逸）；域级重试 ≤2 次、聚合器候选位按序取用；每次取用一行终态落 HotCallLog。
 """
 from __future__ import annotations
 
@@ -18,8 +20,17 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from .. import config
-from ..models import HotBatch, HotTopic, PipelineTask
+from ..models import HotBatch, HotCallLog, HotTopic, PipelineTask
 from ..pipeline.runner import _claim, _finish, _new_task, round_busy
+from ..transport.errors import (
+    REASON_ERROR_NOT_RETRYABLE,
+    REASON_MAX_RETRIES_EXCEEDED,
+    ContractError,
+    RetryExhausted,
+    SemanticError,
+    TransportError,
+)
+from ..transport.http import _origin_of, _scrub, get_json, retry_delay_ms
 
 log = logging.getLogger("newswright.hot")
 
@@ -28,18 +39,91 @@ def fetch_platform(platform: str, *, timeout: float = 20.0,
     """拉取一个平台热榜（newsnow 类聚合 API），返回原始条目列表（全量，不裁剪）。
 
     响应形如 {"status": "success|cache", "items": [{"title", "url", "extra"}]}。
-    客户端经统一出网工厂构造（UA 策略 + proxy 参数位）。
+    出网经传输脊 GET 面（客户端池复用 + 非 2xx 全入错 + httpx 原生异常包装
+    分类上抛）；域级重试 ≤2 次——仅可重试 TransportError 重试（退避经
+    retry_delay_ms 协商：429 的服务端 Retry-After 优先采纳、否则随机化指数
+    退避；429 动态降频不在本批，status 如实落账），ContractError（items 非
+    列表/响应非 JSON 等契约违例）与 SemanticError 不重试。聚合器候选位
+    HOT_AGG_CANDIDATES 按序取用：首候选失败 → 次候选，全败抛 RetryExhausted
+    终态（轮次层单平台容错照旧兜住）。每次取用一行终态落 HotCallLog（成败
+    都记；db 为 None 时跳过落账——生产调用恒传会话）。
+    设计依据见 docs/design-index.md「HR-1」「HR-2」「HR-3」「HR-4」。
     """
-    from ..ingest.http import http_client
+    bases = list(config.HOT_AGG_CANDIDATES) or [config.HOT_AGG_BASE]
+    t0 = time.monotonic()
+    errors: list[Exception] = []
+    last_err: Exception | None = None
+    for base in bases:
+        attempt = 0
+        while attempt <= 2:  # 首次 + 重试 ≤2（照搜索域纪律）
+            try:
+                resp = get_json(f"{base}?id={platform}&latest",
+                                timeout=timeout, db=db, follow_redirects=True)
+                try:
+                    body = resp.json()
+                except ValueError as e:
+                    raise ContractError(
+                        f"聚合 API 响应非 JSON platform={platform}: {e}") from e
+                items = body.get("items") if isinstance(body, dict) else None
+                if not isinstance(items, list):
+                    raise ContractError(
+                        f"聚合 API 响应异常 platform={platform}: {str(body)[:200]}")
+                kept = [it for it in items
+                        if isinstance(it, dict) and (it.get("title") or "").strip()]
+                _write_call_log(db, base=base, platform=platform, ok=True,
+                                status=str(resp.status_code), t0=t0, error=None)
+                return kept
+            except TransportError as e:
+                last_err = e
+                errors.append(e)
+                if not e.retryable:
+                    break  # 不可重试：本候选放弃，换下一候选
+                attempt += 1
+                if attempt <= 2:
+                    delay = retry_delay_ms(e, attempt - 1) / 1000.0
+                    log.warning("热榜 %s 传输失败（%.1fs 后重试）: %s",
+                                platform, delay, e)
+                    time.sleep(delay)
+            except (ContractError, SemanticError) as e:
+                last_err = e
+                errors.append(e)
+                break  # 契约/语义错误不重试：换下一候选
+        # 该候选放弃（重试耗尽或不可重试）→ 下一候选
+    last_retryable = isinstance(last_err, TransportError) and last_err.retryable
+    terminal = RetryExhausted(
+        f"聚合 API 全候选失败 platform={platform}: {last_err}",
+        reason=(REASON_MAX_RETRIES_EXCEEDED if last_retryable
+                else REASON_ERROR_NOT_RETRYABLE),
+        errors=errors,
+    )
+    _write_call_log(db, base=bases[-1], platform=platform, ok=False,
+                    status=_ledger_status(terminal), t0=t0,
+                    error=f"{type(terminal).__name__}: {terminal}")
+    raise terminal
 
-    with http_client(db, timeout=timeout, follow_redirects=True) as client:
-        r = client.get(f"{config.HOT_AGG_BASE}?id={platform}&latest")
-    r.raise_for_status()
-    body = r.json()
-    items = body.get("items")
-    if not isinstance(items, list):
-        raise ValueError(f"聚合 API 响应异常 platform={platform}: {str(body)[:200]}")
-    return [it for it in items if isinstance(it, dict) and (it.get("title") or "").strip()]
+
+def _ledger_status(err: BaseException) -> str:
+    """终态错误 → 落账状态：HTTP 码优先（RetryExhausted 取末次尝试链的状态码，
+    无码则错误类别名）。"""
+    status = getattr(err, "status", None)
+    if status is None and isinstance(err, RetryExhausted) and err.errors:
+        status = getattr(err.errors[-1], "status", None)
+    return str(status) if status is not None else type(err).__name__
+
+
+def _write_call_log(db, *, base: str, platform: str, ok: bool,
+                    status: str, t0: float, error: str | None) -> None:
+    """HotCallLog 一行终态账（成败都记，中间尝试不逐行）：provider=聚合器
+    origin、latency=整次取用耗时、error 入账前脱敏。"""
+    if db is None:
+        return
+    db.add(HotCallLog(
+        provider=_origin_of(base), platform=platform, ok=ok,
+        status=str(status)[:20],
+        latency_ms=int((time.monotonic() - t0) * 1000),
+        error=_scrub(error)[:500] if error else None,
+    ))
+    db.commit()
 
 
 def _keyword_input(topics: list[HotTopic]) -> str:
