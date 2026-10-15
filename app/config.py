@@ -190,6 +190,13 @@ HOT_PLATFORMS = [
 ]
 # 进入关键词提炼的每平台条目上限（全量落库不受限；输入控制成本）
 HOT_KEYWORD_INPUT_PER_PLATFORM = int(_get("HOT_KEYWORD_INPUT_PER_PLATFORM") or 20)
+# 聚合器候选位（热榜治理批）：逗号分隔有序列表，取用按序——首候选失败
+# （重试耗尽或不可重试）→ 下一候选，全败该平台记失败不中断整轮；缺省回落
+# [HOT_AGG_BASE] 单元素 = 行为零变（候选结构就位，备聚合源实际接入属后续批）。
+# 设计依据见 docs/design-index.md「HR-2」。
+HOT_AGG_CANDIDATES = [
+    s.strip() for s in (_get("HOT_AGG_CANDIDATES") or "").split(",") if s.strip()
+] or [HOT_AGG_BASE]
 
 # 搜索额度（能力④B）：每分钟/每日上限，按 provider 配置。
 # 默认值依据（Demo 假设档，可被环境变量覆盖）：博查按官方定价页充值档位保守估计
