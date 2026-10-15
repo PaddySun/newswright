@@ -29,6 +29,9 @@ from sqlalchemy.orm import Session
 
 from .. import config
 from ..models import RankCallLog
+from ..transport.errors import ProviderError
+from ..transport.http import post_json
+from ..transport.metering import record_usage
 
 log = logging.getLogger("newswright.rerank")
 
@@ -68,7 +71,7 @@ class RankProvider(ABC):
     def rank(self, criteria: str, candidates: list[RankCandidate],
              *, criteria_key: str | None = None) -> list[RankedResult]:
         """额度闸 → 截断 → 分批调用 → rank_call_log 落库。"""
-        from ..search.quota import check_and_count
+        from ..transport.quota import check_and_count
 
         allowed, state = check_and_count(self.db, self.name)
         if not allowed:
@@ -125,11 +128,10 @@ class HTTPRankProvider(RankProvider):
 
     def _rank_chunk(self, criteria: str, candidates: list[RankCandidate]) -> list[RankedResult]:
         """Jev 批量排序：state=方向 criteria（共享上下文），每个候选一个 score 型问题。
-        分数换算：索引 0-2 → 0-100；band：≥75 high / ≥25 mid / <25 low。"""
-        import httpx
+        分数换算：索引 0-2 → 0-100；band：≥75 high / ≥25 mid / <25 low。
 
-        from ..providers.base import RETRYABLE_STATUS, _scrub
-
+        出网经传输脊 post_json（非 2xx 全入错、客户端池复用）；typed 错误
+        转译 RankError（retryable/retry_after 结构化字段随转译保留）。"""
         questions: dict[str, dict[str, Any]] = {}
         for i, c in enumerate(candidates):
             questions[f"c{i}"] = {
@@ -140,26 +142,27 @@ class HTTPRankProvider(RankProvider):
                 "criteria": ["无关", "间接相关", "直接相关"],
             }
         payload = {"model": self._model, "state": {"direction": criteria}, "questions": questions}
-        with httpx.Client(timeout=60.0) as client:
-            resp = client.post(
+        try:
+            resp = post_json(
                 f"{self._base_url}/v1/systemone",
-                json=payload,
+                payload,
                 headers={"Authorization": f"Bearer {self._api_key}",
                          "Content-Type": "application/json"},
+                timeout=60.0,
+                db=self.db,
             )
-        if resp.status_code in RETRYABLE_STATUS:
-            e = RankError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
-            e.retryable = True  # type: ignore[attr-defined]
-            raise e
-        if resp.status_code >= 400:
-            raise RankError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
+        except ProviderError as e:
+            re_ = RankError(str(e))
+            re_.retryable = getattr(e, "retryable", False)  # type: ignore[attr-defined]
+            ra = getattr(e, "retry_after", None)
+            if ra is not None:
+                re_.retry_after = ra  # type: ignore[attr-defined]
+            raise re_ from e
         body = resp.json()
         answers = body.get("answers") or {}
         usage = body.get("usage") or {}
 
         # Jev/LLM 排序走 provider 层计量纪律：usage_log 归因（call_point=rank_jev）
-        from ..providers.base import record_usage
-
         record_usage(
             self.db, provider=self.name, model=body.get("model", self._model),
             call_point="rank_jev",

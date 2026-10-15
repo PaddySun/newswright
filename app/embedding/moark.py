@@ -7,16 +7,20 @@
 - 模型名大小写不敏感、支持命名空间（bge-m3 = BAAI/bge-m3）。
 - 响应 data[].embedding 按 index 排序还原输入顺序；usage.prompt_tokens 计量。
 - 鉴权同其他 moark 端点：Bearer MOARK_API_KEY。
+
+出网经传输脊 app/transport/（非 2xx 全入错、客户端池复用——此前自建
+httpx.Client 与状态码判定的复制份已收敛）。设计依据见
+docs/design-index.md「TR-1」「TR-2」。
 """
 from __future__ import annotations
 
 from typing import Any
 
-import httpx
 from sqlalchemy.orm import Session
 
 from .. import config
-from ..providers.base import RETRYABLE_STATUS, ProviderError, _scrub
+from ..transport.errors import ProviderError
+from ..transport.http import post_json
 from .base import EmbeddingError, EmbeddingProvider
 
 
@@ -52,19 +56,22 @@ class MoarkEmbeddingProvider(EmbeddingProvider):
         }
         if dimensions is not None:
             payload["dimensions"] = dimensions
-        with httpx.Client(timeout=self._timeout) as client:
-            resp = client.post(
+        try:
+            resp = post_json(
                 f"{self._base_url}/v1/embeddings",
-                json=payload,
+                payload,
                 headers={"Authorization": f"Bearer {self._api_key}",
                          "Content-Type": "application/json"},
+                timeout=self._timeout,
+                db=self.db,
             )
-        if resp.status_code in RETRYABLE_STATUS:
-            e = EmbeddingError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
-            e.retryable = True  # type: ignore[attr-defined]
-            raise e
-        if resp.status_code >= 400:
-            raise EmbeddingError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
+        except ProviderError as e:
+            ee = EmbeddingError(str(e))
+            ee.retryable = getattr(e, "retryable", False)  # type: ignore[attr-defined]
+            ra = getattr(e, "retry_after", None)
+            if ra is not None:
+                ee.retry_after = ra  # type: ignore[attr-defined]
+            raise ee from e
         body = resp.json()
         data = body.get("data")
         if not isinstance(data, list) or not data:

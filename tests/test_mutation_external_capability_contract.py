@@ -159,8 +159,9 @@ def test_embed_default_call_point_is_embed(db_session):
 
 
 def test_embed_retry_cap_exponential_backoff_and_error_records(db_session, monkeypatch):
-    """ADR-8：重试≤2（共 3 次尝试）、指数退避 sleep [1,2]、耗尽 raise 含失败事实、
-    失败也逐次落账（item_count/latency/ok=False/error 事实）。guard 防变异体死循环。"""
+    """ADR-8 + 传输脊退避协商：重试≤2（共 3 次尝试）、随机化指数退避
+    （2**attempt × uniform(0.5,1.5) 秒——断言区间与指数形态，不断言具体
+    随机序列）、耗尽 raise 含失败事实、失败也逐次落账。guard 防变异体死循环。"""
     p = RecordingEmbedProvider(db_session, meter={"prompt_tokens": 3, "billing_units": 1},
                                failures=[("retryable", "HTTP 503: boom")] * 10,
                                guard=5)
@@ -171,7 +172,9 @@ def test_embed_retry_cap_exponential_backoff_and_error_records(db_session, monke
     with pytest.raises(EmbeddingError, match="boom"):
         p.embed(["a", "b"], batch_size=2, ref_type="item", ref_id=9)
     assert len(p.calls) == 3  # 重试≤2 → 共 3 次尝试
-    assert sleeps == [1, 2]  # 指数退避
+    assert len(sleeps) == 2  # 两次退避
+    assert 0.5 <= sleeps[0] <= 1.5  # attempt 0：2^0 × [0.5,1.5] 秒
+    assert 1.0 <= sleeps[1] <= 3.0  # attempt 1：指数翻倍形态
 
     rows = db_session.query(UsageLog).filter_by(provider="fake_embed").all()
     assert len(rows) == 3

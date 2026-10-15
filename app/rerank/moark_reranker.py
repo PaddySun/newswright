@@ -17,6 +17,8 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from .. import config
+from ..transport.errors import ProviderError
+from ..transport.http import post_json
 from .base import RankCandidate, RankError, RankProvider, RankedResult
 
 
@@ -52,10 +54,8 @@ class MoarkRerankerProvider(RankProvider):
         return out
 
     def _rank_chunk(self, criteria: str, candidates: list[RankCandidate]) -> list[RankedResult]:
-        import httpx
-
-        from ..providers.base import RETRYABLE_STATUS, _scrub
-
+        # 出网经传输脊 post_json（非 2xx 全入错、客户端池复用）；typed 错误
+        # 转译 RankError（retryable/retry_after 结构化字段随转译保留）。
         query = criteria if self._query_max_chars is None else criteria[: self._query_max_chars]
         payload = {
             "model": self._model,
@@ -63,19 +63,22 @@ class MoarkRerankerProvider(RankProvider):
             "documents": [c.text for c in candidates],
             "top_n": len(candidates),
         }
-        with httpx.Client(timeout=self._timeout) as client:
-            resp = client.post(
+        try:
+            resp = post_json(
                 f"{self._base_url}/v1/rerank",
-                json=payload,
+                payload,
                 headers={"Authorization": f"Bearer {self._api_key}",
                          "Content-Type": "application/json"},
+                timeout=self._timeout,
+                db=self.db,
             )
-        if resp.status_code in RETRYABLE_STATUS:
-            e = RankError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
-            e.retryable = True  # type: ignore[attr-defined]
-            raise e
-        if resp.status_code >= 400:
-            raise RankError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
+        except ProviderError as e:
+            re_ = RankError(str(e))
+            re_.retryable = getattr(e, "retryable", False)  # type: ignore[attr-defined]
+            ra = getattr(e, "retry_after", None)
+            if ra is not None:
+                re_.retry_after = ra  # type: ignore[attr-defined]
+            raise re_ from e
         body = resp.json()
         usage = body.get("usage") or {}
         usage_flat = {

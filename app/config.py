@@ -172,3 +172,14 @@ RANK_JEV_MAX_QUESTIONS = int(_get("RANK_JEV_MAX_QUESTIONS") or 32)
 # Bocha Jev（jev.bocha.cn，systemone 协议同族，限时免费——免费期结束后成本风险记录在案）
 BOCHA_JEV_BASE_URL = _get("BOCHA_JEV_BASE_URL") or "https://jev.bocha.cn"
 BOCHA_JEV_MODEL = _get("BOCHA_JEV_MODEL") or "bocha-jev-v1"
+
+# 出网 proxy 参数位（传输脊）：env HTTPX_PROXY 注入即启用，不配置行为不变。
+# 读取归口在此（函数形态=调用时读取——运行时注入立即生效，不做 import 期快照）。
+# 设计依据见 docs/design-index.md「TR-1」。
+PROXY_ENV_KEY = "HTTPX_PROXY"
+
+
+def httpx_proxy_url() -> str | None:
+    """proxy 参数位的唯一读取点：未配置返回 None（不配置行为不变）。"""
+    value = os.environ.get(PROXY_ENV_KEY, "").strip()
+    return value or None
