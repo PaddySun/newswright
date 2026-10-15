@@ -95,6 +95,42 @@ EMBED_TRUNCATE_CHARS = int(_get("EMBED_TRUNCATE_CHARS") or 2000)
 EMBED_DIMENSIONS = int(_get("EMBED_DIMENSIONS") or 1024)
 # moark rerank（/v1/rerank，注册不接线）：默认模型
 MOARK_RERANK_MODEL = _get("MOARK_RERANK_MODEL") or "Qwen3-Reranker-0.6B"
+# moark chat（OpenAI 兼容族备源，/v1/chat/completions）：默认模型=冒烟锁定的
+# 跨厂商同族主备对（官方 deepseek-flash ↔ moark deepseek-v4.1-flash）
+MOARK_CHAT_MODEL = _get("MOARK_CHAT_MODEL") or "deepseek-v4.1-flash"
+
+# LLM 选源层（治理批 W2）：提供方名归口。默认单候选 deepseek、冷却不启用——
+# 默认配置行为零变；候选位与 TTL 冷却是结构就位（跨厂商自动主备切换属后续决策）。
+LLM_PROVIDER = _get("LLM_PROVIDER") or "deepseek"
+# 有序候选列表（逗号分隔，缺省回落 [LLM_PROVIDER] 单候选形态）
+LLM_CANDIDATES = [s.strip() for s in (_get("LLM_CANDIDATES") or "").split(",") if s.strip()]
+# 候选失败冷却 TTL 秒数；0=不启用（默认——低流量系统不做自动熔断）
+LLM_PROVIDER_COOLDOWN_SECONDS = float(_get("LLM_PROVIDER_COOLDOWN_SECONDS") or 0)
+
+# 嵌入提供方名（选源接线）：默认 moark 行为零变；none/显式空串=禁用哨兵
+# （检索层整体回退全量慢速，与 MOARK_EMBED_MODEL 的禁用语义同轨）。
+_EMBED_PROVIDER_ENV = os.environ.get("EMBED_PROVIDER")
+if _EMBED_PROVIDER_ENV is not None and not _EMBED_PROVIDER_ENV.strip():
+    EMBED_PROVIDER = "none"
+else:
+    EMBED_PROVIDER = _get("EMBED_PROVIDER") or "moark"
+
+
+# 热点榜单筛选三 env 归口（治理批 W2，读取面等价——调用时读取保持原
+# os.environ.get 的读取时机语义，运行时注入立即生效）
+def hot_rank_filter_enabled() -> bool:
+    """榜单筛选开关（默认关）。"""
+    return os.environ.get("HOT_RANK_FILTER", "").lower() in ("1", "true", "yes", "on")
+
+
+def hot_rank_provider_name() -> str:
+    """榜单筛选用的排序提供方名。"""
+    return os.environ.get("HOT_RANK_PROVIDER") or "bocha_jev"
+
+
+def hot_rank_min_score() -> int:
+    """榜单筛选的最低保留分（0-100）。"""
+    return int(os.environ.get("HOT_RANK_MIN_SCORE") or 40)
 
 # 搜索/排序底座 Key（可选：缺失时对应通道降级关闭，不阻塞启动）
 BOCHA_API_KEY = _get("bochaaiAPIKey", "BOCHAAI_API_KEY", "BOCHA_API_KEY")

@@ -40,6 +40,7 @@ from app.pipeline.runner import (
     score_round,
 )
 from app.providers.base import ProviderError
+from app.transport.errors import SemanticError
 from app.providers.deepseek import DeepSeekProvider
 
 
@@ -306,7 +307,7 @@ def test_chat_400_valve_resend_does_not_poison_reasoner_flag(db_session):
 
     def always_400(payload, **kw):
         n["c"] += 1
-        raise ProviderError("HTTP 400: bad request")
+        raise SemanticError("HTTP 400: bad request", status=400)
 
     p._call = always_400  # type: ignore[method-assign]
     with pytest.raises(ProviderError):
@@ -366,7 +367,7 @@ def test_chat_compat_valve_strips_both_tier_params(db_session):
         calls.append(payload)
         kwargs.append(kw)
         if "thinking" in payload or "reasoning_effort" in payload:
-            raise ProviderError("HTTP 400: unknown field")
+            raise SemanticError("HTTP 400: unknown field", status=400)
         return _body(content="stripped-ok")
 
     p._call = flaky  # type: ignore[method-assign]
@@ -389,7 +390,7 @@ def test_chat_compat_valve_422_also_strips(db_session):
     def flaky(payload, **kw):
         calls.append(payload)
         if "reasoning_effort" in payload or "thinking" in payload:
-            raise ProviderError("HTTP 422: unprocessable field")
+            raise SemanticError("HTTP 422: unprocessable field", status=422)
         return _body(content="ok-422")
 
     p._call = flaky  # type: ignore[method-assign]

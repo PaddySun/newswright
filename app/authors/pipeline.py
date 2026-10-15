@@ -28,8 +28,8 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
 from ..models import Article, Author, WriteRun
-from ..providers.base import JSONParseError, ProviderError, parse_strict_json
-from ..providers.deepseek import DeepSeekProvider
+from ..providers.base import JSONParseError, LLMProvider, ProviderError, parse_strict_json
+from ..providers.resolve import resolve_chat
 from . import gates as G
 from .memory import fill_placeholders
 from .schema import AuthorConfigError, load_author_config
@@ -288,7 +288,7 @@ def validate_citations_pipeline(text: str, defs: dict[int, tuple[int, str]],
 # ---------------- 执行器 ----------------
 
 class PipelineRunner:
-    def __init__(self, db: Session, author: Author, run: WriteRun, cfg: dict, provider: DeepSeekProvider):
+    def __init__(self, db: Session, author: Author, run: WriteRun, cfg: dict, provider: LLMProvider):
         self.db, self.author, self.run, self.cfg = db, author, run, cfg
         self.provider = provider
         self.trace: list[dict] = []
@@ -716,7 +716,13 @@ def run_pipeline_write(
     db.add(run)
     db.commit()
 
-    provider = DeepSeekProvider(db)
+    provider = resolve_chat(db)
+    if provider is None:
+        # 全部候选冷却中：走既有降级链（run 落 FAILED 终态）
+        run.status = "FAILED"
+        run.error = "无可用 LLM 提供方（候选全部冷却）"
+        db.commit()
+        return run
     runner = PipelineRunner(db, author, run, cfg, provider)
     try:
         runner.pairs = pairs

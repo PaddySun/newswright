@@ -27,8 +27,9 @@ EMBED_DISABLED_SENTINEL = "none"
 
 
 def embed_enabled() -> bool:
-    """嵌入功能是否启用：模型键为空哨兵即禁用（整体回退全量慢速的回退件）。"""
-    return bool(config.MOARK_EMBED_MODEL) and config.MOARK_EMBED_MODEL != EMBED_DISABLED_SENTINEL
+    """嵌入功能是否启用：模型键或提供方名为空哨兵即禁用（整体回退全量慢速的回退件）。"""
+    return (bool(config.MOARK_EMBED_MODEL) and config.MOARK_EMBED_MODEL != EMBED_DISABLED_SENTINEL
+            and config.EMBED_PROVIDER != EMBED_DISABLED_SENTINEL)
 
 
 def vec_to_blob(vec: list[float] | np.ndarray) -> bytes:
@@ -59,10 +60,11 @@ def embed_input_text(item: Item, *, truncate_chars: int | None = None) -> str:
 
 
 def default_provider(db: Session) -> EmbeddingProvider | None:
-    """按配置解析嵌入 provider；禁用态返回 None（调用方按未嵌入处理）。"""
+    """按配置解析嵌入 provider（config.EMBED_PROVIDER，默认 moark 行为零变）；
+    禁用态返回 None（调用方按未嵌入处理）。"""
     if not embed_enabled():
         return None
-    return registry.get_provider("moark", db)
+    return registry.get_provider(config.EMBED_PROVIDER, db)
 
 
 def missing_vector_items(db: Session, items: list[Item], *,

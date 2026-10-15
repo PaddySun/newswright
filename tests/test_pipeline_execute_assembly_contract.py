@@ -89,7 +89,7 @@ def test_reading_window_slice_offset_and_length(three_items, monkeypatch):
     author = import_author_json(db, _cfg(db), model="test-model",
                                 readable_directions=[{"direction_id": 1, "threshold": 60}])
     fake = FakeProviderPipeline({"w_draft": [_draft(items[1].id, "这是第2条目的正文内容")]})
-    monkeypatch.setattr(pl, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(pl, "resolve_chat", lambda _db: fake)
     run = wr.run_write(db, author, triggered_by="test", reading_window=(1, 1))
     assert run.status == "OK" and run.decision == "WRITE"
     snap = run.prompt_snapshot
@@ -112,7 +112,7 @@ def test_rolling_prompt_carries_plan_and_previous_sections(three_items, monkeypa
                     _draft(items[1].id, "这是第2条目的正文内容", "滚动二"),
                     _draft(items[2].id, "这是第3条目的正文内容", "滚动三")],
     })
-    monkeypatch.setattr(pl, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(pl, "resolve_chat", lambda _db: fake)
     run = wr.run_write(db, author, triggered_by="test")
     assert run.status == "OK", run.error
     draft_prompts = [c["messages"][-1]["content"] for c in fake.calls
@@ -137,7 +137,7 @@ def test_incubate_mode_feeds_incubation_into_draft(three_items, monkeypatch):
         "w_incubate": [incubation],
         "w_draft": [_draft(items[0].id, "这是第1条目的正文内容")],
     })
-    monkeypatch.setattr(pl, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(pl, "resolve_chat", lambda _db: fake)
     run = wr.run_write(db, author, triggered_by="test")
     assert run.status == "OK", run.error
     draft_prompt = [c["messages"][-1]["content"] for c in fake.calls
@@ -151,7 +151,7 @@ def test_published_article_lands_with_status(three_items, monkeypatch):
     author = import_author_json(db, _cfg(db), model="test-model",
                                 readable_directions=[{"direction_id": 1, "threshold": 60}])
     fake = FakeProviderPipeline({"w_draft": [_draft(items[0].id, "这是第1条目的正文内容")]})
-    monkeypatch.setattr(pl, "DeepSeekProvider", lambda _db: fake)
+    monkeypatch.setattr(pl, "resolve_chat", lambda _db: fake)
     run = wr.run_write(db, author, triggered_by="test")
     assert run.status == "OK" and run.decision == "WRITE"
     article = db.get(Article, run.article_id)

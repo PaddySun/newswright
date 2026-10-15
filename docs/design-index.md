@@ -209,3 +209,15 @@
 | TR-4 | Retry-After 协商：服务端值优先（delta-seconds/HTTP-date 双形态解析，B3 上提四域共用），采纳夹逼 [0, 60s) 开区间；无服务端值走 TR-3 |
 | TR-5 | RetryExhausted 结构化耗尽：reason 两态（max_retries_exceeded / error_not_retryable）+ 逐次尝试 errors 链；必须继承 ProviderError 兼容根（既有 except 面零改动）；域耗尽组合类保域类型（EmbeddingRetryExhausted / SearchRetryExhausted 双类型） |
 | TR-6 | 客户端池：(源, 鉴权头, 超时, 生效 UA, 客户端工厂) 进程级复用、线程安全（双检锁）；UA 值入键=site_config 运行时切 UA 即新客户端；工厂身份入键=同进程桩替换不串台；池客户端不跟随重定向（3xx 须在传输层拦截） |
+
+## LR-x（LLM 域抽象与选源条款，外部服务治理批（C4）增补；条文正文随外层技术书 C4 变更点落册）
+
+| 编号 | 一句话摘要 |
+|---|---|
+| LR-1 | LLM 域基类下沉：chat/chat_json 挂 LLMProvider（tier_request 档位钩子默认零改写；观测面 last_usage/fallback_note/reasoner_available 初始化在基类，管线直写经缓存共享实例跨调用生效）；具体厂商退化为「配置 + 档位钩子 + 兼容阀声明」；注册名是配置面与代码面唯一耦合点（registry 同 embedding/rerank 模式，variant 按模型出变体） |
+| LR-2 | 选源层缓存纪律：进程级实例缓存键=(域,名,model)，探测状态（reasoner_available）随实例跨调用存活不逐调用丢失；缓存命中实例的计量归属（db）刷新为当前调用方会话；消费方一律经 resolve 取用、零具体厂商 import（llm 排序经构造注入 + 注册处组装） |
+| LR-3 | 候选与冷却语义：有序候选列表（LLM_CANDIDATES 缺省回落 [LLM_PROVIDER] 单候选=行为零变）；TTL 冷却默认不启用（TTL=0 标记 no-op）；单候选永不进入冷却判定（无备源可切）；全部候选冷却 → 选源返回 None、消费方走各自既有降级链（FAILED 终态/回退生成/全量慢速），不在选源层统一吞错 |
+| LR-4 | 启动校验与 none 哨兵域：配置的 provider 名不可解析拒绝启动（create_app 内执行，报错含 available() 名单）；none 禁用哨兵仅嵌入域合法（EMBED_PROVIDER=none → 检索层回退全量慢速），chat 域配置 none 即配置错误、不实现 chat 禁用路径 |
+| LR-5 | OpenAI 族厂商差异声明：chat_completions_path 路径前缀为厂商差异（deepseek 官方 base 无 /v1、moark OpenAI 网关族带 /v1，误用即触发 TR-2 的 302 漏网形态）；moark chat 默认模型=冒烟锁定的跨厂商同族主备对（deepseek-v4.1-flash ↔ 官方 deepseek-flash），moark 间歇长挂起定位为备源 |
+| LR-6 | 计量回显与兼容阀状态判定：usage_log 的 model 以响应回显实况优先落账（请求名兜底——计量空洞治理）；网关兼容阀按错误对象结构化 status 判定（400/422 参数拒绝域）+ gateway_compat_params 声明式剥离重发一次（deepseek=thinking 族参数、moark=response_format），全库禁文案嗅探形态 |
+| LR-7 | Jev 决策协议客户端构造期校验：questions 逐项 instructions 必填（服务端对缺失回 400「请求参数缺少必填字段 'questions.q.instructions'」实测锚），缺字段在构造期抛 JevAdapterError 防线前移（消息含字段名与 qid），不烧注定失败的网络调用 |

@@ -18,7 +18,7 @@ from sqlalchemy.orm import Session
 from .. import config
 from ..models import Article, Author, Direction, Item, ScoreResult, WriteRun
 from ..providers.base import JSONParseError
-from ..providers.deepseek import DeepSeekProvider
+from ..providers.resolve import resolve_chat
 from .memory import fill_placeholders
 
 PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
@@ -279,7 +279,13 @@ def run_write(db: Session, author: Author, *, triggered_by: str = "manual", mode
     db.add(run)
     db.commit()
 
-    provider = DeepSeekProvider(db)
+    provider = resolve_chat(db)
+    if provider is None:
+        # 全部候选冷却中：走既有降级链（run 落 FAILED 终态）
+        run.status = "FAILED"
+        run.error = "无可用 LLM 提供方（候选全部冷却）"
+        db.commit()
+        return run
     messages = [
         {"role": "system", "content": "你是 AI 内容生产系统中的作者代理，只输出规定结构的 JSON 对象。"},
         {"role": "user", "content": _build_prompt(db, author, pairs)},

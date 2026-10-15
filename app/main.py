@@ -34,6 +34,11 @@ def create_app() -> FastAPI:
         openapi_url="/openapi.json" if docs_open else None,
     )
     init_db()
+    # 启动期 provider 名解析校验：配置的提供方名不可解析时拒绝启动（报错含
+    # 可用名单；嵌入域允许 none 禁用，chat 域不允许）
+    from .providers.resolve import validate_provider_config
+
+    validate_provider_config()
     with SessionLocal() as db:
         bootstrap_admin(db)  # AC-01.1：users 空表时创建 admin（已有用户不覆盖）
     app.include_router(auth_router)  # /api/auth：守卫豁免路由（先注册）

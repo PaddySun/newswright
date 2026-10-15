@@ -31,7 +31,8 @@ from app import config  # noqa: E402
 from app.db import SessionLocal, init_db  # noqa: E402
 from app.models import UsageLog  # noqa: E402
 from app.providers.base import record_usage  # noqa: E402
-from app.providers.deepseek import DeepSeekProvider, parse_strict_json  # noqa: E402
+from app.providers.base import parse_strict_json  # noqa: E402
+from app.providers.deepseek import DeepSeekProvider  # noqa: E402
 from app.providers.moark_jev import MoarkJevProvider  # noqa: E402
 
 import httpx  # noqa: E402

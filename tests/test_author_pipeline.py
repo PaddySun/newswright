@@ -81,12 +81,12 @@ def test_pipeline_write_e2e(db_session, env):
     cfg = base_config()
     author = _author(db, cfg)
     fake = FakeProvider({"w_draft": [make_draft_text(i1, i2)]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "OK" and run.decision == "WRITE"
     article = db.get(Article, run.article_id)
     assert article.title.startswith("关于机器写作")
@@ -109,12 +109,12 @@ def test_gated_retry_discarded_drafts_kept(db_session, env):
     bad = "# 废稿标题\n\n一段没有引用的正文。"
     good = make_draft_text(i1, i2)
     fake = FakeProvider({"w_draft": [bad], "w_revise": [good]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "OK"
     assert run.payload["rewrite"]["attempts"] == 1
     assert [t["node"] for t in run.payload["trace"]] == ["w_draft", "w_revise"]
@@ -133,12 +133,12 @@ def test_gated_retry_exhausted_fails(db_session, env):
     bad2 = "# 废稿标题\n\n一段没有引用的正文，这一版更长一些但依然没有任何脚注引用。"
     bad3 = "# 废稿标题\n\n又是一版没有脚注引用的废稿，正文长度继续变化以逐轮产生不同的字数问题。"
     fake = FakeProvider({"w_draft": [bad1], "w_revise": [bad2, bad3]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "FAILED"
     assert "门禁重试耗尽" in (run.error or "")
     assert run.article_id is None  # 无文章落库（废稿只在 trace 可见）
@@ -152,12 +152,12 @@ def test_zero_revision_records_audit(db_session, env):
     author = _author(db, cfg)
     bad = "# 废稿标题\n\n一段没有引用的正文。"
     fake = FakeProvider({"w_draft": [bad]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "OK" and run.decision == "WRITE"  # 违规仍入库（零修订语义）
     assert run.payload["rewrite"]["attempts"] == 0
     assert run.payload["gates_final"]["passed"] is False
@@ -175,12 +175,12 @@ def test_static_injection_hard_budget(db_session, env):
                                   "selection": "round_robin", "position": "head"}
     author = _author(db, cfg)
     fake = FakeProvider({"w_draft": [make_draft_text(i1, i2)]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "OK"
     rec = run.payload["static_injection"]
     assert len(rec) == 3  # 硬预算：5 块只注 3
@@ -201,12 +201,12 @@ def test_copyright_gate_blocks_copying(db_session, env):
     author = _author(db, cfg)
     body = "开头。" + block_text + "结尾。"
     fake = FakeProvider({"w_draft": [make_draft_text(i1, i2, body=body)], "w_revise": [bad := make_draft_text(i1, i2, body=body), bad]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "FAILED"  # gated_retry 耗尽（每次重试都照抄）
     assert any("n-gram" in i for a in run.payload["gate_history"]
                for i in a["verdict"]["issues"])
@@ -221,12 +221,12 @@ def test_topic_dedup_gate(db_session, env):
     db.commit()
     fake = FakeProvider({"w_draft": [make_draft_text(i1, i2)],
                          "w_revise": [make_draft_text(i1, i2), make_draft_text(i1, i2)]})  # 同题
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "FAILED"
     assert any("同题" in i or "过于相似" in i for a in run.payload["gate_history"]
                for i in a["verdict"]["issues"])
@@ -253,7 +253,7 @@ def test_single_route_regression_no_json(db_session, env, monkeypatch):
                 "reason": "r", "thinking": "t"}
             return data, "m"
 
-    monkeypatch.setattr("app.authors.writer.DeepSeekProvider", FakeOld)
+    monkeypatch.setattr("app.authors.writer.resolve_chat", lambda _db: FakeOld(_db))
     # 直接调 run_write，验证分派：无 JSON 不进管线（不会出现 payload.trace）
     from app.authors.writer import run_write
 
@@ -303,12 +303,12 @@ def test_pipeline_empty_reading_set_lands_skip_without_llm(db_session):
     cfg = base_config()
     author = _author(db, cfg)
     fake = FakeProvider({})  # 任何节点调用都会因无脚本而抛错 → 测试失败即暴露
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "SKIP"
     assert run.skip_reason and "阅读集" in run.skip_reason
     assert run.article_id is None and run.decision is None
@@ -324,12 +324,12 @@ def test_gate_retry_stops_early_on_repeated_same_issues(db_session, env):
     bad1 = "# 同因早停甲\n\n一段没有任何脚注引用的正文，且长度足以越过字数下限门槛线。"
     bad2 = "# 同因早停乙\n\n修订之后仍然没有任何脚注引用的正文，长度也足以越过字数下限。"
     fake = FakeProvider({"w_draft": [bad1], "w_revise": [bad2]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "FAILED"
     assert "早停" in (run.error or "")
     assert run.payload["rewrite"]["early_stop"] is True
@@ -352,12 +352,12 @@ def test_gate_retry_continues_while_issues_differ(db_session, env):
              + f"\n\n[^1]: [条目 {i1}] 事实一\n[^2]: [条目 {i2}] 事实二")
     good = make_draft_text(i1, i2)
     fake = FakeProvider({"w_draft": [bad1], "w_revise": [long2, good]})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "OK"
     assert run.payload["rewrite"]["attempts"] == 2
     assert run.payload["rewrite"].get("early_stop", False) is False

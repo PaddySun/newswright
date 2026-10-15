@@ -84,7 +84,7 @@ def test_citation_violation_exhausted_stored_with_flag(db_session, author_items,
         def chat_json(self, messages, **kw):
             return bad_payload, "m"
 
-    monkeypatch.setattr(wr, "DeepSeekProvider", FakeOld)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: FakeOld(_db))
     run = wr.run_write(db_session, a, triggered_by="test")
     assert run.status == "OK" and run.decision == "WRITE"
     article = db_session.get(Article, run.article_id)
@@ -114,7 +114,7 @@ def test_citation_normal_path_flag_false(db_session, author_items, monkeypatch):
         def chat_json(self, messages, **kw):
             return good_payload, "m"
 
-    monkeypatch.setattr(wr, "DeepSeekProvider", FakeOld)
+    monkeypatch.setattr(wr, "resolve_chat", lambda _db: FakeOld(_db))
     run = wr.run_write(db_session, a, triggered_by="test")
     assert run.status == "OK" and run.decision == "WRITE"
     article = db_session.get(Article, run.article_id)

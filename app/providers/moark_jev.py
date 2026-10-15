@@ -5,6 +5,7 @@
 - state 是唯一内容通道；questions 每个决策点一项，criteria key 即语义枚举值。
 - 响应 answers[qid] = {probabilities, confidence, choice}；usage = {input_tokens, output_tokens, billing_units}。
 - 客户端组装层必须做 answers 键完整性 + choice 枚举校验（协议文档 2.4 / 提示词文档 2.5）。
+设计依据见 docs/design-index.md「LR-7」。
 """
 from __future__ import annotations
 
@@ -25,9 +26,9 @@ class MoarkJevProvider(HTTPProvider):
 
     name = "moark_jev"
 
-    def __init__(self, db: Session) -> None:
+    def __init__(self, db: Session, *, model: str | None = None) -> None:
         super().__init__(db, base_url=config.MOARK_BASE_URL, api_key=config.MOARK_API_KEY)
-        self.default_model = config.MOARK_JEV_MODEL
+        self.default_model = model or config.MOARK_JEV_MODEL
 
     def _post(self, payload: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
         resp = self._post_json("/v1/systemone", payload)
@@ -63,6 +64,13 @@ class MoarkJevProvider(HTTPProvider):
         for qid, q in questions.items():
             if q.get("type") != "choice" or not q.get("criteria"):
                 raise JevAdapterError(f"question {qid!r} 结构非法：type=choice 且 criteria 不能为空")
+            if not str(q.get("instructions") or "").strip():
+                # 防线前移：服务端对缺 instructions 的请求回 400
+                # （"请求参数缺少必填字段 'questions.q.instructions'"，统筹冒烟实测），
+                # 客户端构造期即拦下，不烧一次注定失败的网络调用
+                raise JevAdapterError(
+                    f"question {qid!r} 结构非法：instructions 必填"
+                    "（服务端对缺失该字段回 400：请求参数缺少必填字段 'questions.q.instructions'）")
         payload = {"model": model, "state": state, "questions": questions}
         body = self._call(
             payload, call_point=call_point, ref_type=ref_type, ref_id=ref_id, max_retries=max_retries

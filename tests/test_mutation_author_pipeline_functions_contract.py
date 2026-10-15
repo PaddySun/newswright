@@ -115,12 +115,12 @@ def _pairs(db):
 
 
 def _run_e2e(db, author, fake, **kw):
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         return pl.run_pipeline_write(db, author, triggered_by="test", **kw)
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
 
 
 def _inj_cfg(blocks: list, *, n: int, per: int, selection: str) -> dict:
@@ -318,12 +318,12 @@ def test_config_error_failed_run_contract(db_session):
     db.add(author)
     db.commit()
     fake = FakeProvider({})
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")  # 不传 model → 归因 author.model
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "FAILED"                      # 失败终态
     assert run.error                                   # 失败原因留痕
     assert run.author_id == author.id                  # 作者归因
@@ -340,17 +340,17 @@ def test_run_row_payload_rank_and_triggered_by(db_session, env):
     author = _author(db, cfg)
     fake = FakeProvider({"w_draft": [make_draft_text(i1, i2)]})
     seen = {}
-    orig = pl.DeepSeekProvider
+    orig = pl.resolve_chat
 
     def recorder(db_arg):
         seen["db"] = db_arg
         return fake
 
-    pl.DeepSeekProvider = recorder
+    pl.resolve_chat = recorder
     try:
         run = pl.run_pipeline_write(db, author, triggered_by="test")
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
     assert run.status == "OK"
     assert "rank" in run.payload and isinstance(run.payload["rank"], dict)  # §4.1 rank 明细
     assert run.triggered_by == "test"

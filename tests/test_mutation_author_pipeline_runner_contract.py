@@ -106,12 +106,12 @@ def _pairs(db):
 
 
 def _run_e2e(db, author, fake, **kw):
-    orig = pl.DeepSeekProvider
-    pl.DeepSeekProvider = lambda _db: fake
+    orig = pl.resolve_chat
+    pl.resolve_chat = lambda _db: fake
     try:
         return pl.run_pipeline_write(db, author, triggered_by="test", **kw)
     finally:
-        pl.DeepSeekProvider = orig
+        pl.resolve_chat = orig
 
 
 def _runner(db, author, cfg, fake):

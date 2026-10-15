@@ -1,23 +1,32 @@
-"""LLM 批量相关性排序（deepseek 一次调用，strict JSON，temperature=0）。
+"""LLM 批量相关性排序（chat 提供方经构造注入或选源层，strict JSON，temperature=0）。
 
 口径：模型直接输出 0-100 分 + 三档 band；排序场景理由不入库（如实声明：reason
 仅用于模型自检，不落库）。调用走 provider 层计量（call_point=rank_llm）+ rank_call_log。
+chat 提供方不在本模块触碰具体厂商（组合实现漏点修复）：注册处
+（rank/registry.py）注入选源结果，直接构造时惰性经选源层取默认候选。
+设计依据见 docs/design-index.md「LR-2」。
 """
 from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
+from ..providers.resolve import resolve_chat
 from .base import RankCandidate, RankError, RankProvider, RankedResult
 
 
 class LLMRankProvider(RankProvider):
     name = "llm"
 
+    def __init__(self, db: Session, *, chat_provider=None) -> None:
+        super().__init__(db)
+        self.chat_provider = chat_provider
+
     def _rank(self, criteria: str, candidates: list[RankCandidate]) -> list[RankedResult]:
         from ..providers.base import JSONParseError, parse_strict_json
-        from ..providers.deepseek import DeepSeekProvider
 
-        provider = DeepSeekProvider(self.db)
+        provider = self.chat_provider or resolve_chat(self.db)
+        if provider is None:
+            raise RankError("rank_llm 无可用 LLM 提供方（候选全部冷却）")
         items = "\n".join(f"{{\"id\": \"{c.id}\", \"text\": {c.text!r}}}" for c in candidates)
         system = (
             "你是相关性排序器。给定方向标准与一批候选内容，为每条候选输出与方向的相关分。\n"
