@@ -2,8 +2,14 @@
 
 纪律（选型草稿 §3.2.3）：
 - 所有 LLM 调用统一经此层，每次调用落一条 usage_log（调用点/模型/token/延迟/成败/归属）。
-- 网络失败重试最多 2 次（指数退避），耗尽抛 ProviderError 由上层进 FAILED 终态。
+- 网络失败重试最多 2 次（退避经传输脊协商：Retry-After 优先、随机化指数退避），
+  耗尽抛 RetryExhausted（继承 ProviderError）由上层进 FAILED 终态。
 - 日志与报错绝不携带 Key。
+
+传输横切面（错误分类学/_scrub/计量/HTTP 出口/重试协商）已上提至 app/transport/
+（传输脊中立化批）；本模块保留 LLM 域语义（_call 模板方法、strict JSON 解析、
+OpenAI usage 计量映射），并 re-export 兼容名（既有 import 面零改动）。
+设计依据见 docs/design-index.md「TR-1」「TR-3」「TR-4」「TR-5」「ADR-8」。
 """
 from __future__ import annotations
 
@@ -16,19 +22,35 @@ from typing import Any
 import httpx
 from sqlalchemy.orm import Session
 
-from ..models import UsageLog
+from ..transport.errors import (
+    REASON_ERROR_NOT_RETRYABLE,
+    REASON_MAX_RETRIES_EXCEEDED,
+    ProviderError,
+    RetryExhausted,
+)
+from ..transport.http import (
+    RETRYABLE_STATUS,
+    FATAL_STATUS_MESSAGE,
+    _scrub,
+    post_json,
+    retry_delay_ms,
+)
+from ..transport.metering import record_usage
+
+__all__ = [
+    "FATAL_STATUS_MESSAGE",
+    "HTTPProvider",
+    "JSONParseError",
+    "LLMProvider",
+    "ProviderError",
+    "RETRYABLE_STATUS",
+    "RetryExhausted",
+    "_scrub",
+    "parse_strict_json",
+    "record_usage",
+]
 
 log = logging.getLogger("newswright.providers")
-
-RETRYABLE_STATUS = {429, 500, 502, 503, 504}
-# 官方错误码语义（2026-10 文档）：402 余额不足、401 认证失败、400/422 参数错误——
-# 全部不可重试（重试只会烧日志）；429/5xx 可重试。
-FATAL_STATUS_MESSAGE = {
-    400: "请求体格式错误（400）",
-    401: "API key 认证失败（401）",
-    402: "账户余额不足（402）——请充值后重试",
-    422: "请求参数错误（422）",
-}
 
 # finish_reason 官方语义：length=截断（max_tokens/上下文）、content_filter=被过滤
 # （不可重试）、insufficient_system_resource/aborted=服务端中断（可重试）、stop/tool_calls 正常
@@ -36,59 +58,16 @@ RETRYABLE_FINISH_REASONS = {"insufficient_system_resource", "aborted"}
 FATAL_FINISH_REASONS = {"content_filter"}
 
 
-class ProviderError(Exception):
-    """重试耗尽或不可恢复的 provider 错误（message 不得含 Key）。"""
-    retryable = False
-
-
 class JSONParseError(Exception):
     """LLM 返回内容无法解析为合法 JSON / 字段缺失。"""
 
 
-def _scrub(text: str) -> str:
-    """兜底脱敏：日志里不该出现任何 key 形态的字符串。"""
-    return text.replace("sk-", "sk-***") if text else text
-
-
-def record_usage(
-    db: Session,
-    *,
-    provider: str,
-    model: str,
-    call_point: str,
-    prompt_tokens: int = 0,
-    completion_tokens: int = 0,
-    billing_units: int = 0,
-    cache_hit_tokens: int = 0,
-    reasoning_tokens: int = 0,
-    finish_reason: str | None = None,
-    item_count: int | None = None,
-    latency_ms: int = 0,
-    ok: bool = True,
-    error: str | None = None,
-    ref_type: str | None = None,
-    ref_id: int | None = None,
-) -> None:
-    db.add(
-        UsageLog(
-            provider=provider,
-            model=model,
-            call_point=call_point,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            billing_units=billing_units,
-            cache_hit_tokens=cache_hit_tokens,
-            reasoning_tokens=reasoning_tokens,
-            finish_reason=finish_reason,
-            item_count=item_count,
-            latency_ms=latency_ms,
-            ok=ok,
-            error=_scrub(error)[:2000] if error else None,
-            ref_type=ref_type,
-            ref_id=ref_id,
-        )
-    )
-    db.commit()
+def _error_is_retryable(e: BaseException) -> bool:
+    """传输脊 typed 错误按结构化字段判定；httpx 网络异常一律可重试；
+    朴素异常按类属性兜底（兼容既有鸭子属性形态）。"""
+    if isinstance(e, httpx.HTTPError):
+        return True
+    return bool(getattr(e, "retryable", False))
 
 
 class LLMProvider(ABC):
@@ -120,9 +99,11 @@ class LLMProvider(ABC):
         ref_id: int | None = None,
         max_retries: int = 2,
     ) -> dict[str, Any]:
-        """重试 + 计量包装，返回完整响应体。网络类失败指数退避重试 max_retries 次。"""
+        """重试 + 计量包装，返回完整响应体。失败退避经传输脊协商（Retry-After
+        优先夹逼 / 随机化指数退避），耗尽抛 RetryExhausted（reason 两态+尝试链）。"""
         attempt = 0
         last_err: Exception | None = None
+        attempt_errors: list[Exception] = []
         while attempt <= max_retries:
             t0 = time.monotonic()
             try:
@@ -152,7 +133,8 @@ class LLMProvider(ABC):
             except (httpx.HTTPError, ProviderError) as e:
                 latency_ms = int((time.monotonic() - t0) * 1000)
                 last_err = e
-                retryable = isinstance(e, httpx.HTTPError) or getattr(e, "retryable", False)
+                attempt_errors.append(e)
+                retryable = _error_is_retryable(e)
                 record_usage(
                     self.db,
                     provider=self.name,
@@ -166,15 +148,24 @@ class LLMProvider(ABC):
                 )
                 if not retryable or attempt == max_retries:
                     break
-                delay = 2**attempt  # 1s, 2s
+                delay = retry_delay_ms(e, attempt) / 1000.0
                 log.warning("provider 调用失败（第 %d 次，%.1fs 后重试）: %s", attempt + 1, delay, e)
                 time.sleep(delay)
                 attempt += 1
-        raise ProviderError(f"{self.name} 调用失败（重试 {attempt} 次后放弃）: {last_err}")
+        reason = (REASON_MAX_RETRIES_EXCEEDED if _error_is_retryable(last_err)
+                  else REASON_ERROR_NOT_RETRYABLE)
+        raise RetryExhausted(
+            f"{self.name} 调用失败（重试 {attempt} 次后放弃）: {last_err}",
+            reason=reason, errors=attempt_errors,
+        )
 
 
 class HTTPProvider(LLMProvider):
-    """带 base_url/api_key 的 HTTP provider 公共部分。"""
+    """带 base_url/api_key 的 HTTP provider 公共部分。
+
+    HTTP 出网经传输脊 post_json（非 2xx 全入错、3xx 可重试带 location、
+    客户端进程级复用）；本层只保留 LLM 域鉴权头与响应契约
+    （返回原始 httpx.Response，调用方自行 .json()）。"""
 
     def __init__(self, db: Session, *, base_url: str, api_key: str, timeout: float = 120.0) -> None:
         super().__init__(db)
@@ -183,18 +174,10 @@ class HTTPProvider(LLMProvider):
         self._timeout = timeout
 
     def _post_json(self, path: str, payload: dict[str, Any]) -> httpx.Response:
-        with httpx.Client(timeout=self._timeout) as client:
-            resp = client.post(f"{self.base_url}{path}", json=payload, headers=self._headers)
-        if resp.status_code in RETRYABLE_STATUS:
-            e = ProviderError(f"HTTP {resp.status_code}: {_scrub(resp.text[:300])}")
-            e.retryable = True  # type: ignore[attr-defined]
-            raise e
-        if resp.status_code >= 400:
-            # 官方错误码语义映射（402 余额不足 / 401 认证 / 400·422 参数），全部不可重试
-            msg = FATAL_STATUS_MESSAGE.get(resp.status_code,
-                                           f"HTTP {resp.status_code}")
-            raise ProviderError(f"{msg}: {_scrub(resp.text[:300])}")
-        return resp
+        return post_json(
+            f"{self.base_url}{path}", payload,
+            headers=self._headers, timeout=self._timeout, db=self.db,
+        )
 
     @staticmethod
     def _meter_from_openai_usage(usage: dict[str, Any] | None) -> dict[str, int]:

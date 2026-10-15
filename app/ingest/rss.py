@@ -28,7 +28,8 @@ TRACKING_PARAMS = {
     "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
     "fbclid", "gclid", "igshid", "mc_cid", "mc_eid", "spm", "ref", "ref_src",
 }
-from .http import http_client  # 出网统一出口（UA 策略 + proxy 参数位）
+from ..transport.http import parse_retry_after as _transport_parse_retry_after
+from .http import http_client  # 出网统一出口（UA 策略 + proxy 参数位；实现上提 transport）
 
 # 内容嗅探：HTTP 200 但响应体不是 XML（WAF 挑战页/HTML 伪装空 feed）→ 判
 # non_xml_response 走失败列，不喂 feedparser（空 feed 解析会伪装成"源没更新"）。
@@ -60,23 +61,9 @@ def channel_skip_days(content: bytes) -> list[str]:
             for dm in _SKIPDAY_ITEM_RE.finditer(m.group(1))]
 
 
-def parse_retry_after(value: str | None, *, now: datetime) -> float | None:
-    """Retry-After 双形态解析：delta-seconds 秒数与 HTTP-date 两种形态；
-    解析失败返回 None（调用方退回降频档位对应缺省间隔）。负值钳为 0。"""
-    if not value or not value.strip():
-        return None
-    text = value.strip()
-    if text.isdigit():
-        return float(text)
-    try:
-        from email.utils import parsedate_to_datetime
-
-        dt = parsedate_to_datetime(text)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return max(0.0, (dt - now).total_seconds())
-    except (TypeError, ValueError):
-        return None
+# Retry-After 双形态解析已上提至传输脊 app/transport/http.py（传输脊中立化批，
+# 供四域退避协商共用）；此处保留 re-export——既有调用方（降频状态机）与测试零改动。
+parse_retry_after = _transport_parse_retry_after
 
 
 def normalize_url(url: str) -> str:

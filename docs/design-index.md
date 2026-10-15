@@ -198,3 +198,14 @@
 | B5 | source_config.enrich_full_text 开关（摘要型源自救） |
 | B6 | 瞬态空 feed 计数清零语义（并入 DT-1） |
 | B7 | etag 原样存取（≥500 列宽）+ web 监测 guid 用配置 URL；web 单页版本条目豁免指纹链 |
+
+## TR-x（传输脊条款，外部服务治理批（C4）增补；条文正文随外层技术书 C4 变更点落册）
+
+| 编号 | 一句话摘要 |
+|---|---|
+| TR-1 | 传输脊分层：全部外部服务出网收敛 app/transport/（HTTP 出口/错误分类学/计量/额度闸唯一实现）；能力域保留重试模板方法与计量语义；旧位置（providers.base/search.base/ingest.http）转薄 re-export，新增代码禁止从旧位置出网 |
+| TR-2 | 非 2xx 全入错：3xx=可重试 TransportError 带 location（网关 302 营销站漏网=「成功空响应」形态实锤）；429/5xx=可重试 TransportError 挂 Retry-After 解析值；其余 ≥400=不可重试 SemanticError（官方错误码语义映射） |
+| TR-3 | 随机化指数退避：2**attempt × uniform(0.5, 1.5) 秒（jitter 治确定性退避的同步踩踏）；RNG 型测试断言区间与分布形态、禁依赖具体随机序列 |
+| TR-4 | Retry-After 协商：服务端值优先（delta-seconds/HTTP-date 双形态解析，B3 上提四域共用），采纳夹逼 [0, 60s) 开区间；无服务端值走 TR-3 |
+| TR-5 | RetryExhausted 结构化耗尽：reason 两态（max_retries_exceeded / error_not_retryable）+ 逐次尝试 errors 链；必须继承 ProviderError 兼容根（既有 except 面零改动）；域耗尽组合类保域类型（EmbeddingRetryExhausted / SearchRetryExhausted 双类型） |
+| TR-6 | 客户端池：(源, 鉴权头, 超时, 生效 UA, 客户端工厂) 进程级复用、线程安全（双检锁）；UA 值入键=site_config 运行时切 UA 即新客户端；工厂身份入键=同进程桩替换不串台；池客户端不跟随重定向（3xx 须在传输层拦截） |

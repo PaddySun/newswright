@@ -137,6 +137,11 @@ def _capture_provider(monkeypatch, base_url: str, db_session):
             self._c.close()
             return False
 
+        def post(self, *a, **kw):
+            # 传输脊客户端池：HTTP 出网不再逐调用进出 with——客户端经工厂构造后
+            # 直接 .post 复用（池化语义）。委托内裹真实客户端，捕获行为不变。
+            return self._c.post(*a, **kw)
+
     monkeypatch.setattr("app.providers.base.httpx.Client", CapturingClient)
 
     class Dummy(HTTPProvider):

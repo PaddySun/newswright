@@ -149,9 +149,10 @@ def test_call_fatal_error_no_retry_and_ledger(db_session, monkeypatch):
     assert row.ref_type == "item" and row.ref_id == 7
 
 
-def test_call_retry_exhaustion_backoff_1s_2s(db_session, monkeypatch):
-    """ADR-8 + 模块纪律：网络类失败重试最多 2 次（指数退避 1s/2s），耗尽抛
-    ProviderError；每次尝试各落一条失败账。"""
+def test_call_retry_exhaustion_backoff_jittered_intervals(db_session, monkeypatch):
+    """ADR-8 + 传输脊退避协商：网络类失败重试最多 2 次（随机化指数退避——
+    2**attempt × uniform(0.5,1.5) 秒，RNG 断言只断区间不断言具体序列），
+    耗尽抛 RetryExhausted（ProviderError 兼容面）；每次尝试各落一条失败账。"""
     sleeps = _patch_clock(monkeypatch)
     d = _Dummy(db_session)
     calls: list = []
@@ -164,7 +165,9 @@ def test_call_retry_exhaustion_backoff_1s_2s(db_session, monkeypatch):
     with pytest.raises(ProviderError):
         d._call({"model": "m-1"}, call_point="ut", ref_type="item", ref_id=7)
     assert len(calls) == 3  # 初次 + 重试 2 次
-    assert sleeps == [1, 2]  # 指数退避 2**attempt：1s, 2s
+    assert len(sleeps) == 2  # 两次退避
+    assert 0.5 <= sleeps[0] <= 1.5  # attempt 0：2^0 × [0.5,1.5] 秒
+    assert 1.0 <= sleeps[1] <= 3.0  # attempt 1：2^1 × [0.5,1.5] 秒（指数翻倍形态）
     rows = db_session.query(UsageLog).all()
     assert len(rows) == 3 and all(r.ok is False for r in rows)
     assert all(r.latency_ms == 250 for r in rows)

@@ -1,10 +1,16 @@
 """向量生成底座（能力⑥）：与 search/rerank/LLM provider 同构的"抽象 + 子类 + 注册"。
 
 纪律（选型草稿 §3.2.8，EmbeddingProvider 为第三种 provider 类型，用户已拍板）：
-- 所有 embedding 调用统一经此层：批量输入、dimensions 透传、重试（≤2 次指数退避）、
-  计量落 usage_log（call_point=embed：模型名/token/条数 item_count/延迟/成败），免费也记账。
+- 所有 embedding 调用统一经此层：批量输入、dimensions 透传、重试（≤2 次，退避经
+  传输脊协商：Retry-After 优先/随机化指数退避）、计量落 usage_log（call_point=embed：
+  模型名/token/条数 item_count/延迟/成败），免费也记账。
 - 服务定位：注册不接线——本阶段不进抓取/打分/写作生产路径（接线属正式版决策）。
 - 日志与报错绝不携带 Key。
+
+错误分类与计量横切面走传输脊 app/transport/（此前反向 import LLM 域基类的
+横向依赖已消灭）；耗尽抛 EmbeddingRetryExhausted（域类型兼容 +
+RetryExhausted 结构化 reason/errors）。设计依据见 docs/design-index.md
+「TR-1」「TR-3」「TR-4」「TR-5」。
 """
 from __future__ import annotations
 
@@ -17,7 +23,14 @@ import httpx
 from sqlalchemy.orm import Session
 
 from .. import config
-from ..providers.base import ProviderError, record_usage
+from ..transport.errors import (
+    REASON_ERROR_NOT_RETRYABLE,
+    REASON_MAX_RETRIES_EXCEEDED,
+    ProviderError,
+    RetryExhausted,
+)
+from ..transport.http import retry_delay_ms
+from ..transport.metering import record_usage
 
 log = logging.getLogger("newswright.embedding")
 
@@ -28,6 +41,11 @@ class EmbeddingError(ProviderError):
 
 class EmbeddingValidationError(EmbeddingError):
     """响应校验失败（向量数/维度与请求不符）——请求构造或服务端错配，不重试。"""
+
+
+class EmbeddingRetryExhausted(RetryExhausted, EmbeddingError):
+    """向量生成重试终态：保持 EmbeddingError 域类型兼容（既有 except 面零改动），
+    同时携带 RetryExhausted 结构化 reason/errors（传输脊耗尽归因）。"""
 
 
 class EmbeddingProvider(ABC):
@@ -92,6 +110,7 @@ class EmbeddingProvider(ABC):
     ) -> list[list[float]]:
         attempt = 0
         last_err: Exception | None = None
+        attempt_errors: list[Exception] = []
         while attempt <= max_retries:
             t0 = time.monotonic()
             try:
@@ -128,6 +147,7 @@ class EmbeddingProvider(ABC):
             except (httpx.HTTPError, ProviderError) as e:
                 latency_ms = int((time.monotonic() - t0) * 1000)
                 last_err = e
+                attempt_errors.append(e)
                 retryable = isinstance(e, httpx.HTTPError) or getattr(e, "retryable", False)
                 record_usage(
                     self.db,
@@ -143,11 +163,17 @@ class EmbeddingProvider(ABC):
                 )
                 if not retryable or attempt == max_retries:
                     break
-                delay = 2**attempt
+                delay = retry_delay_ms(e, attempt) / 1000.0
                 log.warning("embedding 调用失败（第 %d 次，%.1fs 后重试）: %s", attempt + 1, delay, e)
                 time.sleep(delay)
                 attempt += 1
-        raise EmbeddingError(f"{self.name} embedding 失败（重试 {attempt} 次后放弃）: {last_err}")
+        reason = (REASON_MAX_RETRIES_EXCEEDED
+                  if isinstance(last_err, httpx.HTTPError) or getattr(last_err, "retryable", False)
+                  else REASON_ERROR_NOT_RETRYABLE)
+        raise EmbeddingRetryExhausted(
+            f"{self.name} embedding 失败（重试 {attempt} 次后放弃）: {last_err}",
+            reason=reason, errors=attempt_errors,
+        )
 
     @property
     @abstractmethod
