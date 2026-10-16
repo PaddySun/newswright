@@ -2935,3 +2935,210 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 ## C5-0 同步节（2026-10-16，统一 dispatch #18〔run 38784821806〕对账后同步——统筹亲执）
 
 > 移除 230 行 = **转杀 175**（现 killed——新测试连带杀灭，名单 doc/C4/统一dispatch-对账/artifacts/exem_tokill.txt，其中 hot 族 21 条为 C2 轮老幸存清零）+ **路径失配 55**（C4 迁移面源码路径变化〔providers.deepseek 23/providers.base 11/search.base 7/ingest.http 6/hot 5/search.quota 2/ingest.rss 1〕——旧名变异体已随源码消失，新路径幸存者已在 C5 分诊池内，不重复登记；名单 exem_missing.txt）。同步后口径 2363 → 2133。
+
+## C5-1 分诊批次 1（2026-10-16，公开页与 API 契约族 312 条）：A 120 + B 1 = 121 条
+
+> 种子 312 = C 167（补测杀灭：tests/test_mutation_c5_1_public_render_whitelist_contract.py + test_mutation_c5_1_public_render_inline_contract.py + test_mutation_c5_1_public_pages_contract.py + test_mutation_c5_1_stream_board_author_contract.py，共 34 测试） + A 120（本节）+ B 1（本节）+ D 2（呈统筹，不在本清单：公开文章卡片流顺序与 unscored 列表顺序无条款锚） + suspicious 转杀 13（重跑 stable-killed，既有测试已杀：require_session m19-29 / record_success m1 / verify_password m5，doc/C5/C5-1-suspicious定性结果.json） + 复用既有豁免 3（require_session m18 与 issue_session m8/m9——豁免表在案维持原判）。核验-改判循环：C 逐条施加必杀、A/B 逐条施加必活至零意外（doc/C5/C5-1-核验结果.json）。
+
+> 本批特记：render_markdown_whitelist 引用块族 26 条按「不可达」判 A——引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;），该语法当前永不触发（生产缺陷呈报 D 类问题清单；若统筹裁定修复，本族需重新分诊）。
+
+### app.api.middleware.cache_policy_for（6 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.middleware.x_cache_policy_for__mutmut_1 | A | query 缺省 ""→XXXX：split 无 = 部分→空 dict→no-cache 同值；ASGI 调用方恒显式传 query（缺省分支判定域内等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.middleware.x_cache_policy_for__mutmut_8 | A | split(rsplit/=,2) 变体：版本锚形态=十进制时间戳串（STATIC_VERSION=str(int(time))），单 k=v 判定域内解析同值；值含 = 的病态 query 无条款 | 设计书条款/实证推理（详见说明列） |
+| app.api.middleware.x_cache_policy_for__mutmut_9 | A | split(rsplit/=,2) 变体：版本锚形态=十进制时间戳串（STATIC_VERSION=str(int(time))），单 k=v 判定域内解析同值；值含 = 的病态 query 无条款 | 设计书条款/实证推理（详见说明列） |
+| app.api.middleware.x_cache_policy_for__mutmut_11 | A | split(rsplit/=,2) 变体：版本锚形态=十进制时间戳串（STATIC_VERSION=str(int(time))），单 k=v 判定域内解析同值；值含 = 的病态 query 无条款 | 设计书条款/实证推理（详见说明列） |
+| app.api.middleware.x_cache_policy_for__mutmut_12 | A | query.split(None) 按空白：URL query 判定域无空白（%20 编码），同值等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.middleware.x_cache_policy_for__mutmut_13 | A | split("XX&XX")：v 键存在性解析不变（v=1 开头段仍解析出 v 键），immutable 判定同值 | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public._base_url（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public.x__base_url__mutmut_13 | A | rstrip 字符集 {X,/}：判定域（base 尾随非 X）等价 | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public._citations_with_urls（4 A + 1 B）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public.x__citations_with_urls__mutmut_4 | B | 非 dict 脏条目 continue→break：脏数据防御分支形态差异（防御域——设计要求防御存在，跳过/终止细节不钉） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__citations_with_urls__mutmut_7 | A | or True 恒真：item_id 假值时 db.get(Item, None)→None，与原版直接 None 同值（等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__citations_with_urls__mutmut_27 | A | quote 缺省变体：写入侧 pipeline citations 恒带 quote 键（app/authors/pipeline.py 脚注装配），缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__citations_with_urls__mutmut_29 | A | quote 缺省变体：写入侧 pipeline citations 恒带 quote 键（app/authors/pipeline.py 脚注装配），缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__citations_with_urls__mutmut_32 | A | quote 缺省变体：写入侧 pipeline citations 恒带 quote 键（app/authors/pipeline.py 脚注装配），缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public._mode_b_entries（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public.x__mode_b_entries__mutmut_5 | A | limit None：一次渲染窗口数值无条款（docstring『合理窗口，全量由分页演进』），判定域数据量内等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__mode_b_entries__mutmut_16 | A | join onclause None/省略（SQLAlchemy FK 推断等价）；query(Item, None)=SELECT NULL 附列无消费（C2 join 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__mode_b_entries__mutmut_18 | A | join onclause None/省略（SQLAlchemy FK 推断等价）；query(Item, None)=SELECT NULL 附列无消费（C2 join 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__mode_b_entries__mutmut_20 | A | join onclause None/省略（SQLAlchemy FK 推断等价）；query(Item, None)=SELECT NULL 附列无消费（C2 join 判例族） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public._public_articles（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public.x__public_articles__mutmut_2 | A | limit None：渲染窗口数值无条款（同 PUBLIC_LIST_LIMIT 判据） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__public_articles__mutmut_9 | A | join onclause FK 推断等价（C2 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__public_articles__mutmut_11 | A | join onclause FK 推断等价（C2 判例族） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public._visible_article（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public.x__visible_article__mutmut_9 | A | join onclause FK 推断等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x__visible_article__mutmut_11 | A | join onclause FK 推断等价 | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public.public_mode（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public.x_public_mode__mutmut_10 | A | None 恒真/缺省 XXAXX/a：变体值均不在 _VALID_MODES，被兜底回退 A 吸收（暴露面取最紧侧的自愈设计） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x_public_mode__mutmut_14 | A | None 恒真/缺省 XXAXX/a：变体值均不在 _VALID_MODES，被兜底回退 A 吸收（暴露面取最紧侧的自愈设计） | 设计书条款/实证推理（详见说明列） |
+| app.api.public.x_public_mode__mutmut_15 | A | None 恒真/缺省 XXAXX/a：变体值均不在 _VALID_MODES，被兜底回退 A 吸收（暴露面取最紧侧的自愈设计） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public_render._inline（5 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public_render.x__inline__mutmut_9 | A | 替换模板 XX 包裹：标签结构保留+页面垃圾文本——措辞域（任务书 HTML 文案条） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x__inline__mutmut_10 | A | <CODE>/<EM> 大写标签：HTML 标签大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x__inline__mutmut_19 | A | 替换模板 XX 包裹：标签结构保留+页面垃圾文本——措辞域（任务书 HTML 文案条） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x__inline__mutmut_29 | A | 替换模板 XX 包裹：标签结构保留+页面垃圾文本——措辞域（任务书 HTML 文案条） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x__inline__mutmut_30 | A | <CODE>/<EM> 大写标签：HTML 标签大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public_render._link_markup（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public_render.x__link_markup__mutmut_6 | A | replace(&amp; 解码) 目标/产物字面量变体：replace 结果只进 _SAFE_URL 前缀判定，中部 &amp; 不影响 ^https?:// 前缀匹配（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x__link_markup__mutmut_7 | A | replace(&amp; 解码) 目标/产物字面量变体：replace 结果只进 _SAFE_URL 前缀判定，中部 &amp; 不影响 ^https?:// 前缀匹配（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x__link_markup__mutmut_8 | A | replace(&amp; 解码) 目标/产物字面量变体：replace 结果只进 _SAFE_URL 前缀判定，中部 &amp; 不影响 ^https?:// 前缀匹配（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x__link_markup__mutmut_15 | A | 编码值形态 XX%22XX：字面引号仍被替换（破面消除），编码值形态无条款 | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public_render.first_sentence（8 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public_render.x_first_sentence__mutmut_1 | A | max_chars 缺省 121/边界等号未钉——摘要长度数值无条款（AC-16.1 只钉一句话语义；C2 expire 等号判例族） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_first_sentence__mutmut_15 | A | maxsplit 移除/加档/len>1≡len>2：re.split 捕获组下 pieces 长度域 {1,3,4,5}，cut 取 pieces[0]/[1] 同值（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_first_sentence__mutmut_18 | A | maxsplit 移除/加档/len>1≡len>2：re.split 捕获组下 pieces 长度域 {1,3,4,5}，cut 取 pieces[0]/[1] 同值（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_first_sentence__mutmut_23 | A | maxsplit 移除/加档/len>1≡len>2：re.split 捕获组下 pieces 长度域 {1,3,4,5}，cut 取 pieces[0]/[1] 同值（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_first_sentence__mutmut_30 | A | cut 空兜底分支不可达：归一化保证 normalized 首字符非空白（空文本已早退），pieces[0]+[1] 恒非空——cut=normalized 兜底永不触发 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_first_sentence__mutmut_31 | A | max_chars 缺省 121/边界等号未钉——摘要长度数值无条款（AC-16.1 只钉一句话语义；C2 expire 等号判例族） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_first_sentence__mutmut_33 | A | 截断段 lstrip/省略号形态变体：截断+省略号语义仍在，措辞未钉（HTML 文案域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_first_sentence__mutmut_34 | A | 截断段 lstrip/省略号形态变体：截断+省略号语义仍在，措辞未钉（HTML 文案域） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.public_render.render_markdown_whitelist（75 条，其中引用块不可达族 26）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.public_render.x_render_markdown_whitelist__mutmut_9 | A | 无 url 缺省 XXXX：_SAFE_URL 前缀判定不匹配与空串同走不加链接分支（等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_13 | A | escape quote=None：None falsy ≡ quote=False（缺省参数语义等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_17 | A | source None 缺省 XXXX：调用面 article.body 恒非 None（DB 列非空），判定域不可达 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_24 | A | in_code_fence 初值/复位 None：None falsy ≡ False（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_27 | A | code_lang 初始 None：恒被 fence 开栏 group(1) 覆盖后始被读取（初始值不可达——m101/m102 同判据） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_28 | A | code_lang 缺省 XXXX：被 fence.group(1) 覆盖或仅进 class 属性值（措辞） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_32 | A | <br> join XX/大写：软换行连接形态变体，段落结构保留（措辞/大小写等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_33 | A | <br> join XX/大写：软换行连接形态变体，段落结构保留（措辞/大小写等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_50 | A | strip 字符集 {X,|}：判定域 cell 文本首尾非 X 等价（middleware rsplit 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_54 | A | th join XXXX：列间连接形态变体，标签结构保留（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_61 | A | tr/td 结构串 XX 包裹/大写：标签结构保留+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_62 | A | tr/td 结构串 XX 包裹/大写：标签结构保留+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_64 | A | tr/td 结构串 XX 包裹/大写：标签结构保留+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_67 | A | tr/td 结构串 XX 包裹/大写：标签结构保留+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_68 | A | tr/td 结构串 XX 包裹/大写：标签结构保留+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_75 | A | table 结构串 XX 包裹/大写：标签完整+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_76 | A | table 结构串 XX 包裹/大写：标签完整+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_77 | A | table 结构串 XX 包裹/大写：标签完整+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_78 | A | table 结构串 XX 包裹/大写：标签完整+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_80 | A | table 结构串 XX 包裹/大写：标签完整+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_81 | A | table 结构串 XX 包裹/大写：标签完整+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_82 | A | table 结构串 XX 包裹/大写：标签完整+垃圾文本或大小写等价（措辞域） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_86 | A | 行 rstrip→lstrip：HTML 空白折叠，渲染等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_92 | A | lang None：仅 class 属性值变 language-None（措辞） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_98 | A | in_code_fence 初值/复位 None：None falsy ≡ False（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_101 | A | code_lang reset None/XXXX：恒被下次 fence.group(1) 覆盖（不可达差异） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_102 | A | code_lang reset None/XXXX：恒被下次 fence.group(1) 覆盖（不可达差异） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_111 | A | [0-9a-za-z+-] 字符类重复成员等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_119 | A | and→or：单边 | 行（| 开头不闭合）不属表格行判定域（markdown 表格行=双 | 包裹） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_152 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_153 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_154 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_155 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_156 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_157 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_158 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_159 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_160 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_161 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_162 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_163 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_164 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_165 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_166 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_167 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_168 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_169 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_170 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_171 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_172 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_173 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_174 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_175 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_176 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_177 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_178 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_179 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_197 | A | <UL>/<OL> 大写标签：HTML 大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_199 | A | <UL>/<OL> 大写标签：HTML 大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_224 | A | 续行切片 [:-5] 恰剥净闭合标签（原版 [:-4] 残留孤立 <）：渲染近似等价（孤立 < 按文本显示），无条款钉拼接切片边界 | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_227 | A | </li> 尾 XX/大写：闭合标签结构保留（措辞/大小写） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_228 | A | </li> 尾 XX/大写：闭合标签结构保留（措辞/大小写） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_248 | A | else 缺省 XXXX：不安全值同被 _SAFE_URL 拒（链接生成分支等价） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_255 | A | escape(url,)≡quote=True（缺省即 True） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_263 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_264 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_266 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_267 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_268 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
+| app.api.public_render.x_render_markdown_whitelist__mutmut_270 | A | 总出口 join XX：块间分隔形态变体（块内容与顺序不变，措辞域） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.routes._author_full_out（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.routes.x__author_full_out__mutmut_11 | A | or True 恒真（非 int did 的 db.get→None 同值等价）；func.count(None) 在 SQLAlchemy 渲染为 count(*)（实证 2.1 等价——计数同值） | 设计书条款/实证推理（详见说明列） |
+| app.api.routes.x__author_full_out__mutmut_37 | A | or True 恒真（非 int did 的 db.get→None 同值等价）；func.count(None) 在 SQLAlchemy 渲染为 count(*)（实证 2.1 等价——计数同值） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.routes._enriched_citations（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.routes.x__enriched_citations__mutmut_13 | A | or True 恒真：item_id 假值 db.get→None 同值（与 public._citations_with_urls m7 同判据） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.routes._inject_explore_items（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.routes.x__inject_explore_items__mutmut_72 | A | join onclause FK 推断等价（C2 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.api.routes.x__inject_explore_items__mutmut_74 | A | join onclause FK 推断等价（C2 判例族） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.routes._unscored_entries（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.routes.x__unscored_entries__mutmut_36 | A | join onclause FK 推断等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.routes.x__unscored_entries__mutmut_38 | A | join onclause FK 推断等价 | 设计书条款/实证推理（详见说明列） |
+| app.api.routes.x__unscored_entries__mutmut_85 | A | limit 10→None/11：附带数量窗口数值无条款（§3 只钉同构+note） | 设计书条款/实证推理（详见说明列） |
+| app.api.routes.x__unscored_entries__mutmut_87 | A | limit 10→None/11：附带数量窗口数值无条款（§3 只钉同构+note） | 设计书条款/实证推理（详见说明列） |
+
+### app.api.routes._url_domain（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.api.routes.x__url_domain__mutmut_3 | A | url or XXXX：urlparse(XXXX).hostname=None 与 urlparse('').hostname=None 同值（等价） | 设计书条款/实证推理（详见说明列） |
