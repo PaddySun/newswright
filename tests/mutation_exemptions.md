@@ -3142,3 +3142,272 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | 变异体 | 类 | 说明 | 依据 |
 |---|---|---|---|
 | app.api.routes.x__url_domain__mutmut_3 | A | url or XXXX：urlparse(XXXX).hostname=None 与 urlparse('').hostname=None 同值（等价） | 设计书条款/实证推理（详见说明列） |
+
+## C5-2 分诊批次 2（2026-10-17，传输脊与 LLM 选源族 209 条）：A 128 + B 0 = 128 条
+
+> 种子 209 = C 79（补测杀灭：tests/test_mutation_c5_2_transport_status_boundary.py + test_mutation_c5_2_transport_pool_key_contract.py + test_mutation_c5_2_transport_backoff_formula.py + test_mutation_c5_2_llm_provider_call_contract.py + test_mutation_c5_2_llm_resolve_variant_contract.py + test_mutation_c5_2_moark_deepseek_metering_contract.py + test_mutation_c5_2_docs_gate_and_mount.py + test_mutation_c5_2_hot_rank_env_contract.py + test_mutation_c5_2_scoring_terminal_status.py，共 59 测试（含 GET/POST 池隔离与 os.environ 替换两处核验改判后补强）；条款锚=技术书 v2.2 §6.13 TR-1~6/LR-1~7 + P1-8 + AC-07 + 配置键七项表） + A 128（本节，含核验改判 3 条：chat 回退分支等价与计量/打分状态列 INSERT-NULL 兜底实证）+ D 2（呈统筹，不在本清单：chat 温度缺省与打分温度显式值无条款锚）。核验-改判循环：C 逐条施加必杀、A 逐条施加必活至零意外（doc/C5/C5-2-核验结果.json）。
+
+> 本批判例复用特记：providers.base 计量与重试族 A 条目大量复用 C1-1 批判例（meter.get 缺省族/payload 恒含 model/日志文案/截断界/timeout 缺省）——chat/_call 自 DeepSeekProvider 下沉 LLMProvider 后迁移面语义不变，全部施加核验必活实证；retrieval.query 与 scoring.service 回归族系打桩面resolve_chat 随动（C4-2 偏离 A），被测契约未变按原判据族登记。
+
+### app.config::hot_rank_filter_enabled（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.config.x_hot_rank_filter_enabled__mutmut_8 | A | 缺省 ""→XXXX：两缺省串 lower 后均不在真值集合——恒 False 等价 | 设计书条款/实证推理（详见说明列） |
+
+### app.main::_docs_enabled（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.main.x__docs_enabled__mutmut_8 | A | 缺省 ""→XXXX：两缺省串 lower 后均不在真值集合——恒 False 等价 | 设计书条款/实证推理（详见说明列） |
+
+### app.main::create_app（8 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.main.x_create_app__mutmut_9 | A | 删 version 行：FastAPI 缺省 version 即 "0.1.0"（缺省同值恰等价） | 设计书条款/实证推理（详见说明列） |
+| app.main.x_create_app__mutmut_13 | A | title XX/大写、version XX：应用元信息字符串无条款（观测面=OpenAPI info 文案域） | 设计书条款/实证推理（详见说明列） |
+| app.main.x_create_app__mutmut_14 | A | title XX/大写、version XX：应用元信息字符串无条款（观测面=OpenAPI info 文案域） | 设计书条款/实证推理（详见说明列） |
+| app.main.x_create_app__mutmut_15 | A | title XX/大写、version XX：应用元信息字符串无条款（观测面=OpenAPI info 文案域） | 设计书条款/实证推理（详见说明列） |
+| app.main.x_create_app__mutmut_41 | A | mount name None/丢参/XX/大写：Starlette 按 path 提供静态服务、name 无行为消费方（全库无 url_for('static') 使用） | 设计书条款/实证推理（详见说明列） |
+| app.main.x_create_app__mutmut_44 | A | mount name None/丢参/XX/大写：Starlette 按 path 提供静态服务、name 无行为消费方（全库无 url_for('static') 使用） | 设计书条款/实证推理（详见说明列） |
+| app.main.x_create_app__mutmut_49 | A | mount name None/丢参/XX/大写：Starlette 按 path 提供静态服务、name 无行为消费方（全库无 url_for('static') 使用） | 设计书条款/实证推理（详见说明列） |
+| app.main.x_create_app__mutmut_50 | A | mount name None/丢参/XX/大写：Starlette 按 path 提供静态服务、name 无行为消费方（全库无 url_for('static') 使用） | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.base::_error_is_retryable（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.base.x__error_is_retryable__mutmut_5 | A | getattr 缺省 False→None：bool(None)=False 同值恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.x__error_is_retryable__mutmut_8 | A | 丢缺省/缺省 True：_call 捕获面限定 (httpx.HTTPError, ProviderError)，前者先 return、后者类属性 retryable 恒存在——缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.x__error_is_retryable__mutmut_11 | A | 丢缺省/缺省 True：_call 捕获面限定 (httpx.HTTPError, ProviderError)，前者先 return、后者类属性 retryable 恒存在——缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.base::LLMProviderǁ_call（17 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_14 | A | 延迟毫秒换算 ×1000→×1001：换算系数数值无条款（延迟语义保留） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_27 | A | 成功计量行 ok=None：UsageLog.ok 列 default=True 在 INSERT 时兜底落库 True（SQLAlchemy INSERT-NULL 兜底判例——C3-6 先例复用，本批施加亲证） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_42 | A | 丢 ok=True：record_usage 缺省即 True（缺省同值恰等价） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_55 | A | meter.get('model') 缺省 XXXX：payload 恒含 model 键，缺省分支不可达（C1-1 m50 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_62 | A | meter.get token 键缺省变体（1/丢缺省）：meter 契约恒含全部 token 键（_meter_from_openai_usage 恒返全键），缺省分支不可达（C1-1 m52 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_69 | A | meter.get token 键缺省变体（1/丢缺省）：meter 契约恒含全部 token 键（_meter_from_openai_usage 恒返全键），缺省分支不可达（C1-1 m52 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_76 | A | meter.get token 键缺省变体（1/丢缺省）：meter 契约恒含全部 token 键（_meter_from_openai_usage 恒返全键），缺省分支不可达（C1-1 m52 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_83 | A | meter.get token 键缺省变体（1/丢缺省）：meter 契约恒含全部 token 键（_meter_from_openai_usage 恒返全键），缺省分支不可达（C1-1 m52 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_87 | A | meter.get token 键缺省变体（1/丢缺省）：meter 契约恒含全部 token 键（_meter_from_openai_usage 恒返全键），缺省分支不可达（C1-1 m52 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_90 | A | meter.get token 键缺省变体（1/丢缺省）：meter 契约恒含全部 token 键（_meter_from_openai_usage 恒返全键），缺省分支不可达（C1-1 m52 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_102 | A | 延迟毫秒换算 ×1000→×1001：换算系数数值无条款（延迟语义保留） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_126 | A | error 路径 model 缺省变体：payload 恒含 model（C1-1 m131 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_128 | A | error 路径 model 缺省变体：payload 恒含 model（C1-1 m131 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_133 | A | error 文案 type(None).__name__：账本 error 文案前缀域（D12 未钉文案；C1-1 m155 判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_148 | A | 重试日志文案/实参/计数偏移：业务日志措辞无条款（C1-1 m155 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_153 | A | 重试日志文案/实参/计数偏移：业务日志措辞无条款（C1-1 m155 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁ_call__mutmut_156 | A | 重试日志文案/实参/计数偏移：业务日志措辞无条款（C1-1 m155 判例族） | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.base::LLMProviderǁchat（15 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.base.xǁLLMProviderǁchat__mutmut_13 | A | reasoner 回退分支值 None→空串：空串与 None 同走 chat 档构建（不等于 reasoner 的判定与 tier_request else 分支对两值同构）——恰等价（桌面误读变异行为回退分支非初值，施加实证不杀改判） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_15 | A | fallback_note 文案 XX/大写：观测面属性措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_16 | A | fallback_note 文案 XX/大写：观测面属性措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_27 | A | tier != 'reasoner' 判定变体：差异域=reasoner+json_mode 组合——生产调用面 JSON 节点恒 chat 档（authors/pipeline JSON_NODES 实证）、chat_json 调用方不传 tier——组合不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_28 | A | tier != 'reasoner' 判定变体：差异域=reasoner+json_mode 组合——生产调用面 JSON 节点恒 chat 档（authors/pipeline JSON_NODES 实证）、chat_json 调用方不传 tier——组合不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_64 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_65 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_66 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_67 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_92 | A | fallback_note 截断界 200→201：截断界数值无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_94 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_95 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_96 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_97 | A | 兼容阀/回退日志文案与实参：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁLLMProviderǁchat__mutmut_142 | A | JSONParseError(None)：异常类型不变、消息文案域（调用方按类型处理） | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.base::OpenAIChatProviderǁ__init__（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.base.xǁOpenAIChatProviderǁ__init____mutmut_1 | A | timeout 缺省 120→121：显式超时语义不变（技术书 §4.2 只要求必填有限值；HTTPProviderǁ__init__ǁm1 判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.providers.base.xǁOpenAIChatProviderǁ__init____mutmut_9 | A | super 丢 timeout：HTTPProvider 缺省即 120.0（缺省同值恰等价） | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.base::OpenAIChatProviderǁ_compat_resend_payload（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.base.xǁOpenAIChatProviderǁ_compat_resend_payload__mutmut_8 | A | fallback_note join 分隔符 XX：观测面属性措辞无条款 | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.registry::get_provider（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.registry.x_get_provider__mutmut_2 | A | none 判定集合变体：none/空串名仍被未注册分支以 FrameworkError 拦截（类型不变、文案域）；NONE 大写差异域经启动校验前置不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.registry.x_get_provider__mutmut_3 | A | none 判定集合变体：none/空串名仍被未注册分支以 FrameworkError 拦截（类型不变、文案域）；NONE 大写差异域经启动校验前置不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.registry.x_get_provider__mutmut_4 | A | none 判定集合变体：none/空串名仍被未注册分支以 FrameworkError 拦截（类型不变、文案域）；NONE 大写差异域经启动校验前置不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.registry.x_get_provider__mutmut_6 | A | FrameworkError 消息 XX：异常文案域 | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.resolve::cooldown_remaining（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.resolve.x_cooldown_remaining__mutmut_11 | A | 缺省 0.0→1.0：无记录时 1.0−monotonic 恒负被 max(0,·) 钳 0——恰等价 | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.resolve::mark_cooldown（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.resolve.x_mark_cooldown__mutmut_5 | A | ttl<=0→<0：ttl=0 写入即刻过期记录——外部行为等价（>now 判定与 cooldown_remaining 的 max(0,·) 双重吸收） | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.resolve::resolve_chat（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.resolve.x_resolve_chat__mutmut_2 | A | 显式 candidates 被忽略：生产调用面（scoring/retrieval/pipeline）恒不传 candidates——差异域不可达（实参恒替换判例） | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_resolve_chat__mutmut_17 | A | 冷却缺省 1.0：无记录时 1.0>monotonic 恒假——缺省分支行为等价 | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_resolve_chat__mutmut_18 | A | >→>=：冷却恰到期瞬态（单调钟相等时刻）边界开闭无条款 | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.resolve::validate_provider_config（12 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.resolve.x_validate_provider_config__mutmut_6 | A | LLM_PROVIDER/EMBED_PROVIDER or 缺省：两 config 值恒非空（缺省 deepseek/moark），缺省右支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_8 | A | none 判定集合变体：非法值仍被未注册分支拦截（仍拒启动、类型不变，报错文案域） | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_9 | A | none 判定集合变体：非法值仍被未注册分支拦截（仍拒启动、类型不变，报错文案域） | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_10 | A | none 判定集合变体：非法值仍被未注册分支拦截（仍拒启动、类型不变，报错文案域） | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_16 | A | none 判定集合变体：非法值仍被未注册分支拦截（仍拒启动、类型不变，报错文案域） | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_17 | A | none 判定集合变体：非法值仍被未注册分支拦截（仍拒启动、类型不变，报错文案域） | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_23 | A | LLM_PROVIDER/EMBED_PROVIDER or 缺省：两 config 值恒非空（缺省 deepseek/moark），缺省右支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_32 | A | 校验失败消息/分隔符变体：异常文案域 | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_33 | A | 校验失败消息/分隔符变体：异常文案域 | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_36 | A | 校验失败消息/分隔符变体：异常文案域 | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_37 | A | 校验失败消息/分隔符变体：异常文案域 | 设计书条款/实证推理（详见说明列） |
+| app.providers.resolve.x_validate_provider_config__mutmut_39 | A | 校验失败消息/分隔符变体：异常文案域 | 设计书条款/实证推理（详见说明列） |
+
+### app.retrieval.query::ensure_direction_query_vec（13 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_20 | A | ref_id None/删行：账本归因值域（chat 签名缺省 None；C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_21 | A | max_tokens None/丢参/501：生成上限护栏数值无条款（「200 字以内」由提示词文本承载；C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_25 | A | ref_id None/删行：账本归因值域（chat 签名缺省 None；C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_26 | A | max_tokens None/丢参/501：生成上限护栏数值无条款（「200 字以内」由提示词文本承载；C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_33 | A | system 消息「你是检索查询构造器。」文案：LLM-facing 措辞无条款（版本化常量是 user 消息 QUERY_GEN_PROMPT，system 角色串不在版本锚内） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_44 | A | ref_type 值 DIRECTION：账本归因值域（C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_45 | A | max_tokens None/丢参/501：生成上限护栏数值无条款（「200 字以内」由提示词文本承载；C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_48 | A | 空文本异常消息 None/XX：异常文案域（类型不变） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_49 | A | 空文本异常消息 None/XX：异常文案域（类型不变） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_56 | A | dims 覆写恒缺省：生产调用形态恒不传 expected_dims（C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_70 | A | 失败日志实参/文案：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_71 | A | 失败日志实参/文案：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+| app.retrieval.query.x_ensure_direction_query_vec__mutmut_75 | A | 失败日志实参/文案：业务日志措辞无条款 | 设计书条款/实证推理（详见说明列） |
+
+### app.scoring.service::score_item（12 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.scoring.service.x_score_item__mutmut_53 | A | 降级文案大小写 llm：错误原因措辞域（非空语义保留） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_57 | A | model None/删行：生产调用点恒不传 model（形参恒 None 恰等价；C4 前 判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_59 | A | ref_type None/XX/大写：账本归因值域（C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_63 | A | model None/删行：生产调用点恒不传 model（形参恒 None 恰等价；C4 前 判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_70 | A | ref_type None/XX/大写：账本归因值域（C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_71 | A | ref_type None/XX/大写：账本归因值域（C4 前判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_92 | A | 成功路径 status=None：ScoreResult.status 列 default="OK" 在 INSERT 时兜底落库 OK（SQLAlchemy INSERT-NULL 兜底判例——C3-6 先例复用，本批施加亲证 status 落 'OK'） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_95 | A | error ''：OK 行 error 空串与 None 在真值判定下同消费（列语义=无错） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_98 | A | last_error str(None)：失败原因文案域（非空语义保留） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_107 | A | 重试违规说明消息文案 XX：LLM-facing 提示措辞域（C1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_117 | A | OK 判定 != 变体：OK 路径 last_error 恒 None，误入 if 落列同值——恰等价（初值吸收判例族） | 设计书条款/实证推理（详见说明列） |
+| app.scoring.service.x_score_item__mutmut_118 | A | OK 判定 != 变体：OK 路径 last_error 恒 None，误入 if 落列同值——恰等价（初值吸收判例族） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::_non_2xx_error（11 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x__non_2xx_error__mutmut_8 | A | retry-after/location 头键大写：httpx.Headers 大小写不敏感（C1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_17 | A | retry-after/location 头键大写：httpx.Headers 大小写不敏感（C1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_20 | A | 无 location 头时 head 文案变体：错误消息措辞无条款（类型/retryable/status/location 结构化字段不变） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_27 | A | TransportError 丢 retryable=True 显式参：构造缺省即 True（缺省同值恰等价） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_31 | A | _scrub(None) 消息不含响应体：错误消息文案域（结构化字段与异常类型不变；脱敏纪律不因丢内容而违反） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_32 | A | 消息体截断界 300→301：截断界数值无条款（providers.base m42 [:2000] 先例同族） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_40 | A | TransportError 丢 retryable=True 显式参：构造缺省即 True（缺省同值恰等价） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_43 | A | _scrub(None) 消息不含响应体：错误消息文案域（结构化字段与异常类型不变；脱敏纪律不因丢内容而违反） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_44 | A | 消息体截断界 300→301：截断界数值无条款（providers.base m42 [:2000] 先例同族） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_55 | A | _scrub(None) 消息不含响应体：错误消息文案域（结构化字段与异常类型不变；脱敏纪律不因丢内容而违反） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__non_2xx_error__mutmut_56 | A | 消息体截断界 300→301：截断界数值无条款（providers.base m42 [:2000] 先例同族） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::_origin_of（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x__origin_of__mutmut_5 | A | isinstance(bytes) or True 恒真：httpx.URL.netloc 恒 bytes（else 分支不可达） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__origin_of__mutmut_8 | A | decode('ASCII')：Python 编码别名大小写不敏感恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__origin_of__mutmut_9 | A | else 分支 str(None)：netloc 恒 bytes 使 else 不可达（同 m5 域） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::_pooled_client（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x__pooled_client__mutmut_1 | A | 外层快路径失效：恒进锁后二检兜底同值（快路径是纯性能优化，语义等价；既有线程安全测试施加域内同杀面不覆盖） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x__pooled_client__mutmut_2 | A | 外层快路径失效：恒进锁后二检兜底同值（快路径是纯性能优化，语义等价；既有线程安全测试施加域内同杀面不覆盖） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::_scrub（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x__scrub__mutmut_2 | A | or True 使 falsy 输入崩 AttributeError：库内调用点恒非 falsy（transport 三处 resp.text[:300] 恒 str；metering error 真值守卫）——差异域不可达 | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::effective_user_agent（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x_effective_user_agent__mutmut_11 | A | 缺省 honest→XX/大写：strategy 仅与 'custom' 比较，缺省值漂移落同一 honest 分支（判定域等价） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x_effective_user_agent__mutmut_12 | A | 缺省 honest→XX/大写：strategy 仅与 'custom' 比较，缺省值漂移落同一 honest 分支（判定域等价） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::get_json（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x_get_json__mutmut_11 | A | 鉴权缺省值变体（None/丢缺省/XXXX）：差异域=Authorization 显式空串请求（无生产消费方；真值鉴权仍分键） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x_get_json__mutmut_13 | A | 鉴权缺省值变体（None/丢缺省/XXXX）：差异域=Authorization 显式空串请求（无生产消费方；真值鉴权仍分键） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x_get_json__mutmut_18 | A | 鉴权缺省值变体（None/丢缺省/XXXX）：差异域=Authorization 显式空串请求（无生产消费方；真值鉴权仍分键） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x_get_json__mutmut_41 | A | TransportError 丢 retryable=True：构造缺省即 True（缺省同值） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::honest_user_agent（2 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x_honest_user_agent__mutmut_3 | A | 条件 str(contact_email)→str(None)：两支 strip 后均非空，真值表恒等价（return 行未变，邮箱值正常进 UA） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x_honest_user_agent__mutmut_5 | A | base[:-2] 邮箱形态 UA 模板截断字符：模板措辞无条款（产品名+邮箱语义仍在） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::http_client（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x_http_client__mutmut_1 | A | timeout 缺省 60→61：采集调用点（web/rss/tencent 四处）恒显式传 timeout——缺省不可达 | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.http::post_json（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.http.x_post_json__mutmut_10 | A | 鉴权缺省值变体（None/丢缺省/XXXX）：差异域=Authorization 显式空串请求（无生产消费方） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x_post_json__mutmut_12 | A | 鉴权缺省值变体（None/丢缺省/XXXX）：差异域=Authorization 显式空串请求（无生产消费方） | 设计书条款/实证推理（详见说明列） |
+| app.transport.http.x_post_json__mutmut_16 | A | 鉴权缺省值变体（None/丢缺省/XXXX）：差异域=Authorization 显式空串请求（无生产消费方） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.metering::record_usage（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.metering.x_record_usage__mutmut_6 | A | latency_ms/ok 签名缺省变体：库内全部调用点（providers/embedding/rerank 五处）恒显式传两参——缺省不可达（C1-1 计量判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.transport.metering.x_record_usage__mutmut_7 | A | latency_ms/ok 签名缺省变体：库内全部调用点（providers/embedding/rerank 五处）恒显式传两参——缺省不可达（C1-1 计量判例族复用） | 设计书条款/实证推理（详见说明列） |
+| app.transport.metering.x_record_usage__mutmut_42 | A | error 截断界 2000→2001：截断界数值无条款（C1-1 m42 先例同族） | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.quota::_count（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.quota.x__count__mutmut_6 | A | filter_by 丢 period：minute 键（%Y-%m-%dT%H:%M）与 day 键（%Y-%m-%d）形态互斥，period_key 单独已唯一区分行——查询同值恰等价 | 设计书条款/实证推理（详见说明列） |
+
+### app.transport.quota::check_and_count（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.transport.quota.x_check_and_count__mutmut_43 | A | 预占查询丢 period：同上 minute/day 键形态互斥等价 | 设计书条款/实证推理（详见说明列） |
