@@ -2936,11 +2936,11 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 
 > 移除 230 行 = **转杀 175**（现 killed——新测试连带杀灭，名单 doc/C4/统一dispatch-对账/artifacts/exem_tokill.txt，其中 hot 族 21 条为 C2 轮老幸存清零）+ **路径失配 55**（C4 迁移面源码路径变化〔providers.deepseek 23/providers.base 11/search.base 7/ingest.http 6/hot 5/search.quota 2/ingest.rss 1〕——旧名变异体已随源码消失，新路径幸存者已在 C5 分诊池内，不重复登记；名单 exem_missing.txt）。同步后口径 2363 → 2133。
 
-## C5-1 分诊批次 1（2026-10-16，公开页与 API 契约族 312 条）：A 120 + B 1 = 121 条
+## C5-1 分诊批次 1（2026-10-16，公开页与 API 契约族 312 条）：A 92 + B 1 = 93 条（原 A 120：引用块族 28 条经引用块可达性修复批（C5-1b）重分诊转 C 移除）
 
-> 种子 312 = C 167（补测杀灭：tests/test_mutation_c5_1_public_render_whitelist_contract.py + test_mutation_c5_1_public_render_inline_contract.py + test_mutation_c5_1_public_pages_contract.py + test_mutation_c5_1_stream_board_author_contract.py，共 34 测试） + A 120（本节）+ B 1（本节）+ D 2（呈统筹，不在本清单：公开文章卡片流顺序与 unscored 列表顺序无条款锚） + suspicious 转杀 13（重跑 stable-killed，既有测试已杀：require_session m19-29 / record_success m1 / verify_password m5，doc/C5/C5-1-suspicious定性结果.json） + 复用既有豁免 3（require_session m18 与 issue_session m8/m9——豁免表在案维持原判）。核验-改判循环：C 逐条施加必杀、A/B 逐条施加必活至零意外（doc/C5/C5-1-核验结果.json）。
+> 种子 312 = C 167（补测杀灭：tests/test_mutation_c5_1_public_render_whitelist_contract.py + test_mutation_c5_1_public_render_inline_contract.py + test_mutation_c5_1_public_pages_contract.py + test_mutation_c5_1_stream_board_author_contract.py，共 34 测试） + A 120（本节；其中引用块族 28 条后经引用块可达性修复批（C5-1b）逐条施加重分诊转 C 移除，本节现存 A 92）+ B 1（本节）+ D 2（呈统筹，不在本清单：公开文章卡片流顺序与 unscored 列表顺序无条款锚） + suspicious 转杀 13（重跑 stable-killed，既有测试已杀：require_session m19-29 / record_success m1 / verify_password m5，doc/C5/C5-1-suspicious定性结果.json） + 复用既有豁免 3（require_session m18 与 issue_session m8/m9——豁免表在案维持原判）。核验-改判循环：C 逐条施加必杀、A/B 逐条施加必活至零意外（doc/C5/C5-1-核验结果.json）。
 
-> 本批特记：render_markdown_whitelist 引用块族 26 条按「不可达」判 A——引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;），该语法当前永不触发（生产缺陷呈报 D 类问题清单；若统筹裁定修复，本族需重新分诊）。
+> 本批特记（引用块族处置后续）：render_markdown_whitelist 引用块族变异按「不可达」判 A 登记——引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;），该语法当时永不触发（生产缺陷 D1 呈报）。站长裁定修复后，引用块可达性修复批（C5-1b，main 侧分支 feat/c5-1b-blockquote-fix）落地前缀容忍匹配（> / &gt; 双形态），本族 28 条（原节头记 26 系计数出入，实际登记行 m152-179 连续 28 行——修复批呈报纠正）逐条施加（库级静态重建+修复后形态再推导）核验：全部被 C5-1b 引用块契约测试（tests/test_mutation_c5_1b_public_render_blockquote_contract.py）杀灭，转 C 自本节移除；核验零意外（doc/C5/C5-1b-核验结果.json，施加前预判=全杀，28/28 对账一致）。
 
 ### app.api.middleware.cache_policy_for（6 条）
 
@@ -3033,7 +3033,7 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.api.public_render.x_first_sentence__mutmut_33 | A | 截断段 lstrip/省略号形态变体：截断+省略号语义仍在，措辞未钉（HTML 文案域） | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_first_sentence__mutmut_34 | A | 截断段 lstrip/省略号形态变体：截断+省略号语义仍在，措辞未钉（HTML 文案域） | 设计书条款/实证推理（详见说明列） |
 
-### app.api.public_render.render_markdown_whitelist（75 条，其中引用块不可达族 26）
+### app.api.public_render.render_markdown_whitelist（42 条；原 70 行含引用块不可达族 28——原节头「75/26」系计数出入，修复批呈报纠正）
 
 | 变异体 | 类 | 说明 | 依据 |
 |---|---|---|---|
@@ -3066,34 +3066,6 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.api.public_render.x_render_markdown_whitelist__mutmut_102 | A | code_lang reset None/XXXX：恒被下次 fence.group(1) 覆盖（不可达差异） | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_111 | A | [0-9a-za-z+-] 字符类重复成员等价 | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_119 | A | and→or：单边 | 行（| 开头不闭合）不属表格行判定域（markdown 表格行=双 | 包裹） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_152 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_153 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_154 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_155 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_156 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_157 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_158 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_159 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_160 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_161 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_162 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_163 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_164 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_165 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_166 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_167 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_168 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_169 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_170 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_171 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_172 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_173 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_174 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_175 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_176 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_177 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_178 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_179 | A | 引用块（> 前缀）判定在整篇 HTML 转义后失配（> → &gt;）——本函数路径不可达（生产缺陷呈报 D 类问题清单；修复后本族需重新分诊） | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_197 | A | <UL>/<OL> 大写标签：HTML 大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_199 | A | <UL>/<OL> 大写标签：HTML 大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_224 | A | 续行切片 [:-5] 恰剥净闭合标签（原版 [:-4] 残留孤立 <）：渲染近似等价（孤立 < 按文本显示），无条款钉拼接切片边界 | 设计书条款/实证推理（详见说明列） |
