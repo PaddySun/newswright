@@ -3383,3 +3383,155 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | 变异体 | 类 | 说明 | 依据 |
 |---|---|---|---|
 | app.transport.quota.x_check_and_count__mutmut_43 | A | 预占查询丢 period：同上 minute/day 键形态互斥等价 | 设计书条款/实证推理（详见说明列） |
+## C5-3 分诊批次 3（2026-10-17，能力域治理族 144 条）：A 91 + B 0 = 91 条
+
+> 种子 144 = C 49（补测杀灭：tests/test_mutation_c5_3_embed_retry_exhaustion.py + test_mutation_c5_3_embed_moark_translate.py + test_mutation_c5_3_rerank_band_translate.py + test_mutation_c5_3_hot_fetch_ledger.py + test_mutation_c5_3_search_translate.py + test_mutation_c5_3_pipeline_provider_degrade.py，共 20 测试〔含核验改判后补强的退避-重试配对计数断言〕；条款锚=技术书 v2.2 §6.13 TR-1~6/HR-1~4/LR-2~3 + 域契约〔归一化阈值子类声明/转译保留/双护栏〕） + A 91（本节，含核验改判 5 条：Contract/SemanticError 分支 last_err=None 的 reason 面恰等价 + _ledger_status 整组 status 读取面生产调用域收窄〔fetch_platform 终态恒 RetryExhausted〕；embedding/rerank C1-C3 期判例密集复用 + 施加必活实证）+ D {n_d}（呈统筹，不在本清单：热榜无标题条目过滤与重排 score round 精度无条款锚）。核验-改判循环：C 逐条施加必杀、A 逐条施加必活至零意外（doc/C5/C5-3-核验结果.json）。
+
+> 本批判例复用特记：embedding.moark/rerank 族 A 条目大量复用 C1-8/C2-4 判例（防御缺省族/截断界/文案域/INSERT-NULL 兜底/死键族）——C4 迁移面（typed 转译/UA 归口）后语义不变的旧判据直接登记；回归族（regressions 77 条）按成因口径分诊：typed 转译与协商字段面=C、观测面基类化与 UA/缺省恒等=A。
+
+### app.authors.pipeline::run_pipeline_write（4 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.authors.pipeline.x_run_pipeline_write__mutmut_119 | A | 全冷却 error 文案 XX 包裹/大小写：错误消息措辞域（非空语义保留） | 设计书条款/实证推理（详见说明列） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_120 | A | 全冷却 error 文案 XX 包裹/大小写：错误消息措辞域（非空语义保留） | 设计书条款/实证推理（详见说明列） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_135 | A | _ = article → _ = None：纯丢弃赋值语句，行为零变（恰等价） | 设计书条款/实证推理（详见说明列） |
+| app.authors.pipeline.x_run_pipeline_write__mutmut_145 | A | PipelineAbort error=str(None)：失败原因文案域（类型不变、非空语义保留——C5-2 score_item m98 判例族复用） | 设计书条款/实证推理（详见说明列） |
+
+### app.embedding.base::EmbeddingProviderǁ_embed_batch（15 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_29 | A | 计量行 completion_tokens/ok None：UsageLog 列 default=0/True 在 INSERT 时兜底（原值恰同值——SQLAlchemy INSERT-NULL 兜底判例，C3-6/C5-2 m27 先例复用） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_33 | A | 计量行 completion_tokens/ok None：UsageLog 列 default=0/True 在 INSERT 时兜底（原值恰同值——SQLAlchemy INSERT-NULL 兜底判例，C3-6/C5-2 m27 先例复用） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_41 | A | 删计量行 kwarg：record_usage 签名缺省即 0/True（缺省同值恰等价；C5-2 PB m42 判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_45 | A | 删计量行 kwarg：record_usage 签名缺省即 0/True（缺省同值恰等价；C5-2 PB m42 判例复用） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_77 | A | getattr 缺省 False→None：bool(None)=False 同值恰等价（C5-2 PB m5） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_80 | A | getattr 丢缺省/缺省 True：捕获面 or 短路（httpx 先真）+ProviderError.retryable 类属性恒存在（transport/errors.py 实证）——缺省分支不可达（C5-2 PB m8/m11 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_83 | A | getattr 丢缺省/缺省 True：捕获面 or 短路（httpx 先真）+ProviderError.retryable 类属性恒存在（transport/errors.py 实证）——缺省分支不可达（C5-2 PB m8/m11 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_116 | A | 退避毫秒→秒换算 /1000→/1001：换算系数数值无条款（延迟语义保留；C5-2 latency 换算判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_120 | A | 重试日志实参/文案/计数偏移：业务日志措辞无条款（C1-1 m155 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_125 | A | 重试日志实参/文案/计数偏移：业务日志措辞无条款（C1-1 m155 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_127 | A | 重试日志实参/文案/计数偏移：业务日志措辞无条款（C1-1 m155 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_128 | A | 重试日志实参/文案/计数偏移：业务日志措辞无条款（C1-1 m155 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_139 | A | 耗尽前 retryable 判定缺省变体：last_err 域同上（ProviderError 属性恒存在 + httpx 被 or 左支短路）——缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_142 | A | 耗尽前 retryable 判定缺省变体：last_err 域同上（ProviderError 属性恒存在 + httpx 被 or 左支短路）——缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.base.xǁEmbeddingProviderǁ_embed_batch__mutmut_145 | A | 耗尽前 retryable 判定缺省变体：last_err 域同上（ProviderError 属性恒存在 + httpx 被 or 左支短路）——缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+
+### app.embedding.moark::MoarkEmbeddingProviderǁ_embed_request（13 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_28 | A | Content-Type 头键 XX/小写/大写：传输脊 post_json 经 httpx json= 参数自动设 content-type: application/json（transport/http.py 实证）——显式头丢失后自动头兜底 + HTTP 头名大小写不敏感（RFC 7230），恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_29 | A | Content-Type 头键 XX/小写/大写：传输脊 post_json 经 httpx json= 参数自动设 content-type: application/json（transport/http.py 实证）——显式头丢失后自动头兜底 + HTTP 头名大小写不敏感（RFC 7230），恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_30 | A | Content-Type 头键 XX/小写/大写：传输脊 post_json 经 httpx json= 参数自动设 content-type: application/json（transport/http.py 实证）——显式头丢失后自动头兜底 + HTTP 头名大小写不敏感（RFC 7230），恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_35 | A | 转译消息 str(None)：错误消息文案域（类型/结构化字段不变） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_42 | A | retryable 转译缺省变体：ProviderError.retryable 类属性恒存在（transport/errors.py:32）→ 缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_45 | A | retryable 转译缺省变体：ProviderError.retryable 类属性恒存在（transport/errors.py:32）→ 缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_64 | A | 域错误消息 None/XX：异常消息文案域（类型不变；C2-4 m72 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_77 | A | sorted index 缺省 0→1：差异域=缺 index 键的违约响应（协议 data[].index 恒在）——防御缺省不可达（C2-4 m88 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_86 | A | 域错误消息 None/XX：异常消息文案域（类型不变；C2-4 m72 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_87 | A | 域错误消息 None/XX：异常消息文案域（类型不变；C2-4 m72 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_102 | A | prompt_tokens or 0→or 1：差异域=缺键违约响应——防御缺省+数值缺省族（C2-4 m88 判例） | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_103 | A | meter['item_count'] 键变体：基类 _embed_batch 不读该键（item_count 由基类 len(inputs) 自算）——返回 dict 死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_104 | A | meter['item_count'] 键变体：基类 _embed_batch 不读该键（item_count 由基类 len(inputs) 自算）——返回 dict 死键判据族 | 设计书条款/实证推理（详见说明列） |
+
+### app.hot.service::_ledger_status（6 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.hot.service.x__ledger_status__mutmut_1 | A | status 读取面变体（None/getattr(None)/属性名漂移）：生产唯一调用面 fetch_platform 终态恒传 RetryExhausted（该类无 status 属性，getattr 任何形态同 None 恰等价）；HR-3 生产形态「末次尝试链状态码」由 if 块内链读取承载未变异——差异域=直接带码非 RetryExhausted 输入，生产不可达（A 轮施加核验纠偏整组改判：初判以函数文档泛化输入域为可达面 系过度延伸） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__ledger_status__mutmut_2 | A | status 读取面变体（None/getattr(None)/属性名漂移）：生产唯一调用面 fetch_platform 终态恒传 RetryExhausted（该类无 status 属性，getattr 任何形态同 None 恰等价）；HR-3 生产形态「末次尝试链状态码」由 if 块内链读取承载未变异——差异域=直接带码非 RetryExhausted 输入，生产不可达（A 轮施加核验纠偏整组改判：初判以函数文档泛化输入域为可达面 系过度延伸） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__ledger_status__mutmut_7 | A | status 读取面变体（None/getattr(None)/属性名漂移）：生产唯一调用面 fetch_platform 终态恒传 RetryExhausted（该类无 status 属性，getattr 任何形态同 None 恰等价）；HR-3 生产形态「末次尝试链状态码」由 if 块内链读取承载未变异——差异域=直接带码非 RetryExhausted 输入，生产不可达（A 轮施加核验纠偏整组改判：初判以函数文档泛化输入域为可达面 系过度延伸） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__ledger_status__mutmut_8 | A | status 读取面变体（None/getattr(None)/属性名漂移）：生产唯一调用面 fetch_platform 终态恒传 RetryExhausted（该类无 status 属性，getattr 任何形态同 None 恰等价）；HR-3 生产形态「末次尝试链状态码」由 if 块内链读取承载未变异——差异域=直接带码非 RetryExhausted 输入，生产不可达（A 轮施加核验纠偏整组改判：初判以函数文档泛化输入域为可达面 系过度延伸） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__ledger_status__mutmut_9 | A | and/or 优先级变体：差异域=非 RetryExhausted 输入时 err.errors 属性读取 AttributeError（RetryExhausted 形态两式同值；errors 空的防御形态生产构造恒非空）——生产调用面不可达 | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__ledger_status__mutmut_10 | A | and/or 优先级变体：差异域=非 RetryExhausted 输入时 err.errors 属性读取 AttributeError（RetryExhausted 形态两式同值；errors 空的防御形态生产构造恒非空）——生产调用面不可达 | 设计书条款/实证推理（详见说明列） |
+
+### app.hot.service::_rank_filter_topics（6 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.hot.service.x__rank_filter_topics__mutmut_17 | A | 「无启用方向」文案 XX：观测面措辞域 | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__rank_filter_topics__mutmut_42 | A | error 截断界 [:200]→[:201]：截断界数值无条款（批次 10 m69 先例） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__rank_filter_topics__mutmut_49 | A | score 缺省 None/丢缺省：差异域=rank 结果缺 id 的违约响应（moark top_n=候选数全回 + llm 提示词钉「必须覆盖全部候选 id」）；违约时 TypeError 被 run_hot_round except 捕获走标题分词降级——防御缺省+降级链双兜底（C2-4 防御缺省族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__rank_filter_topics__mutmut_51 | A | score 缺省 None/丢缺省：差异域=rank 结果缺 id 的违约响应（moark top_n=候选数全回 + llm 提示词钉「必须覆盖全部候选 id」）；违约时 TypeError 被 run_hot_round except 捕获走标题分词降级——防御缺省+降级链双兜底（C2-4 防御缺省族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__rank_filter_topics__mutmut_52 | A | 缺省 0→1：差异域=min_score≤1 的配置（缺省 40）——数值缺省族 | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__rank_filter_topics__mutmut_53 | A | >=→>：分值恰等边界开闭无条款（C5-2 resolve m18 边界开闭先例） | 设计书条款/实证推理（详见说明列） |
+
+### app.hot.service::_write_call_log（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.hot.service.x__write_call_log__mutmut_17 | A | status 截断界 [:20]→[:21]：差异域=超 20 字符 status（HTTP 码≤3 位/错误类别名≤15 字符）——不可达 | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__write_call_log__mutmut_21 | A | 耗时换算 ×1000→×1001：换算系数数值无条款（延迟语义保留；C5-2 latency 换算判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x__write_call_log__mutmut_25 | A | error 截断界 [:500]→[:501]：截断界数值无条款（批次 10 m69 先例） | 设计书条款/实证推理（详见说明列） |
+
+### app.hot.service::fetch_platform（11 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.hot.service.x_fetch_platform__mutmut_20 | A | follow_redirects=True 实参删除：get_json 签名缺省即 True（transport/http.py:240）——缺省同值恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_23 | A | ContractError 消息 None/实参 str(None)/截断界：异常消息文案域（类型不变；C1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_31 | A | ContractError 消息 None/实参 str(None)/截断界：异常消息文案域（类型不变；C1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_32 | A | ContractError 消息 None/实参 str(None)/截断界：异常消息文案域（类型不变；C1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_33 | A | ContractError 消息 None/实参 str(None)/截断界：异常消息文案域（类型不变；C1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_44 | A | 终态账 ok=None：HotCallLog.ok 列 default=True 在 INSERT 时兜底（成功路径原值 True 恰同值——INSERT-NULL 兜底判例） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_75 | A | 重试日志实参/文案：业务日志措辞无条款（C1-1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_77 | A | 重试日志实参/文案：业务日志措辞无条款（C1-1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_82 | A | 重试日志实参/文案：业务日志措辞无条款（C1-1 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_85 | A | Contract/SemanticError 分支 last_err=None：非 Transport 末错的 reason 判定经 isinstance 短路恒 False 同值（TR-5/HR-2 两态不受影响）；差异仅终态消息文案 str(None)——文案域判例族（C 轮施加核验纠偏改判：初判 TransportError 分支系桌面误读变异位置） | 设计书条款/实证推理（详见说明列） |
+| app.hot.service.x_fetch_platform__mutmut_89 | A | 末错判定 and→or：生产末错域（TransportError 恒 retryable=True 构造 +Contract/SemanticError retryable=False 类属性）两式同值——差异域=retryable=False 的 TransportError，生产构造面不存在（TR-2 分类单点只造可重试 TransportError） | 设计书条款/实证推理（详见说明列） |
+
+### app.rerank.llm_rank::LLMRankProviderǁ_rank（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_130 | A | RankedResult(provider=None)：返回值观测字段无生产消费方（hot/_rank_filter 与 writer 阅读集装配仅取 id/score；基类落账用 self.name）——死键判据族 | 设计书条款/实证推理（详见说明列） |
+
+### app.rerank.moark_reranker::MoarkRerankerProviderǁ_rank_chunk（26 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_28 | A | Content-Type 头键 XX/小写/大写：httpx json= 自动 content-type 兜底 +HTTP 头名大小写不敏感——恰等价（同 embedding.moark 判据） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_29 | A | Content-Type 头键 XX/小写/大写：httpx json= 自动 content-type 兜底 +HTTP 头名大小写不敏感——恰等价（同 embedding.moark 判据） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_30 | A | Content-Type 头键 XX/小写/大写：httpx json= 自动 content-type 兜底 +HTTP 头名大小写不敏感——恰等价（同 embedding.moark 判据） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_42 | A | retryable 转译丢缺省：ProviderError.retryable 类属性恒存在——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_60 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_67 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_68 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_69 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_70 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_71 | A | token or 0→or 1：差异域=缺键违约响应——防御缺省+数值缺省族（C2-4 m88 判例） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_72 | A | raw 写入键变体（total_tokens/relevance_score/model）：raw 存档键名无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_73 | A | raw 写入键变体（total_tokens/relevance_score/model）：raw 存档键名无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_75 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_76 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_77 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_78 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_79 | A | usage 读取键变体/and 0：usage_flat 只进 raw 存档，raw 无生产消费方（hot/writer 仅取 id/score）——返回值死键判据族（「token 用量记入 raw」属 EV 实测观测面，非生产条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_80 | A | token or 0→or 1：差异域=缺键违约响应——防御缺省+数值缺省族（C2-4 m88 判例） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_130 | A | raw= 整体丢弃：raw 无生产消费方（同族；RankedResult.raw 缺省空 dict） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_136 | A | raw 写入键变体（total_tokens/relevance_score/model）：raw 存档键名无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_137 | A | raw 写入键变体（total_tokens/relevance_score/model）：raw 存档键名无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_138 | A | raw 写入键变体（total_tokens/relevance_score/model）：raw 存档键名无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_139 | A | raw 写入键变体（total_tokens/relevance_score/model）：raw 存档键名无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_140 | A | body.get(model) 读取变体（None/XX/大写）：raw 的 model 回显属诊断存档观测面，无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_141 | A | body.get(model) 读取变体（None/XX/大写）：raw 的 model 回显属诊断存档观测面，无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_142 | A | body.get(model) 读取变体（None/XX/大写）：raw 的 model 回显属诊断存档观测面，无生产读方——死键判据族 | 设计书条款/实证推理（详见说明列） |
+
+### app.search.base::HTTPSearchProviderǁ_post_json（1 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.search.base.xǁHTTPSearchProviderǁ_post_json__mutmut_13 | A | SearchError(None) 消息：异常消息文案域（类型不变） | 设计书条款/实证推理（详见说明列） |
+
+### app.search.base::HTTPSearchProviderǁ_translate（5 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.search.base.xǁHTTPSearchProviderǁ_translate__mutmut_2 | A | SearchError(None)/str(None)：转译消息文案域（类型/结构化字段不变） | 设计书条款/实证推理（详见说明列） |
+| app.search.base.xǁHTTPSearchProviderǁ_translate__mutmut_3 | A | SearchError(None)/str(None)：转译消息文案域（类型/结构化字段不变） | 设计书条款/实证推理（详见说明列） |
+| app.search.base.xǁHTTPSearchProviderǁ_translate__mutmut_7 | A | getattr 缺省 False→None：bool(None)=False 同值恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.search.base.xǁHTTPSearchProviderǁ_translate__mutmut_10 | A | getattr 丢缺省：ProviderError.retryable 类属性恒存在——恰等价 | 设计书条款/实证推理（详见说明列） |
+| app.search.base.xǁHTTPSearchProviderǁ_translate__mutmut_13 | A | 缺省 False→True：属性恒存在，缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
+
