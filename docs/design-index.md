@@ -221,6 +221,7 @@
 | LR-5 | OpenAI 族厂商差异声明：chat_completions_path 路径前缀为厂商差异（deepseek 官方 base 无 /v1、moark OpenAI 网关族带 /v1，误用即触发 TR-2 的 302 漏网形态）；moark chat 默认模型=冒烟锁定的跨厂商同族主备对（deepseek-v4.1-flash ↔ 官方 deepseek-flash），moark 间歇长挂起定位为备源 |
 | LR-6 | 计量回显与兼容阀状态判定：usage_log 的 model 以响应回显实况优先落账（请求名兜底——计量空洞治理）；网关兼容阀按错误对象结构化 status 判定（400/422 参数拒绝域）+ gateway_compat_params 声明式剥离重发一次（deepseek=thinking 族参数、moark=response_format），全库禁文案嗅探形态 |
 | LR-7 | Jev 决策协议客户端构造期校验：questions 逐项 instructions 必填（服务端对缺失回 400「请求参数缺少必填字段 'questions.q.instructions'」实测锚），缺字段在构造期抛 JevAdapterError 防线前移（消息含字段名与 qid），不烧注定失败的网络调用 |
+| LR-8 | 判定类 chat 调用温度 0 确定性：打分（scoring）与检索查询生成（query_gen）两类判定/结构化输出调用 temperature=0 为契约——chat 模板温度缺省 0.0 不得漂移（缺省唯一生产消费方=query_gen），打分显式 0.0 不得漂移；测试形态=桩捕获请求 payload 断言 temperature==0.0（杀灭 0.0→1.0 常量变异）。判例源：C5-2 分诊温度面两条变异站长裁定转 C（2026-10-17），条款正文见外层技术书 v2.3 §6.13 LR-8 |
 
 ## HR-x（热榜域治理条款，外部服务治理批（C4-3）增补；条文正文随外层技术书 C4 变更点落册）
 
