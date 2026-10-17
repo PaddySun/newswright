@@ -3535,3 +3535,61 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.search.base.xǁHTTPSearchProviderǁ_translate__mutmut_10 | A | getattr 丢缺省：ProviderError.retryable 类属性恒存在——恰等价 | 设计书条款/实证推理（详见说明列） |
 | app.search.base.xǁHTTPSearchProviderǁ_translate__mutmut_13 | A | 缺省 False→True：属性恒存在，缺省分支不可达 | 设计书条款/实证推理（详见说明列） |
 
+## C5-4 分诊批次 4（2026-10-17，no-tests 转幸存老族 178 条）：A 38 + B 0 = 38 条
+
+> 种子 178（providers.moark_jev 79 / rerank.llm_rank 76 / scheduler.status 23——统一 dispatch #18 期 no-tests 转幸存，C4-2/C5-2 新测试首次触碰后仍存活的三个老函数面）= C 102（补测杀灭：tests/test_mutation_c5_4_moark_jev_metering_contract.py + test_mutation_c5_4_llm_rank_band_clamp_contract.py + test_mutation_c5_4_scheduler_status_utc.py，共 16 测试；条款锚=ADR-8 计量落账与重试 ≤2/LR-7 协议映射与构造期校验/LR-8 确定性温度/LR-2 选源会话归属/归一化 0-100 钳制与回退档边界/D16 aware-UTC输出〔子类声明形态与判例复用：C5-3 band 阈值族/数值缺省族/文案域/缺省恒等〕） + A 38（本节，含老族成因①真实等价〔缺省恒等/or 兜底值/违约差异域〕与措辞文案域；施加必活实证）+ D 38（呈统筹，不在本清单：llm_rank 提示词组装结构面与 messages 协议键 16 条——无条款锚；scheduler.status 状态 dict 键面 22 条——不在 OpenAPI 契约且前端零消费）。核验-改判循环：C 逐条施加必杀、A/D 逐条施加必活至零意外（doc/C5/C5-4-核验结果.json）。
+
+> 本批判例复用特记：or 兜底值族（or 0→or 1）与钳制界值族的判据线——兜底值选择无条款判 A（C2-4 m88/C5-3 MR m71/m80 判例），钳制界0.0/100.0 有归一化量纲锚判 C；band 声明优先与回退边界为子类声明形态判 C（C5-3 MR m105-125 同构）。llm_rank 与 C1 收官 rerank import-time 归因对照：本批 _rank 76 条全为运行时方法体变异，C1 的「mutmut 运行时激活结构性不可杀导入期代码」归因不适用——本批幸存成因全部为测试盲区（C/D）与真实等价/文案域（A），无 import-time 面。
+
+### app.providers.moark_jev::MoarkJevProviderǁ_post（3 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.moark_jev.xǁMoarkJevProviderǁ_post__mutmut_22 | A | or 0→or 1：差异域=usage 缺键的违约响应——防御缺省+数值缺省族（C2-4 m88/C5-3 MR m71/m80 判例：or 兜底值选择无条款，正常响应真值不触发） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁ_post__mutmut_30 | A | or 0→or 1：差异域=usage 缺键的违约响应——防御缺省+数值缺省族（C2-4 m88/C5-3 MR m71/m80 判例：or 兜底值选择无条款，正常响应真值不触发） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁ_post__mutmut_38 | A | or 0→or 1：差异域=usage 缺键的违约响应——防御缺省+数值缺省族（C2-4 m88/C5-3 MR m71/m80 判例：or 兜底值选择无条款，正常响应真值不触发） | 设计书条款/实证推理（详见说明列） |
+
+### app.providers.moark_jev::MoarkJevProviderǁdecide（12 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_19 | A | 构造期校验消息文案变体（None/XX/大写）：异常类型不变、qid 归因保留——文案域判例族（C5-2 score_item m98） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_28 | A | 构造期校验消息文案变体（None/XX/大写）：异常类型不变、qid 归因保留——文案域判例族（C5-2 score_item m98） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_29 | A | 构造期校验消息文案变体（None/XX/大写）：异常类型不变、qid 归因保留——文案域判例族（C5-2 score_item m98） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_47 | A | max_retries 实参删除：_call 签名缺省即 2——缺省同值恰等价（C5-2 PB m42 判例） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_48 | A | error 分支形态（键漂移放行→仍走 answers 缺键抛同型 JevAdapterError/消息 None）：类型不变+qid 归因保留——文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_49 | A | error 分支形态（键漂移放行→仍走 answers 缺键抛同型 JevAdapterError/消息 None）：类型不变+qid 归因保留——文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_51 | A | error 分支形态（键漂移放行→仍走 answers 缺键抛同型 JevAdapterError/消息 None）：类型不变+qid 归因保留——文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_63 | A | 异常消息 None：类型不变——文案域判例族（调用方按类型处理） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_76 | A | 异常消息 None：类型不变——文案域判例族（调用方按类型处理） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_88 | A | confidence or 0.0→or 1.0：差异域=confidence 缺键的违约响应——防御缺省+数值缺省族（or 兜底值无条款） | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_111 | A | input_tokens or 0→or 1：差异域=缺键违约响应——数值缺省族 | 设计书条款/实证推理（详见说明列） |
+| app.providers.moark_jev.xǁMoarkJevProviderǁdecide__mutmut_119 | A | output_tokens or 0→or 1：差异域=缺键违约响应——数值缺省族 | 设计书条款/实证推理（详见说明列） |
+
+### app.rerank.llm_rank::LLMRankProviderǁ_rank（23 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_6 | A | 无可用提供方消息文案 XX/大小写：类型不变、「无可用」语义保留——文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_7 | A | 无可用提供方消息文案 XX/大小写：类型不变、「无可用」语义保留——文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_8 | A | 无可用提供方消息文案 XX/大小写：类型不变、「无可用」语义保留——文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_9 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_11 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_13 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_14 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_15 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_16 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_17 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_18 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_19 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_20 | A | 提示词渲染措辞域（items None 化/分隔符 XX/system 各段 XX/大小写）：str 形态保留、仅措辞漂移——prompt 组装文案域（任务书 §2 钉文案域A 主带；措辞无条款） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_45 | A | RankError 消息 None/XX/大小写：类型不变——文案域判例族（调用方按类型降级） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_51 | A | RankError 消息 None/XX/大小写：类型不变——文案域判例族（调用方按类型降级） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_52 | A | RankError 消息 None/XX/大小写：类型不变——文案域判例族（调用方按类型降级） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_53 | A | RankError 消息 None/XX/大小写：类型不变——文案域判例族（调用方按类型降级） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_56 | A | 条目判 isinstance or 短路：差异域=results 含非 dict 条目的违约响应——防御违约域（提示词钉「必须覆盖全部候选 id」+ TypeError 被 run_hot_round except 捕获走标题分词降级双兜底；C5-3 RF m49 判例族） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_69 | A | band 缺省 or "low"→XX/大写：差异域=模型漏 band 字段的违约响应（缺省变体仍走回推，与原缺省 "low" 同为有效/无效域差异仅违约面）——防御缺省族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_70 | A | band 缺省 or "low"→XX/大写：差异域=模型漏 band 字段的违约响应（缺省变体仍走回推，与原缺省 "low" 同为有效/无效域差异仅违约面）——防御缺省族 | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_99 | A | band_map.get 缺省变体（None/丢缺省/XXXX）：差异域=band_map 缺该 id 的违约漏回——两式同走回退推导恰等价（None/""/"XXXX" 均 not in 三档） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_101 | A | band_map.get 缺省变体（None/丢缺省/XXXX）：差异域=band_map 缺该 id 的违约漏回——两式同走回退推导恰等价（None/""/"XXXX" 均 not in 三档） | 设计书条款/实证推理（详见说明列） |
+| app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_103 | A | band_map.get 缺省变体（None/丢缺省/XXXX）：差异域=band_map 缺该 id 的违约漏回——两式同走回退推导恰等价（None/""/"XXXX" 均 not in 三档） | 设计书条款/实证推理（详见说明列） |
