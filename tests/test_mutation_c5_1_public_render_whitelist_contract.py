@@ -12,8 +12,9 @@ docs/design-index.md「ADR-7」「AC-12.1」）：
 断言两档说明：标签结构断言先小写化（HTML 标签大小写不敏感，语法功能在
 即过——措辞/形态变体不在本文件射程）；内容与安全断言按语义档精确。
 
-注：引用块（> 前缀）在整篇 HTML 转义后判定失配（> → &gt;），当前不可达
-——缺陷呈报见 C5-1 执行汇报 D 类问题清单，本文件不覆盖该语法。
+注：引用块（> 前缀）语法不属本文件射程——其行首标记在整篇转义后须按
+&gt; 形态匹配的可达性契约由引用块契约测试文件覆盖
+（tests/test_mutation_c5_1b_public_render_blockquote_contract.py）。
 """
 from app.api.public_render import render_markdown_whitelist
 

@@ -175,10 +175,15 @@ def render_markdown_whitelist(source: str,
             out.append(f"<h{level}>{text}</h{level}>")
             continue
 
-        if re.match(r"^>\s?", line):
+        # 引用块按转义后形态做行首标记匹配：整篇转义已把行首 > 变为 &gt;，
+        # 判定与内容剥离均须 > / &gt; 双形态前缀容忍匹配（「整篇转义先行的
+        # 行首标记匹配」条款，docs/design-index.md PR-1）；源文字面 &gt; 经
+        # 二次转义为 &amp;gt; 不匹配此前缀，仍按普通段落文本呈现。嵌套 >>
+        # 仅剥一层（白名单未定义嵌套引用层级语义）。
+        if re.match(r"^(?:>|&gt;)\s?", line):
             flush_paragraph()
             close_list()
-            quote = _footnote_refs(_inline(re.sub(r"^>\s?", "", line)))
+            quote = _footnote_refs(_inline(re.sub(r"^(?:>|&gt;)\s?", "", line)))
             if out and out[-1].startswith("<blockquote>"):
                 out[-1] = out[-1][:-13] + f"<p>{quote}</p></blockquote>"
             else:
