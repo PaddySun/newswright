@@ -110,9 +110,14 @@ export function renderMarkdownClient(source) {
       out.push(`<h${level}>${footnoteRefs(inline(heading[2]))}</h${level}>`);
       continue;
     }
-    if (/^>\s?/.test(line)) {
+    // 引用块按转义后形态做行首标记匹配：escapeHtml 已把行首 > 转为 &gt;，
+    // 判定与剥离均须 > / &gt; 双形态前缀容忍匹配（与服务端
+    // app/api/public_render.py 同规则——「整篇转义先行的行首标记匹配」
+    // 条款，docs/design-index.md PR-1；字面 &gt; 源文二次转义为 &amp;gt;
+    // 不匹配，仍按段落呈现；嵌套 >> 仅剥一层）。
+    if (/^(?:>|&gt;)\s?/.test(line)) {
       flushParagraph(); closeList();
-      const quote = footnoteRefs(inline(line.replace(/^>\s?/, "")));
+      const quote = footnoteRefs(inline(line.replace(/^(?:>|&gt;)\s?/, "")));
       if (out.length && out[out.length - 1].startsWith("<blockquote>")) {
         out[out.length - 1] = out[out.length - 1].slice(0, -13) + `<p>${quote}</p></blockquote>`;
       } else {

@@ -230,3 +230,9 @@
 | HR-2 | 热榜域重试与聚合器候选位：域级重试 ≤2 次（仅可重试 TransportError；退避经 retry_delay_ms 协商——429 Retry-After 优先/随机化指数退避自动继承）；ContractError（items 非列表/响应非 JSON 等契约违例，替换治理前裸 ValueError）与 SemanticError 不重试；HOT_AGG_CANDIDATES 有序候选按序取用（缺省 [HOT_AGG_BASE] 单元素=行为零变），首候选失败（重试耗尽或不可重试）→ 次候选，全败抛 RetryExhausted 终态（reason 两态+跨候选尝试链），轮次层单平台失败不中断整轮照旧 |
 | HR-3 | HotCallLog 成败都记账：每平台每次取用一行终态（中间重试尝试不逐行——search_call_log 同语义），成败各一行；provider=聚合器 origin、platform、status=HTTP 码或错误类别（RetryExhausted 取末次尝试链状态码，无码则类别名）、latency_ms=整次取用耗时（含重试）、error 脱敏（sk- 形态不落账）；这是新增持久账，不替代任务 payload 的 platform_stats（形态零变） |
 | HR-4 | 429 识别与降频边界：429 经传输脊错误对象的结构化 retry_after 字段识别、退避协商自动采纳服务端值，落账 status 如实记录 HTTP 码；动态降频（rate_limited_until 档位语义）记遗留不在治理批做——低流量单聚合器先如实观测 |
+
+## PR-x（公开页渲染条款，引用块可达性修复批（C5-1b）增补）
+
+| 编号 | 一句话摘要 |
+|---|---|
+| PR-1 | 整篇转义先行的行首标记匹配：白名单渲染器先整篇 HTML 转义再逐行匹配语法，一切行首标记类语法（引用块 > 等）的判定与内容剥离必须以转义后形态（&gt;）做前缀容忍匹配（> / &gt; 双形态），不得按源文字面形态匹配；源文字面实体（&gt;）经二次转义（&amp;gt;）自然不匹配，无需消歧工程；服务端 public_render.py 为规则权威，SPA markdown-client.js 同构镜像（双侧规则形态一致；嵌套标记仅剥一层，白名单未定义嵌套层级）——判例源：引用块判定 ^>\s? 在整篇转义后永不匹配、blockquote 永不产出的生产缺陷（修复批汇报 doc/C5/C5-1b-执行Agent工作汇报.md） |
