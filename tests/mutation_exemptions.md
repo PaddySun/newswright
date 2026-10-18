@@ -3593,3 +3593,78 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_99 | A | band_map.get 缺省变体（None/丢缺省/XXXX）：差异域=band_map 缺该 id 的违约漏回——两式同走回退推导恰等价（None/""/"XXXX" 均 not in 三档） | 设计书条款/实证推理（详见说明列） |
 | app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_101 | A | band_map.get 缺省变体（None/丢缺省/XXXX）：差异域=band_map 缺该 id 的违约漏回——两式同走回退推导恰等价（None/""/"XXXX" 均 not in 三档） | 设计书条款/实证推理（详见说明列） |
 | app.rerank.llm_rank.xǁLLMRankProviderǁ_rank__mutmut_103 | A | band_map.get 缺省变体（None/丢缺省/XXXX）：差异域=band_map 缺该 id 的违约漏回——两式同走回退推导恰等价（None/""/"XXXX" 均 not in 三档） | 设计书条款/实证推理（详见说明列） |
+
+## C5-5 分诊批次 5（2026-10-18，作者 W0 面收官 42 条 + C5-4 D 类 38 条站长裁定落地）：A 32 + B 0 = 32 条 + 站长裁定特例 D 22 条入册
+
+> 种子 42（authors.writer 25 / authors.schema 13 / suspicious 尾 4——susp 先 ×3 重跑定性）+ D 类裁定清单 38（B1 llm_rank messages 结构 16 → C 组杀〔锚=LR-9，站长 2026-10-17 裁定转 C〕；B2 scheduler.status 键面 22 → 维持 D〔站长裁定〕）。账面：A 块 = C 5（schema 路径前缀 1 + writer 终态带 4；tests/test_mutation_c5_5_writer_run_write_contract.py + test_mutation_c5_5_author_schema_contract.py，共 4 测试）+ A 32（本节）+ D 1（writer m228 呈统筹裁定，不入册）+ susp 转杀 4（重跑 ×3 稳定杀灭，doc/C5/C5-5-suspicious定性结果.json）；B 块 = C 16（LR-9 组杀断言 test_mutation_c5_5_llm_rank_messages_payload_contract.py，施加必杀 16/16）+ D 22（本节特例入册）。核验-改判循环：C 逐条施加必杀、A/D 逐条施加必活至零意外（doc/C5/C5-5-核验结果.json）；改判 2 条 C→A（writer m121/m187——INSERT 路径显式 None 经 ORM 列缺省归一，施加实证+探查实验；「DEFAULTS 恒回退」判例族）。
+
+> **B2 特例入册说明（站长 2026-10-17 裁定）**：本文件历史口径为C/D 不入册（呈统筹裁定后处置）；下列 app.scheduler::status 22 条系站长裁定特例——**维持 D 入豁免归档**，依据=观测端点 /scheduler/status 无 OpenAPI 契约（技术书 §3 R1：YAML 之外无契约，沿用 Demo 行为）、前端零消费、键面不钉（as-implemented 观测面不钉键名，钉键即僵化）〔站长裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」。**22 条不写任何测试**（钉键名即违裁定）；施加必活已对 scheduler 触碰面测试集逐条实证（19 测试全绿 ×22）。
+
+### app.authors.schema::validate_author_json（12 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.authors.schema.x_validate_author_json__mutmut_29 | A | model 拒绝说明文案变体（None/XX/小写/大写）：路径保留、拦截行为不变——错误消息文案组（C2-4 gates/identity/memory 带同构判例：AC-10.1 只钉路径+一次报全，未钉措辞） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_35 | A | model 拒绝说明文案变体（None/XX/小写/大写）：路径保留、拦截行为不变——错误消息文案组（C2-4 gates/identity/memory 带同构判例：AC-10.1 只钉路径+一次报全，未钉措辞） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_36 | A | model 拒绝说明文案变体（None/XX/小写/大写）：路径保留、拦截行为不变——错误消息文案组（C2-4 gates/identity/memory 带同构判例：AC-10.1 只钉路径+一次报全，未钉措辞） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_37 | A | model 拒绝说明文案变体（None/XX/小写/大写）：路径保留、拦截行为不变——错误消息文案组（C2-4 gates/identity/memory 带同构判例：AC-10.1 只钉路径+一次报全，未钉措辞） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_47 | A | bio 类型错误消息 value/expect 实参变体（None/XX/大写）：拦截行为不变（errors 非空）、路径保留——C3-6 m33/m34 同带判例直接复用（「实得<type> 名」细节无条款） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_48 | A | bio 类型错误消息 value/expect 实参变体（None/XX/大写）：拦截行为不变（errors 非空）、路径保留——C3-6 m33/m34 同带判例直接复用（「实得<type> 名」细节无条款） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_55 | A | bio 类型错误消息 value/expect 实参变体（None/XX/大写）：拦截行为不变（errors 非空）、路径保留——C3-6 m33/m34 同带判例直接复用（「实得<type> 名」细节无条款） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_56 | A | bio 类型错误消息 value/expect 实参变体（None/XX/大写）：拦截行为不变（errors 非空）、路径保留——C3-6 m33/m34 同带判例直接复用（「实得<type> 名」细节无条款） | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_66 | A | public_visible 类型错误消息 value/expect 实参变体：同 bio 带——C3-6 m33/m34 判例直接复用 | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_67 | A | public_visible 类型错误消息 value/expect 实参变体：同 bio 带——C3-6 m33/m34 判例直接复用 | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_74 | A | public_visible 类型错误消息 value/expect 实参变体：同 bio 带——C3-6 m33/m34 判例直接复用 | 设计书条款/实证推理（详见说明列） |
+| app.authors.schema.x_validate_author_json__mutmut_75 | A | public_visible 类型错误消息 value/expect 实参变体：同 bio 带——C3-6 m33/m34 判例直接复用 | 设计书条款/实证推理（详见说明列） |
+
+### app.authors.writer::run_write（20 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.authors.writer.x_run_write__mutmut_49 | A | 无可用提供方分支 run.error 文案变体（XX/llm 小写）：非空可诊断语义保留——错误说明文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_50 | A | 无可用提供方分支 run.error 文案变体（XX/llm 小写）：非空可诊断语义保留——错误说明文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_58 | A | system 消息内容文案变体（XX/大小写）：结构（role/content 二键+str）保留——提示词文案域（C5-4 llm_rank prompt 渲染带同构） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_59 | A | system 消息内容文案变体（XX/大小写）：结构（role/content 二键+str）保留——提示词文案域（C5-4 llm_rank prompt 渲染带同构） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_84 | A | last_error 初值/成功复位 None→空串：消费不可达——异常路径消费前必先被异常处理器赋值；成功路径 run.error 显式 None、payload.citation_error 仅在 citation_violated 为真时读取（该标志同拍复位 False） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_85 | A | citation_violated 初值 False→None/True：初值不可达——所有到达 Article 构造的路径均先被成功复位（False）或 or 表达式（按末次异常定性）覆写；JSONParseError-first 路径同理被覆写 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_86 | A | citation_violated 初值 False→None/True：初值不可达——所有到达 Article 构造的路径均先被成功复位（False）或 or 表达式（按末次异常定性）覆写；JSONParseError-first 路径同理被覆写 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_95 | A | 写作调用温度数值漂移（0.3→None/实参删除〔缺省 0.0〕/1.3）：创作类调用温度数值无条款（LR-8 只钉判定类 0——pipeline node_draft 0.9/node_revise 0.8「数值无条款」判例直接复用） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_101 | A | 写作调用温度数值漂移（0.3→None/实参删除〔缺省 0.0〕/1.3）：创作类调用温度数值无条款（LR-8 只钉判定类 0——pipeline node_draft 0.9/node_revise 0.8「数值无条款」判例直接复用） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_107 | A | 写作调用温度数值漂移（0.3→None/实参删除〔缺省 0.0〕/1.3）：创作类调用温度数值无条款（LR-8 只钉判定类 0——pipeline node_draft 0.9/node_revise 0.8「数值无条款」判例直接复用） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_120 | A | last_error 初值/成功复位 None→空串：消费不可达——异常路径消费前必先被异常处理器赋值；成功路径 run.error 显式 None、payload.citation_error 仅在 citation_violated 为真时读取（该标志同拍复位 False） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_121 | A | 重试成功复位 citation_violated False→None：INSERT 路径显式 None 经 Python-side 列缺省（default=False）归一落库 False——ORM 缺省归一（DEFAULTS 恒回退判例族，C3-1；核验改判 C→A：施加实证新测试全过+探查实验落库值 False；桌面推演「NOT NULL 拒收」被实证推翻——列缺省对 INSERT 生效） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_143 | A | 拒收重试 user 消息文案变体（XX/大小写×两段）：拒收-重试一次机制不变——提示词文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_144 | A | 拒收重试 user 消息文案变体（XX/大小写×两段）：拒收-重试一次机制不变——提示词文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_145 | A | 拒收重试 user 消息文案变体（XX/大小写×两段）：拒收-重试一次机制不变——提示词文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_146 | A | 拒收重试 user 消息文案变体（XX/大小写×两段）：拒收-重试一次机制不变——提示词文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_147 | A | 拒收重试 user 消息文案变体（XX/大小写×两段）：拒收-重试一次机制不变——提示词文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_148 | A | 拒收重试 user 消息文案变体（XX/大小写×两段）：拒收-重试一次机制不变——提示词文案域判例族 | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_187 | A | 文章 status→None：INSERT 路径显式 None 经列缺省（default="PUBLISHED_TO_C"）归一落库——ORM 缺省归一（核验改判 C→A：施加实证新测试全过，同 m121 机制） | 设计书条款/实证推理（详见说明列） |
+| app.authors.writer.x_run_write__mutmut_200 | A | title 兜底「（无题）」文案变体（XX 包裹）：兜底存在性不变——文案域 | 设计书条款/实证推理（详见说明列） |
+
+### app.scheduler::status（22 条）
+
+| 变异体 | 类 | 说明 | 依据 |
+|---|---|---|---|
+| app.scheduler.x_status__mutmut_1 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_2 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_3 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_4 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_5 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_6 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_7 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_8 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_9 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_10 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_11 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_12 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_13 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_14 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_15 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_16 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_17 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_18 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_19 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_20 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_21 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+| app.scheduler.x_status__mutmut_22 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
