@@ -37,8 +37,10 @@ from .sanitize import SanitizeTarget, run_sanitize
 log = logging.getLogger("newswright.ingest.web")
 
 from .http import http_client  # 出网统一出口（UA 策略 + proxy 参数位）
+from ..transport import robots  # BE-5/RG-1：enrich 面 robots 裁决（transport 层归属）
 _TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.IGNORECASE | re.DOTALL)
 _WEB_BODY_MAX_CHARS = 100_000  # morningdeck 口径：抽取后正文截 100KB
+_TAG_RE = re.compile(r"<[^>]+>")  # BE-5/RG-5：剥标签兜底（与 rss.py 同形态）
 
 
 def _content_hash(text: str) -> str:
@@ -92,7 +94,11 @@ def extract_page_markdown(html: str) -> str:
             return text.strip()[:_WEB_BODY_MAX_CHARS]
     except Exception:  # noqa: BLE001
         pass
-    return ""
+    # 剥标签兜底（RG-5，对齐 RSS 面 _html_to_text 同款）：trafilatura 双段失败
+    # 后不再返回空串——剥标签+空白归一+截断，两通道失败语义一致（docstring
+    # 「再失败回退剥标签」自此与实现相符，P2-3.1 背离修正）。
+    text = _TAG_RE.sub(" ", html)
+    return re.sub(r"\s+", " ", text).strip()[:_WEB_BODY_MAX_CHARS]
 
 
 def llm_extract_entries(db: Session, *, page_url: str, content_text: str,
@@ -178,12 +184,20 @@ def enrich_entry_text(url: str, current_text: str, *, page_url: str,
     安装备注：条目 URL 来自不可信页面/LLM 抽取——与 morningdeck 抓取侧
     相同的教训；私网地址/重定向白名单复检已由传输层 SSRF 钩子覆盖（BE-4/
     TG-1，挂 http_client 工厂、重定向逐跳过检），本函数零感知零改动。
+    robots 分级遵守（BE-5/RG-2）：抓取前必查源站 robots.txt——Disallow 或
+    robots 不可得（fail-closed）均放弃富化保留摘要（RSS feed 拉取与列表页
+    主抓不查，分级辨析见 transport/robots.py 模块 docstring）。
     """
     if not url.startswith(("http://", "https://")):
         return current_text
     if normalize_url(url) == normalize_url(page_url):
         return current_text
     try:
+        if not robots.allowed(url, db=db):
+            # info 级：守规弃抓而非故障（与失败保留语义同形，不致命）
+            log.info("enrich 放弃富化：robots %s url=%s",
+                     robots.denial_reason(url) or "Disallow", url[:120])
+            return current_text
         with http_client(db, timeout=30.0, follow_redirects=True) as client:
             resp = client.get(url)
             resp.raise_for_status()
@@ -220,6 +234,13 @@ def fetch_web_source(db: Session, source: Source) -> SourceFetchStats:
                 stats.not_modified = True
                 source.last_fetched_at = datetime.now(timezone.utc)
                 db.commit()
+                return stats
+            # 429/Retry-After 在 raise_for_status 之前拦截（RG-4，与 rss.py 同构：
+            # 4xx 会抛异常走错误路径，但限流不是抓取失败——交给 D13 动态降频
+            # 状态机，不计失败退避；通道间待遇一致 P1-2）
+            if resp.status_code == 429 or "retry-after" in resp.headers:
+                stats.rate_limited = True
+                stats.retry_after = resp.headers.get("retry-after")
                 return stats
             resp.raise_for_status()
             html = resp.text

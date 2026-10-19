@@ -24,6 +24,7 @@ import httpx
 from sqlalchemy.orm import Session
 
 from ..siteconfig import get_config
+from . import robots  # RG-3：Crawl-delay 第三分量（纯缓存读取；robots 归属 transport 层）
 
 log = logging.getLogger(__name__)
 
@@ -94,18 +95,25 @@ def _num_config(db: Session, key: str, default: float) -> float:
 
 
 def _min_interval_for(db: Session, netloc: str) -> float:
-    """该 netloc 的最小间隔：netloc_throttle_domains per-netloc 覆盖 →
-    netloc_min_interval_s 全局缺省（非法值 warn 回退，照 hub 判例）。"""
+    """该 netloc 的最小间隔（三分量 max）：netloc_throttle_domains per-netloc
+    覆盖 → netloc_min_interval_s 全局缺省（非法值 warn 回退，照 hub 判例）→
+    robots Crawl-delay 缓存（RG-3：纯缓存读取零网络——robots 未抓过=无分量，
+    行为不变；请求层兑现使实际发送间隔 ≥ Crawl-delay，语义等价于调大调度
+    间隔且不触碰 source_config.interval_minutes 与 schema）。"""
     overrides = get_config(db, "netloc_throttle_domains")
+    base: float | None = None
     if isinstance(overrides, dict):
         raw = overrides.get(netloc)
         if raw is not None:
             try:
-                return max(float(raw), 0.0)
+                base = max(float(raw), 0.0)
             except (TypeError, ValueError):
                 log.warning("netloc_throttle_domains[%s] 非法值 %r，忽略覆盖回退全局",
                             netloc, raw)
-    return _num_config(db, "netloc_min_interval_s", DEFAULT_MIN_INTERVAL_S)
+    if base is None:
+        base = _num_config(db, "netloc_min_interval_s", DEFAULT_MIN_INTERVAL_S)
+    delay = robots.crawl_delay_cached(netloc) or 0.0
+    return max(base, delay)
 
 
 def throttle_request(request: httpx.Request, *, db: Session | None = None) -> None:
