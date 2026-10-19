@@ -133,7 +133,9 @@ def _tick_hot() -> None:
 
 
 def _tick_backup() -> None:
-    """每日备份：本地目录插件执行一次 SQLite 在线备份（失败 WARN 不阻断任何轮）。"""
+    """每日备份：本地目录插件执行一次 SQLite 在线备份（失败 WARN 不阻断任何轮）；
+    同轮顺带清理过期会话行（SR-2——sessions 表 logout 只删单行，堆积
+    由每日批量清理治理；两事同为日频维护，同一 job 收口）。"""
     try:
         from .backup import default_backup_target
 
@@ -141,12 +143,20 @@ def _tick_backup() -> None:
             target = default_backup_target(db)
             if target is None:
                 log.info("无已注册备份目标，本轮跳过")
-                return
-            path = target.run_backup()
-            log.info("每日备份完成: %s", path)
+            else:
+                path = target.run_backup()
+                log.info("每日备份完成: %s", path)
     except Exception:  # noqa: BLE001  备份失败 WARN + 任务可恢复
         log.warning("每日备份异常（下轮重试，不阻断其他轮次）:\n%s",
                     traceback.format_exc())
+    try:
+        from .auth import purge_expired_sessions
+
+        with SessionLocal() as db:
+            removed = purge_expired_sessions(db)
+        log.info("过期会话清理：删除 %d 行", removed)
+    except Exception:  # noqa: BLE001  清理失败不阻断任何轮（下轮重试）
+        log.warning("过期会话清理异常（下轮重试）:\n%s", traceback.format_exc())
 
 
 def _reclaim_once() -> None:

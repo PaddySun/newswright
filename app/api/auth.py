@@ -104,9 +104,10 @@ def auth_me(request: Request, db: Session = Depends(get_session)):
 
 @router.post("/api/auth/password")
 def auth_password(payload: PasswordIn, request: Request, db: Session = Depends(get_session)):
-    """改密（AC-01.5）：旧密码校验 → 更新哈希 + must_change_password=false。
-
-    旧会话不强制失效，但旧密码立即可验证失效（旧密码登录落 401）。
+    """改密（AC-01.5 + SR-2）：旧密码校验 → 更新哈希 + must_change_password=false
+    → **吊销该用户全部旧会话**（被盗会话随改密立即失效）→ 换发新会话保持当前
+    连接不断（Set-Cookie 属性与登录同形态）；响应体含 sessions_revoked=<n>。
+    旧密码立即可验证失效（旧密码登录落 401）。
     本端点豁免首登改密门禁（must_change_password=true 时唯一放行端点之一）。
     """
     user = get_current_user(request, db)
@@ -117,4 +118,16 @@ def auth_password(payload: PasswordIn, request: Request, db: Session = Depends(g
     user.password_hash = hash_password(payload.new_password)
     user.must_change_password = False
     db.commit()
-    return {"username": user.username, "must_change_password": False}
+    revoked = (db.query(UserSession)
+               .filter(UserSession.user_id == user.id)
+               .delete(synchronize_session=False))
+    db.commit()
+    duration_days = siteconfig.get_config(db, "session_duration_days")
+    sess = issue_session(db, user, duration_days=duration_days)
+    resp = JSONResponse({"username": user.username,
+                         "must_change_password": False,
+                         "sessions_revoked": revoked})
+    # Secure 位暂不加（本里程碑本地 http 形态）；见 app/auth.py COOKIE_* 注释
+    resp.set_cookie(COOKIE_NAME, sess.id, httponly=COOKIE_HTTP_ONLY,
+                    samesite=COOKIE_SAMESITE, path="/")
+    return resp

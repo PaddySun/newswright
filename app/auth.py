@@ -71,6 +71,17 @@ def get_valid_session(db: Session, session_id: str | None) -> UserSession | None
     return sess
 
 
+def purge_expired_sessions(db: Session) -> int:
+    """批量清理过期会话行（SR-2）：DELETE WHERE expires_at < now(utc)，
+    返回删除行数。logout 只删单行、sessions 表只增不减的堆积由本函数治理——
+    挂在每日备份轮内顺带执行（app/scheduler._tick_backup）。"""
+    n = (db.query(UserSession)
+         .filter(UserSession.expires_at < _now())
+         .delete(synchronize_session=False))
+    db.commit()
+    return n
+
+
 def _now():
     return datetime.now(timezone.utc)
 

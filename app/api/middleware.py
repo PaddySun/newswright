@@ -15,10 +15,32 @@
 """
 from __future__ import annotations
 
+import secrets
+
 # 三段判定域的缓存策略字面值（测试与实现共用同一常量，防漂移）
 POLICY_NO_STORE = "no-store"
 POLICY_IMMUTABLE = "public, max-age=31536000, immutable"
 POLICY_NO_CACHE = "no-cache, must-revalidate"
+
+# 安全响应头字面值（SR-3；测试与实现共用同一常量，防漂移）。CSP 为模板
+# 串——渲染时以 nonce 填充 script-src 的 'nonce-<n>' 位。style-src 保留
+# 'unsafe-inline'：模板样式走外链 CSS，但 SVG 内联属性/第三方安全余量先保留
+# 最小面（无 <style> 块与 style 属性面，AC-3.4 grep 复核在案）。
+CSP_TEMPLATE = (
+    "default-src 'self'; "
+    "script-src 'self' 'nonce-{nonce}'; "
+    "style-src 'self' 'unsafe-inline'; "
+    "img-src 'self' data: https:; "
+    "connect-src 'self'; "
+    "frame-ancestors 'none'; "
+    "base-uri 'self'; "
+    "form-action 'self'"
+)
+HEADER_NOSNIFF = "nosniff"
+HEADER_FRAME_DENY = "DENY"
+HEADER_REFERRER = "strict-origin-when-cross-origin"
+# HSTS 在 http 下被浏览器忽略（无害），上 HTTPS 后即生效——故全域无条件下发
+HEADER_HSTS = "max-age=31536000"
 
 # HTML/SEO 判定域（白名单）：公开页、登录页、SPA 壳与 SEO 三件——内容随公开
 # 模式配置即时变化，允许缓存复验。守卫路由双挂载后，demo 兼容形态（无 /api
@@ -50,6 +72,25 @@ def cache_policy_for(path: str, query: str = "") -> str:
     if path in _HTML_EXACT or path.startswith(_HTML_PREFIXES):
         return POLICY_NO_CACHE
     return POLICY_NO_STORE
+
+
+def security_headers(csp_nonce: str) -> dict[str, str]:
+    """安全响应头五件套（SR-3，纯函数——对齐 cache_policy_for 纪律）：
+    CSP（nonce 填充）/nosniff/DENY/Referrer/HSTS。nonce 每请求新生成
+    （secrets.token_urlsafe(16)，挂载点在 main.py 中间件），模板经
+    request.state.csp_nonce 取同值——头与页面属性必然一致。"""
+    return {
+        "Content-Security-Policy": CSP_TEMPLATE.format(nonce=csp_nonce),
+        "X-Content-Type-Options": HEADER_NOSNIFF,
+        "X-Frame-Options": HEADER_FRAME_DENY,
+        "Referrer-Policy": HEADER_REFERRER,
+        "Strict-Transport-Security": HEADER_HSTS,
+    }
+
+
+def new_csp_nonce() -> str:
+    """每请求独立 nonce（≥128bit 随机；单请求生命期，不可跨请求复用）。"""
+    return secrets.token_urlsafe(16)
 
 
 async def cache_header_middleware(request, call_next):

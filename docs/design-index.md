@@ -239,3 +239,13 @@
 | 编号 | 一句话摘要 |
 |---|---|
 | PR-1 | 整篇转义先行的行首标记匹配：白名单渲染器先整篇 HTML 转义再逐行匹配语法，一切行首标记类语法（引用块 > 等）的判定与内容剥离必须以转义后形态（&gt;）做前缀容忍匹配（> / &gt; 双形态），不得按源文字面形态匹配；源文字面实体（&gt;）经二次转义（&amp;gt;）自然不匹配，无需消歧工程；服务端 public_render.py 为规则权威，SPA markdown-client.js 同构镜像（双侧规则形态一致；嵌套标记仅剥一层，白名单未定义嵌套层级）——判例源：引用块判定 ^>\s? 在整篇转义后永不匹配、blockquote 永不产出的生产缺陷（修复批汇报 doc/C5/C5-1b-执行Agent工作汇报.md） |
+
+## SR-x（安全杂项条款，后端完善批 BE-1 增补；条文正文随外层治理文档 doc/BE/BE-1-任务书.md 落册）
+
+| 编号 | 一句话摘要 |
+|---|---|
+| SR-1 | 反馈频控与记忆闸三道：/feedback 入口 per-IP 小时频控（缺省 30，进程内固定窗，now 可注入）+ per-article 当日聚合上限（缺省 100，ArticleReaction DB 计数、站点时区日切）+ 同作者当日 feedback 记忆回流 cap（缺省 50，超限丢弃回流、reaction 照常入库+WARN）——cookie 身份可轮换（换 cookie 即新身份），IP 桶与 DB 计数是不可伪造维度；already_counted 幂等与 comment 登录要求零变 |
+| SR-2 | 改密吊销：改密成功即删除该用户全部 sessions 行（响应含 sessions_revoked）+ 换发新会话当前连接不断（Set-Cookie 与登录同形态）；过期会话行 purge_expired_sessions 每日批量清理（挂 daily_backup 轮，logout 单行删除语义不变） |
+| SR-3 | 安全响应头全域中间件：CSP（每请求 secrets.token_urlsafe(16) nonce，request.state 供模板、头与页面属性必然一致；importmap 为全站唯一 inline script）/X-Content-Type-Options/X-Frame-Options/Referrer-Policy/HSTS 五件套，纯函数+常量防漂移；HSTS 在 http 下浏览器忽略（无害） |
+| SR-4 | client_ip_header 反代警告：配置头后该值可被客户端伪造绕过一切按 IP 的限速/频控——仅真实部署在可信反代/CDN 后才可配置 |
+| SR-5 | SMTP 口令备份擦洗：在线备份为全文件复制、逐行排除不可行，备份完成后对目标备份文件 DELETE site_config.smtp_pass（原库零触碰、轮转逻辑零动）；恢复语义=恢复后 SMTP 需重录 |
