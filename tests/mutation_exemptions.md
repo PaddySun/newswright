@@ -4,7 +4,8 @@
 > B = 防御分支（正常运行不可触达，设计书明确要求其存在）。
 > 依据任务书 `doc/CI0/CI0-分诊批次1-任务书.md` §2；裁决依据为两份正式设计书 v1.4。
 > C 类（测试缺口）与 D 类（设计模糊）**不在本清单**：C 类由 `tests/test_mutation_t1.py`
-> 补测试击杀，D 类交统筹（见执行汇报 §3）。
+> 补测试击杀，D 类交统筹（见执行汇报 §3）。唯一例外=站长裁定特例 D 类入册
+> （2026-10-17 裁定，见尾部「C5-5 分诊批次 5」节的 scheduler 键面 22 条）。
 
 ## 批次 1：认证域（14 A + 1 B = 15 条）
 
@@ -65,7 +66,6 @@
 
 | mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
 |---|---|---|---|
-| app.main.x_create_app__mutmut_6 | A | title "XXnewswright-demoXX"：同 m2 | 同 m2 |
 | app.main.x_create_app__mutmut_8 | A | version "XX0.1.0XX"：同 m3 | 同 m2 |
 | app.scheduler.x__reclaim_once__mutmut_5 | A | log.info(n)（msg 换实参）：同上 | 同 m3 |
 | app.scheduler.x__reclaim_once__mutmut_6 | A | log.info 丢实参：同上 | 同 m3 |
@@ -1604,7 +1604,6 @@
 
 | 变异体 | 类 | 说明 | 依据 |
 |---|---|---|---|
-| app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_24 | A | Authorization 键小写/大写：HTTP 头名大小写不敏感（RFC 7230），服务端解析等价——httpx 头名归一化判据族（batch4 m29/30 先例） | 历史判据族复用（详见说明列） |
 | app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_26 | A | Content-Type 键小写/大写：HTTP 头名大小写不敏感——同 m23 判据族 | 历史判据族复用（详见说明列） |
 | app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_27 | A | Content-Type 键小写/大写：HTTP 头名大小写不敏感——同 m23 判据族 | 历史判据族复用（详见说明列） |
 | app.embedding.moark.xǁMoarkEmbeddingProviderǁ_embed_request__mutmut_34 | A | 响应体截断 [:300]→[:301]：截断界数值无条款（batch2 m42、批次10 m69 先例） | 历史判据族复用（详见说明列） |
@@ -2126,7 +2125,6 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.api.routes.x__unscored_entries__mutmut_5 | A | 窗宽 24→25h：窗口数字未落条款（AC-21.1 仅说「近期」）——自定窗口域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.api.routes.x__unscored_entries__mutmut_13 | A | query(None)：venv 实证 filter 照常渲染、命中行返回 (None,) 元组非 None——first() is not None 的行存在性判定与 query(id) 恰等价（count(None) 行数判例的 first 版；核验 C 轮实锤改判） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.api.routes.x__unscored_entries__mutmut_20 | A | 窗 >=→>：恰 24h 边界含等性无条款——自定边界域（C3-2 degraded m28 判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.api.routes.x__unscored_entries__mutmut_70 | A | limit 10→None/11、order_by None：附带上限与顺序无条款（自定上限；顺序无断言面——C2-1 fingerprint order_by 判据族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 
 #### app.api.deps.x_require_session（A 1）
 
@@ -2459,7 +2457,6 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | mutant 全名 | 类别 | 一句话理由 | 依据条款或推理 |
 |---|---|---|---|
 | app.retrieval.query.x_ensure_direction_query_vec__mutmut_7 | B | query_vec_version or 0 → or 1：差异域=vec 落列而 version None 的不一致态（commit 双写恒一致，生产不可达）且 prompt_version=1 时误判缓存命中——防御分支豁免 | 防御分支豁免（正常运行不可达、设计书要求其存在——任务书 §2 B 判据） |
-| app.retrieval.query.x_ensure_direction_query_vec__mutmut_18 | A | ref_id 值 None/移除：同 ref_type——账本归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.retrieval.query.x_ensure_direction_query_vec__mutmut_19 | A | max_tokens 500→None/移除：生成上限护栏数值（chat 签名缺省 None），「200 字以内」由提示词文本承载——护栏数值无条款 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.retrieval.query.x_ensure_direction_query_vec__mutmut_24 | A | max_tokens 500→None/移除：生成上限护栏数值（chat 签名缺省 None），「200 字以内」由提示词文本承载——护栏数值无条款 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.retrieval.query.x_ensure_direction_query_vec__mutmut_41 | A | ref_type 值 None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
@@ -2554,12 +2551,9 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 |---|---|---|---|
 | app.scoring.service.x_score_item__mutmut_47 | A | last_error 初始 ""：失败路径恒先赋值（两分支均 last_error=...），初始值不可达读——初值吸收判例 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.scoring.service.x_score_item__mutmut_52 | A | chat_json model=model None 化/移除：生产调用点（runner 两处）恒不传 model →形参恒 None，变异与原值恰等价（实参变异恒替换判例） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.scoring.service.x_score_item__mutmut_54 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.scoring.service.x_score_item__mutmut_60 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.scoring.service.x_score_item__mutmut_61 | A | ref_id=None/移除：同 ref_type——账本归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.scoring.service.x_score_item__mutmut_65 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.scoring.service.x_score_item__mutmut_66 | A | ref_type="item" None/移除/XX/大写：ref_type 缺省 None（chat 签名实证），归因列无行为消费方——账本值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.scoring.service.x_score_item__mutmut_67 | A | temperature=0.0 None/移除/1.0：温度数值无条款（移除时 chat 签名缺省恰 0.0 等价；None/1.0 为 LLM 参数域）——护栏数值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 
 ## 批次 5：外部能力族（C3-5，2026-10-08）
 
@@ -2583,34 +2577,18 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_2 | A | query_max_chars 覆写判定 and False/or True/is not None：生产构造缺省恒 None（__init__ m13 豁免判例——None=不截断 8K 直吃口径），三形态与原恒等；整数截断域=对照实验用（docstring 明示）——生产调用形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_3 | A | query_max_chars 覆写判定 and False/or True/is not None：生产构造缺省恒 None（__init__ m13 豁免判例——None=不截断 8K 直吃口径），三形态与原恒等；整数截断域=对照实验用（docstring 明示）——生产调用形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_4 | A | query_max_chars 覆写判定 and False/or True/is not None：生产构造缺省恒 None（__init__ m13 豁免判例——None=不截断 8K 直吃口径），三形态与原恒等；整数截断域=对照实验用（docstring 明示）——生产调用形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_24 | A | Authorization 键小写/大写：httpx Headers 大小写不敏感（RFC 头名不分区），线格式恒等——HTTP 头形态等价（任务书 A 形态明示） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_26 | A | Content-Type 键小写/大写：同 m23 域——头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_27 | A | Content-Type 键小写/大写：同 m23 域——头形态等价 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_34 | A | 429 错误消息 RankError(None)/scrub(None)/[:301]：异常类型与 retryable 标记不变，消息文案/截断界无条款——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_35 | A | e.retryable=None/False：rank 链无重试环（rerank.base.rank 捕获 RankError 落账即raise、writer/hot 捕获回退，全链无 retryable 消费方——grep 实证）——标记无消费方等价（报错脱敏/重试纪律的消费面在 LLM/search 底座非 rank） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_36 | A | e.retryable=None/False：rank 链无重试环（rerank.base.rank 捕获 RankError 落账即raise、writer/hot 捕获回退，全链无 retryable 消费方——grep 实证）——标记无消费方等价（报错脱敏/重试纪律的消费面在 LLM/search 底座非 rank） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_39 | A | ≥400 错误消息 RankError(None)/scrub(None)/[:301]：异常类型不变——异常文案域（文案先例族） | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_44 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_45 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_46 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_47 | A | usage 读取 and 化/键 None/XX/大写：usage_flat 仅入 RankedResult.raw 存档域（rank_call_log 不携带 token——base._log 无 token 列），缺 usage 键域=协议恒返（V10 实测）——存档值域无行为消费方 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_52 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_53 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_54 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_55 | A | prompt_tokens 值 and 0/读取键变体/or 1：真值域差异仅 raw 存档值；缺键域 or 0兜底=防御缺省（usage 协议恒返）——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_58 | A | usage_flat total_tokens 键 XX/大写：同 m49 域——存档键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_59 | A | usage_flat total_tokens 键 XX/大写：同 m49 域——存档键面 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_61 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_63 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_64 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_66 | A | total_tokens 值 and 0/读取键变体/or 1：同 m52 域——存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_104 | A | band 三档判定/阈值/字面量全变体（None/and/or/XX/大写/边界/越界）：拍板「只用排序不用 band」（M18-M20 官方 band 与 rubric 分带不对齐）——band 无生产行为消费方（writer 仅消费 rank_score 与阈值明细；inject band 键面无断言先例）——明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_108 | A | band=None：同上拍板域——band 明细值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_109 | A | provider=None：RankedResult.provider 归因值域（writer/hot 只读 id/score/band；rank_call_log.provider 出自 self.name 非该字段）——归因值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_110 | A | raw=None/raw 实参移除（default_factory=dict 兜底）：RankedResult.raw 不落库（writer/hot 均不持久化 rank raw）——内存存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_116 | A | raw=None/raw 实参移除（default_factory=dict 兜底）：RankedResult.raw 不落库（writer/hot 均不持久化 rank raw）——内存存档值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_118 | A | round(norm,1)→None/单参/2：舍入位数无条款（×100 归一化已发生；int/float 数值在阈值比较与明细域等价——施加必活验证）——数值形态域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
-| app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_122 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_123 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 | app.rerank.moark_reranker.xǁMoarkRerankerProviderǁ_rank_chunk__mutmut_124 | A | raw dict relevance_score/model 键值变体：同 m110 域——内存存档键值域 | 等价/不可达或条款未钉（C1/C2/C3 判据族沿用） |
 
@@ -2789,8 +2767,6 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_91 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_92 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
 | app.authors.pipeline.xǁPipelineRunnerǁexecute__mutmut_99 | A | _slices_block position 实参变体：head/tail 渲染差异=文案尾部换行形态（U 形放置语义不变；文案组） | 等价/不可达或条款未钉 |
-| app.authors.schema.x_validate_author_json__mutmut_33 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
-| app.authors.schema.x_validate_author_json__mutmut_34 | A | bio/public_visible 类型错误消息的 value/expect 实参变体：拦截行为不变（errors 非空），消息「实得 <type> 名」细节无条款（错误消息文案组；模块 docstring 钉含字段路径——路径部分未被变异） | 等价/不可达或条款未钉 |
 | app.authors.writer.x__assemble_with_domain_cap__mutmut_14 | A | 候选池 limit(None)：200 上限数值无条款（池大小数值缺省先例族；pool 语义与 domain cap 不受影响） | 等价/不可达或条款未钉 |
 | app.authors.writer.x__assemble_with_domain_cap__mutmut_23 | A | join(ScoreResult, None)/实参删除：onclause=None 走 FK 自动推断（ScoreResult.item_id FK 实证）——恰等价 | 等价/不可达或条款未钉 |
 | app.authors.writer.x__assemble_with_domain_cap__mutmut_25 | A | join(ScoreResult, None)/实参删除：onclause=None 走 FK 自动推断（ScoreResult.item_id FK 实证）——恰等价 | 等价/不可达或条款未钉 |
@@ -3066,17 +3042,8 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.api.public_render.x_render_markdown_whitelist__mutmut_102 | A | code_lang reset None/XXXX：恒被下次 fence.group(1) 覆盖（不可达差异） | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_111 | A | [0-9a-za-z+-] 字符类重复成员等价 | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_119 | A | and→or：单边 | 行（| 开头不闭合）不属表格行判定域（markdown 表格行=双 | 包裹） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_197 | A | <UL>/<OL> 大写标签：HTML 大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_199 | A | <UL>/<OL> 大写标签：HTML 大小写不敏感，渲染等价 | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_224 | A | 续行切片 [:-5] 恰剥净闭合标签（原版 [:-4] 残留孤立 <）：渲染近似等价（孤立 < 按文本显示），无条款钉拼接切片边界 | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_227 | A | </li> 尾 XX/大写：闭合标签结构保留（措辞/大小写） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_228 | A | </li> 尾 XX/大写：闭合标签结构保留（措辞/大小写） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_248 | A | else 缺省 XXXX：不安全值同被 _SAFE_URL 拒（链接生成分支等价） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_255 | A | escape(url,)≡quote=True（缺省即 True） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_263 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_264 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_266 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
-| app.api.public_render.x_render_markdown_whitelist__mutmut_267 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_268 | A | footnotes section 结构串 XX/大写：标签完整（class 值大写仅样式钩失配，样式无条款） | 设计书条款/实证推理（详见说明列） |
 | app.api.public_render.x_render_markdown_whitelist__mutmut_270 | A | 总出口 join XX：块间分隔形态变体（块内容与顺序不变，措辞域） | 设计书条款/实证推理（详见说明列） |
 
@@ -3668,3 +3635,8 @@ A 210 条 + B 1 条（suspicious 定案 m18 = 批次 1 在册条目保留，不�
 | app.scheduler.x_status__mutmut_20 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
 | app.scheduler.x_status__mutmut_21 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
 | app.scheduler.x_status__mutmut_22 | D | 状态 dict 键面漂移（running/jobs/intervals/checked_at 键 XX/大写；jobs None/append None；next_run_at、trigger str(None)）：观测端点/scheduler/status 无 OpenAPI 契约（沿用 Demo 行为）、前端零消费、键面不钉〔站长 2026-10-17 裁定维持 D，统筹建议理由〕；m1 另注「启动竞态窗口 500 形态接受现状」 | 设计书条款/实证推理（详见说明列） |
+
+## BE-0 同步节（2026-10-19，统一 dispatch #19〔run 39119848087〕对账后同步——统筹亲执）
+
+> 移除 34 行 = **转杀**（现 killed——豁免在案期间新测试连带杀灭，名单 doc/C5/统一dispatch-对账/artifacts/exem_tokill.txt）：moark_reranker 16（C3-5 节）/ public_render 9（C5-1 节）/ scoring 3（C3-4 节）/ authors.schema 2（C3-6 节）/ 其余 4（main·批次3 / embedding·C2-4A / api.routes·C3-3 / retrieval.query·C3-4 各 1）。同步后口径 2537 → 2503。历史节头计数为批次时点口径，不回改（C2-0/C5-0 同例）。
+

@@ -145,8 +145,10 @@ def main() -> int:
     (VERIFY / "e2e_report.md").write_text("\n".join(md) + "\n", encoding="utf-8")
     print(json.dumps(report["channels"], ensure_ascii=False, indent=1))
     print(f"[e2e] 报告 -> verify/e2e_report.json / verify/e2e_report.md")
+    # 非零退出=有 FAILED 写作轮（SKIP=空阅读集本地短路不算失败）：上层靠退出码发现批跑失败
+    failed_runs = sum(1 for r in runs if r.status == "FAILED")
     db.close()
-    return 0
+    return 1 if failed_runs else 0
 
 
 if __name__ == "__main__":
