@@ -101,6 +101,20 @@ def create_app() -> FastAPI:
         return await cache_header_middleware(request, call_next)
 
     @app.middleware("http")
+    async def security_headers_middleware(request, call_next):
+        """安全响应头全域下发（SR-3）：每请求生成 CSP nonce 存
+        request.state.csp_nonce（模板渲染取同值），响应统一补五头——API JSON
+        同带头无害，公开页/登录页/SPA 壳全覆盖。纯函数与常量见 api/middleware.py。"""
+        from .api.middleware import new_csp_nonce, security_headers
+
+        nonce = new_csp_nonce()
+        request.state.csp_nonce = nonce
+        response = await call_next(request)
+        for name, value in security_headers(nonce).items():
+            response.headers[name] = value
+        return response
+
+    @app.middleware("http")
     async def log_context_middleware(request, call_next):
         """请求侧日志上下文注入：route + actor（会话身份）经 contextvars 写入，
         业务代码不手工拼上下文字段。请求完成记一条 INFO 行（访问面留痕）。"""

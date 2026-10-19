@@ -21,7 +21,13 @@ VISITOR_COOKIE_NAME = "nw_visitor"
 
 
 def get_client_ip(request: Request, db: Session | None = None) -> str:
-    """请求侧真实客户端 IP（ADR-5⑤ 提取链）：配置头优先，空 = 直连地址。"""
+    """请求侧真实客户端 IP（ADR-5⑤ 提取链）：配置头优先，空 = 直连地址。
+
+    ⚠ 反代警告（SR-4）：配置 client_ip_header 后该头的值可被客户端随意
+    伪造（直连请求也能携带），从而绕过一切按 IP 的限速/频控（登录限速、反馈
+    IP 桶）。仅当服务真实部署在可信反代/CDN 之后（该头由反代覆写、客户端
+    无法注入）才可配置本键；直连暴露形态下配置等于放弃 IP 维度闸门。
+    """
     if db is not None:
         header_name = siteconfig.get_config(db, "client_ip_header") or ""
         if header_name:
@@ -91,6 +97,36 @@ class LoginRateLimiter:
     def record_success(self, key: str) -> None:
         """成功登录清零该身份计数（AC-01.2）。"""
         self._store.pop(key, None)
+
+
+class FeedbackRateLimiter:
+    """反馈入口 per-IP 小时频控（SR-1）：窗口 1 小时上限 N（site_config
+    feedback_ip_hourly_limit 注入，缺省 30）——固定窗计数，超窗翻新。
+
+    与 LoginRateLimiter 同址同前提（进程内字典、单进程 ADR-2、重启清零可接受），
+    但语义不同：这里是**窗口速率**（不限连续失败、不冷却），防匿名刷量——
+    visitor_hash 的 cookie 主链可被客户端随意轮换（换 cookie 即新身份），IP 桶
+    是 cookie 之外不可伪造的闸门维度。now 可注入以便测试（等价验证窗口翻新，
+    不真等 1 小时）。"""
+
+    def __init__(self, now=None):
+        from datetime import datetime, timezone
+
+        self._store: dict[str, int] = {}
+        self.now = now or (lambda: datetime.now(timezone.utc))
+
+    def _window_key(self, key: str) -> str:
+        hour = self.now().strftime("%Y%m%d%H")
+        return f"ip:{key}:{hour}"
+
+    def allow(self, key: str, *, limit: int) -> bool:
+        """本次请求是否放行：窗口内未达上限则计数 +1 放行；已达上限拒绝。"""
+        window = self._window_key(key)
+        count = self._store.get(window, 0)
+        if count >= limit:
+            return False
+        self._store[window] = count + 1
+        return True
 
 
 def require_session(request: Request, db: Session = Depends(get_session)) -> User:

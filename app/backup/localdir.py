@@ -25,6 +25,12 @@ class LocalDirectoryBackup(BackupTarget):
     name = "local_dir"
 
     def run_backup(self) -> Path:
+        """执行一次备份并返回备份文件路径。
+
+        SMTP 凭据擦洗（SR-5）：在线备份是全文件复制、逐行排除不可行，
+        故备份完成后对**目标备份文件**开连接删除 site_config.smtp_pass 行
+        （原库零触碰）。恢复语义=从备份恢复后 SMTP 口令需重录。
+        """
         directory = Path(str(get_config(self.db, "backup_dir") or "backups"))
         directory.mkdir(parents=True, exist_ok=True)
         # 纳秒尾缀零补齐 6 位：文件名可读（轮转按修改时间排序，不依赖名字典序）
@@ -41,11 +47,23 @@ class LocalDirectoryBackup(BackupTarget):
                 dest.close()
         finally:
             src_conn.close()
+        self._scrub_smtp_pass(dest_path)
         removed = rotate_backups(directory, FILE_PREFIX)
         if removed:
             log.info("备份轮转：挤出最旧 %d 份", len(removed))
         log.info("备份完成: %s", dest_path.name)
         return dest_path
+
+    @staticmethod
+    def _scrub_smtp_pass(dest_path: Path) -> None:
+        """擦洗备份文件中的 SMTP 凭据（只动备份产物，主库零触碰）。"""
+        conn = sqlite3.connect(str(dest_path))
+        try:
+            conn.execute("DELETE FROM site_config WHERE key='smtp_pass'")
+            conn.commit()
+        finally:
+            conn.close()
+        log.info("已擦洗备份中的 SMTP 凭据: %s", dest_path.name)
 
 
 register("local_dir", LocalDirectoryBackup)

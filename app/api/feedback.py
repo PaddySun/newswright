@@ -12,14 +12,27 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from .. import siteconfig
 from ..authors.memory import record_feedback
 from ..db import get_session
 from ..models import Article, ArticleReaction
+from ..timeline import local_day_start, site_zone
 from .auth import get_current_user
-from .deps import visitor_hash
+from .deps import FeedbackRateLimiter, get_client_ip, visitor_hash
 
 # 无会话守卫的独立路由（匿名反馈入口）
 router = APIRouter()
+
+# 进程内 per-IP 小时频控器（SR-1；单进程前提 ADR-2，重启清零可接受）
+feedback_limiter = FeedbackRateLimiter()
+
+DEFAULT_IP_HOURLY_LIMIT = 30
+DEFAULT_ARTICLE_DAILY_LIMIT = 100
+
+
+def _rate_limited() -> HTTPException:
+    return HTTPException(429, {"code": "FEEDBACK_RATE_LIMITED",
+                               "message": "反馈提交过于频繁，请稍后再试"})
 
 
 class FeedbackIn(BaseModel):
@@ -31,6 +44,14 @@ class FeedbackIn(BaseModel):
 
 @router.post("/feedback")
 def feedback(payload: FeedbackIn, request: Request, db: Session = Depends(get_session)):
+    # per-IP 小时频控（SR-1）：cookie 身份可轮换，IP 桶是不可伪造维度——
+    # 入口先于一切分支（like/dislike/comment 全部计数，含 404/422 请求）
+    ip = get_client_ip(request, db)
+    ip_limit = int(siteconfig.get_config(db, "feedback_ip_hourly_limit")
+                   or DEFAULT_IP_HOURLY_LIMIT)
+    if not feedback_limiter.allow(ip, limit=ip_limit):
+        raise _rate_limited()
+
     article = db.get(Article, payload.article_id)
     if article is None:
         raise HTTPException(404, "article not found")
@@ -55,7 +76,21 @@ def feedback(payload: FeedbackIn, request: Request, db: Session = Depends(get_se
               .one_or_none())
     if exists is not None:
         return {"counted": False, "reason": "already_counted"}
+    # per-article 聚合日上限（SR-1）：DB 计数当日行数（站点时区日切，
+    # 与预算日同口径）——跨重启诚实、免新增状态；already_counted 幂等不受影响
+    daily_limit = int(siteconfig.get_config(db, "feedback_article_daily_limit")
+                      or DEFAULT_ARTICLE_DAILY_LIMIT)
+    today_count = (db.query(ArticleReaction.id)
+                   .filter(ArticleReaction.article_id == article.id,
+                           ArticleReaction.created_at
+                           >= local_day_start(site_zone(db)))
+                   .count())
+    if today_count >= daily_limit:
+        raise _rate_limited()
     db.add(ArticleReaction(article_id=article.id, visitor_hash=v_hash,
                            verdict=payload.verdict))
+    # 先落库再回流：记忆闸丢弃回流时 reaction 照常入库（AC-1.3——不再依赖
+    # add_memory 内的 commit 顺带提交）
+    db.commit()
     record_feedback(db, article, verdict=payload.verdict)
     return {"counted": True}

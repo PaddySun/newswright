@@ -5,12 +5,20 @@
 """
 from __future__ import annotations
 
+import logging
+
 from sqlalchemy.orm import Session
 
 from ..models import Article, Author, MemoryEntry
+from ..siteconfig import get_config
+from ..timeline import local_day_start, site_zone
+
+log = logging.getLogger("newswright.authors.memory")
 
 MODULE_SEPARATOR = "_memory"
 EMPTY_PLACEHOLDER_TEXT = "（暂无记录）"
+
+DEFAULT_MEMORY_DAILY_CAP = 50
 
 
 def module_of_placeholder(placeholder: str) -> str:
@@ -48,8 +56,15 @@ def add_memory(db: Session, author: Author, *, module: str, content: str, source
     return entry
 
 
-def record_feedback(db: Session, article: Article, *, verdict: str, comment: str | None = None) -> MemoryEntry:
-    """读者反馈 → 自然语言记忆条目（feedback 模块，回流不做人工筛选）。"""
+def record_feedback(db: Session, article: Article, *, verdict: str,
+                    comment: str | None = None) -> MemoryEntry | None:
+    """读者反馈 → 自然语言记忆条目（feedback 模块，回流不做人工筛选）。
+
+    回流聚合闸（SR-1）：同作者当日 feedback 记忆条数已达
+    feedback_memory_daily_cap（缺省 50）时丢弃本次回流（返回 None）——
+    reaction 计数照常入库不受影响；防匿名刷量污染 AI 作者人格（身份轮换
+    攻击下每条 reaction 都会回流记忆，闸门把污染面截在 cap 内）。
+    """
     if verdict == "like":
         text = f"读者点赞了《{article.title}》，说明这类选题与写法受到认可。"
     elif verdict == "dislike":
@@ -62,4 +77,15 @@ def record_feedback(db: Session, article: Article, *, verdict: str, comment: str
     if comment:
         text += f"读者评语：{comment}"
     author = db.get(Author, article.author_id)
+    cap = int(get_config(db, "feedback_memory_daily_cap")
+              or DEFAULT_MEMORY_DAILY_CAP)
+    day_start = local_day_start(site_zone(db))
+    today_count = (db.query(MemoryEntry.id)
+                   .filter(MemoryEntry.author_id == author.id,
+                           MemoryEntry.module == "feedback",
+                           MemoryEntry.created_at >= day_start)
+                   .count())
+    if today_count >= cap:
+        log.warning("作者 %s 当日反馈记忆已达上限 %d，丢弃本次回流", author.id, today_count)
+        return None
     return add_memory(db, author, module="feedback", content=text, source_event="feedback")

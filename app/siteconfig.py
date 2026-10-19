@@ -72,6 +72,12 @@ DEFAULTS: dict[str, object] = {
     # sitemap 绝对 URL 前缀（如 https://example.com，末尾不带斜杠；空=仅输出路径形态）。
     # sitemap 协议期望绝对 URL，生产部署应配置该键
     "public_base_url": "",
+    # 反馈频控与记忆闸（SR-1）：/feedback 入口 per-IP 小时上限（缺省 30）；
+    # 单文当日 ArticleReaction 聚合上限（缺省 100）；同作者当日 feedback 记忆
+    # 回流上限（缺省 50，超限丢弃回流、reaction 照常入库）
+    "feedback_ip_hourly_limit": 30,
+    "feedback_article_daily_limit": 100,
+    "feedback_memory_daily_cap": 50,
 }
 
 

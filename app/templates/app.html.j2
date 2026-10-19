@@ -13,7 +13,7 @@
   <title>{{ i18n.t("site.name") }}</title>
   <link rel="stylesheet" href="/static/css/design-system.css?v={{ static_version }}">
   <link rel="stylesheet" href="/static/css/app.css?v={{ static_version }}">
-  <script type="importmap">
+  <script type="importmap" nonce="{{ request.state.csp_nonce }}">
     {
       "imports": {
         "vue": "/static/vendor/vue.esm-browser.prod.js?v={{ static_version }}",
