@@ -37,6 +37,8 @@ def _migrate_added_columns() -> None:
             "failure_level": "VARCHAR(20) NOT NULL DEFAULT 'none'",
             "failure_since": "DATETIME",
             "last_error": "TEXT",
+            # 死刑探活时钟（BE-3/D6）：nullable 无回填——历史行 null = 从未探活
+            "last_probe_at": "DATETIME",
             # 三级判别计数与动态降频状态（G2 失效判别批）：历史行均为正常态
             "hard_failures": "INTEGER NOT NULL DEFAULT 0",
             "empty_rounds": "INTEGER NOT NULL DEFAULT 0",

@@ -63,6 +63,9 @@ CATEGORY_REGISTRY: dict[str, dict] = {
                    "default_min_interval_s": 0},
     "reconcile": {"family": "alert", "priority": 2,
                   "default_min_interval_s": 0},
+    # hard_failed→none 复活通知（BE-3/SM-1）：与失效同开关族，低紧迫档
+    "source_recovered": {"family": "alert", "priority": 2,
+                         "default_min_interval_s": 0},
     # 测试邮件专用（POST /settings/notify/test；唯一时间戳键不参与抑制）
     "notify_test": {"family": "alert", "priority": 2,
                     "default_min_interval_s": 0},

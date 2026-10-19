@@ -14,7 +14,7 @@ skip_reason 返回约定：
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from .. import config
 from ..models import Direction, Source
@@ -34,6 +34,31 @@ def rate_limit_minutes(level: int) -> int:
 def probe_due(skips: int) -> bool:
     """探测窗口判定：backoff_skips 计入状态内每一轮（含探测轮），每 N 轮放行一次。"""
     return (skips or 0) % config.BACKOFF_PROBE_EVERY == 0
+
+
+def hard_failed_probe_due(src: Source, *, now: datetime) -> bool:
+    """死刑源探活窗口（BE-3/D6）：进入 hard_failed 满 HARD_FAIL_PROBE_EVERY_DAYS
+    天，且最近一次探活尝试（last_probe_at，成败都记账）也已冷却同期——两钟
+    皆满才 due。failure_since 语义是「进入当前失效态的时间」，不得挪作探活
+    时钟；缺 failure_since 的历史行保守不探。纯函数不知配额（配额放行在
+    enqueue 层），skip_reason 的 hard_failed 分支不因此改变。"""
+    if src.failure_level != "hard_failed" or src.failure_since is None:
+        return False
+    window = timedelta(days=config.HARD_FAIL_PROBE_EVERY_DAYS)
+    if now - _aware(src.failure_since) < window:
+        return False
+    if src.last_probe_at is not None and now - _aware(src.last_probe_at) < window:
+        return False
+    return True
+
+
+def is_stale_dead(src: Source, *, now: datetime, stale_days: int) -> bool:
+    """陈旧死源判定（BE-3/D6）：hard_failed 且进入失效态超 stale_days 天——
+    聚合哨兵与体检载荷的降级分子出清判据（只影响呈现口径，不改源状态本体
+    与 enabled 分母）。suspect 与缺 failure_since 的历史行永不出清。"""
+    if src.failure_level != "hard_failed" or src.failure_since is None:
+        return False
+    return (now - _aware(src.failure_since)) > timedelta(days=stale_days)
 
 
 def skip_reason(src: Source, direction: Direction | None, *, now: datetime) -> str | None:

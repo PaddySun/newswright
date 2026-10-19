@@ -169,6 +169,10 @@ BACKOFF_PROBE_EVERY = int(_get("BACKOFF_PROBE_EVERY") or 4)
 # 连续 ≥3 轮 404/403/410 → 硬失效；连续 ≥3 轮 200 空内容 → 疑似失效
 HARD_FAIL_ROUNDS = int(_get("HARD_FAIL_ROUNDS") or 3)
 SUSPECT_EMPTY_ROUNDS = int(_get("SUSPECT_EMPTY_ROUNDS") or 3)
+# 死刑源周探活（BE-3/D6）：进入 hard_failed 满 N 天起每轮至多 M 个探活
+# （最老优先，防探活排满）；探活尝试后同样冷却 N 天
+HARD_FAIL_PROBE_EVERY_DAYS = int(_get("HARD_FAIL_PROBE_EVERY_DAYS") or 7)
+HARD_FAIL_PROBE_QUOTA = int(_get("HARD_FAIL_PROBE_QUOTA") or 5)
 # 搜索源关键词连续 ≥6 轮零新增 → 边际降频（与 429 降频同构但独立计数）
 KEYWORD_EXHAUSTED_ROUNDS = int(_get("KEYWORD_EXHAUSTED_ROUNDS") or 6)
 # 降频缺省间隔档：15×2^档位 分钟，上限 240（429 限流与关键词零收益共用阶梯）

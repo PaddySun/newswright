@@ -71,10 +71,10 @@ def smtp_ready(db_session):
     set_config(db_session, "smtp_to", ["me@example.com"])
 
 
-# ---------- AC-4：类别注册表（十条目）与硬常量 ----------
+# ---------- AC-4：类别注册表（十一条目）与硬常量 ----------
 
 
-def test_registry_ten_entries_and_hard_constants():
+def test_registry_eleven_entries_and_hard_constants():
     assert hub.ACCOUNT_HARD_INTERVAL_S == 60  # 「硬」=代码常量，不做 site_config
     assert hub.ACCOUNT_QUEUE_CAP == 10
     expected = {
@@ -84,6 +84,7 @@ def test_registry_ten_entries_and_hard_constants():
         "collective_degradation": ("alert", 1, 0),
         "disk_usage": ("alert", 1, 0),
         "reconcile": ("alert", 2, 0),
+        "source_recovered": ("alert", 2, 0),   # BE-3 复活通知（低紧迫档）
         "notify_test": ("alert", 2, 0),
         "provider_switched": ("alert", 1, 0),      # 骨架位（BE-7 接线）
         "balance_low": ("alert", 1, 0),            # 骨架位
