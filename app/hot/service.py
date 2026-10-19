@@ -31,6 +31,7 @@ from ..transport.errors import (
     TransportError,
 )
 from ..transport.http import _origin_of, _scrub, get_json, retry_delay_ms
+from ..transport import retry_budget
 
 log = logging.getLogger("newswright.hot")
 
@@ -80,6 +81,9 @@ def fetch_platform(platform: str, *, timeout: float = 20.0,
                     break  # 不可重试：本候选放弃，换下一候选
                 attempt += 1
                 if attempt <= 2:
+                    if not retry_budget.spend("hot", db=db):
+                        log.warning("重试预算耗尽（caller=hot，60s 滑窗超限）：候选 %s 放弃换下一候选", base)
+                        break
                     delay = retry_delay_ms(e, attempt - 1) / 1000.0
                     log.warning("热榜 %s 传输失败（%.1fs 后重试）: %s",
                                 platform, delay, e)

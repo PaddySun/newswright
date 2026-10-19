@@ -33,6 +33,7 @@ from ..transport.errors import (
     RetryExhausted,
 )
 from ..transport.http import post_json, retry_delay_ms
+from ..transport import retry_budget
 
 log = logging.getLogger("newswright.search")
 
@@ -101,6 +102,11 @@ class SearchProvider(ABC):
                 attempt_errors.append(last_err)
             attempt += 1
             if attempt <= 2:
+                if not retry_budget.spend("search", db=getattr(self, "_db", None)):
+                    log.warning("重试预算耗尽（caller=search，60s 滑窗超限）：本次失败按不可重试快速失败")
+                    raise SearchRetryExhausted(
+                        f"{self.name} 搜索失败（重试预算耗尽）: {last_err}",
+                        reason=REASON_ERROR_NOT_RETRYABLE, errors=attempt_errors)
                 delay = retry_delay_ms(last_err, attempt - 1) / 1000.0
                 log.warning("搜索 %s 失败（%.1fs 后重试）: %s", self.name, delay, last_err)
                 time.sleep(delay)
