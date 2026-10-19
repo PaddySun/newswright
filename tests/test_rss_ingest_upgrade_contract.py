@@ -21,10 +21,24 @@ import pytest
 
 import app.ingest.rss as rss_mod
 import app.ingest.web as web_mod
+import app.transport.robots as robots_mod
 from app.models import Direction, Item, Source
 
 NOW_FIXED = datetime(2026, 10, 8, 4, 0, 0, tzinfo=timezone.utc)
 LONG_TEXT = "富化后的完整正文，长度超过短摘要。" * 8
+
+
+def _robots_allow_all(monkeypatch):
+    """robots 裁决放行桩（BE-5/RG-2 后富化挂 robots 必查——模块内抓取函数
+    注入零真 DNS 判例；分级语义由 test_transport_robots.py 专测）。"""
+    def fake_fetch(origin, *, db=None):
+        from urllib import robotparser
+
+        p = robotparser.RobotFileParser()
+        p.allow_all = True
+        return p, None
+
+    monkeypatch.setattr(robots_mod, "_fetch_robots", fake_fetch)
 
 
 class _UTCProbeDatetime(datetime):
@@ -194,6 +208,7 @@ def test_fetch_status_and_fetched_at_never_null(rss_source, monkeypatch):
 def test_enrich_preflight_real_run(rss_source, monkeypatch):
     """富化预采真实执行：自 URL 跳过非终止，后续短条目被富化、db 接线正确。"""
     db, src = rss_source
+    _robots_allow_all(monkeypatch)  # 富化子路径 robots 放行钉桩（零真 DNS）
     src.source_config = {"enrich_full_text": True}
     db.commit()
     feed = _xml(

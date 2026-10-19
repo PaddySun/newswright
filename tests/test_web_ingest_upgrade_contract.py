@@ -12,15 +12,37 @@
 网络纪律：fake http_client 返回脚本化响应，不真联网；生产代码零改动。
 """
 from datetime import datetime, timezone
+from urllib import robotparser
 
 import pytest
 
 import app.ingest.web as web_mod
+import app.transport.robots as robots_mod
 from app.ingest.web import enrich_entry_text, fetch_web_source
 from app.models import Direction, Item, Source
 
 NOW_FIXED = datetime(2026, 10, 8, 4, 0, 0, tzinfo=timezone.utc)
 LONG_TEXT = "富化后的完整正文，长度超过短摘要。" * 8
+
+
+@pytest.fixture(autouse=True)
+def _reset_robots_cache():
+    """robots 进程级缓存复位（BE-5/RG-2 后 enrich 挂 robots 裁决——判例：
+    进程态 fixture 复位，照 throttle 表同款）。"""
+    robots_mod._reset_for_tests()
+    yield
+    robots_mod._reset_for_tests()
+
+
+def _robots_allow_all(monkeypatch):
+    """robots 裁决放行桩（模块内抓取函数注入——零真 DNS 零出网判例）：
+    本文件聚焦富化/监测契约，robots 分级语义由 test_transport_robots.py 专测。"""
+    def fake_fetch(origin, *, db=None):
+        p = robotparser.RobotFileParser()
+        p.allow_all = True
+        return p, None
+
+    monkeypatch.setattr(robots_mod, "_fetch_robots", fake_fetch)
 
 
 class _UTCProbeDatetime(datetime):
@@ -138,6 +160,7 @@ def test_single_page_item_integrity(web_source, monkeypatch):
 def test_enrich_real_run_https(web_source, monkeypatch):
     """https 条目富化真实执行：db 接线、显式有限超时与跟随语义、更长全文被采用。"""
     db, src = web_source
+    _robots_allow_all(monkeypatch)
     web_factory = FakeHttpClientFactory(FakeResponse(text="<html>full</html>"))
     monkeypatch.setattr(web_mod, "http_client", web_factory)
 
@@ -159,6 +182,7 @@ def test_enrich_real_run_https(web_source, monkeypatch):
 def test_enrich_real_run_http(web_source, monkeypatch):
     """http 条目同样在富化域内（协议前缀判定同时覆盖两种 scheme）。"""
     db, src = web_source
+    _robots_allow_all(monkeypatch)
     web_factory = FakeHttpClientFactory(FakeResponse(text="<html>full</html>"))
     monkeypatch.setattr(web_mod, "http_client", web_factory)
     monkeypatch.setattr(web_mod, "extract_page_markdown", lambda html: LONG_TEXT)
@@ -182,6 +206,7 @@ def test_enrich_same_page_url_guard(web_source, monkeypatch):
 def test_enrich_equal_length_keeps_original(web_source, monkeypatch):
     """等长文本不采用（「更长才采用」）：原文保留。"""
     db, src = web_source
+    _robots_allow_all(monkeypatch)  # 语义聚焦等长判据；robots 放行钉桩免真 DNS
     web_factory = FakeHttpClientFactory(FakeResponse(text="<html>eq</html>"))
     monkeypatch.setattr(web_mod, "http_client", web_factory)
     monkeypatch.setattr(web_mod, "extract_page_markdown",
@@ -195,6 +220,7 @@ def test_enrich_equal_length_keeps_original(web_source, monkeypatch):
 def test_llm_extract_entries_enrich_wires_db(web_source, monkeypatch):
     """列表页 LLM 抽取路径：过短条目经富化补全——富化出网携带请求级会话（R9）。"""
     db, src = web_source
+    _robots_allow_all(monkeypatch)  # 富化子路径 robots 放行钉桩（零真 DNS）
     src.source_config = {"llm_extract": True}
     db.commit()
     factory = FakeHttpClientFactory(FakeResponse(

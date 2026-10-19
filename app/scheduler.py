@@ -183,6 +183,12 @@ def _tick_notify_flush() -> None:
                      out["kept"])
 
 
+# misfire 显式（BE-5/RG-6，P2-4.1）：错过 ≤MISFIRE_GRACE_S 秒的 tick 补跑、
+# 超过则跳过（coalesce 已并——堆积触发合并为一次执行）。替代 APScheduler
+# 隐式默认 1 秒的不可预期形态（线程池拥塞/进程停顿 5 分钟内不丢轮）。
+MISFIRE_GRACE_S = 300
+
+
 def _register_jobs() -> None:
     """job 注册（独立函数便于单测：未 start 的 scheduler 上 add_job 仅登记，
     不触发任何执行）。"""
@@ -190,32 +196,38 @@ def _register_jobs() -> None:
         run_job_safely, args=[_tick_fetch],
         trigger=IntervalTrigger(minutes=config.SCHED_FETCH_MINUTES),
         id="fetch_score_round", max_instances=1, coalesce=True,
+        misfire_grace_time=MISFIRE_GRACE_S,
         next_run_time=datetime.now(timezone.utc),  # 启动即跑第一轮
     )
     scheduler.add_job(
         run_job_safely, args=[_tick_score],
         trigger=IntervalTrigger(minutes=config.SCHED_SCORE_MINUTES),
         id="score_round_tick", max_instances=1, coalesce=True,
+        misfire_grace_time=MISFIRE_GRACE_S,
     )
     scheduler.add_job(
         run_job_safely, args=[_tick_hot],
         trigger=IntervalTrigger(minutes=config.SCHED_HOT_MINUTES),
         id="hot_round", max_instances=1, coalesce=True,
+        misfire_grace_time=MISFIRE_GRACE_S,
     )
     scheduler.add_job(
         run_job_safely, args=[_tick_backup],
         trigger=IntervalTrigger(hours=24),
         id="daily_backup", max_instances=1, coalesce=True,
+        misfire_grace_time=MISFIRE_GRACE_S,
     )
     scheduler.add_job(
         run_job_safely, args=[_tick_write_consume],
         trigger=IntervalTrigger(minutes=1),
         id="write_consume", max_instances=1, coalesce=True,
+        misfire_grace_time=MISFIRE_GRACE_S,
     )
     scheduler.add_job(
         run_job_safely, args=[_tick_notify_flush],
         trigger=IntervalTrigger(seconds=15),
         id="notify_flush", max_instances=1, coalesce=True,
+        misfire_grace_time=MISFIRE_GRACE_S,
     )
 
 
