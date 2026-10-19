@@ -260,12 +260,20 @@ def _update_source_health(db: Session, src: Source, stats) -> None:
 
     # --- 失效三级判别（RSS 空轮侧）+ 清零语义 ---
     if not_modified or (error is None and entries > 0):
-        # 任何一轮非空或 not_modified：空轮/硬失效计数清零，suspect 探测恢复
+        # 任何一轮非空或 not_modified：空轮/硬失效计数清零，suspect/hard_failed
+        # 复活（BE-3：死刑态同样复位——探活成功的意义在此兑现；304 同语义）
         src.empty_rounds = 0
         src.hard_failures = 0
-        if src.failure_level == "suspect":
+        if src.failure_level in ("suspect", "hard_failed"):
+            recovered_from_hard = src.failure_level == "hard_failed"
             src.failure_level = "none"
             src.failure_since = None
+            src.last_probe_at = None
+            if recovered_from_hard:
+                # 通知挂钧：死刑复活转换点（suspect 降频探测恢复不通知）
+                from ..notify.triggers import notify_source_recovered
+
+                notify_source_recovered(db, src)
     elif non_xml or (error is None and entries == 0 and src.type == "rss"):
         # 200 但内容空/条目归零/挑战页：空轮侧计数；源声明休息日豁免
         if not skip_day:
@@ -371,8 +379,13 @@ def enqueue_fetch_round(db: Session, *, triggered_by: str = "scheduler") -> Pipe
     跳过判定统一走 skip_reason（单一优先级表：disabled > direction_expired >
     rate_limited > keyword_exhausted > hard_failed/suspect_probe > backoff >
     interval_not_due），跳过原因与探测窗口计数都在此推进。
+
+    死刑源周探活（BE-3/D6）：主循环前预扫描 due 死源，按 (last_probe_at or
+    failure_since) 最老优先取前 HARD_FAIL_PROBE_QUOTA 名入放行集——放行集源
+    入队时即记账 last_probe_at（worker 崩溃不重探）并强制入队；配额外的
+    due 死源照旧 skipped（reason 保持 "hard_failed"，skip_reason 零改）。
     """
-    from .skip_policy import skip_reason
+    from .skip_policy import _aware, hard_failed_probe_due, skip_reason
 
     if round_busy(db, "fetch_round"):
         return None
@@ -381,7 +394,20 @@ def enqueue_fetch_round(db: Session, *, triggered_by: str = "scheduler") -> Pipe
     now = datetime.now(timezone.utc)
     expire_due_temp_directions(db, now=now)
     directions = {d.id: d for d in db.query(Direction).all()}
-    for src in _fetchable_sources(db):
+    sources = _fetchable_sources(db)
+    due_dead = [s for s in sources if hard_failed_probe_due(s, now=now)]
+    due_dead.sort(key=lambda s: _aware(s.last_probe_at or s.failure_since))
+    probe_ids = {s.id for s in due_dead[:config.HARD_FAIL_PROBE_QUOTA]}
+    for src in sources:
+        if src.id in probe_ids:
+            # 死刑探活放行：入队时即记账（尝试即冷却起算，探活失败也冷却）
+            src.last_probe_at = now
+            db.commit()
+            log.info("源 %s 处于 hard_failed，本周探活窗口放行（最老优先配额）",
+                     src.id)
+            _new_task(db, kind="fetch", payload={"source_id": src.id, "url": src.url,
+                                                 "round_task_id": round_task.id})
+            continue
         reason = skip_reason(src, directions.get(src.direction_id), now=now)
         if reason == "probe":
             # 退避/疑似失效状态的探测窗口：放行抓取并推进探测轮计数

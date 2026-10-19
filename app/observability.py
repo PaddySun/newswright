@@ -166,9 +166,17 @@ def pipeline_stats_payload(db: Session) -> dict:
         if sid in per_source and per_source[sid] is None:
             per_source[sid] = updated_at.isoformat() if updated_at else None
     enabled_sources = db.query(Source).filter(Source.enabled.is_(True)).all()
+    # 降级分子出清（BE-3/SM-4，与聚合哨兵同构）：陈旧死源与过期限流旧账
+    # 不计入 degraded_sources_count；分母（enabled）与源状态本体不动
+    from .pipeline.skip_policy import _aware, is_stale_dead
+
+    stale_days = int(get_config(db, "sentinel_exclude_stale_days") or 30)
     degraded_sources = [s for s in enabled_sources
-                        if s.failure_level in ("suspect", "hard_failed")
-                        or s.rate_limited_until is not None]
+                        if s.failure_level == "suspect"
+                        or (s.failure_level == "hard_failed"
+                            and not is_stale_dead(s, now=now, stale_days=stale_days))
+                        or (s.rate_limited_until is not None
+                            and _aware(s.rate_limited_until) > now)]
     items_24h = (db.query(func.count(Item.id))
                  .filter(Item.fetched_at >= since).scalar()) or 0
     scored_24h = (db.query(func.count(ScoreResult.id))

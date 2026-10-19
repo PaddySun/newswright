@@ -1,6 +1,7 @@
 """通知触发接线：四类事件的触发点与去重键形态（SMTP 未配置时仅落日志）。
 
 - 源失效（DT-1 状态机转换点）：hard_failed 与 suspect 各自通知，同源 24h 去重；
+  hard_failed→none 复活（BE-3/SM-1）：与失效共开关共去重键，suspect 恢复不通知；
 - Token 日预算触发（预算闸事件）：每自然日至多一次（去重键带日期）；
 - 采集面聚合哨兵：超过一半启用源处于失效/降频状态持续 2 轮 → 整体降级通知
   （轮次计数持久化在 site_config，重启不丢）；
@@ -51,6 +52,19 @@ def notify_source_failure(db: Session, source, *, level: str) -> dict:
              f"时间: {datetime.now(timezone.utc).isoformat()}")
 
 
+def notify_source_recovered(db: Session, source) -> dict:
+    """hard_failed→none 复活通知（BE-3/SM-1）：抓取成功复位死刑态时触发。
+    与源失效共一开关（notify_on_source_failure，源健康族失效/复活同开关，
+    不新增配置键）与同去重键 source-{id}（24h 窗口内先失效后复活不双发）；
+    suspect→none 降频探测恢复不通知（非事件）。"""
+    return _dispatch(
+        db, switch_key="notify_on_source_failure", category="source_recovered",
+        dedupe_key=f"source-{source.id}",
+        subject=f"[newswright] 来源已复活: {source.url[:80]}",
+        body=f"来源已复活恢复采集\n来源 id={source.id} url={source.url}\n"
+             f"时间: {datetime.now(timezone.utc).isoformat()}")
+
+
 def notify_budget_exceeded(db: Session, *, used_tokens: int, budget: int) -> dict:
     """Token 日预算触发通知：每自然日至多一次（去重键带日期；自然日取站点时区）。"""
     from ..timeline import local_date_key, site_zone
@@ -79,17 +93,28 @@ def notify_usage_reconcile_deviation(db: Session, *, month: str, ledger_units: i
 
 
 def check_collective_sentinel(db: Session, *, threshold_ratio: float = 0.5,
-                              sustained_rounds: int = 2) -> dict:
+                              sustained_rounds: int = 2,
+                              now: datetime | None = None) -> dict:
     """采集面聚合哨兵（fetch 轮末检查）：超过一半启用源处于 suspect/hard_failed
-    或降频状态持续 2 轮 → 整体降级通知。轮次计数持久化在 site_config。"""
-    from ..models import Source
+    或降频状态持续 2 轮 → 整体降级通知。轮次计数持久化在 site_config。
 
+    降级分子出清（BE-3/SM-4）：hard_failed 超 sentinel_exclude_stale_days
+    （缺省 30 天）视为陈旧不再计入；rate_limited_until 过期旧账不计入
+    （now 比较）——分母（enabled）与源状态本体不动。"""
+    from ..models import Source
+    from ..pipeline.skip_policy import _aware, is_stale_dead
+
+    now = now or datetime.now(timezone.utc)
+    stale_days = int(get_config(db, "sentinel_exclude_stale_days") or 30)
     enabled = db.query(Source).filter(Source.enabled.is_(True)).all()
     if not enabled:
         return {"sent": False, "reason": "no_sources"}
     degraded = [s for s in enabled
-                if s.failure_level in ("suspect", "hard_failed")
-                or s.rate_limited_until is not None]
+                if s.failure_level == "suspect"
+                or (s.failure_level == "hard_failed"
+                    and not is_stale_dead(s, now=now, stale_days=stale_days))
+                or (s.rate_limited_until is not None
+                    and _aware(s.rate_limited_until) > now)]
     key = "collective_sentinel_rounds"
     if len(degraded) > len(enabled) * threshold_ratio:
         count = int(get_config(db, key) or 0) + 1

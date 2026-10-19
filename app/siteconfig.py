@@ -84,6 +84,9 @@ DEFAULTS: dict[str, object] = {
     "notify_dedup_window_hours": 24,
     "notify_category_intervals": {},
     "notify_digest_enabled": False,
+    # 聚合哨兵死源出清阈值（天，BE-3/D6）：hard_failed 超该天数视为陈旧、
+    # 不再计入降级分子（只影响哨兵与体检呈现，源状态本体与 enabled 分母不变）
+    "sentinel_exclude_stale_days": 30,
 }
 
 

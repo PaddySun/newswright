@@ -142,6 +142,10 @@ class Source(Base):
     failure_since: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # 最近一次抓取错误摘要（DT-1 硬失效判据的展示与排查面，从抓取任务错误同步）
     last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # 死刑探活时钟（BE-3/D6）：最近一次 hard_failed 探活「尝试」时刻（成败都
+    # 算——尝试即记账，探活失败也冷却）；复活（成功轮复位）时一并清空。
+    # 语义与 failure_since（进入失效态时间）严格分置，勿挪用。
+    last_probe_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # 连续硬失效轮数（404/403/410）与连续空轮数（200 但内容空/条目归零）——
     # 三级判别的计数状态，成功轮或豁免轮按判据清零
     hard_failures: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
