@@ -175,8 +175,9 @@ def enrich_entry_text(url: str, current_text: str, *, page_url: str,
     护栏：条目 URL 与页面 URL 相同时不富化（LLM 常把索引页自身当条目 URL，
     抓回同一内容无增量）；失败保留原文不致命。
 
-    安装备注（0 信任二期依据）：条目 URL 来自不可信页面/LLM 抽取——与 morningdeck
-    抓取侧相同的教训，正式系统需 SSRF 复检（私网地址/重定向白名单），Demo 不做。
+    安装备注：条目 URL 来自不可信页面/LLM 抽取——与 morningdeck 抓取侧
+    相同的教训；私网地址/重定向白名单复检已由传输层 SSRF 钩子覆盖（BE-4/
+    TG-1，挂 http_client 工厂、重定向逐跳过检），本函数零感知零改动。
     """
     if not url.startswith(("http://", "https://")):
         return current_text

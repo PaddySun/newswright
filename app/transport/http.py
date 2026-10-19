@@ -27,6 +27,7 @@ from __future__ import annotations
 import random
 import threading
 from datetime import datetime, timezone
+from functools import partial
 from typing import Any, Callable
 
 import httpx
@@ -36,6 +37,8 @@ from .. import config
 from ..config import PROXY_ENV_KEY  # noqa: F401  采集通道经本模块取 env 键名
 from ..siteconfig import get_config
 from .errors import SemanticError, TransportError
+from .ssrf import refuse_private_destination
+from .throttle import throttle_request
 
 PRODUCT_NAME = "newswright"
 
@@ -85,12 +88,23 @@ def parse_retry_after(value: str | None, *, now: datetime) -> float | None:
 # ---------- 出网 UA 策略与 proxy 参数位（自 ingest/http.py 上提） ----------
 
 
-def honest_user_agent(contact_email: str | None) -> str:
-    """诚实 UA 模板：产品名 + 联系邮箱位（未配邮箱则只有产品标识）。"""
-    base = f"Mozilla/5.0 (compatible; {PRODUCT_NAME}/1.0; +https://localhost)"
+def honest_user_agent(contact_email: str | None,
+                      contact_url: str | None = None) -> str:
+    """诚实 UA 模板：产品名 + 联系邮箱位 + 站点链接位（P1-1：contact_url
+    非空→`+{url}` 替换 `+https://localhost` 占位——UA 是被抓站管理员唯一
+    申诉/识别通道，占位符是「无主爬虫」信号；未配则占位形态保留）。"""
+    site = str(contact_url).strip() if contact_url else ""
+    base = f"Mozilla/5.0 (compatible; {PRODUCT_NAME}/1.0; +{site or 'https://localhost'})"
     if contact_email and str(contact_email).strip():
         return f"{base[:-1]}; contact: {str(contact_email).strip()})"
     return base
+
+
+def _public_site_url(db: Session) -> str | None:
+    """public_base_url（复用 sitemap 既有键，不加新键）：strip 后非空才返回。"""
+    raw = get_config(db, "public_base_url")
+    text = str(raw).strip() if raw else ""
+    return text or None
 
 
 def effective_user_agent(db: Session | None = None) -> str:
@@ -101,25 +115,35 @@ def effective_user_agent(db: Session | None = None) -> str:
     strategy = str(get_config(db, "ua_strategy") or "honest")
     if strategy == "custom":
         custom = str(get_config(db, "ua_custom") or "").strip()
-        return custom or honest_user_agent(get_config(db, "contact_email"))
-    return honest_user_agent(get_config(db, "contact_email"))
+        return custom or honest_user_agent(get_config(db, "contact_email"),
+                                           contact_url=_public_site_url(db))
+    return honest_user_agent(get_config(db, "contact_email"),
+                             contact_url=_public_site_url(db))
 
 
 def proxy_url() -> str | None:
-    """proxy 参数位读取（归口 config.httpx_proxy_url——调用时读取，
-    运行时注入立即生效；未配置返回 None=行为不变）。"""
+    """proxy 参数位读取（归口 config.httpx_proxy_url——调用时读取；仅对**新
+    构造**客户端生效：池化客户端复用构造时配置，proxy 不在六元池键（入键会
+    致缓存分裂，此为声明式取舍而非遗漏）；未配置返回 None=行为不变）。"""
     return config.httpx_proxy_url()
 
 
 def http_client(db: Session | None = None, *, timeout: float = 60.0,
                 follow_redirects: bool = True, **kwargs: Any) -> httpx.Client:
-    """采集 GET 通道的统一出网客户端：默认 UA 按策略键解析 + proxy 参数位；
-    其余构造参数透传（timeout/follow_redirects/max_redirects 等）。请求级
-    headers 与本客户端默认 headers 按 httpx 语义合并（请求级覆盖同名头）。"""
+    """采集 GET 通道的统一出网客户端：默认 UA 按策略键解析 + proxy 参数位 +
+    SSRF/节流双 request hook（GET-only 出网收口，见 TG-1/TG-2——POST 面全部
+    是自有 API 域名，双 hook 对非 GET 一律放行是设计而非遗漏）；其余构造参数
+    透传（timeout/follow_redirects/transport 等）。请求级 headers 与本客户端
+    默认 headers 按 httpx 语义合并（请求级覆盖同名头）。错误分类仍由调用方
+    （hook 抛 PrivateAddressError/ThrottledError 均继承 httpx.TransportError，
+    既有 except 捕获面零改收编）。池化合并不做——采集低频+UA 可变（注记）。"""
     client_kwargs: dict[str, Any] = {
         "timeout": timeout,
         "follow_redirects": follow_redirects,
         "headers": {"User-Agent": effective_user_agent(db)},
+        # 双 hook 均 GET-only；SSRF 在前（先拒后等，不为将被拒的请求排队）
+        "event_hooks": {"request": [partial(refuse_private_destination, db=db),
+                                    partial(throttle_request, db=db)]},
         **kwargs,
     }
     proxy = proxy_url()

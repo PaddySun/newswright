@@ -545,6 +545,10 @@ def test_fetch_sanitize_passed_counts_each_entry(db_session, monkeypatch):
 def test_fetch_with_last_modified_completes_request_normally(db_session, monkeypatch):
     """带 last_modified 的源再抓取：条件请求照常构造完成、整源正常解析入库
     （真实 httpx 请求构造路径，条件头缺省值不得使请求构造失败）。"""
+    # BE-4 机械随动：本用例经真 http_client 工厂发请求，SSRF hook 对域名 host
+    # 走默认 resolver——注入 fake resolver 钉公网地址（零真 DNS；原 URL 与断言零变）
+    monkeypatch.setattr("app.transport.ssrf._default_resolver",
+                        lambda host: ["93.184.216.34"])
     d, src = _mk_source(db_session)
     src.last_modified = "Wed, 30 Sep 2026 10:00:00 GMT"
     db_session.commit()

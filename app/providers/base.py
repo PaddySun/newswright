@@ -43,6 +43,7 @@ from ..transport.http import (
     retry_delay_ms,
 )
 from ..transport.metering import record_usage
+from ..transport import retry_budget
 
 __all__ = [
     "FATAL_STATUS_MESSAGE",
@@ -150,6 +151,7 @@ class LLMProvider(ABC):
         attempt = 0
         last_err: Exception | None = None
         attempt_errors: list[Exception] = []
+        budget_exhausted = False
         while attempt <= max_retries:
             t0 = time.monotonic()
             try:
@@ -194,11 +196,16 @@ class LLMProvider(ABC):
                 )
                 if not retryable or attempt == max_retries:
                     break
+                if not retry_budget.spend("llm", db=self.db):
+                    log.warning("重试预算耗尽（caller=llm，60s 滑窗超限）：本次失败按不可重试快速失败")
+                    budget_exhausted = True
+                    break
                 delay = retry_delay_ms(e, attempt) / 1000.0
                 log.warning("provider 调用失败（第 %d 次，%.1fs 后重试）: %s", attempt + 1, delay, e)
                 time.sleep(delay)
                 attempt += 1
         reason = (REASON_MAX_RETRIES_EXCEEDED if _error_is_retryable(last_err)
+                  and not budget_exhausted
                   else REASON_ERROR_NOT_RETRYABLE)
         raise RetryExhausted(
             f"{self.name} 调用失败（重试 {attempt} 次后放弃）: {last_err}",

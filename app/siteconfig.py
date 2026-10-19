@@ -87,6 +87,17 @@ DEFAULTS: dict[str, object] = {
     # 聚合哨兵死源出清阈值（天，BE-3/D6）：hard_failed 超该天数视为陈旧、
     # 不再计入降级分子（只影响哨兵与体检呈现，源状态本体与 enabled 分母不变）
     "sentinel_exclude_stale_days": 30,
+    # 传输脊防护（BE-4/TG 族）：SSRF 放行口（缺省 False——站长未示内网源
+    # 场景，按最简全局开关；True 时采集 GET 面对私网目标放行并 log.info）；
+    # per-netloc 节流三键——全局最小间隔秒（缺省 3）、JSON dict per-netloc
+    # 覆盖（netloc→秒，缺省 {}）、单请求等待上限秒（缺省 30：同域连发约
+    # 10 条内排队成功、其余快速失败留待下轮）；retry budget 每分钟上限
+    # （同 caller 60s 滑窗 spend 计数，缺省 50——故障期快速失败防锤）
+    "fetch_allow_private": False,
+    "netloc_min_interval_s": 3,
+    "netloc_throttle_domains": {},
+    "netloc_throttle_max_wait_s": 30,
+    "retry_budget_per_minute": 50,
 }
 
 
