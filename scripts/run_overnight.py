@@ -75,7 +75,8 @@ def main() -> int:
 
     ok = sum(1 for r in results if r["exit"] == 0)
     log(f"=== 批跑结束：成功 {ok}/{len(PLAN)}；逐篇结果已落库（write_run.payload.batch_id={args.batch}）===")
-    return 0
+    # 非零退出=有失败篇目：计划任务/CI/看门狗靠退出码发现批跑失败，不看日志尾部
+    return 0 if ok == len(results) else 1
 
 
 if __name__ == "__main__":
