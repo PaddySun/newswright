@@ -17,23 +17,21 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 
 from ..siteconfig import get_config
-from . import default_notifier
+from . import hub
 
 log = logging.getLogger("newswright.notify")
 
 
 def _dispatch(db: Session, *, switch_key: str, category: str, dedupe_key: str,
               subject: str, body: str) -> dict:
-    """按触发开关分发：开关关闭或未配置 = 仅落日志（Notifier.send 自带语义）。"""
+    """按触发开关分发（六类告警的唯一咽喉）：开关关闭 = 仅落日志；过闸消息经
+    调度中枢入队（BE-2 起邮件发送由 hub 统管：双闸/缓冲上限/去重落账见
+    app/notify/hub.py；返回 {"queued": ...}，实际投递由 flush 执行）。"""
     if get_config(db, switch_key) is False:
         log.info("通知触发开关关闭，事件仅落日志: %s %s", category, dedupe_key)
         return {"sent": False, "reason": "switch_off"}
-    notifier = default_notifier(db)
-    if notifier is None:
-        log.info("通知事件仅落日志（无已注册通道）: %s %s %s",
-                 category, dedupe_key, subject)
-        return {"sent": False, "reason": "not_configured"}
-    return notifier.send(subject, body, category=category, dedupe_key=dedupe_key)
+    return hub.enqueue(db, subject, body, category=category,
+                       dedupe_key=dedupe_key)
 
 
 def notify_source_failure(db: Session, source, *, level: str) -> dict:

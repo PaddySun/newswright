@@ -170,6 +170,19 @@ def _reclaim_once() -> None:
             log.info("启动回收：%d 个僵死任务置 FAILED", n)
 
 
+def _tick_notify_flush() -> None:
+    """通知调度中枢 flush：按入队序投递队列消息（双闸/缓冲上限/去重落账
+    见 app/notify/hub.py；自带会话，纯函数直调可测试）。"""
+    from .notify import hub
+
+    with SessionLocal() as db:
+        out = hub.flush(db)
+        if out["delivered"] or out["deliver_failed"]:
+            log.info("notify_flush：投递 %d 封 / 失败丢弃 %d 封 / 留队 %d 封",
+                     len(out["delivered"]), len(out["deliver_failed"]),
+                     out["kept"])
+
+
 def _register_jobs() -> None:
     """job 注册（独立函数便于单测：未 start 的 scheduler 上 add_job 仅登记，
     不触发任何执行）。"""
@@ -198,6 +211,11 @@ def _register_jobs() -> None:
         run_job_safely, args=[_tick_write_consume],
         trigger=IntervalTrigger(minutes=1),
         id="write_consume", max_instances=1, coalesce=True,
+    )
+    scheduler.add_job(
+        run_job_safely, args=[_tick_notify_flush],
+        trigger=IntervalTrigger(seconds=15),
+        id="notify_flush", max_instances=1, coalesce=True,
     )
 
 

@@ -74,6 +74,10 @@ class ContractSMTP:
 def smtp_stubbed(monkeypatch):
     ContractSMTP.calls = []
     ContractSMTP.fail = False
+    # BE-2 随动：_dispatch 改经调度中枢，队列/锚点为进程内状态——每测试复位
+    from app.notify import hub
+
+    hub._reset_for_tests()
     monkeypatch.setattr("app.notify.smtp.smtplib.SMTP_SSL", ContractSMTP)
     return ContractSMTP
 
@@ -125,6 +129,8 @@ def test_channel_send_carries_subject_and_body(db_session, smtp_stubbed, smtp_re
 
 def test_source_failure_notification_content(db_session, smtp_stubbed, smtp_ready):
     """源失效通知链：主题承载来源 URL、正文承载失效语义。"""
+    from app.notify import hub
+
     set_config(db_session, "notify_on_source_failure", True)
     d = Direction(name="内容方向", prompt="p", threshold=60)
     db_session.add(d)
@@ -134,7 +140,8 @@ def test_source_failure_notification_content(db_session, smtp_stubbed, smtp_read
     db_session.add(src)
     db_session.commit()
     out = notify_source_failure(db_session, src, level="hard_failed")
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    hub.flush(db_session)
     msg = _last_message(smtp_stubbed)
     subject = _assert_valid_delivery(msg)
     assert "https://content.example/feed" in subject
@@ -144,9 +151,12 @@ def test_source_failure_notification_content(db_session, smtp_stubbed, smtp_read
 
 def test_budget_notification_content(db_session, smtp_stubbed, smtp_ready):
     """预算通知链：主题承载日期键、正文承载消耗与降级秩序语义。"""
+    from app.notify import hub
+
     set_config(db_session, "notify_on_token_budget", True)
     out = notify_budget_exceeded(db_session, used_tokens=1200, budget=1000)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    hub.flush(db_session)
     msg = _last_message(smtp_stubbed)
     _assert_valid_delivery(msg)
     assert "Token 日预算" in msg["Subject"]
@@ -156,11 +166,14 @@ def test_budget_notification_content(db_session, smtp_stubbed, smtp_ready):
 
 def test_reconcile_notification_content(db_session, smtp_stubbed, smtp_ready):
     """对账偏差通知链：主题承载月份与偏差、正文承载双方账目数值。"""
+    from app.notify import hub
+
     set_config(db_session, "notify_on_reconcile", True)
     out = notify_usage_reconcile_deviation(db_session, month="2026-09",
                                            ledger_units=100, platform_units=130,
                                            deviation_pct=30.0)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    hub.flush(db_session)
     msg = _last_message(smtp_stubbed)
     _assert_valid_delivery(msg)
     assert "2026-09" in msg["Subject"]
@@ -171,6 +184,8 @@ def test_reconcile_notification_content(db_session, smtp_stubbed, smtp_ready):
 def test_collective_sentinel_notification_content(db_session, smtp_stubbed,
                                                   smtp_ready):
     """聚合哨兵通知链：主题为钉名的「采集面整体降级」、正文承载状态计数。"""
+    from app.notify import hub
+
     set_config(db_session, "notify_on_collective", True)
     d = Direction(name="哨兵方向", prompt="p", threshold=60)
     db_session.add(d)
@@ -182,7 +197,8 @@ def test_collective_sentinel_notification_content(db_session, smtp_stubbed,
     # 第一轮：未满持续轮次不投递；第二轮：触发整体降级通知
     check_collective_sentinel(db_session)
     out = check_collective_sentinel(db_session)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    hub.flush(db_session)
     msg = _last_message(smtp_stubbed)
     _assert_valid_delivery(msg)
     assert "采集面整体降级" in msg["Subject"]
@@ -191,12 +207,15 @@ def test_collective_sentinel_notification_content(db_session, smtp_stubbed,
 
 def test_disk_notification_content(db_session, smtp_stubbed, smtp_ready, monkeypatch):
     """磁盘通知链：主题承载用量、正文承载阈值与剩余空间。"""
+    from app.notify import hub
+
     set_config(db_session, "notify_on_disk", True)
     set_config(db_session, "disk_usage_warn_percent", 80)
     monkeypatch.setattr("app.notify.triggers.shutil.disk_usage",
                         lambda path: types.SimpleNamespace(total=1000, free=100))
     out = check_disk_usage(db_session)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    hub.flush(db_session)
     msg = _last_message(smtp_stubbed)
     _assert_valid_delivery(msg)
     assert "磁盘用量" in msg["Subject"]

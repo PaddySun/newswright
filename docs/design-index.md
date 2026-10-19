@@ -249,3 +249,13 @@
 | SR-3 | 安全响应头全域中间件：CSP（每请求 secrets.token_urlsafe(16) nonce，request.state 供模板、头与页面属性必然一致；importmap 为全站唯一 inline script）/X-Content-Type-Options/X-Frame-Options/Referrer-Policy/HSTS 五件套，纯函数+常量防漂移；HSTS 在 http 下浏览器忽略（无害） |
 | SR-4 | client_ip_header 反代警告：配置头后该值可被客户端伪造绕过一切按 IP 的限速/频控——仅真实部署在可信反代/CDN 后才可配置 |
 | SR-5 | SMTP 口令备份擦洗：在线备份为全文件复制、逐行排除不可行，备份完成后对目标备份文件 DELETE site_config.smtp_pass（原库零触碰、轮转逻辑零动）；恢复语义=恢复后 SMTP 需重录 |
+
+## NC-x（通知调度中枢条款，后端完善批 BE-2 增补；条文正文随外层治理文档 doc/BE/BE-2-任务书.md 落册）
+
+| 编号 | 一句话摘要 |
+|---|---|
+| NC-1 | 通知统管与双闸：全部通知消费方（六类告警触发器+测试邮件端点）一律经 app/notify/hub.enqueue 入队（五关：注册表未知→unknown_category WARN/通道未配置→not_configured 仅落日志/去重预检（持久化时间戳+在队同键）→deduped/digest 族全局开关关拒收→digest_disabled），flush 按 APScheduler job notify_flush（IntervalTrigger 15s，max_instances=1/coalesce，不传 next_run_time=不启动即跑）按入队序投递；账户硬间隔 ACCOUNT_HARD_INTERVAL_S=60 代码常量「硬」不可配+类别最小间隔 site_config notify_category_intervals 覆盖（缺省注册表 default_min_interval_s=0=仅账户闸，行为最接近现状）双闸未到留队冷却缓存；投递失败 WARN 丢弃不重试（告警类下轮触发兜底）；队列操作持 threading.Lock、投递锁外（fetch/score/hot/backup 多 job 并行既有形态）；Notifier.send() 保留为同步直发原语（不经队列不经双闸，新消费方一律 hub.enqueue） |
+| NC-2 | 去重落账时序与键治理：去重时间戳仅投递成功才落（入队即落会在 flush 前进程重启时既丢消息又留 24h 抑制）；窗口 site_config notify_dedup_window_hours（缺省 24=DEDUP_WINDOW_HOURS 常量回退）；notify_last_sent_% 键 flush 时惰性清理（距上次清理 >1h 节流；最后发送时间早于窗口+24h 宽限即删，site_config 行数小全扫可接受，坏值不清不炸）；队列与锚点进程内、重启即丢=接受语义（文档性测试 _reset_for_tests 后断言空队钉死，防未来误加持久化而不自知） |
+| NC-3 | 缓冲上限与丢弃序：每账户（=通道名，当前唯一 smtp）ACCOUNT_QUEUE_CAP=10 代码常量，溢出按丢弃序逐条挤出——digest 族→priority 数值大者→同级丢最新入队者（丢新留旧），逐条 log.warning（含 category 与原因）+计数；hub.snapshot()={queue_depth,delivered_total,dropped_total(按 category),deduped_total} 进程内计数，pipeline_stats_payload 增 notify_queue_depth/notify_dropped_total 两键（纯增量） |
+| NC-4 | 类别注册表：hub.CATEGORY_REGISTRY 十条目（六类现有告警 source_hard_fail/source_suspect/token_budget/collective_degradation/disk_usage priority=1+reconcile priority=2+notify_test priority=2（测试邮件专用，唯一时间戳键不参与抑制）+三骨架位 provider_switched/balance_low/llm_error_rate_high priority=1（BE-7 接线，本批只注册无消费方））；条目字段 {family: alert\|digest, priority, default_min_interval_s}，测试与实现共用防漂移；digest 族本批零条目，仅全局开关 notify_digest_enabled（缺省 False）与 enqueue 拒收分支（D5 接口预留） |
+| NC-5 | 五缝隙收口：(a) admin 四通知开关去 disabled 改 v-model（notifySwitches）并入 saveNotify 提交载荷+补第五开关 notify_on_reconcile（i18n 按命名族补 notifyOnReconcile）；(b) _NOTIFY_SWITCH_KEYS/NotifySettingsIn 增 notify_on_reconcile（PUT/GET 同步）；(c) 去重窗口可配（见 NC-2）；(d) 键惰性清理（见 NC-2）；(e) 测试邮件端点 POST /settings/notify/test 改经中枢同步试发（enqueue category=notify_test+flush 一次，响应 {"sent":true} 或 {"sent":false,"reason":account_interval\|deliver_failed\|not_configured} 如实反映，SMTP 未配置仍 502 SMTP_UNREACHABLE）——SMTP 为非 HTTP 独立通道不入出网收口（D9 定性保留） |

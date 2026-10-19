@@ -23,6 +23,13 @@ export default {
       hotDirectionId: "",
       notifyForm: { smtp_host: "", smtp_port: 465, smtp_user: "", smtp_pass: "", from_addr: "", to_addrs: "" },
       notifyState: null,   // GET 回显（smtp_configured + 开关们）
+      notifySwitches: {    // BE-2 缝隙 (a)：开关可编辑（v-model + saveNotify 提交载荷）
+        notify_on_source_failure: false,
+        notify_on_token_budget: false,
+        notify_on_collective: false,
+        notify_on_disk: false,
+        notify_on_reconcile: false,
+      },
       notifyTest: "",      // ok | failed | ""
       reconcile: { month: "", platform_billed_units: null },
       reconcileResult: null,
@@ -57,7 +64,13 @@ export default {
       catch { this.filters = null; }
     },
     async loadNotify() {
-      try { this.notifyState = await api.get("/api/settings/notify"); }
+      try {
+        this.notifyState = await api.get("/api/settings/notify");
+        const state = this.notifyState || {};
+        Object.keys(this.notifySwitches).forEach((key) => {
+          if (key in state) this.notifySwitches[key] = Boolean(state[key]);
+        });
+      }
       catch { this.notifyState = null; }
     },
     async loadHot() {
@@ -97,6 +110,7 @@ export default {
           smtp_pass: this.notifyForm.smtp_pass || undefined,
           from_addr: this.notifyForm.from_addr,
           to_addrs: this.notifyForm.to_addrs.split(/[,，]/).map((s) => s.trim()).filter(Boolean),
+          ...this.notifySwitches,
         };
         await api.put("/api/settings/notify", payload);
         this.notice = this.$t("common.saved");
@@ -255,10 +269,11 @@ export default {
             <nw-button size="sm" @click="saveNotify">{{ $t("common.save") }}</nw-button>
           </div>
           <p class="muted-note" v-if="notifyState">
-            <label style="margin-right:12px;"><input type="checkbox" :checked="notifyState.notify_on_source_failure" disabled> {{ $t("adminSystem.notifyOnSourceFailure") }}</label>
-            <label style="margin-right:12px;"><input type="checkbox" :checked="notifyState.notify_on_token_budget" disabled> {{ $t("adminSystem.notifyOnTokenBudget") }}</label>
-            <label style="margin-right:12px;"><input type="checkbox" :checked="notifyState.notify_on_collective" disabled> {{ $t("adminSystem.notifyOnCollective") }}</label>
-            <label><input type="checkbox" :checked="notifyState.notify_on_disk" disabled> {{ $t("adminSystem.notifyOnDisk") }}</label>
+            <label style="margin-right:12px;"><input type="checkbox" v-model="notifySwitches.notify_on_source_failure"> {{ $t("adminSystem.notifyOnSourceFailure") }}</label>
+            <label style="margin-right:12px;"><input type="checkbox" v-model="notifySwitches.notify_on_token_budget"> {{ $t("adminSystem.notifyOnTokenBudget") }}</label>
+            <label style="margin-right:12px;"><input type="checkbox" v-model="notifySwitches.notify_on_collective"> {{ $t("adminSystem.notifyOnCollective") }}</label>
+            <label style="margin-right:12px;"><input type="checkbox" v-model="notifySwitches.notify_on_disk"> {{ $t("adminSystem.notifyOnDisk") }}</label>
+            <label><input type="checkbox" v-model="notifySwitches.notify_on_reconcile"> {{ $t("adminSystem.notifyOnReconcile") }}</label>
           </p>
         </div>
       </div>

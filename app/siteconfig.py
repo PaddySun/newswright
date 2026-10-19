@@ -78,6 +78,12 @@ DEFAULTS: dict[str, object] = {
     "feedback_ip_hourly_limit": 30,
     "feedback_article_daily_limit": 100,
     "feedback_memory_daily_cap": 50,
+    # 通知调度中枢（BE-2/NC-x）：去重窗口（小时，缺省 24=常量回退）；
+    # 类别最小发送间隔（JSON dict：category→秒，缺省 {}=全取注册表 0=仅账户硬间隔）；
+    # digest 族全局开关（缺省 False——邮件订阅不进本期范围，接口预留 D5）
+    "notify_dedup_window_hours": 24,
+    "notify_category_intervals": {},
+    "notify_digest_enabled": False,
 }
 
 

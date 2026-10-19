@@ -77,7 +77,16 @@ class Notifier(ABC):
             from datetime import timezone
 
             last = last.replace(tzinfo=timezone.utc)
-        return now - last < timedelta(hours=DEDUP_WINDOW_HOURS)
+        # 窗口可配（BE-2 缝隙 c）：site_config notify_dedup_window_hours，
+        # 常量保留为缺省值
+        window_hours = DEDUP_WINDOW_HOURS
+        raw_window = get_config(self.db, "notify_dedup_window_hours")
+        if raw_window is not None:
+            try:
+                window_hours = max(float(raw_window), 0.0)
+            except (TypeError, ValueError):
+                window_hours = DEDUP_WINDOW_HOURS
+        return now - last < timedelta(hours=window_hours)
 
     def _record_sent(self, category: str, dedupe_key: str, *, now) -> None:
         set_config(self.db, self._dedupe_key_name(category, dedupe_key),
@@ -85,7 +94,11 @@ class Notifier(ABC):
 
     def send(self, subject: str, body: str, *, category: str,
              dedupe_key: str) -> dict:
-        """发送入口：去重判定 → 投递 → 成功落去重时间戳（失败不落、允许重试）。"""
+        """发送入口：去重判定 → 投递 → 成功落去重时间戳（失败不落、允许重试）。
+
+        BE-2 起本方法保留为**同步直发原语**（不排队、不经调度中枢双闸）——
+        新消费方一律走 app.notify.hub.enqueue；send 仅为兼容/测试保留。
+        """
         from datetime import datetime, timezone
 
         now = datetime.now(timezone.utc)
