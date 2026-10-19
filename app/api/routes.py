@@ -1332,7 +1332,8 @@ def rescore_direction(direction_id: int, payload: RescoreIn,
 # ---------- 通知设置（US-19） ----------
 
 _NOTIFY_SWITCH_KEYS = ("notify_on_source_failure", "notify_on_token_budget",
-                       "notify_on_collective", "notify_on_disk")
+                       "notify_on_collective", "notify_on_disk",
+                       "notify_on_reconcile")
 
 
 class NotifySettingsIn(BaseModel):
@@ -1347,6 +1348,7 @@ class NotifySettingsIn(BaseModel):
     notify_on_token_budget: bool | None = None
     notify_on_collective: bool | None = None
     notify_on_disk: bool | None = None
+    notify_on_reconcile: bool | None = None
 
 
 def _smtp_configured(db: Session) -> bool:
@@ -1399,20 +1401,30 @@ def get_notify_settings(db: Session = Depends(get_session)):
 
 @router.post("/settings/notify/test")
 def test_notify_settings(db: Session = Depends(get_session)):
-    """测试邮件：200 = 已发出；502 SMTP_UNREACHABLE = 不可达或未配置。"""
-    from ..notify import get_notifier
+    """测试邮件：同步试发一次（经调度中枢——enqueue notify_test + flush）；
+    502 SMTP_UNREACHABLE = 未配置；已配置时响应如实反映试发结果。"""
+    from ..notify import get_notifier, hub
 
     notifier = get_notifier("smtp", db)
     if notifier is None or not notifier.configured():
         raise HTTPException(502, {"code": "SMTP_UNREACHABLE",
                                   "message": "SMTP 未配置"})
-    try:
-        notifier._deliver("[newswright] 测试邮件",
-                          "这是一封测试邮件（通知通道验证）。")
-    except Exception as e:  # noqa: BLE001  报错脱敏：不携带配置值
-        raise HTTPException(502, {"code": "SMTP_UNREACHABLE",
-                                  "message": f"{type(e).__name__}: {e}"})
-    return {"sent": True}
+    now = datetime.now(timezone.utc)
+    # 去重键带时间戳唯一 → 不参与抑制（测试邮件必须可反复试发）
+    out = hub.enqueue(db, "[newswright] 测试邮件",
+                      "这是一封测试邮件（通知通道验证）。",
+                      category="notify_test",
+                      dedupe_key=f"test-{now.isoformat()}", now=now)
+    if not out.get("queued"):
+        return {"sent": False, "reason": out.get("reason", "not_configured")}
+    result = hub.flush(db, now=now)
+    key = f"notify_test/test-{now.isoformat()}"
+    if key in result["delivered"]:
+        return {"sent": True}
+    if key in result["deliver_failed"]:
+        return {"sent": False, "reason": "deliver_failed"}
+    # 双闸未过留队（缺省类别间隔 0 下即账户硬间隔）
+    return {"sent": False, "reason": "account_interval"}
 
 
 # ---------- 站长端点：关键词降频复位 / 月度计费对账 ----------

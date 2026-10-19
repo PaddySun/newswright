@@ -178,6 +178,11 @@ def pipeline_stats_payload(db: Session) -> dict:
                   .filter(ScoreResult.created_at >= since,
                           ScoreResult.status == "OK",
                           ScoreResult.passed.is_(True)).scalar()) or 0
+    # 通知调度中枢进程计数（BE-2/NC-3：queue_depth 与按 category 的溢出/失败
+    # 丢弃计数——纯进程内快照，零 DB 查询）
+    from .notify import hub as notify_hub
+
+    notify_snap = notify_hub.snapshot()
     return {
         "oldest_running_task_min": _minutes_ago(oldest_running, now),
         "stale_count_24h": stale_count_24h,
@@ -191,4 +196,6 @@ def pipeline_stats_payload(db: Session) -> dict:
         "total_enabled_sources": len(enabled_sources),
         "db_size_mb": _db_size_mb(db),
         "disk_free_mb": _disk_free_mb(db),
+        "notify_queue_depth": notify_snap["queue_depth"],
+        "notify_dropped_total": notify_snap["dropped_total"],
     }

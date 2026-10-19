@@ -183,6 +183,7 @@ export default {
     notifyOnTokenBudget: "Token 预算通知",
     notifyOnCollective: "采集面整体降级通知",
     notifyOnDisk: "磁盘阈值通知",
+    notifyOnReconcile: "计费对账偏差通知",
     smtpHost: "SMTP 主机",
     smtpPort: "端口",
     smtpUser: "账号",

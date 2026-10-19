@@ -44,6 +44,10 @@ class FakeSMTP:
 def smtp_monkeypatched(monkeypatch):
     FakeSMTP.calls = []
     FakeSMTP.fail = False
+    # BE-2 随动：_dispatch 改经调度中枢，队列/锚点为进程内状态——每测试复位
+    from app.notify import hub
+
+    hub._reset_for_tests()
     monkeypatch.setattr("app.notify.smtp.smtplib.SMTP_SSL", FakeSMTP)
     return FakeSMTP
 
@@ -145,6 +149,8 @@ def test_suspect_transition_uses_own_dedupe_category(db_session,
                                                      smtp_monkeypatched,
                                                      smtp_configured):
     """疑似失效通知的 24h 去重状态必须落在 suspect 类别键下（与硬失效分列）。"""
+    from app.notify import hub
+
     _seed_direction_with_sources(db_session, "疑似方向", 1)
     src = db_session.query(Source).one()
     src.empty_rounds = 2
@@ -152,6 +158,7 @@ def test_suspect_transition_uses_own_dedupe_category(db_session,
     _update_source_health(db_session, src,
                           _error_stats(error=None, http_status=200))
     assert src.failure_level == "suspect"
+    hub.flush(db_session)  # BE-2 随动
     assert len(FakeSMTP.calls) == 1
     assert get_config(db_session,
                       f"notify_last_sent_source_suspect_source-{src.id}")
@@ -161,11 +168,13 @@ def test_budget_dedupe_key_carries_site_timezone_date(db_session,
                                                       smtp_monkeypatched,
                                                       smtp_configured):
     """Token 预算通知去重键带站点时区自然日（每自然日至多一次的承载形态）。"""
+    from app.notify import hub
     from app.notify.triggers import notify_budget_exceeded
     from app.timeline import local_date_key, site_zone
 
     day = local_date_key(site_zone(db_session))
     notify_budget_exceeded(db_session, used_tokens=600, budget=500)
+    hub.flush(db_session)  # BE-2 随动
     assert len(FakeSMTP.calls) == 1
     assert get_config(db_session,
                       f"notify_last_sent_token_budget_daily-{day}")
@@ -178,13 +187,15 @@ def test_collective_counts_hard_failed_sources(db_session,
                                                smtp_monkeypatched,
                                                smtp_configured):
     """硬失效源计入聚合降级判定：超半数硬失效持续 2 轮必须通知。"""
+    from app.notify import hub
     from app.notify.triggers import check_collective_sentinel
 
     _seed_direction_with_sources(db_session, "硬失效面", 3,
                                  enabled=True, failure_level="hard_failed")
     check_collective_sentinel(db_session)
     out = check_collective_sentinel(db_session)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    hub.flush(db_session)
     assert len(FakeSMTP.calls) == 1
 
 
@@ -192,6 +203,7 @@ def test_collective_counts_rate_limited_sources(db_session,
                                                 smtp_monkeypatched,
                                                 smtp_configured):
     """降频源计入聚合降级判定：超半数降频持续 2 轮必须通知。"""
+    from app.notify import hub
     from app.notify.triggers import check_collective_sentinel
 
     d = _seed_direction_with_sources(db_session, "降频面", 3, enabled=True)
@@ -201,7 +213,8 @@ def test_collective_counts_rate_limited_sources(db_session,
     db_session.commit()
     check_collective_sentinel(db_session)
     out = check_collective_sentinel(db_session)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    hub.flush(db_session)
     assert len(FakeSMTP.calls) == 1
 
 
@@ -260,6 +273,9 @@ def test_collective_recovery_resets_sustained_counter(db_session,
     db_session.commit()
     check_collective_sentinel(db_session)
     check_collective_sentinel(db_session)  # 第 1 次通知
+    from app.notify import hub
+
+    hub.flush(db_session)  # BE-2 随动
     assert len(FakeSMTP.calls) == 1
     for src in srcs:
         src.failure_level = "none"
@@ -284,6 +300,9 @@ def test_collective_notice_subject_carries_degradation_name(db_session,
                                  enabled=True, failure_level="suspect")
     check_collective_sentinel(db_session)
     check_collective_sentinel(db_session)
+    from app.notify import hub
+
+    hub.flush(db_session)  # BE-2 随动
     assert len(FakeSMTP.calls) == 1
     subject = str(make_header(decode_header(
         message_from_string(FakeSMTP.calls[-1]["msg"])["Subject"])))
@@ -334,5 +353,8 @@ def test_disk_notification_uses_stable_dedupe_key(db_session,
     monkeypatch.setattr("app.notify.triggers.shutil.disk_usage",
                         lambda path: types.SimpleNamespace(total=1000, free=100))
     out = check_disk_usage(db_session)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动
+    from app.notify import hub
+
+    hub.flush(db_session)
     assert get_config(db_session, "notify_last_sent_disk_usage_disk")

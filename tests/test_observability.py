@@ -43,7 +43,7 @@ def test_stats_pipeline_requires_session(api_client, db_session):
 
 
 def test_stats_pipeline_fields_pinned(auth_client, db_session):
-    """字段逐项钉死（AC-18.3 + 采集面聚合哨兵 + 存储面）。"""
+    """字段逐项钉死（AC-18.3 + 采集面聚合哨兵 + 存储面 + BE-2 通知中枢两键）。"""
     _seed_pipeline_data(db_session)
     r = auth_client.get("/api/stats/pipeline")
     assert r.status_code == 200
@@ -53,6 +53,7 @@ def test_stats_pipeline_fields_pinned(auth_client, db_session):
         "per_source_last_success", "llm_error_rate_24h", "items_24h",
         "scored_24h", "passed_24h", "degraded_sources_count",
         "total_enabled_sources", "db_size_mb", "disk_free_mb",
+        "notify_queue_depth", "notify_dropped_total",
     }
     assert body["items_24h"] == 1
     assert body["scored_24h"] == 1

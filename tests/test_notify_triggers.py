@@ -38,6 +38,10 @@ class FakeSMTP:
 def smtp_monkeypatched(monkeypatch):
     FakeSMTP.calls = []
     FakeSMTP.fail = False
+    # BE-2 随动：_dispatch 改经调度中枢，队列/锚点为进程内状态——每测试复位
+    from app.notify import hub
+
+    hub._reset_for_tests()
     monkeypatch.setattr("app.notify.smtp.smtplib.SMTP_SSL", FakeSMTP)
     return FakeSMTP
 
@@ -91,12 +95,17 @@ def test_notify_settings_put_get_and_no_credential_echo(auth_client, db_session)
 def test_notify_test_endpoint_ok_and_unreachable(auth_client, db_session,
                                                  smtp_monkeypatched,
                                                  smtp_configured):
+    from app.notify import hub
+
     r = auth_client.post("/api/settings/notify/test")
     assert r.status_code == 200
     smtp_monkeypatched.fail = True
+    # BE-2 随动：试发改经中枢，投递失败如实回 200+deliver_failed（不再是 502）；
+    # 清锚点模拟新进程（禁真等 60s 账户硬间隔）
+    hub._reset_for_tests()
     r2 = auth_client.post("/api/settings/notify/test")
-    assert r2.status_code == 502
-    assert r2.json()["code"] == "SMTP_UNREACHABLE"
+    assert r2.status_code == 200
+    assert r2.json() == {"sent": False, "reason": "deliver_failed"}
 
 
 def test_notify_test_endpoint_unconfigured_502(auth_client):
@@ -111,22 +120,28 @@ def test_notify_test_endpoint_unconfigured_502(auth_client):
 def test_hard_fail_transition_notifies_once_per_source(db_session,
                                                        smtp_monkeypatched,
                                                        smtp_configured):
+    from app.notify import hub
+
     src = _seed_source(db_session)
     src.hard_failures = 2
     db_session.commit()
     _update_source_health(db_session, src, _error_stats(404))
     assert src.failure_level == "hard_failed"
+    hub.flush(db_session)  # BE-2 随动：入队后由 flush 投递
     assert len(FakeSMTP.calls) == 1
     assert get_config(db_session, "notify_last_sent_source_hard_fail_source-1")
     # 同源再触发（复位后再次达成阈值）→ 24h 去重不重发
     src.failure_level = "none"
     db_session.commit()
     _update_source_health(db_session, src, _error_stats(404))
+    hub.flush(db_session)
     assert len(FakeSMTP.calls) == 1  # 去重命中
 
 
 def test_suspect_transition_notifies(db_session, smtp_monkeypatched,
                                      smtp_configured):
+    from app.notify import hub
+
     src = _seed_source(db_session)
     src.empty_rounds = 2
     db_session.commit()
@@ -134,6 +149,7 @@ def test_suspect_transition_notifies(db_session, smtp_monkeypatched,
         error=None, http_status=200))
     # 空轮侧：error=None 且 feed_entries=0 → suspect（非 skip_day）
     assert src.failure_level == "suspect"
+    hub.flush(db_session)  # BE-2 随动
     assert len(FakeSMTP.calls) == 1
 
 
@@ -155,6 +171,7 @@ def test_source_failure_unconfigured_logs_only(db_session, smtp_monkeypatched,
 def test_budget_notification_deduped_within_day(db_session, smtp_monkeypatched,
                                                 smtp_configured, monkeypatch):
     from app.models import Item
+    from app.notify import hub
 
     d = Direction(name="预算方向", prompt="p", threshold=60)
     db_session.add(d)
@@ -178,9 +195,11 @@ def test_budget_notification_deduped_within_day(db_session, smtp_monkeypatched,
 
     monkeypatch.setattr("app.scoring.service.score_item", fake_score)
     score_round(db_session, triggered_by="test")
+    hub.flush(db_session)  # BE-2 随动
     assert len(FakeSMTP.calls) == 1
     # 预算仍超限的第二轮：通知去重（每自然日至多一次）
     score_round(db_session, triggered_by="test")
+    hub.flush(db_session)
     assert len(FakeSMTP.calls) == 1
 
 
@@ -205,7 +224,10 @@ def test_collective_sentinel_requires_two_sustained_rounds(db_session,
     assert out1["sent"] is False and out1["reason"] == "sustained_1"
     assert len(FakeSMTP.calls) == 0
     out2 = check_collective_sentinel(db_session)  # 持续第 2 轮 → 通知
-    assert out2["sent"] is True
+    assert out2["queued"] is True  # BE-2 随动：入队即 queued（sent 语义在 flush）
+    from app.notify import hub
+
+    hub.flush(db_session)
     assert len(FakeSMTP.calls) == 1
 
 
@@ -214,15 +236,17 @@ def test_collective_sentinel_requires_two_sustained_rounds(db_session,
 
 def test_disk_threshold_notification(db_session, smtp_monkeypatched,
                                      smtp_configured):
+    from app.notify import hub
     from app.notify.triggers import check_disk_usage
 
     set_config(db_session, "disk_usage_warn_percent", 0)  # 阈值 0 → 必触发
     out = check_disk_usage(db_session)
-    assert out["sent"] is True
+    assert out["queued"] is True  # BE-2 随动：入队即 queued
     assert out["used_percent"] > 0
+    hub.flush(db_session)
     # 24h 去重：同 key 不重发
     out2 = check_disk_usage(db_session)
-    assert out2["sent"] is False and out2["reason"] == "deduped"
+    assert out2["queued"] is False and out2["reason"] == "deduped"
 
 
 # ---------- 每日备份 ----------
