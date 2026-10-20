@@ -174,11 +174,50 @@ def _migrate_added_columns() -> None:
             ))
 
 
+def _migrate_author_model_nullable() -> None:
+    """author.model 可空化+存量清空（BE-7/D1——「空=随候选链」语义的落地件）。
+
+    实测事实（任务书 A6 未记，呈报项）：author.model 列自建表起 NOT NULL
+    （生产库与新库 DDL 均然），SQLite 无 ALTER COLUMN——纯数据迁移
+    ``UPDATE author SET model=NULL`` 会撞 NOT NULL 约束，须表重建：
+    按当前模型元数据建影子表（model 已可空）→ 搬行（model 置 NULL=随链：
+    存量 deepseek 官方名发给 moark 网关 400 且不冷却不切换，故清空）→
+    换名。清空只在重建路径发生（一次性）：新库无存量绑定、迁移后显式
+    重新绑定的值不被后续运行再清。幂等=列已可空即整段跳过（二次运行零行命中）。
+    外键引用（memory_entry/write_run/article→author.id）在 SQLite 默认
+    foreign_keys=OFF 下重建安全（本库从未开启该 pragma）。
+    """
+    from sqlalchemy import MetaData
+
+    from .models import Author
+
+    insp = inspect(engine)
+    if not insp.has_table("author"):
+        return
+    model_col = next((c for c in insp.get_columns("author")
+                      if c["name"] == "model"), None)
+    if model_col is None or model_col.get("nullable", True):
+        return  # 列已可空（新库 create_all 或已迁移）——幂等跳过
+    new_meta = MetaData()
+    shadow = Author.__table__.to_metadata(new_meta, name="author_be7_shadow")
+    with engine.begin() as conn:
+        shadow.create(conn)
+        cols = [c.name for c in shadow.columns]
+        select_expr = ", ".join("NULL" if c == "model" else c for c in cols)
+        conn.execute(text(
+            f"INSERT INTO author_be7_shadow ({', '.join(cols)}) "
+            f"SELECT {select_expr} FROM author"))
+        conn.execute(text("DROP TABLE author"))
+        conn.execute(text("ALTER TABLE author_be7_shadow RENAME TO author"))
+    log.info("migrate: author.model 已可空化（表重建），存量绑定清空=随链")
+
+
 def init_db() -> None:
     from . import models  # noqa: F401  确保模型注册后再建表
 
     models.Base.metadata.create_all(engine)
     _migrate_added_columns()
+    _migrate_author_model_nullable()
 
 
 def get_session() -> Iterator[Session]:

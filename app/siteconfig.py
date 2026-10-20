@@ -98,6 +98,14 @@ DEFAULTS: dict[str, object] = {
     "netloc_throttle_domains": {},
     "netloc_throttle_max_wait_s": 30,
     "retry_budget_per_minute": 50,
+    # 服务商治理（BE-7/PG 族）：三触发开关（关=事件仅落日志，沿告警族形态）；
+    # 余额告警阈值（元，缺省 5——余额耗尽前主动发现，探测宿主为每日备份轮）；
+    # LLM 24h 错误率告警阈值（缺省 0.5；样本 ≥10 才评估——防小分母）
+    "notify_on_provider_switch": True,
+    "notify_on_balance_low": True,
+    "notify_on_llm_error_rate": True,
+    "balance_warn_threshold": 5,
+    "llm_error_rate_warn": 0.5,
 }
 
 

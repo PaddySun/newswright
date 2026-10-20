@@ -294,7 +294,9 @@ def get_article(article_id: int, request: Request,
 
 
 class AuthorUpdate(BaseModel):
-    """作者更新（P6 表单保存）：传值即改、缺省不动（沿 SourceUpdate 形态）。"""
+    """作者更新（P6 表单保存）：传值即改、缺省不动（沿 SourceUpdate 形态）。
+    model 语义（BE-7/D1）：None=不改；空串=清空回随候选链（存 NULL）；
+    非空=绑定该模型名。"""
     name: str | None = None
     model: str | None = None
     enabled: bool | None = None
@@ -409,7 +411,7 @@ def update_author(author_id: int, payload: AuthorUpdate,
                                       "message": "作者名已存在"})
         a.name = new_name
     if payload.model is not None:
-        a.model = payload.model
+        a.model = payload.model or None  # 空串=清空回随链（BE-7/D1）
     if payload.enabled is not None:
         a.enabled = payload.enabled
     if payload.bio is not None:
@@ -428,10 +430,11 @@ def update_author(author_id: int, payload: AuthorUpdate,
 @router.post("/authors/import")
 def import_author(payload: AuthorImportIn, db: Session = Depends(get_session)):
     """导入 author.json（AC-10.1）：薄包 importer 库函数，按 identity.name
-    upsert——created 区分新建/更新（P6 同名覆盖确认弹窗的话术依据）。新作者
-    未传 model → 400 AUTHOR_MODEL_REQUIRED；文档校验失败 → 400
-    AUTHOR_JSON_INVALID（message 携带全部校验细节）。"""
-    from ..authors.importer import AuthorModelRequired, import_author_json
+    upsert——created 区分新建/更新（P6 同名覆盖确认弹窗的话术依据）。model
+    可选（BE-7/D1 契约放宽，原 400 AUTHOR_MODEL_REQUIRED 销案）：不传=随
+    候选链（DB NULL），传了照旧绑定；文档校验失败 → 400 AUTHOR_JSON_INVALID
+    （message 携带全部校验细节）。"""
+    from ..authors.importer import import_author_json
     from ..authors.schema import AuthorConfigError
 
     pre_ids = {aid for (aid,) in db.query(Author.id).all()}
@@ -440,9 +443,6 @@ def import_author(payload: AuthorImportIn, db: Session = Depends(get_session)):
             db, payload.author_json, model=payload.model,
             readable_directions=payload.readable_directions,
             rank_provider=payload.rank_provider)
-    except AuthorModelRequired:
-        raise HTTPException(400, {"code": "AUTHOR_MODEL_REQUIRED",
-                                  "message": "新作者需显式 model 绑定（模型不在 JSON 中）"})
     except AuthorConfigError as e:
         raise HTTPException(400, {"code": "AUTHOR_JSON_INVALID",
                                   "message": str(e)})
@@ -528,6 +528,46 @@ def stats_pipeline(db: Session = Depends(get_session)):
     from ..observability import pipeline_stats_payload
 
     return pipeline_stats_payload(db)
+
+
+@router.get("/providers/status")
+def providers_status(db: Session = Depends(get_session)):
+    """chat 域供应商状态聚合（BE-7/PV-4，会话守卫——/stats/pipeline 同款）：
+    候选链各名的冷却剩余（进程读）/余额（balance_last_* 落账，未探测=null）/
+    24h 用量聚合（usage_log 按实例名聚合：total/errors/error_rate/
+    recent_error 脱敏截断）。admin 呈现留 UI2（旧 SPA 不加区块——端点先立
+    入 UI2 契约面）。"""
+    from sqlalchemy import func
+
+    from ..models import UsageLog
+    from ..providers.resolve import cooldown_remaining, configured_candidates
+    from ..siteconfig import get_config
+    from ..transport.http import _scrub
+
+    now = datetime.now(timezone.utc)
+    since = now - timedelta(hours=24)
+    out = []
+    for name in configured_candidates():
+        total = int(db.query(func.count(UsageLog.id)).filter(
+            UsageLog.provider == name,
+            UsageLog.created_at >= since).scalar() or 0)
+        errors = int(db.query(func.count(UsageLog.id)).filter(
+            UsageLog.provider == name, UsageLog.created_at >= since,
+            UsageLog.ok.is_(False)).scalar() or 0)
+        rate = round(errors / total, 4) if total else 0.0
+        recent_row = (db.query(UsageLog.error)
+                      .filter(UsageLog.provider == name, UsageLog.ok.is_(False),
+                              UsageLog.created_at >= since)
+                      .order_by(UsageLog.created_at.desc()).first())
+        recent = _scrub((recent_row[0] or "")[:300]) if recent_row and recent_row[0] else None
+        out.append({
+            "name": name,
+            "cooldown_remaining": round(cooldown_remaining(name), 1),
+            "balance": get_config(db, f"balance_last_{name}"),
+            "llm_24h": {"total": total, "errors": errors,
+                        "error_rate": rate, "recent_error": recent},
+        })
+    return {"providers": out}
 
 
 @router.get("/tasks")

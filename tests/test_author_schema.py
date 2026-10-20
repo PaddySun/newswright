@@ -77,9 +77,11 @@ def test_import_roundtrip(db_session):
     assert "luxun_t" in author.persona_prompt and "single" in author.persona_prompt
 
 
-def test_import_new_author_requires_model(db_session):
-    with pytest.raises(AuthorConfigError):
-        import_author_json(db_session, default_author_config("t9", "无名作者"))
+def test_import_new_author_without_model_follows_chain(db_session):
+    """BE-7/D1 随动：新作者不传 model → 随候选链（DB NULL），不再抛
+    AuthorConfigError 子类（原 AuthorModelRequired 销案——契约放宽呈报）。"""
+    author = import_author_json(db_session, default_author_config("t9", "无名作者"))
+    assert author.model is None
 
 
 def test_optional_object_explicit_null_treated_as_absent():

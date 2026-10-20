@@ -267,6 +267,9 @@ def run_write(db: Session, author: Author, *, triggered_by: str = "manual", mode
                                   route_overrides=route_overrides)
 
     pairs, rank_meta = assemble_ranked_reading_set(db, author)
+    # model 语义（BE-7/D1，本文件零逻辑改）：author.model 空=随候选链——
+    # model or author.model 为 None → chat_json(model=None) 走 _default_model
+    # （存量 deepseek 官方名发给 moark 网关会 400 且不冷却不切换，已随链迁移）。
     run = WriteRun(
         author_id=author.id,
         triggered_by=triggered_by,
@@ -302,7 +305,7 @@ def run_write(db: Session, author: Author, *, triggered_by: str = "manual", mode
         try:
             content, actual_model = provider.chat_json(
                 messages,
-                model=model or author.model,
+                model=model or author.model,  # 随链语义同上：None→_default_model
                 call_point="writing",
                 ref_type="author",
                 ref_id=author.id,

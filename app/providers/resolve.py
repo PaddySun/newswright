@@ -2,17 +2,19 @@
 
 治理目标：消费方只见名字（经 registry），切换提供方 = 配置一处变化；
 reasoner_available 探测状态随缓存实例跨调用存活（不再逐调用丢失）。
-默认配置（单候选 deepseek、冷却 TTL=0 不启用）下行为零变——本层是
-「结构就位」：跨厂商候选位与冷却就绪，自动主备切换属后续方向性决策。
+D1（BE-7）起默认启用：候选链 moark→deepseek 双账户真冗余、冷却 TTL 缺省
+1800 秒，供应商级致命 4xx 由 providers.base._call 标记（键=(name, None)，
+与 resolve_chat 查询键一致）；冷却态为进程级 time.monotonic——重启即清、
+下次失败重标（接受语义，低流量系统不做持久熔断状态）。
 
 语义要点：
 - 实例缓存键=(域,名,model)，命中时把实例的计量归属（db）刷新为当前调用方
   会话——跨请求/跨测试复用实例不写向已关闭的旧会话；
-- 冷却默认不启用（LLM_PROVIDER_COOLDOWN_SECONDS=0 时标记为 no-op）；
+- 冷却 TTL 显式 0 时标记为 no-op（不启用哨兵，缺省 1800 已启用）；
   单候选永不进入冷却判定——无备源可切，冷却只会让选源平白返回 None；
 - 全部候选冷却中 → 返回 None，消费方走各自既有降级链（FAILED 终态 /
   回退生成 / 全量慢速等，不在本层统一吞错）。
-设计依据见 docs/design-index.md「LR-2」「LR-3」。
+设计依据见 docs/design-index.md「LR-2」「LR-3」「PV-1」「PV-2」。
 """
 from __future__ import annotations
 
@@ -47,8 +49,8 @@ def resolve(name: str, db: Session, *, model: str | None = None) -> LLMProvider:
 
 
 def configured_candidates() -> list[str]:
-    """有序候选列表：LLM_CANDIDATES 显式配置优先，缺省回落 [LLM_PROVIDER]
-    （单候选 = 行为零变的默认形态）。"""
+    """有序候选列表：LLM_CANDIDATES 显式配置优先（缺省 moark→deepseek
+    双候选，D1），空值回落 [LLM_PROVIDER] 单候选形态。"""
     names = [n for n in (config.LLM_CANDIDATES or []) if n]
     return names or [config.LLM_PROVIDER]
 
@@ -68,9 +70,10 @@ def resolve_chat(db: Session, *, candidates: list[str] | None = None) -> LLMProv
 
 
 def mark_cooldown(name: str, *, model: str | None = None, seconds: float | None = None) -> None:
-    """标记一个候选进入冷却。TTL 取 seconds 显式值，缺省读
-    LLM_PROVIDER_COOLDOWN_SECONDS；TTL<=0（默认）时为 no-op——冷却结构就位、
-    默认不启用（低流量系统不做自动熔断的调研裁决）。"""
+    """标记一个候选进入冷却（生产调用方=providers.base._call 供应商级致命
+    接线，键必须 (name, None)——与 resolve_chat 查询键一致，按 payload
+    模型名标记即键不匹配静默失效）。TTL 取 seconds 显式值，缺省读
+    LLM_PROVIDER_COOLDOWN_SECONDS（BE-7 起缺省 1800）；显式 0=no-op 哨兵。"""
     ttl = config.LLM_PROVIDER_COOLDOWN_SECONDS if seconds is None else seconds
     if ttl <= 0:
         return

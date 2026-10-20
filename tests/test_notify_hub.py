@@ -74,7 +74,9 @@ def smtp_ready(db_session):
 # ---------- AC-4：类别注册表（十一条目）与硬常量 ----------
 
 
-def test_registry_eleven_entries_and_hard_constants():
+def test_registry_entries_exact_set_and_hard_constants():
+    """注册表钉面（BE-8 前置判例）：条目集精确相等（键集==预期集合，非数字
+    命名——再增类别即改此测试，防 BE-8+ 换批改名漂移）。"""
     assert hub.ACCOUNT_HARD_INTERVAL_S == 60  # 「硬」=代码常量，不做 site_config
     assert hub.ACCOUNT_QUEUE_CAP == 10
     expected = {
@@ -86,9 +88,9 @@ def test_registry_eleven_entries_and_hard_constants():
         "reconcile": ("alert", 2, 0),
         "source_recovered": ("alert", 2, 0),   # BE-3 复活通知（低紧迫档）
         "notify_test": ("alert", 2, 0),
-        "provider_switched": ("alert", 1, 0),      # 骨架位（BE-7 接线）
-        "balance_low": ("alert", 1, 0),            # 骨架位
-        "llm_error_rate_high": ("alert", 1, 0),    # 骨架位
+        "provider_switched": ("alert", 1, 0),      # BE-7 已接线（冷却边沿）
+        "balance_low": ("alert", 1, 0),            # BE-7 已接线（余额探测）
+        "llm_error_rate_high": ("alert", 1, 0),    # BE-7 已接线（score 轮尾）
     }
     assert set(hub.CATEGORY_REGISTRY) == set(expected)
     for cat, (family, priority, interval) in expected.items():

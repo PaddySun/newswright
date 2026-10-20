@@ -4,7 +4,8 @@
 2xx 返回原始 httpx.Response（调用方自行 .json()，与迁移前
 HTTPProvider._post_json 契约一致）；非 2xx 一律入错：3xx=可重试
 TransportError 带 location（网关 302 营销站漏网成「成功空响应」的实锤教训）、
-429/5xx=可重试 TransportError（挂载 Retry-After 双形态解析值）、其余 >=400=
+429/5xx=可重试 TransportError（挂载 Retry-After 双形态解析值）、401/402/403=
+不可重试 VendorFatalError（供应商级致命——BE-7 冷却切换接线位）、其余 >=400=
 不可重试 SemanticError（官方错误码语义映射）。重试节奏协商统一走
 retry_delay_ms。
 
@@ -36,7 +37,7 @@ from sqlalchemy.orm import Session
 from .. import config
 from ..config import PROXY_ENV_KEY  # noqa: F401  采集通道经本模块取 env 键名
 from ..siteconfig import get_config
-from .errors import SemanticError, TransportError
+from .errors import SemanticError, TransportError, VendorFatalError, VENDOR_FATAL_STATUS
 from .ssrf import refuse_private_destination
 from .throttle import throttle_request
 
@@ -223,6 +224,12 @@ def _non_2xx_error(resp: httpx.Response) -> Exception:
             retryable=True, status=resp.status_code, retry_after=retry_after,
         )
     msg = FATAL_STATUS_MESSAGE.get(resp.status_code, f"HTTP {resp.status_code}")
+    # TR-2 细分（BE-7）：供应商级致命（401/402/403）单列 VendorFatalError——
+    # 错误属于该供应商账户（余额/鉴权/封禁），provider 调用层据此冷却切换；
+    # 请求级致命（400/422 等）照旧 SemanticError，维持快速失败语义零变。
+    if resp.status_code in VENDOR_FATAL_STATUS:
+        return VendorFatalError(f"{msg}: {_scrub(resp.text[:300])}",
+                                status=resp.status_code)
     return SemanticError(f"{msg}: {_scrub(resp.text[:300])}", status=resp.status_code)
 
 

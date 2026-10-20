@@ -5,14 +5,17 @@
 - Token 日预算触发（预算闸事件）：每自然日至多一次（去重键带日期）；
 - 采集面聚合哨兵：超过一半启用源处于失效/降频状态持续 2 轮 → 整体降级通知
   （轮次计数持久化在 site_config，重启不丢）；
-- 磁盘用量超阈值：24h 去重。
-设计依据见 docs/design-index.md「AC-19.2」「AC-19.3」「AC-19.4」。
+- 磁盘用量超阈值：24h 去重；
+- 服务商治理三触发器（BE-7）：供应商冷却切换（providers.base._call 边沿
+  触发）/余额不足（探测模块调用）/LLM 24h 错误率（score 轮末评估宿主，
+  样本 ≥10 防小分母）——24h 去重。
+设计依据见 docs/design-index.md「AC-19.2」「AC-19.3」「AC-19.4」「PV-2」~「PV-4」。
 """
 from __future__ import annotations
 
 import logging
 import shutil
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from sqlalchemy.orm import Session
@@ -154,4 +157,79 @@ def check_disk_usage(db: Session) -> dict:
         body=f"磁盘用量 {used_percent}%，超过阈值 {threshold}%。\n"
              f"剩余 {usage.free // (1024 * 1024)} MB。")
     out["used_percent"] = used_percent
+    return out
+
+
+# ---------- 服务商治理三触发器（BE-7，注册表骨架位的消费方） ----------
+
+
+def notify_provider_switched(db: Session, *, name: str, status: int | None,
+                             ttl_seconds: float) -> dict:
+    """供应商冷却切换通知（PV-2，providers.base._call 边沿触发——仅「未冷却
+    →冷却」转换时调一次）：body 含供应商名/致命状态码/冷却 TTL 分钟数/
+    候选链次位去向；dedupe=f"provider-{name}"（24h 去重兜底，防冷却抖动
+    重发与打分轮逐条失败灌爆）。"""
+    minutes = int(ttl_seconds // 60) if ttl_seconds else 0
+    return _dispatch(
+        db, switch_key="notify_on_provider_switch", category="provider_switched",
+        dedupe_key=f"provider-{name}",
+        subject=f"[newswright] LLM 供应商已冷却切换: {name}",
+        body=f"供应商 {name} 遭供应商级致命（HTTP {status}），进入冷却 {minutes} 分钟，"
+             f"chat 域后续请求走候选链次位。\n"
+             f"时间: {datetime.now(timezone.utc).isoformat()}")
+
+
+def notify_balance_low(db: Session, *, name: str, amount: float,
+                       threshold: float) -> dict:
+    """余额不足告警（BE-7 余额探测调用）：amount < 阈值（缺省 ¥5）时发。
+    dedupe=f"balance-{name}"——24h 去重天然日频（探测宿主为每日轮）。"""
+    return _dispatch(
+        db, switch_key="notify_on_balance_low", category="balance_low",
+        dedupe_key=f"balance-{name}",
+        subject=f"[newswright] 供应商余额不足: {name}",
+        body=f"供应商 {name} 余额 {amount} 元，低于告警阈值 {threshold} 元。\n"
+             f"冷却切换只兜住 402 时刻，请尽快充值（余额耗尽前主动发现）。\n"
+             f"时间: {datetime.now(timezone.utc).isoformat()}")
+
+
+def _llm_attempts_24h(db: Session, *, now: datetime) -> int:
+    """24h 滚动窗 LLM 调用总量（错误率触发器的防小分母判据；口径与
+    observability._llm_error_rate_24h 的分母一致——usage_log 全行计数）。"""
+    from sqlalchemy import func
+
+    from ..models import UsageLog
+
+    since = now - timedelta(hours=24)
+    return int(db.query(func.count(UsageLog.id)).filter(
+        UsageLog.created_at >= since).scalar() or 0)
+
+
+def check_llm_error_rate(db: Session, *, now: datetime | None = None) -> dict:
+    """LLM 24h 错误率触发器（score 轮末评估宿主——哨兵/磁盘同款姿势，纯聚合
+    指标无自然事件点）：样本 ≥10（防小分母）且错误率 ≥ site_config
+    llm_error_rate_warn（缺省 0.5）→ 告警（dedupe="llm-error-rate" 24h 去重）。
+    全候选冷却的静默路径（scoring「无可用 LLM 提供方」FAILED 终态）由本
+    触发器补提醒。"""
+    from ..observability import _llm_error_rate_24h
+
+    now = now or datetime.now(timezone.utc)
+    rate = _llm_error_rate_24h(db, now)
+    total = _llm_attempts_24h(db, now=now)
+    raw_threshold = get_config(db, "llm_error_rate_warn")
+    threshold = float(0.5 if raw_threshold is None else raw_threshold)
+    if total < 10:
+        return {"sent": False, "reason": "insufficient_samples",
+                "total": total, "error_rate": rate}
+    if rate < threshold:
+        return {"sent": False, "reason": "below_threshold",
+                "total": total, "error_rate": rate}
+    out = _dispatch(
+        db, switch_key="notify_on_llm_error_rate", category="llm_error_rate_high",
+        dedupe_key="llm-error-rate",
+        subject=f"[newswright] LLM 24h 错误率超阈（{rate:.0%}）",
+        body=f"近 24h LLM 调用 {total} 次，错误率 {rate:.1%}（阈值 {threshold:.0%}）。\n"
+             f"候选链全冷却或供应商持续故障会以 FAILED 终态推高错误率，"
+             f"请查 /api/providers/status。\n"
+             f"时间: {datetime.now(timezone.utc).isoformat()}")
+    out.update({"total": total, "error_rate": rate})
     return out

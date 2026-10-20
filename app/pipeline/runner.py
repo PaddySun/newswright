@@ -734,6 +734,14 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
             "direction_id": d.id, "name": d.name, "task_id": task.id, "status": task.status,
             **(task.payload.get("stats") or {}), "error": task.last_error,
         })
+    # score 轮末顺带：LLM 24h 错误率触发（BE-7——fetch 轮哨兵/磁盘同款姿势，
+    # 纯聚合指标无自然事件点；通知面异常绝不阻断打分轮收尾）
+    try:
+        from ..notify.triggers import check_llm_error_rate
+
+        summary["llm_error_rate"] = check_llm_error_rate(db)
+    except Exception as e:  # noqa: BLE001
+        log.warning("score 轮末错误率检查异常: %s", e)
     return summary
 
 

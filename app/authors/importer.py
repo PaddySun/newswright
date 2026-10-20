@@ -2,7 +2,8 @@
 
 分层纪律：author_json 列存全量配置（身份资产，可导出/版本管理）；DB 侧运行时
 字段（model/persona_prompt/memory_config/readable_directions）由 JSON 派生或
-独立绑定——**model 永不从 JSON 来**（后台/DB 绑定）。
+独立绑定——**model 永不从 JSON 来**（后台/DB 绑定；BE-7/D1 起空=随候选链，
+model 绑定可选——不传即随链，不再强制显式绑定）。
 
 persona_prompt = identity 层的扁平渲染（供无 JSON 代码路径/后台展示兼容）；
 有 JSON 的作者写作走 pipeline.py，不读 persona_prompt。
@@ -17,12 +18,6 @@ from sqlalchemy.orm import Session
 
 from ..models import Author
 from .schema import AuthorConfigError, load_author_config
-
-
-class AuthorModelRequired(AuthorConfigError):
-    """新作者导入未显式绑定 model（AuthorConfigError 的可分拣子类——HTTP
-    导入端点据此区分 AUTHOR_MODEL_REQUIRED 与文档校验失败的
-    AUTHOR_JSON_INVALID；既有按基类捕获的调用方行为不变）。"""
 
 
 def render_persona_prompt(cfg: dict) -> str:
@@ -56,15 +51,14 @@ def import_author_json(
     """校验并导入 author.json → DB Author（按 identity.name upsert）。
 
     model/readable_directions/rank_provider 为运行时绑定参数：显式传入则覆盖，
-    未传入时既有作者保留原值、新作者必须给 model（模型不在 JSON 中）。
+    未传入时既有作者保留原值；model 绑定可选（BE-7/D1）——不传的新作者为
+    NULL=随候选链（chat_json model=None 走 _default_model），传了照旧绑定。
     """
     cfg = load_author_config(copy.deepcopy(data))
     name = cfg["identity"]["name"]
     author = db.query(Author).filter_by(name=name).first()
     if author is None:
-        if not model:
-            raise AuthorModelRequired(
-                f"新作者 {name!r} 需要显式 model 绑定（模型不在 JSON 中）")
+        # model 可空（BE-7/D1）：不传=随候选链（NULL），不再强制显式绑定
         author = Author(name=name, model=model)
         db.add(author)
     if model:

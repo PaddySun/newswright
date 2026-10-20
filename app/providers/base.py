@@ -34,6 +34,7 @@ from ..transport.errors import (
     REASON_MAX_RETRIES_EXCEEDED,
     ProviderError,
     RetryExhausted,
+    VendorFatalError,
 )
 from ..transport.http import (
     RETRYABLE_STATUS,
@@ -125,6 +126,32 @@ class LLMProvider(ABC):
         """chat 档缺省模型（子类按自身配置覆写；未覆写视为无缺省）。"""
         raise NotImplementedError(f"{type(self).__name__} 未实现 _default_model")
 
+    def _cooldown_and_notify(self, err: VendorFatalError) -> None:
+        """供应商级致命 → 冷却标记 + 边沿通知（BE-7/TR-2 接线，PV-1/PV-2）。
+
+        - 冷却键必须 (name, None)——选源层查询键就是 (name, None)（resolve.py
+          resolve_chat），按 payload 模型名标记即键不匹配、冷却静默失效；
+        - 通知边沿触发：仅在「未冷却 → 冷却」转换时发一次（打分轮逐条 402
+          不灌爆通知）；TTL 配置 0 时 mark 为 no-op（冷却未发生则不发）；
+        - 函数内延迟 import 破环：providers.base→resolve→registry→
+          providers.deepseek→base（robots 判例同款惰性导入）；
+        - 治理面异常绝不改变调用错误语义（WARN 吞出，原错误照常上抛）。
+        """
+        try:
+            from .. import config as _config
+            from ..providers import resolve as _resolve
+            from ..notify.triggers import notify_provider_switched
+
+            was_cooling = _resolve.cooldown_remaining(self.name) > 0
+            _resolve.mark_cooldown(self.name)  # 不传 model——键=(name, None)
+            if not was_cooling and _resolve.cooldown_remaining(self.name) > 0:
+                notify_provider_switched(
+                    self.db, name=self.name, status=err.status,
+                    ttl_seconds=_config.LLM_PROVIDER_COOLDOWN_SECONDS)
+        except Exception:  # noqa: BLE001  治理面异常不改变调用错误语义
+            log.warning("供应商冷却接线异常（不影响原错误上抛）: %s",
+                        type(err).__name__, exc_info=True)
+
     def tier_request(self, payload: dict[str, Any], *, model_tier: str | None) -> dict[str, Any]:
         """按调用档位改写请求 payload 的 provider 钩子（默认不改写——纯模型名档位，
         任何 OpenAI 兼容 provider 零改动兼容；DeepSeek 覆盖为官方 thinking 参数）。"""
@@ -194,6 +221,8 @@ class LLMProvider(ABC):
                     ref_type=ref_type,
                     ref_id=ref_id,
                 )
+                if isinstance(e, VendorFatalError):
+                    self._cooldown_and_notify(e)
                 if not retryable or attempt == max_retries:
                     break
                 if not retry_budget.spend("llm", db=self.db):
