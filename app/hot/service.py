@@ -14,7 +14,7 @@ import json
 import logging
 import re
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from sqlalchemy.orm import Session
@@ -128,6 +128,35 @@ def _write_call_log(db, *, base: str, platform: str, ok: bool,
         error=_scrub(error)[:500] if error else None,
     ))
     db.commit()
+
+
+def platform_in_cooldown(db, platform: str, *, now: datetime) -> bool:
+    """平台连败冷却判定（BE-6/R3.7，纯 DB 回读零新状态）：该 platform 最近
+    HOT_COOLDOWN_STREAK 行 HotCallLog 全 ok=False 且最新一行距 now <
+    HOT_COOLDOWN_MINUTES 分钟 → True。行数不足（无历史不罚）/任一成功（一次
+    成功断连败）/超窗（冷却期满自然重试）→ False。
+
+    判定键=platform（fetch_platform 失败行=全候选皆败，platform 粒度正确；
+    429 形态同样落失败行自然覆盖）。now 必须注入（禁真等）。SQLite 取回的
+    naive datetime 按 UTC 归一（skip_policy._aware 同款）。
+    设计依据见 docs/design-index.md「HG-1」。
+    """
+    from ..pipeline.skip_policy import _aware
+
+    rows = (
+        db.query(HotCallLog)
+        .filter(HotCallLog.platform == platform)
+        .order_by(HotCallLog.id.desc())
+        .limit(config.HOT_COOLDOWN_STREAK)
+        .all()
+    )
+    if len(rows) < config.HOT_COOLDOWN_STREAK:
+        return False
+    if any(r.ok for r in rows):
+        return False
+    latest = max(rows, key=lambda r: r.id)
+    return (now - _aware(latest.fetched_at)) < timedelta(
+        minutes=config.HOT_COOLDOWN_MINUTES)
 
 
 def _keyword_input(topics: list[HotTopic]) -> str:
@@ -263,7 +292,14 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     platforms = config.HOT_PLATFORMS
     platform_stats: list[dict] = []
     raw_by_platform: dict[str, list[dict]] = {}
+    now = datetime.now(timezone.utc)
     for p in platforms:
+        # 连败冷却（BE-6/R3.7）：HotCallLog 回读判定，冷却中平台跳过取用
+        if platform_in_cooldown(db, p, now=now):
+            platform_stats.append({"platform": p, "skipped_cooldown": True})
+            log.info("热榜 %s 连败冷却中（近 %d 次取用全败且窗口内），本轮跳过",
+                     p, config.HOT_COOLDOWN_STREAK)
+            continue
         t0 = time.monotonic()
         try:
             items = fetch_platform(p, db=db)
@@ -277,8 +313,18 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
             log.warning("热榜 %s 失败: %s", p, e)
         time.sleep(0.5)  # 源间礼貌间隔（BettaFish 同款）
 
-    ok_platforms = [s for s in platform_stats if s["ok"]]
+    ok_platforms = [s for s in platform_stats if s.get("ok")]
     if not ok_platforms:
+        # 全平台皆冷却：合法稳态非失败（冷却中无采集 ≠ 采集失败——与下方真失败
+        # FAILED 分态），DONE 提前返回不建 batch
+        if platform_stats and all(s.get("skipped_cooldown") for s in platform_stats):
+            skipped_list = [s["platform"] for s in platform_stats]
+            _finish(db, task, status="DONE",
+                    stats={"platforms": platform_stats,
+                           "skipped_cooldown": skipped_list},
+                    error=None)
+            return {"task_id": task.id, "status": "DONE",
+                    "platforms": platform_stats, "skipped_cooldown": skipped_list}
         _finish(db, task, status="FAILED", stats={"platforms": platform_stats},
                 error="全部平台拉取失败（聚合 API 不可达？）")
         return {"task_id": task.id, "status": "FAILED", "platforms": platform_stats}
@@ -335,8 +381,10 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
 
         reset_keyword_backoff(db)
 
-    # 分态：只有采集（全平台拉取）失败才 FAILED；提炼失败采集成功 → DONE + degraded
-    task_status = "FAILED" if not ok_platforms else "DONE"
+    # 分态定案（BE-6 清理）：采集全败已在循环后早退（FAILED），走到此处恒有
+    # 成功平台 → status 恒 DONE、error 恒 None；提炼失败是合法降级稳态
+    # （DONE + degraded），kw_error 保留 stats 面不落 last_error——分态设计：
+    # 只有采集（全平台拉取）失败才 FAILED，零收益≠失败。
     stats = {
         "platforms": platform_stats, "topics_stored": topic_count,
         "batch_id": batch_id, "keywords": keywords, "kw_error": kw_error,
@@ -345,10 +393,9 @@ def run_hot_round(db: Session, *, triggered_by: str = "scheduler") -> dict:
     if degraded:
         stats["degraded"] = degraded
         stats["kw_fallback"] = "title_tokens"
-    _finish(db, task, status=task_status, stats=stats,
-            error=kw_error if task_status == "FAILED" else None)
+    _finish(db, task, status="DONE", stats=stats, error=None)
     return {
-        "task_id": task.id, "status": task_status, "batch_id": batch_id,
+        "task_id": task.id, "status": "DONE", "batch_id": batch_id,
         "topics_stored": topic_count, "keywords": keywords, "summary": summary[:200],
         "platforms": platform_stats, "degraded": degraded,
     }

@@ -178,6 +178,11 @@ KEYWORD_EXHAUSTED_ROUNDS = int(_get("KEYWORD_EXHAUSTED_ROUNDS") or 6)
 # 降频缺省间隔档：15×2^档位 分钟，上限 240（429 限流与关键词零收益共用阶梯）
 RATE_LIMIT_BASE_MINUTES = int(_get("RATE_LIMIT_BASE_MINUTES") or 15)
 RATE_LIMIT_MAX_MINUTES = int(_get("RATE_LIMIT_MAX_MINUTES") or 240)
+# RSS/web 内容零收益自适应（BE-6/R3.8，HG-3）：健康但连续 N 轮无新增 →
+# interval 读时放大 ×2^档（档位封顶 M=×16）；not_modified/error/限流轮不计数。
+# 与 suspect/hard_failed 失效阶梯（管失败）、D20（管搜索源关键词零收益）划界。
+ZERO_GAIN_THRESHOLD_ROUNDS = int(_get("ZERO_GAIN_THRESHOLD_ROUNDS") or 6)
+ZERO_GAIN_MAX_LEVEL = int(_get("ZERO_GAIN_MAX_LEVEL") or 4)
 
 # 零信任过滤（能力预留位，本阶段只做骨架+统计）：默认关=pass-through
 SANITIZE_ENABLED = _get_bool("SANITIZE_ENABLED", False)
@@ -194,13 +199,20 @@ HOT_PLATFORMS = [
 ]
 # 进入关键词提炼的每平台条目上限（全量落库不受限；输入控制成本）
 HOT_KEYWORD_INPUT_PER_PLATFORM = int(_get("HOT_KEYWORD_INPUT_PER_PLATFORM") or 20)
-# 聚合器候选位（热榜治理批）：逗号分隔有序列表，取用按序——首候选失败
-# （重试耗尽或不可重试）→ 下一候选，全败该平台记失败不中断整轮；缺省回落
-# [HOT_AGG_BASE] 单元素 = 行为零变（候选结构就位，备聚合源实际接入属后续批）。
-# 设计依据见 docs/design-index.md「HR-2」。
+# 聚合器候选位（热榜治理批建、BE-6 启用收口）：逗号分隔有序列表，取用按序——
+# 首候选失败（重试耗尽或不可重试）→ 下一候选，全败该平台记失败不中断整轮。
+# 备源启用形态：.env 配 HOT_AGG_CANDIDATES="https://a.example/api/s,https://b.example/api/s"
+# 即多候选按序取用（首候选 5xx/契约违例自动换次候选，落账 provider=胜者）；
+# 缺省回落 [HOT_AGG_BASE] 单元素 = 行为零变。
+# 设计依据见 docs/design-index.md「HR-2」「HG-2」。
 HOT_AGG_CANDIDATES = [
     s.strip() for s in (_get("HOT_AGG_CANDIDATES") or "").split(",") if s.strip()
 ] or [HOT_AGG_BASE]
+# hot 平台连败冷却（BE-6/R3.7，HotCallLog 回读）：最近 N 行全败且最新失败距
+# now < M 分钟 → 冷却中（跳过 fetch_platform）。无历史不罚、一次成功断连败、
+# 冷却期满自然重试。设计依据见 docs/design-index.md「HG-1」。
+HOT_COOLDOWN_STREAK = int(_get("HOT_COOLDOWN_STREAK") or 3)
+HOT_COOLDOWN_MINUTES = int(_get("HOT_COOLDOWN_MINUTES") or 30)
 
 # 搜索额度（能力④B）：每分钟/每日上限，按 provider 配置。
 # 默认值依据（Demo 假设档，可被环境变量覆盖）：博查按官方定价页充值档位保守估计
