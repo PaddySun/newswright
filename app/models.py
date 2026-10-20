@@ -161,6 +161,11 @@ class Source(Base):
     keyword_limited_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     keyword_rate_level: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
     keyword_zero_rounds: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    # RSS/web 内容零收益自适应（BE-6/R3.8，HG-3——与 D20 搜索零收益划界）：健康
+    # （error None 且非 304）但连续无新增轮计数与读时放大档位；放大只在
+    # skip_policy interval 分支读取时计算，不改 source_config 用户值
+    zero_gain_rounds: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
+    zero_gain_level: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"))
     # 来源自定义名称（UI2 W0a / L1 名称制）：站长起的呈现名；null = 呈现缺省用
     # 域名（呈现归前端，后端不兜底拼接）。写入面 = SourceCreate/SourceUpdate。
     name: Mapped[str | None] = mapped_column(String(200), nullable=True)

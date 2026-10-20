@@ -247,6 +247,8 @@ def _update_source_health(db: Session, src: Source, stats) -> None:
       解析，失败退档位缺省间隔）；降频期满后连续 2 轮正常逐级降档恢复。
     - 关键词边际降频（D20）：搜索源连续零新增轮计数，达阈值进入同构阶梯；
       有新增即清零解限（恢复事件另有 hot 批次更新/手工刷新/提示词升版三个入口）。
+    - 内容零收益自适应（BE-6/HG-3）：rss/web 源健康但连续无新增轮计数，
+      达阈值升档并读时放大 interval（有新增即双清零；划界见 HG-3）。
     """
     now = datetime.now(timezone.utc)
     extra = getattr(stats, "extra", {}) or {}
@@ -357,6 +359,24 @@ def _update_source_health(db: Session, src: Source, stats) -> None:
                 src.keyword_rate_level = 0
                 src.keyword_limited_until = None
 
+    # --- RSS/web 内容零收益自适应（BE-6/R3.8，HG-3）---
+    # 划界：零收益≠失败≠搜索零收益——suspect/hard_failed 阶梯管「抓取失败/
+    # 空内容」（BE-3 域），D20 keyword_zero_rounds 管「搜索源关键词零新增」
+    # （type=search），本段管「rss/web 内容通道健康但连续无新增」。not_modified
+    # （etag 协商的健康低频站）与 error/rate_limited 轮（失败面/限流面，各有
+    # 自管域）不计数；有新增即双清零。
+    if (src.type != "search" and error is None and not not_modified
+            and not getattr(stats, "rate_limited", False)):
+        if inserted == 0:
+            src.zero_gain_rounds = (src.zero_gain_rounds or 0) + 1
+            if src.zero_gain_rounds >= config.ZERO_GAIN_THRESHOLD_ROUNDS:
+                src.zero_gain_level = min((src.zero_gain_level or 0) + 1,
+                                          config.ZERO_GAIN_MAX_LEVEL)
+                src.zero_gain_rounds = 0  # 归零重计（此后每满 N 轮再升一档）
+        elif inserted > 0:
+            src.zero_gain_rounds = 0
+            src.zero_gain_level = 0
+
     db.commit()
 
 
@@ -385,7 +405,8 @@ def enqueue_fetch_round(db: Session, *, triggered_by: str = "scheduler") -> Pipe
     入队时即记账 last_probe_at（worker 崩溃不重探）并强制入队；配额外的
     due 死源照旧 skipped（reason 保持 "hard_failed"，skip_reason 零改）。
     """
-    from .skip_policy import _aware, hard_failed_probe_due, skip_reason
+    from .skip_policy import (_aware, effective_interval_minutes,
+                              hard_failed_probe_due, skip_reason)
 
     if round_busy(db, "fetch_round"):
         return None
@@ -417,8 +438,12 @@ def enqueue_fetch_round(db: Session, *, triggered_by: str = "scheduler") -> Pipe
                      src.id, src.failure_level or "backoff")
         elif reason == "interval_not_due":
             interval = (src.source_config or {}).get("interval_minutes")
+            # 零收益读时放大（HG-3）：展示自然反映 effective 值（与 skip_reason
+            # 判定同一函数，口径一致）
+            effective = effective_interval_minutes(
+                interval, src.zero_gain_level or 0)
             skipped.append({"source_id": src.id, "url": src.url,
-                            "reason": f"interval_not_due:{interval}m"})
+                            "reason": f"interval_not_due:{effective}m"})
             continue
         elif reason in ("backoff", "suspect_probe"):
             # 状态内跳过轮：推进探测轮计数（探测节奏按每 N 轮一次维持）

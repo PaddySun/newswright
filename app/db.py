@@ -48,6 +48,9 @@ def _migrate_added_columns() -> None:
             "keyword_limited_until": "DATETIME",
             "keyword_rate_level": "INTEGER NOT NULL DEFAULT 0",
             "keyword_zero_rounds": "INTEGER NOT NULL DEFAULT 0",
+            # RSS/web 内容零收益自适应（BE-6/R3.8）：历史行 0=无放大
+            "zero_gain_rounds": "INTEGER NOT NULL DEFAULT 0",
+            "zero_gain_level": "INTEGER NOT NULL DEFAULT 0",
             # 来源自定义名称（UI2 W0a / L1 名称制）：无回填——历史行 null 即
             # 呈现缺省（域名），语义归前端
             "name": "VARCHAR(200)",

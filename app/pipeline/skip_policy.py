@@ -61,6 +61,14 @@ def is_stale_dead(src: Source, *, now: datetime, stale_days: int) -> bool:
     return (now - _aware(src.failure_since)) > timedelta(days=stale_days)
 
 
+def effective_interval_minutes(base_minutes: int, zero_gain_level: int) -> int:
+    """RSS/web 零收益读时放大（BE-6/R3.8，HG-3）：base × 2^zero_gain_level，
+    档位封顶 ZERO_GAIN_MAX_LEVEL（缺省 4=×16）。纯读取计算——不改
+    source_config 用户值（呈现面用同函数保持口径一致）。"""
+    level = min(max(int(zero_gain_level or 0), 0), config.ZERO_GAIN_MAX_LEVEL)
+    return int(base_minutes) * (2 ** level)
+
+
 def skip_reason(src: Source, direction: Direction | None, *, now: datetime) -> str | None:
     """返回本源本轮的处置：None=执行，"probe"=执行探测，其余=跳过原因。
 
@@ -83,7 +91,10 @@ def skip_reason(src: Source, direction: Direction | None, *, now: datetime) -> s
         return "probe" if probe_due(src.backoff_skips or 0) else "backoff"
     interval = (src.source_config or {}).get("interval_minutes")
     if interval and src.last_fetched_at:
-        if (now - _aware(src.last_fetched_at)).total_seconds() < int(interval) * 60:
+        # 零收益读时放大（HG-3）：effective = interval × 2^zero_gain_level——
+        # 用户配置值不动，仅判定时放大；无 interval 配置的源本就不进此分支
+        effective = effective_interval_minutes(interval, src.zero_gain_level or 0)
+        if (now - _aware(src.last_fetched_at)).total_seconds() < effective * 60:
             return "interval_not_due"
     return None
 
