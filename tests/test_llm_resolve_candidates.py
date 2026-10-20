@@ -3,7 +3,7 @@
 覆盖：同 (域,名,model) 两次解析同实例且 reasoner 探测状态跨调用存活 /
 缓存实例的计量会话随调用方刷新 / 候选列表按序取用与冷却跳过 /
 单候选永不冷却 / 全冷却返回 None 且消费方走既有降级链 /
-默认配置（单候选 deepseek、冷却不启用）行为零变。
+默认配置（BE-7/D1：双候选 moark→deepseek、冷却 TTL 缺省 1800）钉面。
 设计依据见 docs/design-index.md「LR-2」「LR-3」。
 """
 import pytest
@@ -45,9 +45,9 @@ def test_pipeline_direct_write_visible_through_shared_cache(clean_resolve, db_se
     """管线门禁早停对 provider.reasoner_available 的直写作用于缓存共享实例，
     下一次选源取到的仍是该实例（直写即全局生效）。"""
     p_runner = resolve_chat(db_session)
-    assert p_runner.name == "deepseek"
+    assert p_runner.name == "moark"  # BE-7/D1 起缺省候选链首位
     p_runner.reasoner_available = False  # 与 authors/pipeline.py 门禁直写同形态
-    assert resolve("deepseek", db_session).reasoner_available is False
+    assert resolve("moark", db_session).reasoner_available is False
     assert resolve_chat(db_session) is p_runner
 
 
@@ -68,13 +68,15 @@ def test_cached_instance_follows_caller_session(clean_resolve, db_session):
         assert p2 is p1 and p2.db is other
 
 
-def test_default_config_single_candidate_zero_change(clean_resolve, db_session):
-    """默认配置：单候选 deepseek、冷却不启用——resolve_chat 恒 deepseek 不返回 None。"""
-    assert cfg.LLM_CANDIDATES == [] and cfg.LLM_PROVIDER == "deepseek"
-    assert resolve_chat(db_session).name == "deepseek"
-    mark_cooldown("deepseek")  # TTL 缺省 0：结构就位、行为关闭
-    assert cooldown_remaining("deepseek") == 0.0
-    assert resolve_chat(db_session).name == "deepseek"
+def test_default_config_dual_candidate_and_ttl_enabled(clean_resolve, db_session):
+    """默认配置（BE-7/D1 随动）：双候选 moark→deepseek、冷却 TTL 缺省 1800——
+    resolve_chat 恒 moark；冷却标记缺省即生效（不再 no-op）。"""
+    assert cfg.LLM_CANDIDATES == ["moark", "deepseek"] and cfg.LLM_PROVIDER == "moark"
+    assert cfg.LLM_PROVIDER_COOLDOWN_SECONDS == 1800
+    assert resolve_chat(db_session).name == "moark"
+    mark_cooldown("moark")  # TTL 缺省 1800：标记即生效
+    assert 0 < cooldown_remaining("moark") <= 1800
+    assert resolve_chat(db_session).name == "deepseek"  # 落次位
 
 
 def test_candidates_ordered_first_wins(clean_resolve, db_session, monkeypatch):
@@ -98,8 +100,10 @@ def test_cooldown_ttl_from_config_when_enabled(clean_resolve, db_session, monkey
     assert resolve_chat(db_session).name == "moark"
 
 
-def test_single_candidate_never_enters_cooldown(clean_resolve, db_session):
-    """单候选永不冷却：无备源可切，冷却只会让 resolve 平白返回 None。"""
+def test_single_candidate_never_enters_cooldown(clean_resolve, db_session, monkeypatch):
+    """单候选永不冷却：无备源可切，冷却只会让选源平白返回 None。
+    （BE-7/D1 随动：显式单候选形态——缺省已是双候选。）"""
+    monkeypatch.setattr(cfg, "LLM_CANDIDATES", ["deepseek"])
     mark_cooldown("deepseek", seconds=60)
     assert resolve_chat(db_session).name == "deepseek"
 

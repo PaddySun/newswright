@@ -135,7 +135,8 @@ def _tick_hot() -> None:
 def _tick_backup() -> None:
     """每日备份：本地目录插件执行一次 SQLite 在线备份（失败 WARN 不阻断任何轮）；
     同轮顺带清理过期会话行（SR-2——sessions 表 logout 只删单行，堆积
-    由每日批量清理治理；两事同为日频维护，同一 job 收口）。"""
+    由每日批量清理治理）与 chat 域供应商余额探测（BE-7/PV-3——402 冷却只兜
+    失败时刻，探测在耗尽前主动发现；三事同为日频维护，同一 job 收口）。"""
     try:
         from .backup import default_backup_target
 
@@ -157,6 +158,16 @@ def _tick_backup() -> None:
         log.info("过期会话清理：删除 %d 行", removed)
     except Exception:  # noqa: BLE001  清理失败不阻断任何轮（下轮重试）
         log.warning("过期会话清理异常（下轮重试）:\n%s", traceback.format_exc())
+    try:
+        from .providers.balance import probe_all
+
+        with SessionLocal() as db:
+            results = probe_all(db)
+        # 只记金额不记错误原文（错误原文在 balance_last_* 落账，脱敏口径）
+        amounts = {k: v.get("amount") for k, v in results.items() if v.get("ok")}
+        log.info("供应商余额探测完成: %s", amounts)
+    except Exception:  # noqa: BLE001  探测失败不阻断任何轮（次日再试）
+        log.warning("供应商余额探测异常（次日重试）:\n%s", traceback.format_exc())
 
 
 def _reclaim_once() -> None:

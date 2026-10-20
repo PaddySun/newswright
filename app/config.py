@@ -99,13 +99,15 @@ MOARK_RERANK_MODEL = _get("MOARK_RERANK_MODEL") or "Qwen3-Reranker-0.6B"
 # 跨厂商同族主备对（官方 deepseek-flash ↔ moark deepseek-v4.1-flash）
 MOARK_CHAT_MODEL = _get("MOARK_CHAT_MODEL") or "deepseek-v4.1-flash"
 
-# LLM 选源层（治理批 W2）：提供方名归口。默认单候选 deepseek、冷却不启用——
-# 默认配置行为零变；候选位与 TTL 冷却是结构就位（跨厂商自动主备切换属后续决策）。
-LLM_PROVIDER = _get("LLM_PROVIDER") or "deepseek"
+# LLM 选源层：提供方名归口。D1（BE-7）起默认主源 moark（DeepSeek-V4-Flash，
+# 输入¥1/输出¥2/缓存命中¥0.2——比官方便宜且无峰谷）+候选链 moark→deepseek
+# （不同账户独立余额=真冗余）；供应商级致命 4xx 冷却 TTL 缺省 30 分钟
+# （余额类冷却期满自然回主源，不做自动恢复探测）。env 可覆写零变。
+LLM_PROVIDER = _get("LLM_PROVIDER") or "moark"
 # 有序候选列表（逗号分隔，缺省回落 [LLM_PROVIDER] 单候选形态）
-LLM_CANDIDATES = [s.strip() for s in (_get("LLM_CANDIDATES") or "").split(",") if s.strip()]
-# 候选失败冷却 TTL 秒数；0=不启用（默认——低流量系统不做自动熔断）
-LLM_PROVIDER_COOLDOWN_SECONDS = float(_get("LLM_PROVIDER_COOLDOWN_SECONDS") or 0)
+LLM_CANDIDATES = [s.strip() for s in (_get("LLM_CANDIDATES") or "moark,deepseek").split(",") if s.strip()]
+# 候选失败冷却 TTL 秒数；0=不启用哨兵（显式配置才关——缺省 1800 已启用）
+LLM_PROVIDER_COOLDOWN_SECONDS = float(_get("LLM_PROVIDER_COOLDOWN_SECONDS") or 1800)
 
 # 嵌入提供方名（选源接线）：默认 moark 行为零变；none/显式空串=禁用哨兵
 # （检索层整体回退全量慢速，与 MOARK_EMBED_MODEL 的禁用语义同轨）。

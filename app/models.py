@@ -254,7 +254,10 @@ class Author(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(200), unique=True)
-    model: Mapped[str] = mapped_column(String(100))
+    # 模型绑定（BE-7/D1 语义改）：空=随候选链（chat_json model=None 走
+    # _default_model——候选链默认 moark 后，存量 deepseek 官方名发给 moark 网关
+    # 会 400 且属请求级致命不冷却不切换）；非空=显式绑定该模型名。
+    model: Mapped[str | None] = mapped_column(String(100), nullable=True)
     persona_prompt: Mapped[str] = mapped_column(Text, default="")
     global_system_prompt: Mapped[str] = mapped_column(Text, default="")
     # JSON: [{direction_id, threshold}]
@@ -301,7 +304,9 @@ class WriteRun(Base):
     article_id: Mapped[int | None] = mapped_column(ForeignKey("article.id"), nullable=True)
     skip_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     skip_thinking: Mapped[str | None] = mapped_column(Text, nullable=True)
-    model: Mapped[str] = mapped_column(String(100))
+    # 建行时随链作者（Author.model 空）为 NULL，成功后以服务端回显实况回填
+    # （BE-7/D1 随链改造——与 Author.model 同步可空）。
+    model: Mapped[str | None] = mapped_column(String(100), nullable=True)
     # OK / FAILED（引用校验二次失败或调用失败）
     status: Mapped[str] = mapped_column(String(20), default="OK")
     error: Mapped[str | None] = mapped_column(Text, nullable=True)

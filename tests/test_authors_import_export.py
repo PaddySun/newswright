@@ -2,8 +2,9 @@
 {author_id}/export——UI2 W0b，AC-10.1 的 HTTP 面）。
 
 覆盖口径：导入新建（带 model 绑定）/同名更新 created=false；AuthorConfigError
-→ 400 AUTHOR_JSON_INVALID（message 携带校验细节）；新作者未传 model → 400
-AUTHOR_MODEL_REQUIRED；JSON 文档内含 model 键由 schema 校验拒绝；导出
+→ 400 AUTHOR_JSON_INVALID（message 携带校验细节）；新作者不传 model=随候选链
+（BE-7/D1 契约放宽：原 400 AUTHOR_MODEL_REQUIRED 销案，DB NULL 随链）；JSON
+文档内含 model 键由 schema 校验拒绝；导出
 roundtrip（export→import 幂等）；无配置导出 400 AUTHOR_JSON_ABSENT；
 Content-Disposition 附件头。端点薄包 app/authors/importer.py 库函数。
 设计依据见 docs/design-index.md「AC-10.1」。
@@ -52,12 +53,14 @@ def test_import_invalid_document_is_coded_400(auth_client, db_session):
     assert "identity" in body["message"]
 
 
-def test_import_new_author_without_model_is_coded_400(auth_client, db_session):
-    """新作者未传 model → 400 AUTHOR_MODEL_REQUIRED（模型不在 JSON 中）。"""
+def test_import_new_author_without_model_follows_chain(auth_client, db_session):
+    """新作者不传 model → 随候选链（BE-7/D1 契约放宽随动：原 400
+    AUTHOR_MODEL_REQUIRED 销案——DB NULL，chat_json model=None 走缺省链）。"""
     doc = default_author_config("imp-3", "无模型作者")
     r = auth_client.post("/api/authors/import", json={"author_json": doc})
-    assert r.status_code == 400
-    assert r.json()["code"] == "AUTHOR_MODEL_REQUIRED"
+    assert r.status_code == 200, r.text
+    db_session.expire_all()
+    assert db_session.get(Author, r.json()["id"]).model is None
 
 
 def test_import_document_with_model_key_is_rejected(auth_client, db_session):
