@@ -681,6 +681,43 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
         db.commit()
         scored = failed = passed = parse_failed = 0
         try:
+            # BE-8/D7 超龄闸：fetched_at 距今超 score_expire_days 的条目跳过打分，
+            # 落 EXPIRED 终态一行（每方向每条目一行，机器可读归因；幂等：已有
+            # EXPIRED 行不重写，批量恢复期一次性落账可接受）；0=关闸。rescore
+            # 豁免年龄闸（_rescore_candidate_ids 独立选取——重打分是明确意图）
+            from ..siteconfig import get_config as _get_age_config
+
+            _expire_val = _get_age_config(db, "score_expire_days")
+            expire_days = 2 if _expire_val is None else int(_expire_val)
+            expired_skipped = 0
+            age_cutoff = None
+            if expire_days > 0:
+                age_cutoff = datetime.now(timezone.utc) - timedelta(days=expire_days)
+                stale = (
+                    db.query(Item)
+                    .filter(
+                        Item.source_id.in_(db.query(Source.id).filter_by(direction_id=d.id, enabled=True)),
+                        Item.fetch_status == "FETCHED",
+                        Item.sanitize_status == "PASSED",
+                        Item.duplicate_of.is_(None),
+                        Item.fetched_at < age_cutoff,
+                    )
+                    .outerjoin(ScoreResult, (ScoreResult.item_id == Item.id)
+                               & (ScoreResult.direction_id == d.id)
+                               & (ScoreResult.status == "EXPIRED"))
+                    .filter(ScoreResult.id.is_(None))
+                    .all()
+                )
+                for it in stale:
+                    db.add(ScoreResult(
+                        item_id=it.id, direction_id=d.id,
+                        prompt_version=d.prompt_version,
+                        model="n/a",  # 未发生任何模型调用——诚实归因（error 载机器可读原因）
+                        status="EXPIRED",
+                        error=f"expired: fetched_at 距今超 {expire_days} 天跳过打分"))
+                if stale:
+                    db.commit()
+                expired_skipped = len(stale)
             candidates = (
                 db.query(Item)
                 .filter(
@@ -690,6 +727,8 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                     Item.sanitize_status == "PASSED",
                     # 判重条目不进打分（URL 指纹/语义近重复，duplicate_of 指向 origin）
                     Item.duplicate_of.is_(None),
+                    # 超龄闸（BE-8/D7）：与 EXPIRED 落账同一天数口径
+                    *([Item.fetched_at >= age_cutoff] if age_cutoff is not None else []),
                 )
                 .outerjoin(ScoreResult, (ScoreResult.item_id == Item.id) & (ScoreResult.direction_id == d.id)
                            & (ScoreResult.status == "OK"))
@@ -700,9 +739,56 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
             # 突发上限：单轮至多 SCORE_ROUND_MAX_ITEMS 条；预算触发时降为慢速上限
             round_cap = score_slow_cap(db) if budget_slow else config.SCORE_ROUND_MAX_ITEMS
             items = ordered[:round_cap]
+            # BE-8/D3 jev 预筛三路（成本结构位，非省钱位）：初筛不可用→FAILED
+            # 下轮续跑，绝不自动回退 chat（moark 故障期全量回退成本反超+peers
+            # 联动下 chat 链已落 deepseek——防成本失控，冷却期满自然恢复）；
+            # 高置信 REJECT→终态跳过 chat；高置信 KEEP→照常 chat 链（需要分数）；
+            # 低置信→显式 deepseek 复核（不走链——链上主源收到他厂商模型名会 400）
+            from ..scoring.prefilter import jev_prefilter
+            from ..siteconfig import get_config as _get_prefilter_config
+
+            upgrade_threshold = float(
+                _get_prefilter_config(db, "jev_upgrade_confidence") or 0.8)
+            prefiltered_rejected = upgraded = prefilter_unavailable = 0
             for item in items:
                 try:
-                    sr = score_item(db, item, d)
+                    verdict = jev_prefilter(db, item, d)
+                except Exception as e:  # noqa: BLE001  预筛防线绝不阻断整轮（防御性：jev_prefilter 承诺不抛）
+                    log.warning("jev_prefilter 异常 item=%s: %s", item.id, e)
+                    verdict = None
+                if verdict is None:
+                    db.add(ScoreResult(
+                        item_id=item.id, direction_id=d.id,
+                        prompt_version=d.prompt_version,
+                        model=config.MOARK_JEV_MODEL,
+                        status="FAILED", error="jev 初筛不可用，下轮续跑"))
+                    db.commit()
+                    failed += 1
+                    prefilter_unavailable += 1
+                    continue
+                confidence = float(verdict.get("confidence") or 0.0)
+                high_confidence = confidence >= upgrade_threshold
+                if high_confidence and verdict.get("verdict") == "REJECT":
+                    # 终态预筛行：quality/relevance 列可空→NULL（分数语义缺失
+                    # 如实呈现，A6 实读定案）；reason 标「初筛」+置信可归因
+                    db.add(ScoreResult(
+                        item_id=item.id, direction_id=d.id,
+                        prompt_version=d.prompt_version,
+                        model=str(verdict.get("model") or config.MOARK_JEV_MODEL),
+                        status="OK", passed=False,
+                        reason=f"初筛(jev 置信 {confidence:.2f})：{verdict.get('reason') or ''}",
+                        band=verdict.get("band") or None,
+                        quality_score=None, relevance_score=None, error=None))
+                    db.commit()
+                    prefiltered_rejected += 1
+                    continue
+                try:
+                    if high_confidence:
+                        sr = score_item(db, item, d)
+                    else:
+                        sr = score_item(db, item, d, model=config.DEEPSEEK_MODEL,
+                                        provider_name="deepseek")
+                        upgraded += 1
                 except Exception as e:  # noqa: BLE001  单条异常不中断整轮
                     failed += 1
                     log.warning("score_item 异常 item=%s: %s", item.id, e)
@@ -722,6 +808,12 @@ def score_round(db: Session, *, triggered_by: str = "manual", direction_id: int 
                 "budget_slow": budget_slow,
                 "scored": scored, "passed": passed,
                 "call_failed": failed, "parse_failed": parse_failed,
+                # BE-8 预筛三计数（路由账目）
+                "prefiltered_rejected": prefiltered_rejected,
+                "upgraded": upgraded,
+                "prefilter_unavailable": prefilter_unavailable,
+                # BE-8 超龄闸账目（EXPIRED 落行数）
+                "expired_skipped": expired_skipped,
             }
             _status = "FAILED" if (failed + parse_failed) > 0 and scored == 0 else "DONE"
             _error = (f"{failed + parse_failed} 条打分未成功（含解析失败 {parse_failed}），下轮续跑"

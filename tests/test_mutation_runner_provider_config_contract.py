@@ -44,6 +44,16 @@ from app.transport.errors import SemanticError
 from app.providers.deepseek import DeepSeekProvider
 
 
+@pytest.fixture(autouse=True)
+def _be8_prefilter_passthrough(monkeypatch):
+    """BE-8 随动：jev 预筛直通（KEEP 高置信）——本文件断言打分链既有行为，
+    预筛三路本体见 test_jev_prefilter.py。"""
+    monkeypatch.setattr(
+        "app.scoring.prefilter.jev_prefilter",
+        lambda db, item, direction: {"verdict": "KEEP", "confidence": 0.99,
+                                     "reason": "stub:passthrough"})
+
+
 # ---------- 共享工厂 / 桩体 ----------
 
 _FIXED_NOW = datetime(2026, 10, 4, 8, 0, 0, tzinfo=timezone.utc)

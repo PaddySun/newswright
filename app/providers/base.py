@@ -57,6 +57,7 @@ __all__ = [
     "RetryExhausted",
     "_scrub",
     "error_status",
+    "mark_vendor_cooldown",
     "parse_strict_json",
     "record_usage",
 ]
@@ -100,11 +101,48 @@ def error_status(err: BaseException) -> int | None:
     return None
 
 
+def mark_vendor_cooldown(err: VendorFatalError, *, name: str, db: Session,
+                         peers: tuple[str, ...] = ()) -> None:
+    """供应商级致命 → 冷却标记 + 边沿通知（BE-7/TR-2 接线；BE-8 提为模块级，
+    供非 chat 调用路径与账户联动复用）。
+
+    - 冷却键必须 (name, None)——选源层查询键就是 (name, None)（resolve.py
+      resolve_chat），按 payload 模型名标记即键不匹配、冷却静默失效；
+    - peers=账户联动域（BE-8：moark_jev 与 moark chat 同 key 同账户独立余额，
+      jev 遭 402 时 chat 主源也该冷却）：一并标记；边沿判定取并集——「任一
+      未冷却 → 全冷却」转换为一次进入冷却，通知恰一次且以主名（name）发；
+    - 通知边沿触发：仅在「未冷却 → 冷却」转换时发一次（打分轮逐条 402
+      不灌爆通知）；TTL 配置 0 时 mark 为 no-op（冷却未发生则不发）；
+    - 函数内延迟 import 破环：providers.base→resolve→registry→
+      providers.deepseek→base（robots 判例同款惰性导入）；
+    - 治理面异常绝不改变调用错误语义（WARN 吞出，原错误照常上抛）。
+    """
+    try:
+        from .. import config as _config
+        from ..providers import resolve as _resolve
+        from ..notify.triggers import notify_provider_switched
+
+        names = (name, *peers)
+        was_cooling = any(_resolve.cooldown_remaining(n) > 0 for n in names)
+        for n in names:
+            _resolve.mark_cooldown(n)  # 不传 model——键=(n, None)
+        if not was_cooling and _resolve.cooldown_remaining(name) > 0:
+            notify_provider_switched(
+                db, name=name, status=err.status,
+                ttl_seconds=_config.LLM_PROVIDER_COOLDOWN_SECONDS)
+    except Exception:  # noqa: BLE001  治理面异常不改变调用错误语义
+        log.warning("供应商冷却接线异常（不影响原错误上抛）: %s",
+                    type(err).__name__, exc_info=True)
+
+
 class LLMProvider(ABC):
     """同步 provider。子类实现 _post 与 _default_model；基类负责
     chat/chat_json 模板、重试与计量、档位钩子与兼容阀钩子、观测面属性。"""
 
     name: str = "base"
+    # 供应商级致命冷却的账户联动域（BE-8）：空=单键（基类缺省）；
+    # moark_jev 覆写为 ("moark",)——同 key 同账户，jev 遭 402 时 chat 主源同冷却
+    COOLDOWN_PEERS: tuple[str, ...] = ()
 
     def __init__(self, db: Session) -> None:
         self.db = db
@@ -127,30 +165,10 @@ class LLMProvider(ABC):
         raise NotImplementedError(f"{type(self).__name__} 未实现 _default_model")
 
     def _cooldown_and_notify(self, err: VendorFatalError) -> None:
-        """供应商级致命 → 冷却标记 + 边沿通知（BE-7/TR-2 接线，PV-1/PV-2）。
-
-        - 冷却键必须 (name, None)——选源层查询键就是 (name, None)（resolve.py
-          resolve_chat），按 payload 模型名标记即键不匹配、冷却静默失效；
-        - 通知边沿触发：仅在「未冷却 → 冷却」转换时发一次（打分轮逐条 402
-          不灌爆通知）；TTL 配置 0 时 mark 为 no-op（冷却未发生则不发）；
-        - 函数内延迟 import 破环：providers.base→resolve→registry→
-          providers.deepseek→base（robots 判例同款惰性导入）；
-        - 治理面异常绝不改变调用错误语义（WARN 吞出，原错误照常上抛）。
-        """
-        try:
-            from .. import config as _config
-            from ..providers import resolve as _resolve
-            from ..notify.triggers import notify_provider_switched
-
-            was_cooling = _resolve.cooldown_remaining(self.name) > 0
-            _resolve.mark_cooldown(self.name)  # 不传 model——键=(name, None)
-            if not was_cooling and _resolve.cooldown_remaining(self.name) > 0:
-                notify_provider_switched(
-                    self.db, name=self.name, status=err.status,
-                    ttl_seconds=_config.LLM_PROVIDER_COOLDOWN_SECONDS)
-        except Exception:  # noqa: BLE001  治理面异常不改变调用错误语义
-            log.warning("供应商冷却接线异常（不影响原错误上抛）: %s",
-                        type(err).__name__, exc_info=True)
+        """供应商级致命接线（方法壳，BE-7 调用点零变）：转发模块级
+        mark_vendor_cooldown，peers 取类属性 COOLDOWN_PEERS（BE-8 账户联动）。"""
+        mark_vendor_cooldown(err, name=self.name, db=self.db,
+                             peers=tuple(getattr(self, "COOLDOWN_PEERS", ()) or ()))
 
     def tier_request(self, payload: dict[str, Any], *, model_tier: str | None) -> dict[str, Any]:
         """按调用档位改写请求 payload 的 provider 钩子（默认不改写——纯模型名档位，

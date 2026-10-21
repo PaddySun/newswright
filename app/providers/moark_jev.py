@@ -25,6 +25,10 @@ class MoarkJevProvider(HTTPProvider):
     """systemone 决策协议适配器。"""
 
     name = "moark_jev"
+    # 账户联动（BE-8/AC-2）：与 moark chat 同 key 同账户（独立余额）——jev 遭
+    # 供应商级致命（402 等）时 chat 主源同账户一并冷却，故障期预筛与 chat 链
+    # 一起进入冷却语义（score_round 预筛不可用→FAILED 下轮续跑，防成本失控）
+    COOLDOWN_PEERS = ("moark",)
 
     def __init__(self, db: Session, *, model: str | None = None) -> None:
         super().__init__(db, base_url=config.MOARK_BASE_URL, api_key=config.MOARK_API_KEY)

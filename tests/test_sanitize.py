@@ -1,8 +1,20 @@
 """M8d 测试：零信任过滤预留位——pass-through / KeywordDeny 两条路径 + 统计口径。"""
 from datetime import datetime, timezone
 
+import pytest
+
 import app.config as cfg
 import app.ingest.sanitize as sz
+
+
+@pytest.fixture(autouse=True)
+def _be8_prefilter_passthrough(monkeypatch):
+    """BE-8 随动：jev 预筛直通（KEEP 高置信）——本文件断言打分链既有行为，
+    预筛三路本体见 test_jev_prefilter.py。"""
+    monkeypatch.setattr(
+        "app.scoring.prefilter.jev_prefilter",
+        lambda db, item, direction: {"verdict": "KEEP", "confidence": 0.99,
+                                     "reason": "stub:passthrough"})
 
 
 def test_passthrough_default(monkeypatch):
