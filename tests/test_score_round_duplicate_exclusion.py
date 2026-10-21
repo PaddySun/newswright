@@ -4,8 +4,20 @@
 docs/design-index.md「DT-2」）：判重条目（URL 指纹/语义近重复）已在入库时
 标记 duplicate_of，score_round 候选查询必须排除——重复内容不烧打分 LLM。
 """
+import pytest
+
 from app.models import Direction, Item, ScoreResult, Source
 from app.pipeline.runner import score_round
+
+
+@pytest.fixture(autouse=True)
+def _be8_prefilter_passthrough(monkeypatch):
+    """BE-8 随动：jev 预筛直通（KEEP 高置信）——本文件断言打分链既有行为，
+    预筛三路本体见 test_jev_prefilter.py。"""
+    monkeypatch.setattr(
+        "app.scoring.prefilter.jev_prefilter",
+        lambda db, item, direction: {"verdict": "KEEP", "confidence": 0.99,
+                                     "reason": "stub:passthrough"})
 
 
 def test_score_round_skips_duplicated_items(db_session, monkeypatch):

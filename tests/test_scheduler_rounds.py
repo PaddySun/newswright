@@ -1,4 +1,6 @@
 """M8c 测试：调度轮次——入队/执行分离、防重叠、连续失败退避与探测。"""
+import pytest
+
 from app import config
 from app.models import Direction, PipelineTask, Source
 from app.pipeline.runner import (
@@ -6,6 +8,16 @@ from app.pipeline.runner import (
     process_fetch_round,
     round_busy,
 )
+
+
+@pytest.fixture(autouse=True)
+def _be8_prefilter_passthrough(monkeypatch):
+    """BE-8 随动：jev 预筛直通（KEEP 高置信）——本文件断言打分链既有行为，
+    预筛三路本体见 test_jev_prefilter.py。"""
+    monkeypatch.setattr(
+        "app.scoring.prefilter.jev_prefilter",
+        lambda db, item, direction: {"verdict": "KEEP", "confidence": 0.99,
+                                     "reason": "stub:passthrough"})
 
 
 def _mk_source(db, url: str) -> Source:

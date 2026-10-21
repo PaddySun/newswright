@@ -95,9 +95,11 @@ EMBED_TRUNCATE_CHARS = int(_get("EMBED_TRUNCATE_CHARS") or 2000)
 EMBED_DIMENSIONS = int(_get("EMBED_DIMENSIONS") or 1024)
 # moark rerank（/v1/rerank，注册不接线）：默认模型
 MOARK_RERANK_MODEL = _get("MOARK_RERANK_MODEL") or "Qwen3-Reranker-0.6B"
-# moark chat（OpenAI 兼容族备源，/v1/chat/completions）：默认模型=冒烟锁定的
-# 跨厂商同族主备对（官方 deepseek-flash ↔ moark deepseek-v4.1-flash）
-MOARK_CHAT_MODEL = _get("MOARK_CHAT_MODEL") or "deepseek-v4.1-flash"
+# moark chat（OpenAI 兼容族备源，/v1/chat/completions）：默认模型=跨厂商同族
+# 主备对（官方 deepseek-flash ↔ moark DeepSeek-V4-Flash）。实名依据（BE-8/D1，
+# 2026-10-20 模力 /v1/models?include_details=true 实查）：deepseek-v4.1-flash
+# 系实价 ¥2/M·¥8/M，比口述价贵 2/4 倍；实价 ¥1/M·¥2/M 的 SKU 是 DeepSeek-V4-Flash。
+MOARK_CHAT_MODEL = _get("MOARK_CHAT_MODEL") or "DeepSeek-V4-Flash"
 
 # LLM 选源层：提供方名归口。D1（BE-7）起默认主源 moark（DeepSeek-V4-Flash，
 # 输入¥1/输出¥2/缓存命中¥0.2——比官方便宜且无峰谷）+候选链 moark→deepseek

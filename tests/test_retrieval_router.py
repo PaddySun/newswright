@@ -18,6 +18,16 @@ from app.retrieval.embedder import vec_to_blob
 from app.retrieval.query import ensure_direction_query_vec
 
 
+@pytest.fixture(autouse=True)
+def _be8_prefilter_passthrough(monkeypatch):
+    """BE-8 随动：jev 预筛直通（KEEP 高置信）——本文件断言打分链既有行为，
+    预筛三路本体见 test_jev_prefilter.py。"""
+    monkeypatch.setattr(
+        "app.scoring.prefilter.jev_prefilter",
+        lambda db, item, direction: {"verdict": "KEEP", "confidence": 0.99,
+                                     "reason": "stub:passthrough"})
+
+
 def _seed_direction_with_items(db, *, n=2):
     d = Direction(name="方向", prompt="p", threshold=60)
     db.add(d)

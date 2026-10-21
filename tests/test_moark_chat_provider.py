@@ -50,7 +50,7 @@ def test_chat_request_uses_v1_prefix_and_carries_model(moark):
     # 厂商路径差异：moark 属 OpenAI 网关族，chat 路径带 /v1 前缀
     assert path.endswith("/v1/chat/completions")
     assert payload["model"] == cfg.MOARK_CHAT_MODEL
-    assert payload["model"] == "deepseek-v4.1-flash"  # 冒烟锁定的跨厂商同族主备对
+    assert payload["model"] == "DeepSeek-V4-Flash"  # BE-8 实价证伪换名（D1 口述价 SKU）
     assert model == "deepseek-v4-1-flash-260910"  # 返回口径=服务端回显实况
 
 

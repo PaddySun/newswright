@@ -12,6 +12,7 @@ import threading
 import types
 
 import numpy as np
+import pytest
 
 import app.pipeline.runner as runner_mod
 from app.models import (
@@ -26,6 +27,16 @@ from app.models import (
 from app.pipeline.runner import enqueue_fetch_round, process_fetch_round, score_round
 from app.retrieval.embedder import vec_to_blob
 from app.siteconfig import set_config
+
+
+@pytest.fixture(autouse=True)
+def _be8_prefilter_passthrough(monkeypatch):
+    """BE-8 随动：jev 预筛直通（KEEP 高置信）——本文件断言打分链既有行为，
+    预筛三路本体见 test_jev_prefilter.py。"""
+    monkeypatch.setattr(
+        "app.scoring.prefilter.jev_prefilter",
+        lambda db, item, direction: {"verdict": "KEEP", "confidence": 0.99,
+                                     "reason": "stub:passthrough"})
 
 
 def _stats(**kw) -> types.SimpleNamespace:

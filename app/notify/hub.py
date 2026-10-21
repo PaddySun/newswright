@@ -69,7 +69,7 @@ CATEGORY_REGISTRY: dict[str, dict] = {
     # 测试邮件专用（POST /settings/notify/test；唯一时间戳键不参与抑制）
     "notify_test": {"family": "alert", "priority": 2,
                     "default_min_interval_s": 0},
-    # 三条骨架位（BE-7 服务商治理接线；本批只注册无消费方）
+    # 服务商治理三触发器（BE-7 已接线）
     "provider_switched": {"family": "alert", "priority": 1,
                           "default_min_interval_s": 0},
     "balance_low": {"family": "alert", "priority": 1,

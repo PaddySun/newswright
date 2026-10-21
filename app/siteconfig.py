@@ -106,6 +106,11 @@ DEFAULTS: dict[str, object] = {
     "notify_on_llm_error_rate": True,
     "balance_warn_threshold": 5,
     "llm_error_rate_warn": 0.5,
+    # 打分成本（BE-8）：jev 预筛低置信升级阈值（confidence<阈值升级 deepseek
+    # 复核，D3 两段式）；超龄闸天数（fetched_at 距今超 N 天跳过打分落 EXPIRED
+    # 终态，D7；0=不设限；rescore 豁免年龄闸）
+    "jev_upgrade_confidence": 0.8,
+    "score_expire_days": 2,
 }
 
 

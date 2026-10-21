@@ -177,13 +177,19 @@ def assemble_ranked_reading_set(
 
 def _render_reading_set(pairs: list[tuple[Item, ScoreResult]]) -> str:
     """阅读集渲染：每条目（含搜索摘要来源）包裹 <document id> 定界符。"""
+    from ..scoring.service import break_document_delimiters
+
     blocks = []
     for item, sr in pairs:
         body = (item.content_text or "").strip()[:READING_BODY_MAX_CHARS]
+        # 定界不变式契约（scoring.break_document_delimiters 归口）：标题与正文
+        # 同为源侧不可信文本——字面形破坏后注入内容渲染仍留在块内（MCP P1-3）
+        body = break_document_delimiters(body)
+        title = break_document_delimiters(item.title or "")
         pub = item.published_at.strftime("%Y-%m-%d") if item.published_at else "未知"
         blocks.append(
             f'<document id="{item.id}">\n'
-            f"【条目 {item.id}】{item.title}\n"
+            f"【条目 {item.id}】{title}\n"
             f"来源: {item.url or '未知'} | 发布: {pub} | 相关分: {sr.relevance_score}\n"
             f"正文: {body or '（无正文）'}\n"
             f"</document>"
